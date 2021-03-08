@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @Table(	name = "userMaster")
 @Getter @Setter
-public class UserMaster {
+public class UserMasterEntity {
 	
 	
 	@Id
@@ -23,58 +23,73 @@ public class UserMaster {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotBlank
-	@Size(max = 100)
-	@Column(name = "userId")
-	private Long userId;
 	
-	@NotBlank
-	@Size(max = 100)
+	
+	@Column(name = "userId")
+	private String userId;
+	
+
+	
 	@Column(name = "roleId")
 	private Long roleId;
 	
 	
-	@NotBlank
-	@Size(max = 100)
+
+	
 	@Column(name = "universityId")
 	private Long universityId;
 	
 	
-	@NotBlank
+
 	@Size(max = 100)
 	@Column(name = "companyName")
 	private String companyName;
 	
-	@NotBlank
+
 	@Size(max = 100)
 	@Column(name = "Email")
 	private String email;
 	
-	@NotBlank
-	@Size(max = 100)
-	@Column(name = "contactPersonName")
-	private String contactPersonName;
 	
-	@NotBlank
+	@Size(max = 100)
+	@Column(name = "username")
+	private String username;
+	
+	
 	@Size(max = 100)
 	@Column(name = "contactPersonPhone")
 	private String contactPersonPhone;
 	
-	@NotBlank
+
 	@Size(max = 100)
 	@Column(name = "GSTNo")
 	private String GSTNo;
 	
-	@NotBlank
+
 	@Size(max = 100)
 	@Column(name = "password")
 	private String password;
 	
-	@NotBlank
+	
 	@Size(max = 100)
 	@Column(name = "emailVerificationStatus")
 	private String emailVerificationStatus;
 	
+	@Size(max = 100)
+	@Column(name = "is_active")
+	private String isactive;
+	
+	public UserMasterEntity() {
+		
+	}
+	
+	
+    public UserMasterEntity(String email, String GSTNo,String companyname) {
+		
+		super();
+		this.email = email;
+		this.GSTNo = GSTNo;
+	}
 	
 
 
