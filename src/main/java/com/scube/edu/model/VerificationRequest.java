@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -15,26 +16,23 @@ import lombok.Setter;
 @Entity
 @Table(	name = "verificationRequest")
 @Getter @Setter
-public class VerificationRequest {
+public class VerificationRequest extends CreateUpdate {
 	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter Verification Request ID")
 	@Column(name = "verRequestId")
 	private Long verRequestId;
 	
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter applicationID")
 	@Column(name = "applicationId")
 	private Long applicationId;
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter Userid")
 	@Column(name = "userId")
 	private Long userId;
 	
@@ -48,18 +46,15 @@ public class VerificationRequest {
 	@Column(name = "lastName")
 	private String lastName;
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter Stream")
 	@Column(name = "streamId")
 	private Long streamId;
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter college")
 	@Column(name = "collegeId")
 	private Long collegeId;
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter University")
 	@Column(name = "universityId")
 	private Long universityId;
 	
