@@ -24,108 +24,76 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 	
-	   @Autowired
-	    private JavaMailSender javaMailSender;
+	
 	   
-	   void sendEmail() throws MessagingException {
+	   void sendEmail(String emailId, String encodeEmail) throws MessagingException {
 
-		/*
-		 * SimpleMailMessage msg = new SimpleMailMessage();
-		 * 
-		 * msg.setTo("manishapopalghat315@gmail.com");
-		 * 
-		 * msg.setSubject("Testing from Spring Boot");
-		 * msg.setText("Hello World \n Spring Boot Email");
-		 * 
-		 * javaMailSender.send(msg);
-		 */
-	        
-	        
-		/*
-		 * MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		 * 
-		 * MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,
-		 * true);
-		 * 
-		 * mimeMessageHelper.setSubject("Testing from Spring Boot");
-		 * 
-		 * mimeMessageHelper.setTo("manishapopalghat315@gmail.com");
-		 * mimeMessageHelper.setText("Hello World \\n Spring Boot Email",true);
-		 * 
-		 * javaMailSender.send(mimeMessageHelper.getMimeMessage());
-		 */
-		   
-		   
-		   
-		/*
-		 * Properties props = new Properties(); props.put("mail.smtp.auth", "true");
-		 * props.put("mail.smtp.starttls.enable", "true"); props.put("mail.smtp.host",
-		 * "smtp.gmail.com"); props.put("mail.smtp.port", "587");
-		 * 
-		 * 
-		 * Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-		 * protected PasswordAuthentication getPasswordAuthentication() { return new
-		 * PasswordAuthentication("universityscube@gmail.com", "edu@1234"); } });
-		 * Message msg = new MimeMessage(session); msg.setFrom(new
-		 * InternetAddress("universityscube@gmail.com"));
-		 * 
-		 * msg.setRecipients(Message.RecipientType.TO,
-		 * InternetAddress.parse("manishapopalghat315@gmail.com"));
-		 * msg.setSubject("Tutorials point email");
-		 * msg.setContent("Tutorials point email", "text/html");
-		 * 
-		 * 
-		 * MimeBodyPart messageBodyPart = new MimeBodyPart();
-		 * messageBodyPart.setContent("Tutorials point email", "text/html");
-		 * 
-		 * Multipart multipart = new MimeMultipart();
-		 * multipart.addBodyPart(messageBodyPart); // MimeBodyPart attachPart = new
-		 * MimeBodyPart();
-		 * 
-		 * //attachPart.attachFile("/var/tmp/image19.png"); //
-		 * multipart.addBodyPart(attachPart); msg.setContent(multipart);
-		 * Transport.send(msg);
-		 */
-		   
-		   
-		   Properties props = new Properties();
-	        props.put("mail.smtp.starttls.enable", "true");
-	        props.put("mail.smtp.starttls.required","true");
+		   String to = emailId;
 
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
 	        String host = "smtp.gmail.com";
-	        int port = 25;
-	        String userName = "universityscube@gmail.com";
-	        String password = "edu@1234";
 
-	        String mailTo = "scubeuser8@gmail.com";
-	        String subject = "Hello my friend~";
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        properties.put("mail.smtp.auth", "true");
 
-	        JavaMailSenderImpl sender = new JavaMailSenderImpl();
-	        sender.setJavaMailProperties(props);
-	        sender.setHost(host);
-	        sender.setPort(port);
-	        sender.setUsername(userName);
-	        sender.setPassword(password);
-	    
-	        sender.setProtocol("smtp");
 
-	        MimeMessage message = sender.createMimeMessage();
-	        MimeMessageHelper helper;
+
+	        // Get the Session object.// and pass username and password
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+	            protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+
+	            }
+
+	        });
+
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+
 	        try {
-	            helper = new MimeMessageHelper(message, true);
-	            helper.setTo(mailTo);
-	            helper.setSubject(subject);
-	            helper.setText("test test");
+	            // Create a default MimeMessage object.
+	            MimeMessage message = new MimeMessage(session);
+
+	            // Set From: header field of the header.
+	            message.setFrom(new InternetAddress(from));
+
+	            // Set To: header field of the header.
+	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+	            // Set Subject: header field
+	            message.setSubject("Password Reset Link!!!");
+
+	            // Now set the actual message
+	                       
+                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='http://SampleLogin/new-password.jsp'><strong>Reset Link</strong></a> to reset your password. <br><br><br> Thanks";
+
+                //  Send the complete message parts
+                message.setContent(vmFileContent,"text/html");
+
+	            System.out.println("sending...");
+	            // Send message
+	             Transport.send(message);
+	            
+	           // javaMailSender.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+	            
+	            
+	            
 	        } catch (MessagingException e) {
 	            throw new RuntimeException(e);
 	        }
 
-	        sender.send(message);
-		   
-		   
-		   
-		   
-		   
+	     
 		   
 		   
 	    }

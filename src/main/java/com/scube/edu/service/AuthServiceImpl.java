@@ -1,5 +1,8 @@
 package com.scube.edu.service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.HashMap;
 
 import javax.mail.MessagingException;
@@ -33,7 +36,9 @@ public class AuthServiceImpl implements AuthService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 	
-
+	Base64.Encoder baseEncoder = Base64.getEncoder();
+      
+      
 	 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	 
 	 @Autowired
@@ -110,6 +115,12 @@ public class AuthServiceImpl implements AuthService{
 			 throw new Exception("Error: Password is mandatory!"); 
 		 }
 		 
+		 
+		 UserMasterEntity userEntities  = userRepository.findByEmail(userAddRequest.getEmailid());
+		 
+			if(userEntities != null) {
+				throw new Exception("Error: This email id already exists");
+			}
 		
 		 userMasterEntity.setCompanyName(userAddRequest.getCompanyname());
 		 userMasterEntity.setUsername(userAddRequest.getContactPersonName());
@@ -119,7 +130,7 @@ public class AuthServiceImpl implements AuthService{
 		 userMasterEntity.setEmailVerificationStatus(userAddRequest.getVerificationStatus());
 		 userMasterEntity.setUniversityId(userAddRequest.getUniversityid());
 		 userMasterEntity.setUserId(userAddRequest.getUserid());
-		 userMasterEntity.setRoleId(userAddRequest.getRoleId());
+		 userMasterEntity.setRoleId(new Long(1));
 		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
 		 userMasterEntity.setIsactive("Y");
 	
@@ -131,14 +142,60 @@ public class AuthServiceImpl implements AuthService{
 
 
 	@Override
-	public BaseResponse resetPasswordByMail(HttpServletRequest request) throws MessagingException {
+	public BaseResponse resetPasswordBySendingEMail(String email) throws Exception {
 		 
 		baseResponse	= new BaseResponse();
 			
-		logger.info("----------sending..----------");
+		logger.info("----------resetPasswordBySendingEMail---------");
+		
+		 UserMasterEntity userEntities  = userRepository.findByEmail(email);
+		 
+			if(userEntities == null) {
+				throw new Exception("Error: Invalid Email");
+			}
+		
+			 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
+			 entities.setForgotPasswordFlag("Y");
 			
+			 
+			 userRepository.save(entities);
+			 
+			 String encodeEmail = (baseEncoder.encodeToString(email.getBytes(StandardCharsets.UTF_8))) ;
+			 
+			 logger.info("---------encodeEmail-------"+encodeEmail);
 			
-		emailService.sendEmail();
+			//Send Email 
+			emailService.sendEmail(email,encodeEmail);
+			
+			baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			baseResponse.setRespData("success");
+			 
+			return baseResponse;
+	}
+
+
+	@Override
+	public BaseResponse UpdatePassword(UserMasterEntity reqUserentity) throws Exception {
+		
+		baseResponse	= new BaseResponse();
+		
+		 logger.info("---------Email-------"+reqUserentity.getEmail());   
+		 logger.info("---------password-------"+reqUserentity.getPassword());
+		 
+		 UserMasterEntity userEntities  = userRepository.findByEmail(reqUserentity.getEmail());
+		 
+		   if(userEntities == null) {
+				throw new Exception("Error: Invalid Email");
+			}
+		
+		
+		 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
+		 entities.setPassword(encoder.encode(reqUserentity.getPassword()));
+		 entities.setForgotPasswordFlag("N");
+		 
+		 
+		 userRepository.save(entities);
 		
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -146,9 +203,57 @@ public class AuthServiceImpl implements AuthService{
 		 
 		return baseResponse;
 	}
+
+
+	@Override
+	public BaseResponse checkFlagOnClickOfLink(String encodeEmail) throws Exception {
+		
+        baseResponse	= new BaseResponse();
+        String flag = "";
+		
+        Base64.Decoder decoder = Base64.getDecoder();  
+        // Decoding string  
+        String dStr = new String(decoder.decode(encodeEmail));  
+       
+        UserMasterEntity userEntities  = userRepository.findByEmail(dStr);
+        
+        if(userEntities == null) {
+        	
+			throw new Exception("Error: User Not Found");
+		}
+        System.out.println("-----------------ForgotPasswordFlag-------------------"+userEntities.getForgotPasswordFlag());
+        
+        if(userEntities.getForgotPasswordFlag().equalsIgnoreCase("Y")) {
+        	
+        	flag ="success";
+        	
+        }else {
+        	
+        	flag = "failure";
+        }
+        
+		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		baseResponse.setRespData(flag);
+		 
+		return baseResponse;
+	}
 	
 	
-	
+	 public static String encode(String input) {
+
+	      return Base64.getEncoder().encodeToString(input.getBytes());
+
+	  }
+
+	  //Decode:
+	  public static String decode(String input) {
+
+	      byte[] decodedBytes = Base64.getDecoder().decode(input);
+	      return new String(decodedBytes);
+
+	  }
+	  
 	
 	
 }

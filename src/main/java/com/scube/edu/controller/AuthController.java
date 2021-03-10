@@ -11,11 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.request.LoginRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
@@ -38,7 +40,7 @@ public class AuthController {
 	
 	
 	
-	@PostMapping("/signUp")
+	@PostMapping("/studentSignUp")
 	public ResponseEntity<Object> addUser(@RequestBody UserAddRequest userRequest ,  HttpServletRequest request) {
 		
 		logger.info("********UsersControllers addUser()********");
@@ -56,7 +58,6 @@ public class AuthController {
 			
 		}
 		catch (Exception e) {
-			
 			logger.error(e.getMessage());
 			
 			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
@@ -107,14 +108,14 @@ public class AuthController {
 		
    }
 	
-	@GetMapping("/resetPassword")
-	public  ResponseEntity<Object> resetPasswordBySendingMail(HttpServletRequest request) {
+	@PostMapping("/resetPassword/{email}")
+	public  ResponseEntity<Object> resetPasswordBySendingMail(@PathVariable String email) {
 		logger.info("********UsersControllers addUser()********");
 		
 		response = new BaseResponse();
 		
 		try {
-			response = authService.resetPasswordByMail(request);
+			response = authService.resetPasswordBySendingEMail(email);
 			
 			return ResponseEntity.ok(response);
 				
@@ -131,4 +132,58 @@ public class AuthController {
 		}
 		
    }
+	
+	
+	@GetMapping("/checkFlagOnClickOfLink/{encodeEmail}")
+	public  ResponseEntity<Object> checkFlagOnClickOfLink(@PathVariable String encodeEmail) {
+		
+		response = new BaseResponse();
+		
+		    try {
+					response = authService.checkFlagOnClickOfLink(encodeEmail);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
+	
+	@PostMapping("/UpdatePassword")
+	public  ResponseEntity<Object> UpdatePassword(@RequestBody UserMasterEntity userentity) {
+		
+		response = new BaseResponse();
+		
+		try {
+			
+			response = authService.UpdatePassword(userentity);
+			
+			return ResponseEntity.ok(response);
+				
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+   }
+	
+	
+	
+	
 }

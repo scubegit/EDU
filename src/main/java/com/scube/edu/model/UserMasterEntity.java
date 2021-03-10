@@ -79,6 +79,13 @@ public class UserMasterEntity {
 	@Column(name = "is_active")
 	private String isactive;
 	
+	
+
+	@Size(max = 100)
+	@Column(name = "forgotPasswordFlag")
+	private String forgotPasswordFlag;
+	
+	
 	public UserMasterEntity() {
 		
 	}
