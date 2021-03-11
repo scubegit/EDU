@@ -78,15 +78,43 @@ private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.cla
 				List.add(stuDocResp);
 				
 			}
-			
-			
-		 
-//		 	baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-//			baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-//			baseResponse.setRespData(List);
-		 
 		return List;
 		 
 	 }
+
+	@Override
+	public List<StudentDocsResponse> getClosedRequests(long userId) {
+		
+		logger.info("********StudentServiceImpl getClosedRequests********"+ userId);
+		
+		List<StudentDocsResponse> List = new ArrayList<>();
+		
+		List<VerificationRequest> closedReqs = verificationReqRepository.findByStatusAndUserId(userId);
+		System.out.println("---------------------"+ closedReqs);
+		
+		for(VerificationRequest req: closedReqs) {
+			
+			StudentDocsResponse closedDocResp = new StudentDocsResponse();
+			
+			closedDocResp.setId(req.getId());
+			closedDocResp.setApplication_id(req.getApplicationId());
+			closedDocResp.setCollege_name_id(req.getCollegeId());
+			closedDocResp.setDoc_name(req.getDocumentName());
+			closedDocResp.setEnroll_no(req.getEnrollmentNumber());
+			closedDocResp.setFirst_name(req.getFirstName());
+			closedDocResp.setLast_name(req.getLastName());
+//			closedDocResp.setRequest_type_id(req.get);
+			closedDocResp.setStream_id(req.getStreamId());
+			closedDocResp.setUni_id(req.getUniversityId());
+			closedDocResp.setUser_id(req.getUserId());
+			closedDocResp.setVer_req_id(req.getVerRequestId());
+			closedDocResp.setYear_of_pass_id(req.getYearOfPassingId());	
+			
+			List.add(closedDocResp);
+			
+		}
+		
+		return List;
+	}
 	
 }

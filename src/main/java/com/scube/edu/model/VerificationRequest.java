@@ -83,7 +83,9 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "docStatus")
 	private String docStatus;
 	
-	
+	@NotNull(message = "Please enter Assigned To")
+	@Column(name = "assigned_to")
+	private Long assignedTo;
 	
 
 }

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -16,15 +17,14 @@ import lombok.Setter;
 @Entity
 @Table (name ="raiseDespute")
 @Getter @Setter
-public class RaiseDespute {
+public class RaiseDespute extends CreateUpdate{
 	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotBlank
-	@Size(max = 100)
+	@NotNull(message = "Please enter Verification application ID")
 	@Column(name = "applicationId")
 	private Long applicationId;
 	

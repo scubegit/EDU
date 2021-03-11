@@ -54,7 +54,7 @@ public class VerificationServiceImpl implements VerificationService{
 		}
 //			VerificationRequest verReq = new VerificationRequest();
 			for(StudentDocRequest stuReq : studentDocReq) {
-				
+				Long assign_to = (long) 0;
 				VerificationRequest verReq = new VerificationRequest();
 				System.out.println("------In Save Req FOR LOOP----");
 				
@@ -71,6 +71,7 @@ public class VerificationServiceImpl implements VerificationService{
 				verReq.setDocStatus("Requested");
 				verReq.setUploadDocumentPath(stuReq.getUploadDocPath());
 				verReq.setVerRequestId(stuReq.getVerReqId());
+				verReq.setAssignedTo(assign_to);
 				
 				verificationReqRepo.save(verReq);
 				

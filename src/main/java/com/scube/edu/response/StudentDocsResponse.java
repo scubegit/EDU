@@ -10,6 +10,7 @@ import lombok.ToString;
 
 public class StudentDocsResponse {
 	
+	private Long id;
 	private String first_name; 
 	private String last_name;
 	private Long stream_id;
@@ -23,5 +24,5 @@ public class StudentDocsResponse {
 	private String request_type_id;
 	private Long ver_req_id;
 	private String upload_doc_path;
-
+	private Long assigned_to;
 }

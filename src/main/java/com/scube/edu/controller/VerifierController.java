@@ -23,28 +23,29 @@ import org.springframework.web.bind.annotation.RestController;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentDocsResponse;
 import com.scube.edu.service.StudentService;
+import com.scube.edu.service.VerifierService;
 import com.scube.edu.util.StringsUtils;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
-public class StudentController {
+public class VerifierController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	BaseResponse response = null;
 	
 	@Autowired
-	StudentService	studentService;
+	VerifierService	verifierService;
 	
-	@GetMapping("/getVerificationDataByUserid/{userId}")
-	public  ResponseEntity<Object> getVerificationDataByUserid(@PathVariable long userId) {
+	@GetMapping("/getVerifierRequestList")
+	public  ResponseEntity<Object> getVerifierRequestList() {
 		
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentDocsResponse> list = studentService.getVerificationDataByUserid(userId);
-					
+		    	List<StudentDocsResponse> list = verifierService.getVerifierRequestList();
+					// this list has FIFO mechanism for getting records for verifier (limit 5)
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData(list);
@@ -64,40 +65,5 @@ public class StudentController {
 				}
 			
    }
-	
-	@GetMapping("/getClosedRequests/{userId}")
-	public  ResponseEntity<Object> getClosedRequests(@PathVariable long userId) {
-		
-		response = new BaseResponse();
-		
-		    try {
-		    	List<StudentDocsResponse> list = studentService.getClosedRequests(userId);
-					
-					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-					response.setRespData(list);
-					
-					return ResponseEntity.ok(response);
-						
-				}catch (Exception e) {
-					
-					logger.error(e.getMessage()); //BAD creds message comes from here
-					
-					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
-					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
-					response.setRespData(e.getMessage());
-					
-					return ResponseEntity.badRequest().body(response);
-					
-				}
-			
-   }
-	
-	
-	
-	
-	
-	
-	
 
 }
