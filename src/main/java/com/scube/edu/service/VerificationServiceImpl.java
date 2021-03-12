@@ -26,7 +26,7 @@ import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.LoginRequest;
-import com.scube.edu.request.StudentDocRequest;
+import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.JwtResponse;
@@ -42,18 +42,18 @@ public class VerificationServiceImpl implements VerificationService{
 	VerificationRequestRepository verificationReqRepo;
 
 	@Override
-	public String saveStudentDocs(List<StudentDocRequest> studentDocReq, HttpServletRequest request) {
+	public String saveStudentDocs(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
 		logger.info("********verificationServiceImpl saveStudentDocs********");
 	
-		for(StudentDocRequest req: studentDocReq) {
+		for(StudentDocVerificationRequest req: studentDocReq) {
 		
 			logger.info("--->"+ String.valueOf(req.getYearOfPassId()));
 			logger.info("--->"+ String.valueOf(req.getCollegeNameId()));
 			logger.info("--->"+ String.valueOf(req.getStreamId()));
 		}
 //			VerificationRequest verReq = new VerificationRequest();
-			for(StudentDocRequest stuReq : studentDocReq) {
+			for(StudentDocVerificationRequest stuReq : studentDocReq) {
 				Long assign_to = (long) 0;
 				VerificationRequest verReq = new VerificationRequest();
 				System.out.println("------In Save Req FOR LOOP----");

@@ -30,7 +30,7 @@ import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StreamResponse;
-import com.scube.edu.response.StudentDocsResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
 
@@ -49,18 +49,18 @@ private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.cla
 	 VerificationRequestRepository verificationReqRepository;
 	 
 	 @Override
-		public List<StudentDocsResponse> getVerificationDataByUserid(long userId) throws Exception {
+		public List<StudentVerificationDocsResponse> getVerificationDataByUserid(long userId) throws Exception {
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 
-		 	List<StudentDocsResponse> List = new ArrayList<>();
+		 	List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		 	
 //		 	
 			List<VerificationRequest> verReq = verificationReqRepository.findByUserId(userId);
 			
 			for(VerificationRequest veriRequest : verReq) {
 				
-				StudentDocsResponse stuDocResp = new StudentDocsResponse();
+				StudentVerificationDocsResponse stuDocResp = new StudentVerificationDocsResponse();
 				
 				stuDocResp.setApplication_id(veriRequest.getApplicationId());
 				stuDocResp.setCollege_name_id(veriRequest.getCollegeId());
@@ -83,18 +83,18 @@ private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.cla
 	 }
 
 	@Override
-	public List<StudentDocsResponse> getClosedRequests(long userId) {
+	public List<StudentVerificationDocsResponse> getClosedRequests(long userId) {
 		
 		logger.info("********StudentServiceImpl getClosedRequests********"+ userId);
 		
-		List<StudentDocsResponse> List = new ArrayList<>();
+		List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		
 		List<VerificationRequest> closedReqs = verificationReqRepository.findByStatusAndUserId(userId);
 		System.out.println("---------------------"+ closedReqs);
 		
 		for(VerificationRequest req: closedReqs) {
 			
-			StudentDocsResponse closedDocResp = new StudentDocsResponse();
+			StudentVerificationDocsResponse closedDocResp = new StudentVerificationDocsResponse();
 			
 			closedDocResp.setId(req.getId());
 			closedDocResp.setApplication_id(req.getApplicationId());

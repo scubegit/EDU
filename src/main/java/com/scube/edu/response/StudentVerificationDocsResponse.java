@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 
-public class StudentDocsResponse {
+public class StudentVerificationDocsResponse {
 	
 	private Long id;
 	private String first_name; 

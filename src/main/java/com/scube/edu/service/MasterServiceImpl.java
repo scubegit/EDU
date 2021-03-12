@@ -10,12 +10,21 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.DocumentMaster;
+import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
+import com.scube.edu.repository.CollegeRepository;
+import com.scube.edu.repository.DocumentRepository;
 import com.scube.edu.repository.StreamRepository;
+import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.CollegeResponse;
+import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.response.UserResponse;
+import com.scube.edu.response.YearOfPassingResponse;
 import com.scube.edu.util.StringsUtils;
 
 @Service
@@ -27,12 +36,19 @@ public class MasterServiceImpl implements MasterService {
 	
 	@Autowired
 	StreamRepository streamRespository;
+	
+	@Autowired
+	DocumentRepository documentRespository;
+	
+	@Autowired
+	CollegeRepository collegeRespository;
+	
+	@Autowired
+	YearOfPassingRepository yearOfPassingRepository;
 
 	@Override
-	public BaseResponse getStreamList(HttpServletRequest request) {
+	public List<StreamResponse> getStreamList(HttpServletRequest request) {
 		
-		
-			
 			List<StreamResponse> List = new ArrayList<>();
 			
 			List<StreamMaster> Entities    = streamRespository.findAll();
@@ -47,36 +63,44 @@ public class MasterServiceImpl implements MasterService {
 				
 				List.add(streamResponse);
 			}
-			
-			
-			baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			baseResponse.setRespData(List);
-			 
-			return baseResponse;
-		
-		
+			return List;
 		}
 	
 
 	@Override
-	public BaseResponse getDocumentList(HttpServletRequest request) {
+	public List<DocumentResponse> getDocumentList(HttpServletRequest request) {
 		
-		return null;
+		List<DocumentResponse> List = new ArrayList<>();
+		
+		List<DocumentMaster> Entities    = documentRespository.findAll();
+		
+		for(DocumentMaster entity : Entities) {
+			
+			DocumentResponse documentResponse = new DocumentResponse();
+
+			documentResponse.setId(entity.getId());
+			documentResponse.setDocumentName(entity.getDocumentName());
+			documentResponse.setUniversityId(entity.getUniversityId());
+			
+			List.add(documentResponse);
+		}
+		return List;
 	}
 
-	@Override
-	public BaseResponse getCollegeList(HttpServletRequest request) {
-		
-		return null;
-	}
-
 
 	@Override
-	public BaseResponse getYearOfPassingMasterList(HttpServletRequest request) {
+	public List<CollegeResponse> getCollegeList(HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public List<YearOfPassingResponse> getYearOfPassingMasterList(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 

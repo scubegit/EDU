@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.scube.edu.request.StudentDocRequest;
+import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.service.AuthService;
 import com.scube.edu.service.VerificationService;
@@ -38,7 +38,7 @@ public class VerificationRequestController {
 	
 	@PostMapping("/saveStudentDoc") // value = "/saveStudentDoc", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE}
 
-	public ResponseEntity<?> saveStudentDoc (@RequestBody List<StudentDocRequest> studentDocReq, HttpServletRequest request) {
+	public ResponseEntity<?> saveStudentDoc (@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
 		logger.info("********VerificationRequestController********");
 		

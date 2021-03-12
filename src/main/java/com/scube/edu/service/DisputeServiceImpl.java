@@ -29,7 +29,7 @@ import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.DisputeRequest;
 import com.scube.edu.request.LoginRequest;
-import com.scube.edu.request.StudentDocRequest;
+
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.JwtResponse;

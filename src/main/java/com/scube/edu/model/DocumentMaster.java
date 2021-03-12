@@ -26,7 +26,7 @@ public class DocumentMaster extends CreateUpdate {
 	
 	@Size(max = 100)
 	@Column(name = "universityId")
-	private String universityId;
+	private Long universityId;
 	
 	@NotBlank
 	@Size(max = 100)

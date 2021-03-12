@@ -6,12 +6,13 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.StudentDocsResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
+
 
 public interface StudentService {
 
-	List<StudentDocsResponse> getVerificationDataByUserid(long userId) throws Exception;
+	List<StudentVerificationDocsResponse> getVerificationDataByUserid(long userId) throws Exception;
 
-	List<StudentDocsResponse> getClosedRequests(long userId);
+	List<StudentVerificationDocsResponse> getClosedRequests(long userId);
 
 }

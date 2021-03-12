@@ -6,9 +6,10 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.StudentDocsResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
+
 public interface VerifierService {
 
-	List<StudentDocsResponse> getVerifierRequestList() throws Exception;
+	List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception;
 
 }

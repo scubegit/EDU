@@ -30,7 +30,7 @@ import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StreamResponse;
-import com.scube.edu.response.StudentDocsResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
 
@@ -48,17 +48,17 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
 	 
-	 public List<StudentDocsResponse> getVerifierRequestList() throws Exception {
+	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
 		 
-		 List<StudentDocsResponse> List = new ArrayList<>();
+		 List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		 
 		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords();
 		 
 		 for(VerificationRequest veriReq: verReq) {
 			 
-			 StudentDocsResponse resp = new StudentDocsResponse();
+			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
 			 
 			 resp.setId(veriReq.getId());
 			 resp.setApplication_id(veriReq.getApplicationId());

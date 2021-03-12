@@ -185,5 +185,36 @@ public class AuthController {
 	
 	
 	
+	@PostMapping("/employerSignUp")
+	public ResponseEntity<Object> addEmployerUser(@RequestBody UserAddRequest userRequest ,  HttpServletRequest request) {
+		
+		logger.info("********UsersControllers addUser()********");
+		response = new BaseResponse();
+		
+		try {
+
+			Boolean flag = authService.addUser(userRequest);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(flag);
+			
+			return ResponseEntity.ok(response);
+			
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+   }
+	
+	
 	
 }

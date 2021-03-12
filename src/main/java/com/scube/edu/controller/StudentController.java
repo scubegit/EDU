@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.StudentDocsResponse;
+
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.service.StudentService;
 import com.scube.edu.util.StringsUtils;
 
@@ -43,7 +44,7 @@ public class StudentController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentDocsResponse> list = studentService.getVerificationDataByUserid(userId);
+		    	List<StudentVerificationDocsResponse> list = studentService.getVerificationDataByUserid(userId);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -71,7 +72,7 @@ public class StudentController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentDocsResponse> list = studentService.getClosedRequests(userId);
+		    	List<StudentVerificationDocsResponse> list = studentService.getClosedRequests(userId);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

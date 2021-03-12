@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.StudentDocsResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.service.StudentService;
 import com.scube.edu.service.VerifierService;
 import com.scube.edu.util.StringsUtils;
@@ -44,7 +44,7 @@ public class VerifierController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentDocsResponse> list = verifierService.getVerifierRequestList();
+		    	List<StudentVerificationDocsResponse> list = verifierService.getVerifierRequestList();
 					// this list has FIFO mechanism for getting records for verifier (limit 5)
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
