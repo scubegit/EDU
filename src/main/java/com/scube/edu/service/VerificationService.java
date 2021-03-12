@@ -14,6 +14,8 @@ import com.scube.edu.response.BaseResponse;
 
 public interface VerificationService {
 
+
 	public boolean saveStudentVerificationDoc(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
+
 
 }

@@ -13,7 +13,15 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
+
+import com.scube.edu.request.LoginRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.UserAddRequest;
+import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.JwtResponse;
+import com.scube.edu.security.JwtUtils;
+import com.scube.edu.util.StringsUtils;
+
 
 @Service
 public class VerificationServiceImpl implements VerificationService{
@@ -32,6 +40,7 @@ public class VerificationServiceImpl implements VerificationService{
 
 			for(StudentDocVerificationRequest stuReq : studentDocReq) {
 				
+
 				Long assign_to = (long) 0;
 				VerificationRequest verReq = new VerificationRequest();
 				System.out.println("------In Save Req FOR LOOP----");

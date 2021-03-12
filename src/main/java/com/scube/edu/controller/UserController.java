@@ -24,7 +24,7 @@ import com.scube.edu.util.StringsUtils;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 public class UserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);

@@ -87,11 +87,11 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "assigned_to")
 	private Long assignedTo;
 	
-	@NotNull(message = "Please enter Assigned To")
+	@NotNull(message = "Please enter amount without GST")
 	@Column(name = "doc_amt")
 	private Long docAmt;
 	
-	@NotNull(message = "Please enter Assigned To")
+	@NotNull(message = "Please enter amount with GST")
 	@Column(name = "doc_amt_with_gst")
 	private Long dosAmtWithGst;
 	

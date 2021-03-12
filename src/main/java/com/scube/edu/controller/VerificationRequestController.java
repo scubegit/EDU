@@ -39,6 +39,7 @@ public class VerificationRequestController {
 	@PostMapping("/saveStudentVerificationDoc") // value = "/saveStudentDoc", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE}
 
 	public ResponseEntity<?> saveStudentVerificationDoc (@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
+
 		
 		logger.info("********VerificationRequestController********");
 		

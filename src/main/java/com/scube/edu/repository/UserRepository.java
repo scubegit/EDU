@@ -19,7 +19,9 @@ public interface UserRepository extends JpaRepository<UserMasterEntity, Long>{
 	  boolean existsByUsernameAndIsactive(String username, String isactive);
 	
 	  
-	  UserMasterEntity findByEmail(String emailid);
+	  UserMasterEntity findByEmailId(String emailid);
+
+	  boolean existsByEmailIdAndIsactive(String emailId, String string);
 	
 
 	//List<UserMasterEntity> getAll();

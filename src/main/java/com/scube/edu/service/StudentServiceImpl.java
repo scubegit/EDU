@@ -25,8 +25,16 @@ import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
+
 import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+
+import com.scube.edu.response.JwtResponse;
+import com.scube.edu.response.StreamResponse;
+
+import com.scube.edu.security.JwtUtils;
+import com.scube.edu.util.StringsUtils;
+
 
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -52,7 +60,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	VerificationRequestRepository verificationReqRepo;
 	 
 	 @Override
+
 		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
+
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 

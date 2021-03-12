@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @Table(	name = "userMaster")
 @Getter @Setter
-public class UserMasterEntity {
+public class UserMasterEntity  extends CreateUpdate{
 	
 	
 	@Id
@@ -24,36 +24,42 @@ public class UserMasterEntity {
     private Long id;
 	
 	
-	
-	@Column(name = "userId")
-	private String userId;
-	
-
-	
 	@Column(name = "roleId")
 	private Long roleId;
 	
-	
-
+	@Column(name = "username")
+	private String username;
 	
 	@Column(name = "universityId")
 	private Long universityId;
 	
+	@Size(max = 100)
+	@Column(name = "firstName")
+	private String firstName;
 	
-
+	@Size(max = 100)
+	@Column(name = "lastName")
+	private String lastName;
+	
+	
+	
 	@Size(max = 100)
 	@Column(name = "companyName")
 	private String companyName;
 	
 
 	@Size(max = 100)
-	@Column(name = "Email")
-	private String email;
+	@Column(name = "emailId")
+	private String emailId;
+	
+	@Size(max = 100)
+	@Column(name = "phoneNo")
+	private String phoneNo;
 	
 	
 	@Size(max = 100)
-	@Column(name = "username")
-	private String username;
+	@Column(name = "contactPersonName")
+	private String contactPersonName;
 	
 	
 	@Size(max = 100)
@@ -91,10 +97,10 @@ public class UserMasterEntity {
 	}
 	
 	
-    public UserMasterEntity(String email, String GSTNo,String companyname) {
+    public UserMasterEntity(String emailId, String GSTNo,String companyname) {
 		
 		super();
-		this.email = email;
+		this.emailId = emailId;
 		this.GSTNo = GSTNo;
 	}
 	
