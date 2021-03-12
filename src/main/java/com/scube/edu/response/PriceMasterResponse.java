@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 
-public class StudentVerificationDocsResponse {
+public class PriceMasterResponse {
 	
 	private Long id;
 	private String first_name; 
@@ -25,4 +25,7 @@ public class StudentVerificationDocsResponse {
 	private Long ver_req_id;
 	private String upload_doc_path;
 	private Long assigned_to;
+	private Long total;
+	private Long totalWithGST;
+
 }

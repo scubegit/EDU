@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -23,14 +24,18 @@ public class PriceMaster extends CreateUpdate{
     private Long id;
 	
 	@NotBlank
-	@Column(name = "year_range")
+	@Column(name = "year_range_start")
 	@Size(max = 100)
-	private String yearrange;
-	
+	private String yearrangeStart;
 	
 	@NotBlank
-	@Column(name = "amount")
+	@Column(name = "year_range_end")
 	@Size(max = 100)
+	private String yearrangeEnd;
+	
+	
+	@NotNull(message = "Please enter Amount")
+	@Column(name = "amount")
 	private Long amount;
 	
 	

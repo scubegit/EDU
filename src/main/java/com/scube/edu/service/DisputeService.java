@@ -9,12 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.request.DisputeRequest;
 import com.scube.edu.request.LoginRequest;
-import com.scube.edu.request.StudentDocRequest;
+import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 
 public interface DisputeService {
 
-	String saveDispute(DisputeRequest disputeReq, HttpServletRequest request);
+	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request);
 
 }

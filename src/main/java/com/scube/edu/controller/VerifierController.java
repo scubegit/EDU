@@ -2,36 +2,26 @@ package com.scube.edu.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.StudentDocsResponse;
-import com.scube.edu.service.StudentService;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.service.VerifierService;
 import com.scube.edu.util.StringsUtils;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/verifier")
 public class VerifierController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+	private static final Logger logger = LoggerFactory.getLogger(VerifierController.class);
 
 	BaseResponse response = null;
 	
@@ -44,7 +34,7 @@ public class VerifierController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentDocsResponse> list = verifierService.getVerifierRequestList();
+		    	List<StudentVerificationDocsResponse> list = verifierService.getVerifierRequestList();
 					// this list has FIFO mechanism for getting records for verifier (limit 5)
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

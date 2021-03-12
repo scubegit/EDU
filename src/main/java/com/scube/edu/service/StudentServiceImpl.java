@@ -1,43 +1,37 @@
 package com.scube.edu.service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Base64.Encoder;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
-import com.scube.edu.model.StreamMaster;
+import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.PriceMasterRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
-import com.scube.edu.request.UserAddRequest;
+import com.scube.edu.repository.YearOfPassingRepository;
+import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.JwtResponse;
-import com.scube.edu.response.StreamResponse;
-import com.scube.edu.response.StudentDocsResponse;
-import com.scube.edu.security.JwtUtils;
-import com.scube.edu.util.StringsUtils;
+import com.scube.edu.response.PriceMasterResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 
 @Service
 public class StudentServiceImpl implements StudentService{
 
-private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 	
 	Base64.Encoder baseEncoder = Base64.getEncoder();
 	
@@ -48,19 +42,27 @@ private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.cla
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
 	 
+	 @Autowired
+	 PriceMasterRepository priceMasterRepo;
+	 
+	 @Autowired
+	 YearOfPassingRepository yearOfPassRepo;
+	 
+	 @Autowired
+	VerificationRequestRepository verificationReqRepo;
+	 
 	 @Override
-		public List<StudentDocsResponse> getVerificationDataByUserid(long userId) throws Exception {
+		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 
-		 	List<StudentDocsResponse> List = new ArrayList<>();
+		 	List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		 	
-//		 	
 			List<VerificationRequest> verReq = verificationReqRepository.findByUserId(userId);
 			
 			for(VerificationRequest veriRequest : verReq) {
 				
-				StudentDocsResponse stuDocResp = new StudentDocsResponse();
+				StudentVerificationDocsResponse stuDocResp = new StudentVerificationDocsResponse();
 				
 				stuDocResp.setApplication_id(veriRequest.getApplicationId());
 				stuDocResp.setCollege_name_id(veriRequest.getCollegeId());
@@ -83,18 +85,18 @@ private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.cla
 	 }
 
 	@Override
-	public List<StudentDocsResponse> getClosedRequests(long userId) {
+	public List<StudentVerificationDocsResponse> getClosedRequests(long userId) {
 		
 		logger.info("********StudentServiceImpl getClosedRequests********"+ userId);
 		
-		List<StudentDocsResponse> List = new ArrayList<>();
+		List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		
 		List<VerificationRequest> closedReqs = verificationReqRepository.findByStatusAndUserId(userId);
 		System.out.println("---------------------"+ closedReqs);
 		
 		for(VerificationRequest req: closedReqs) {
 			
-			StudentDocsResponse closedDocResp = new StudentDocsResponse();
+			StudentVerificationDocsResponse closedDocResp = new StudentVerificationDocsResponse();
 			
 			closedDocResp.setId(req.getId());
 			closedDocResp.setApplication_id(req.getApplicationId());
@@ -116,5 +118,73 @@ private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.cla
 		
 		return List;
 	}
+
+	@Override
+	public HashMap<String, Long> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
+		
+		logger.info("********StudentServiceImpl calculateTotalAmount********");
+		
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		long total;
+		long totalWithGST;
+		
+		long amtWithoutGST = 0;
+		long amtWithGST = 0;
+		
+		List<VerificationRequest> list = new ArrayList<>();
+		
+		for(StudentDocVerificationRequest req : studentDocReq) {
+			
+			VerificationRequest resp = new VerificationRequest();
+			
+			Long assign_to = (long) 0;
+			System.out.println("------In Save and calculate Req FOR LOOP----");
+			
+			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearOfPassId());
+			
+			// diff fetches * from pricemaster where year diff is between year_range_start and year_range_end
+			
+			total = diff.getTotalAmt();
+			totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			amtWithoutGST += diff.getTotalAmt();
+			amtWithGST += ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			logger.info(total+ "   "+ totalWithGST+ "   "+ amtWithoutGST + "   "+ amtWithGST);
+			
+			// Make a verificationRequestRepo function which will save total and totalWithoutGST against each application id
+			
+			resp.setApplicationId(req.getApplicationId());
+			resp.setAssignedTo(assign_to);
+			resp.setCollegeId(req.getCollegeNameId());
+			resp.setDocStatus("Requested");
+			resp.setDocumentName(req.getDocName());
+			resp.setEnrollmentNumber(req.getEnrollNo());
+			resp.setFirstName(req.getFirstName());
+			resp.setLastName(req.getLastName());
+			resp.setIsdeleted("N");
+			resp.setStreamId(req.getStreamId());
+			resp.setUniversityId(req.getUniId());
+			resp.setUploadDocumentPath(req.getUploadDocPath());
+			resp.setUserId(req.getUserId());
+			resp.setVerRequestId(req.getVerReqId());
+			resp.setYearOfPassingId(String.valueOf(req.getYearOfPassId()));
+			
+			resp.setDocAmt(total);
+			resp.setDosAmtWithGst(totalWithGST);
+			
+			list.add(resp);
+			
+		}
+		HashMap<String, Long> map = new HashMap<String, Long>();
+		
+		map.put("total_without_gst", amtWithoutGST);
+		map.put("total_with_gst", amtWithGST);
+//		verificationReqRepo.saveAll(list);
+		logger.info("list------------"+ list);
+		
+		return map;
+	}
+
 	
 }

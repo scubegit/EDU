@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter 
 @Setter
 
-public class StudentDocRequest {
+public class StudentDocVerificationRequest {
 	
 	private String firstName; 
 	private String lastName;

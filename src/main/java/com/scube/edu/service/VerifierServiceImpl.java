@@ -1,43 +1,27 @@
 package com.scube.edu.service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
-import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
-import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.JwtResponse;
-import com.scube.edu.response.StreamResponse;
-import com.scube.edu.response.StudentDocsResponse;
-import com.scube.edu.security.JwtUtils;
-import com.scube.edu.util.StringsUtils;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 
 @Service
 public class VerifierServiceImpl implements VerifierService{
 	
-	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(VerifierServiceImpl.class);
 	
 	Base64.Encoder baseEncoder = Base64.getEncoder();
 	
@@ -48,17 +32,17 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
 	 
-	 public List<StudentDocsResponse> getVerifierRequestList() throws Exception {
+	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
 		 
-		 List<StudentDocsResponse> List = new ArrayList<>();
+		 List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		 
 		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords();
 		 
 		 for(VerificationRequest veriReq: verReq) {
 			 
-			 StudentDocsResponse resp = new StudentDocsResponse();
+			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
 			 
 			 resp.setId(veriReq.getId());
 			 resp.setApplication_id(veriReq.getApplicationId());

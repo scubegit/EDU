@@ -18,27 +18,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.scube.edu.request.StudentDocRequest;
+import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.service.AuthService;
 import com.scube.edu.service.VerificationService;
 import com.scube.edu.util.StringsUtils;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/verify")
 public class VerificationRequestController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(VerificationRequestController.class);
 	
 	BaseResponse response = null;
 	
 	@Autowired
 	VerificationService	verificationService;
 	
-	@PostMapping("/saveStudentDoc") // value = "/saveStudentDoc", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE}
+	@PostMapping("/saveStudentVerificationDoc") // value = "/saveStudentDoc", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE}
 
-	public ResponseEntity<?> saveStudentDoc (@RequestBody List<StudentDocRequest> studentDocReq, HttpServletRequest request) {
+	public ResponseEntity<?> saveStudentVerificationDoc (@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
 		logger.info("********VerificationRequestController********");
 		
@@ -46,7 +46,7 @@ public class VerificationRequestController {
 		
 		try {
 
-			String flag = verificationService.saveStudentDocs(studentDocReq, request);
+			boolean flag = verificationService.saveStudentVerificationDoc(studentDocReq, request);
 			
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
