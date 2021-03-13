@@ -1,6 +1,8 @@
 package com.scube.edu.service;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.util.Base64;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -24,9 +26,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 	
-	
+	Base64.Encoder baseEncoder = Base64.getEncoder();
 	   
 	   void sendEmail(String emailId, String encodeEmail) throws MessagingException {
+		   
 
 		   String to = emailId;
 
@@ -74,7 +77,7 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='http://SampleLogin/new-password.jsp'><strong>Reset Link</strong></a> to reset your password. <br><br><br> Thanks";
+                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='http://localhost:4200/resetPassword'><strong>Reset Link</strong></a> to reset your password. <br><br><br> Thanks";
 
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");
@@ -95,7 +98,9 @@ public class EmailService {
 	   
 	   
 	   
-	   void sendVerificationEmail(String emailId) throws MessagingException {
+	  void sendVerificationEmail(String emailId) throws MessagingException {
+		  
+		  String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 
 		   String to = emailId;
 
@@ -113,11 +118,8 @@ public class EmailService {
 	        properties.put("mail.smtp.auth", "true");
 
 
-
-	        // Get the Session object.// and pass username and password
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-
-	            protected PasswordAuthentication getPasswordAuthentication() {
+	                 protected PasswordAuthentication getPasswordAuthentication() {
 
 	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 
@@ -129,34 +131,26 @@ public class EmailService {
 	        session.setDebug(true);
 
 	        try {
-	            // Create a default MimeMessage object.
+	          
 	            MimeMessage message = new MimeMessage(session);
 
-	            // Set From: header field of the header.
 	            message.setFrom(new InternetAddress(from));
 
-	            // Set To: header field of the header.
 	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-	            // Set Subject: header field
 	            message.setSubject("Email Verification Link!!!");
 
 	            // Now set the actual message
 	                       
-                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='http://SampleLogin/new-password.jsp'><strong>Verification Link</strong></a> to verify your EmailId. <br><br><br> Thanks";
+                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='localhost:8081/EDU/api/auth/verifyStudentEmail/"+encodeEmail+"'><strong>Verification Link</strong></a> to verify your EmailId. <br><br><br> Thanks";
 
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");
 
 	            System.out.println("sending...");
-	            // Send message
-	             Transport.send(message);
-	            
-	           // javaMailSender.send(message);
+	         
+	            Transport.send(message);
 	            System.out.println("Sent message successfully....");
-	            
-	            
-	            
 	            
 	        } catch (MessagingException e) {
 	            throw new RuntimeException(e);

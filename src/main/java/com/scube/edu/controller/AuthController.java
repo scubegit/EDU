@@ -2,12 +2,9 @@ package com.scube.edu.controller;
 import javax.servlet.http.HttpServletRequest;
 
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,15 +96,6 @@ public class AuthController {
 	}
 
 	
-	
-	@GetMapping("/Hi")
-	public boolean hi(HttpServletRequest request) {
-		logger.info("********UsersControllers addUser()********");
-		response = new BaseResponse();
-	  return true;
-		
-   }
-	
 	@PostMapping("/resetPassword/{email}")
 	public  ResponseEntity<Object> resetPasswordBySendingMail(@PathVariable String email) {
 		logger.info("********UsersControllers addUser()********");
@@ -189,6 +177,7 @@ public class AuthController {
 	public ResponseEntity<Object> addEmployerUser(@RequestBody UserAddRequest userRequest ,  HttpServletRequest request) {
 		
 		logger.info("********UsersControllers addUser()********");
+		
 		response = new BaseResponse();
 		
 		try {
@@ -215,6 +204,35 @@ public class AuthController {
 		
    }
 	
+	
+	@GetMapping("/verifyStudentEmail/{emailId}")
+	public  String   verifyStudentEmail(@PathVariable String emailId) {
+		
+		response = new BaseResponse();
+		boolean flag;
+		
+		String s="fail ";
+		
+		 try {
+			 
+			flag = authService.verifyStudentEmail(emailId);
+			if(flag) {
+				
+				s= "verified Successfully";
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+		
+		 
+		return s;
+				
+				
+			
+   }
 	
 	
 }

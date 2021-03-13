@@ -139,6 +139,14 @@ public class AuthServiceImpl implements AuthService{
 
 			if(userAddRequest.getRoleId() == 1) {
 				
+				emailService.sendVerificationEmail(userAddRequest.getEmailId());
+				
+				 UserMasterEntity entities =  userRepository.getOne(userMasterEntity.getId());
+				 entities.setEmailVerificationStatus("Verified");
+				 
+				 userRepository.save(entities);
+				
+				
 			}
 			
 	
@@ -166,7 +174,7 @@ public class AuthServiceImpl implements AuthService{
 			 
 			 userRepository.save(entities);
 			 
-			 String encodeEmail = (baseEncoder.encodeToString(email.getBytes(StandardCharsets.UTF_8))) ;
+			 String encodeEmail = baseEncoder.encodeToString(email.getBytes(StandardCharsets.UTF_8)) ;
 			 
 			 logger.info("---------encodeEmail-------"+encodeEmail);
 			
@@ -259,6 +267,30 @@ public class AuthServiceImpl implements AuthService{
 	      return new String(decodedBytes);
 
 	  }
+
+
+	@Override
+	public boolean verifyStudentEmail(String emailId) throws Exception {
+		
+		  Base64.Decoder decoder = Base64.getDecoder();  
+	        // Decoding string  
+	      String decodedEmail = new String(decoder.decode(emailId)); 
+	        
+	        logger.info("---------decodedEmail-------"+decodedEmail);
+		 
+	        UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
+		 
+		   if(userEntities == null) {
+				throw new Exception("Error: Invalid Email");
+			}
+		
+		
+		 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
+		 entities.setEmailVerificationStatus("Verified");
+		 userRepository.save(entities);
+		
+		return true;
+	}
 	  
 	
 	

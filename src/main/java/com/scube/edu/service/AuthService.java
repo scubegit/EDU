@@ -22,6 +22,9 @@ public interface AuthService {
 	public BaseResponse UpdatePassword(UserMasterEntity userentity) throws Exception;
 
 
-	public BaseResponse checkFlagOnClickOfLink(String encodeEmail) throws Exception;;
+	public BaseResponse checkFlagOnClickOfLink(String encodeEmail) throws Exception;
+
+
+	public boolean verifyStudentEmail(String emailId) throws Exception;;
 
 }
