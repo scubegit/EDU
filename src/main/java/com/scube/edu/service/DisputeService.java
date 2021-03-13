@@ -15,6 +15,6 @@ import com.scube.edu.response.BaseResponse;
 
 public interface DisputeService {
 
-	String saveDispute(DisputeRequest disputeReq, HttpServletRequest request);
+	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request);
 
 }
