@@ -190,7 +190,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		map.put("total_without_gst", amtWithoutGST);
 		map.put("total_with_gst", amtWithGST);
-//		verificationReqRepo.saveAll(list);
+		verificationReqRepo.saveAll(list);
 		logger.info("list------------"+ list);
 		
 		return map;
