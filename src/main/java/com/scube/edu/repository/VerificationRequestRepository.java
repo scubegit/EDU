@@ -22,6 +22,9 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Verified' and user_id = ?1" , nativeQuery = true)
 	List<VerificationRequest> findByStatusAndUserId(long userId);
+
+	@Query(value = "SELECT MAX(application_id) from verification_request " , nativeQuery = true)
+	Long getMaxApplicationId();
 	
 
 }
