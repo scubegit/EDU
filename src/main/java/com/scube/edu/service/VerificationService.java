@@ -11,11 +11,14 @@ import com.scube.edu.request.LoginRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 
 public interface VerificationService {
 
 
 	public boolean saveStudentVerificationDoc(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
+
+	public StudentVerificationDocsResponse getdatabyapplicationId(String applicationId);
 
 
 }

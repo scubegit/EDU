@@ -1,8 +1,12 @@
 package com.scube.edu.service;
 
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.mail.MessagingException;
@@ -277,21 +281,35 @@ public class AuthServiceImpl implements AuthService{
 	      String decodedEmail = new String(decoder.decode(emailId)); 
 	        
 	        logger.info("---------decodedEmail-------"+decodedEmail);
+	        
+	        
 		 
-	        UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
-		 
+	       UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
+	       
+	       
 		   if(userEntities == null) {
 				throw new Exception("Error: Invalid Email");
 			}
-		
-		
-		 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
-		 entities.setEmailVerificationStatus("Verified");
-		 userRepository.save(entities);
+		   
+		   
+		 int hours = userRepository.gethoursToValidateTheLink(userEntities.getId());
+		  logger.info("---------hours-------"+hours);
+		  
+		  if(hours < 1440) {
+			     UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
+				 entities.setEmailVerificationStatus("Verified");
+				 userRepository.save(entities);
+			  
+		  }else {
+			  
+			  throw new Exception("Error: Link is Expired!!!");
+			  
+		  }
+
 		
 		return true;
 	}
-	  
-	
+
+
 	
 }

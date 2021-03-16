@@ -1,11 +1,13 @@
 package com.scube.edu.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
-
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -27,10 +29,11 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.PriceMasterResponse;
 
 
-
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.service.StudentService;
+import com.scube.edu.service.VerificationService;
 import com.scube.edu.util.StringsUtils;
+import com.scube.edu.util.InvoicePDFExporter;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -43,6 +46,12 @@ public class StudentController {
 	
 	@Autowired
 	StudentService	studentService;
+	
+	@Autowired
+	VerificationService	verificationService;
+	
+	
+	
 	
 	@GetMapping("/getVerificationDataByUserid/{userId}")
 	public  ResponseEntity<Object> getVerificationDataByUserid(@PathVariable long userId) {
@@ -134,7 +143,28 @@ public class StudentController {
 	
 	
 	
-	
+	  
+    @GetMapping("/exportinvoicepdf/{applicationId}")
+    public void exportToPDF(@PathVariable String applicationId, HttpServletResponse response ,HttpServletRequest request) throws Exception {
+    	
+    	
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        
+        String currentDateTime = dateFormatter.format(new Date());
+         
+        String headerKey =  "Content-Disposition";
+        String headerValue = "attachment; filename=users_"+ applicationId+"_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+         
+        StudentVerificationDocsResponse StudentVerificationDocsResponse = verificationService.getdatabyapplicationId( applicationId) ;
+         
+        
+        InvoicePDFExporter exporter = new InvoicePDFExporter(StudentVerificationDocsResponse);
+        
+        exporter.export(response);
+         
+    }
 	
 	
 

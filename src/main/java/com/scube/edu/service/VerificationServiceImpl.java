@@ -19,6 +19,7 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.JwtResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
 
@@ -69,6 +70,24 @@ public class VerificationServiceImpl implements VerificationService{
 
 			
 		return true;
+	}
+
+	@Override
+	public StudentVerificationDocsResponse getdatabyapplicationId(String applicationId) {
+		
+		VerificationRequest vereqEntity= verificationReqRepo.findByApplicationId(Long.parseLong(applicationId));
+		
+		StudentVerificationDocsResponse docResponse = new StudentVerificationDocsResponse();
+			
+			System.out.println("------In Save Req FOR LOOP----");
+			
+			docResponse.setApplication_id(vereqEntity.getApplicationId());
+			docResponse.setCollege_name_id(vereqEntity.getCollegeId());
+			
+	
+		
+		return docResponse;
+		
 	}
 	
 	

@@ -77,7 +77,8 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='http://localhost:4200/resetPassword'><strong>Reset Link</strong></a> to reset your password. <br><br><br> Thanks";
+                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://192.168.0.228:4200/resetPassword'><strong>Reset Link</strong></a> "+
+                                      "<br><br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");
@@ -140,9 +141,11 @@ public class EmailService {
 
 	            message.setSubject("Email Verification Link!!!");
 
-	            // Now set the actual message
+	            // Now set the actual messageHello User,
+	         
 	                       
-                String vmFileContent = "Hello User, <br><br> Please Click Below Link :<br><a href='localhost:8081/EDU/api/auth/verifyStudentEmail/"+encodeEmail+"'><strong>Verification Link</strong></a> to verify your EmailId. <br><br><br> Thanks";
+                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='localhost:8081/EDU/api/auth/verifyStudentEmail/"+encodeEmail+"'><strong>Verification Link</strong></a> "+
+                                       " <br>This link is valid for 24 hours. <br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");

@@ -206,7 +206,7 @@ public class AuthController {
 	
 	
 	@GetMapping("/verifyStudentEmail/{emailId}")
-	public  String   verifyStudentEmail(@PathVariable String emailId) {
+	public  ResponseEntity<Object>   verifyStudentEmail(@PathVariable String emailId) {
 		
 		response = new BaseResponse();
 		boolean flag;
@@ -216,21 +216,24 @@ public class AuthController {
 		 try {
 			 
 			flag = authService.verifyStudentEmail(emailId);
-			if(flag) {
-				
-				s= "verified Successfully";
-				
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(flag);
 			
+			return ResponseEntity.ok(response);
+			
+			
+		} catch (Exception e) {
+           logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
 		}
 		
-		 
-		return s;
-				
-				
 			
    }
 	
