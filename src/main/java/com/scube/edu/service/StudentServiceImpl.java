@@ -141,6 +141,21 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		long amtWithoutGST = 0;
 		long amtWithGST = 0;
 		
+		// assign application_id here
+		Long appId;
+		Long app_id = verificationReqRepo.getMaxApplicationId();
+		logger.info("---------"+ app_id);
+		
+		if(String.valueOf(app_id).equalsIgnoreCase("")) {
+			appId = (long) 1;
+		}else {
+			appId = app_id + 1;
+		}
+		
+		logger.info("---------"+ appId);
+		
+		
+		
 		List<VerificationRequest> list = new ArrayList<>();
 		
 		for(StudentDocVerificationRequest req : studentDocReq) {
@@ -164,7 +179,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			// Make a verificationRequestRepo function which will save total and totalWithoutGST against each application id
 			
-			resp.setApplicationId(req.getApplicationId());
+//			resp.setApplicationId(req.getApplicationId());
+			resp.setApplicationId(appId);
 			resp.setAssignedTo(assign_to);
 			resp.setCollegeId(req.getCollegeNameId());
 			resp.setDocStatus("Requested");
