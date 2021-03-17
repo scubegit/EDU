@@ -8,5 +8,7 @@ import com.scube.edu.model.PassingYearMaster;
 
 
 public interface YearOfPassingRepository extends JpaRepository<PassingYearMaster, Long> {
+	
+	
 
 }

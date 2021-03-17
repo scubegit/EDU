@@ -69,40 +69,60 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 @Autowired
 	 VerificationDocViewRepository veriDocViewRepo;
 	 
+	 @Autowired
+	 YearOfPassingService yearOfPassService;
+	 
 	 @Override
 
-		public List<VerificationListPojoResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
+		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
 
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 
 		 	List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		 	
-			java.util.List<Map<String, Object>> verReq = verificationReqRepository.findByUserId(userId);
-
-			List<VerificationDocView> docView = new ArrayList<>();
+		 	List<VerificationRequest> verReq = verificationReqRepository.findByUserId(userId);
 			
+			System.out.println("---------"+ verReq);
 			
-			docView = veriDocViewRepo.findByUserId(userId);
-			
-			System.out.println("---------"+ userId);
-//			System.out.println("---------"+ docView + veriDocViewRepo.findAll());
-			List<VerificationListPojoResponse> verDocRespPojo = new ArrayList<VerificationListPojoResponse>();
-			
-			System.out.println("verReq.size();----"+verReq.size());
-			final ObjectMapper mapper = new ObjectMapper();
-			for(int i=0; i<verReq.size();i++) {
+			for(VerificationRequest req: verReq) {
 				
+				StudentVerificationDocsResponse studentVerificationList = new StudentVerificationDocsResponse();
 				
-				final VerificationListPojoResponse pojo = mapper.convertValue(verReq.get(i), VerificationListPojoResponse.class);
+				PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 				
-				System.out.println(pojo);
-				verDocRespPojo.add(pojo);
+				studentVerificationList.setDoc_status(req.getDocStatus());
+				studentVerificationList.setId(req.getId());
+				studentVerificationList.setApplication_id(req.getApplicationId());
+//				closedDocResp.setCollege_name_id(req.getCollegeId());
+				studentVerificationList.setDoc_name(req.getDocumentName());
+				studentVerificationList.setEnroll_no(req.getEnrollmentNumber());
+				studentVerificationList.setFirst_name(req.getFirstName());
+				studentVerificationList.setLast_name(req.getLastName());
+////				studentVerificationList.setRequest_type_id(req.get);
+//				studentVerificationList.setStream_id(req.getStreamId());
+//				studentVerificationList.setUni_id(req.getUniversityId());
+				studentVerificationList.setUser_id(req.getUserId());
+				studentVerificationList.setVer_req_id(req.getVerRequestId());
+				studentVerificationList.setYear(year.getYearOfPassing());	
+				studentVerificationList.setUpload_doc_path(req.getUploadDocumentPath());
+				
+				List.add(studentVerificationList);
 			}
+			
+			return List;
+			
+//			List<VerificationListPojoResponse> verDocRespPojo = new ArrayList<VerificationListPojoResponse>();
+//			final ObjectMapper mapper = new ObjectMapper();
+//			for(int i=0; i<verReq.size();i++) {
+//				final VerificationListPojoResponse pojo = mapper.convertValue(verReq.get(i), VerificationListPojoResponse.class);
+//				System.out.println(pojo);
+//				verDocRespPojo.add(pojo);
+//			}
 
 				
 
-		return verDocRespPojo;
+		
 		 
 	 }
 
@@ -120,19 +140,23 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			StudentVerificationDocsResponse closedDocResp = new StudentVerificationDocsResponse();
 			
+			PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
+			
+			
+			closedDocResp.setDoc_status(req.getDocStatus());
 			closedDocResp.setId(req.getId());
 			closedDocResp.setApplication_id(req.getApplicationId());
-			closedDocResp.setCollege_name_id(req.getCollegeId());
+//			closedDocResp.setCollege_name_id(req.getCollegeId());
 			closedDocResp.setDoc_name(req.getDocumentName());
 			closedDocResp.setEnroll_no(req.getEnrollmentNumber());
 			closedDocResp.setFirst_name(req.getFirstName());
 			closedDocResp.setLast_name(req.getLastName());
-//			closedDocResp.setRequest_type_id(req.get);
-			closedDocResp.setStream_id(req.getStreamId());
-			closedDocResp.setUni_id(req.getUniversityId());
+////			closedDocResp.setRequest_type_id(req.get);
+//			closedDocResp.setStream_id(req.getStreamId());
+//			closedDocResp.setUni_id(req.getUniversityId());
 			closedDocResp.setUser_id(req.getUserId());
 			closedDocResp.setVer_req_id(req.getVerRequestId());
-			closedDocResp.setYear_of_pass_id(req.getYearOfPassingId());	
+			closedDocResp.setYear(year.getYearOfPassing());	
 			
 			List.add(closedDocResp);
 			

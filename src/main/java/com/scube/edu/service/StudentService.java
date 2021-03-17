@@ -14,7 +14,7 @@ import com.scube.edu.response.VerificationListPojoResponse;
 
 public interface StudentService {
 
-	public List<VerificationListPojoResponse> getVerificationDocsDataByUserid(long userId) throws Exception;
+	public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception;
 
 	public List<StudentVerificationDocsResponse> getClosedRequests(long userId);
 

@@ -61,7 +61,7 @@ public class StudentController {
 		
 		    try {
 
-		    	List<VerificationListPojoResponse> list = studentService.getVerificationDocsDataByUserid(userId);
+		    	List<StudentVerificationDocsResponse> list = studentService.getVerificationDocsDataByUserid(userId);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

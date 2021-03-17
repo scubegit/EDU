@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,5 +46,16 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 				}
 				
 				return List;
+		}
+		
+		@Override
+		public PassingYearMaster getYearById(String id) {
+				Long ID = Long.parseLong(id);
+				System.out.println(ID);
+				Optional<PassingYearMaster> yearEntity    = yearOfPassingRespository.findById(ID);
+				PassingYearMaster yearEnt = yearEntity.get();
+				System.out.println("yearEnt---"+ yearEnt);
+				
+						return yearEnt;
 		}
 }
