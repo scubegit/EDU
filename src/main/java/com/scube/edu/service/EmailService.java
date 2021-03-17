@@ -90,12 +90,15 @@ public class EmailService {
 	           // javaMailSender.send(message);
 	            System.out.println("Sent message successfully....");
 	            
+
 	        } catch (MessagingException e) {
 	            throw new RuntimeException(e);
 	        }
 
 	     
 	    }
+	   
+
 	   
 	   
 	   
@@ -159,6 +162,7 @@ public class EmailService {
 	            throw new RuntimeException(e);
 	        }
 	   }
+	  
+	  
 
-	     
 }

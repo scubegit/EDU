@@ -52,7 +52,7 @@ public class InvoicePDFExporter {
 	    	try {
 	    	
 	        Document document = new Document(PageSize.A4, 30, 30, 50, 50);
-	     document.setMargins(10, 10, 10, 10);
+	        document.setMargins(10, 10, 10, 10);
 	      
 	      
 	        
@@ -77,6 +77,11 @@ public class InvoicePDFExporter {
 	        f10.setSize(10);
 	        f10.setColor(Color.BLACK);
 	        
+	        Font ft10 = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+	        ft10.setSize(10);
+	        ft10.setColor(Color.BLACK);
+	        
+	        
 	        BaseFont bf_helv = BaseFont.createFont(BaseFont.HELVETICA, "Cp1252", false);
 	        BaseFont bf_times = BaseFont.createFont(BaseFont.TIMES_ROMAN, "Cp1252", false);
 	        BaseFont bf_courier = BaseFont.createFont(BaseFont.COURIER, "Cp1252", false);
@@ -90,24 +95,49 @@ public class InvoicePDFExporter {
 	        
 	     
 	        
-	           Image img = Image.getInstance("logo_png.png");
-	     
-//	              image.setFixedPosition(100, 250); 
-	              img.scaleAbsolute(200, 200);
-	              img.setAlignment(20);
-	              img.setAbsolutePosition(243,800);
-	              
+	           Image img = Image.getInstance("logo.png");
+	           img.setAlignment(Element.ALIGN_CENTER);
+		   	   img.scaleToFit(100,100);
+		
 	          
-	        
-	           Paragraph header = new Paragraph();
-	            header.add("\n");
-		        header.add(img);
-		        header.setFont(headingFont15);
-		        header.setAlignment(Paragraph.ALIGN_CENTER);
+		        
+		        PdfPCell ImageCell = new PdfPCell();
+			   	  
+		   	   
+		   	    
+		        ImageCell.addElement(img);
+		   	    ImageCell.setBorderWidthRight(0);
+		   	    ImageCell.setPaddingTop(15);
+	            ImageCell.setPaddingRight(5);
+		        
+		        Paragraph firstLinep= new Paragraph("       University Of Mumbai",headingFont15); 
+		      
 		   
 		        
-		        document.add(header);
-	          
+		        PdfPCell pdfWordCell = new PdfPCell();
+		        pdfWordCell.addElement(firstLinep);
+		        pdfWordCell.addElement(Chunk.NEWLINE);
+		        pdfWordCell.addElement(new Paragraph("Mahatma Jotirao Phule Bhavan,Vidhyanagri ,Santacruz(E) ,Mumbai",f10));
+		    
+		        
+		        pdfWordCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        pdfWordCell.setVerticalAlignment(Element.ALIGN_CENTER);
+		        pdfWordCell.setBorderWidthLeft(0);
+		        pdfWordCell.setPaddingLeft(50);
+		        pdfWordCell.setPaddingBottom(10);
+		        pdfWordCell.setPaddingTop(15);
+		      
+		        
+		      
+	            
+	            PdfPTable tab1 = new PdfPTable(2);
+	            tab1.setWidthPercentage(100);
+	            tab1.setWidths(new int[]{25, 75});
+	            
+	            tab1.addCell(ImageCell);
+	            tab1.addCell(pdfWordCell);
+	            
+	         document.add(tab1);
 	         
 	         PdfPTable recptinfotable = new PdfPTable(2);
 	         recptinfotable.setWidthPercentage(100);
@@ -117,7 +147,7 @@ public class InvoicePDFExporter {
 	               PdfPCell rcpt_NOcell = new PdfPCell(new Paragraph("Receipt No.:" + "456954" ,f10));
 	              // Po_NOcell.addElement(PoNo_ph);
 	               rcpt_NOcell.setPaddingBottom(5);
-	             //  rcpt_NOcell.setBorderWidthTop(0);
+	            // rcpt_NOcell.setBorderWidthTop(0);
 	              // rcpt_NOcell.setBorderWidthRight(0);
 	               //rcpt_NOcell.setBorderWidthBottom(0);
 	               
@@ -127,45 +157,75 @@ public class InvoicePDFExporter {
 	               PdfPCell Datecell = new PdfPCell(new Paragraph("Date : " + "45/05/2021",f10));
 	               Datecell.setHorizontalAlignment(Element.ALIGN_CENTER);
 	             //  PoDatecell.addElement(PoDate_ph);
-	               Datecell.setPaddingBottom(5);
-			/*
-			 * Datecell.setBorderWidthTop(0); Datecell.setBorderWidthLeft(0);
-			 * Datecell.setBorderWidthBottom(0);
-			 */
+	        
 	               
            recptinfotable.addCell(rcpt_NOcell);
            recptinfotable.addCell(Datecell);
            
            document.add(recptinfotable);
+           
+           
 	        
-			
- 
-	        
-	        Paragraph skuTitle = new Paragraph();
-	        skuTitle.add("\n");
-	        skuTitle.add("GENERAL FUND - 1");
-	        skuTitle.add("\n");
+           PdfPTable contentTable = new PdfPTable(1);
+           contentTable.setWidthPercentage(100);
+         
+           
+           
+           Paragraph skuTitle = new Paragraph();
+	     
+	        skuTitle.add("    GENERAL FUND - 1");
+	        skuTitle.add(Chunk.NEWLINE);
 	        skuTitle.add("Received from SECURE 	credential ltd the sum of rupes");
 	        skuTitle.setFont(headingFont15);
 	        skuTitle.setAlignment(Paragraph.ALIGN_CENTER);
 	        
-	        document.add(skuTitle);
-	        
-	        
-	        PdfPTable footerTable = new PdfPTable(2);
-	        
-	        Paragraph footer = new Paragraph();
-	        footer.add("1. Receipt subject to the realisation of Cheque/Draft etc., it tendered. \n 2. No. of duplicate  receipt will be issued. \n"
-	                  +"3.The statement of marks should be collected from Ground Floor,Winmdoow No.2 after 15 working days on production of the receipt and "
-	               	  + " if no collected within 3 months no responsibility lies on the unversity.");
-	        		
-	           
+           
+	       
 	    
-	   // footer.setBorder(Rectangle.NO_BORDER);
-	    footer.setAlignment(Element.ALIGN_LEFT);
-	    footer.setFont(paraFont10);
+	       PdfPCell  contentCell = new PdfPCell(); 
+	       
+	       contentCell.addElement(skuTitle);
+	       contentCell.addElement(Chunk.NEWLINE);
+	       contentCell.addElement(new Paragraph("Mahatma Jotirao Phule Bhavan,Vidhyanagri ,Santacruz(E) ,Mumbai",f10));
+	        
+	        
+	       contentCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	       contentCell.setVerticalAlignment(Element.ALIGN_CENTER);
+	       contentCell.setPaddingLeft(50);
+	       contentCell.setPaddingBottom(10);
+	       contentCell.setPaddingTop(15);
+	        
+	       contentTable.addCell(contentCell);
+	       contentTable.addCell(new Phrase("Cash Receiver's Signature                                        ",f10));
+           
+           document.add(contentTable);
+           
+			/*
+			 * Paragraph skuTitle = new Paragraph(); skuTitle.add("\n");
+			 * skuTitle.add("GENERAL FUND - 1"); skuTitle.add("\n");
+			 * skuTitle.add("Received from SECURE 	credential ltd the sum of rupes");
+			 * skuTitle.setFont(headingFont15);
+			 * skuTitle.setAlignment(Paragraph.ALIGN_CENTER);
+			 * 
+			 * document.add(skuTitle);
+			 */
+	        
+	      PdfPTable footerTable = new PdfPTable(1);
+	      footerTable.setWidthPercentage(100);
+	         
+	      
+	      PdfPCell footerCell = new PdfPCell();
+	      
+	      footerCell.addElement(new Paragraph("1. Receipt subject to the realisation of Cheque/Draft etc., it tendered.",ft10));
+	      footerCell.addElement(new Paragraph("2. No. of duplicate  receipt will be issued.",ft10));
+	      footerCell.addElement(new Paragraph("3.The statement of marks should be collected from Ground Floor,Winmdoow No.2 after 15 working days on production of the receipt and if"+
+	                                             "no collected within 3 months no responsibility lies on the unversity.",ft10));
+	      
+	     
+	    
+	    footerTable.addCell(footerCell);
 	   
-	    document.add(footer);
+	    document.add(footerTable);
 
 	        
 	       

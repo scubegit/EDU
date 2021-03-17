@@ -65,6 +65,7 @@ public class AuthServiceImpl implements AuthService{
         baseResponse	= new BaseResponse();
 		
 		logger.info("loginRequest.email "+ loginRequest.getUsername());
+
 		
 		if(loginRequest.getUsername().equalsIgnoreCase("")) {
 			throw new Exception("Error: Login Id cannot be empty!");
@@ -73,13 +74,30 @@ public class AuthServiceImpl implements AuthService{
 			throw new Exception("Error: Password cannot be empty!");
 		}
 		
-		
-		logger.info("---------checking values-----------  "+ userRepository.existsByUsernameAndIsactive(loginRequest.getUsername() ,"Y"));
+
+		logger.info("---------checking values-----------  "+ userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername() ,"Y"));
+
 		
 		 if(!userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername(),"Y"))
 		 {
+			 
+			 //  msg = "User is not active";
 			 throw new Exception("Error: User unauthorized!");
 		}
+		 
+		UserMasterEntity masterEntity =  userRepository.findByEmailId(loginRequest.getUsername());
+		
+		
+		System.out.println("===masterEntity======="+masterEntity.getEmailVerificationStatus());
+		 
+		 if(!masterEntity.getEmailVerificationStatus().equalsIgnoreCase("Verified"))
+		 {
+			 
+			//  msg = "Email is nor verified";
+			 throw new Exception("Email is not Verified!");
+		}
+		 
+	
   
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -89,6 +107,7 @@ public class AuthServiceImpl implements AuthService{
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();	
 	
+	
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 		baseResponse.setRespData(new JwtResponse(jwt, 
@@ -96,7 +115,9 @@ public class AuthServiceImpl implements AuthService{
 				 userDetails.getUsername(), 
 				 userDetails.getEmail(),
 				 userDetails.getRole()
+
 				 ));
+
 		
 		return baseResponse;
        
@@ -143,14 +164,17 @@ public class AuthServiceImpl implements AuthService{
 
 			if(userAddRequest.getRoleId() == 1) {
 				
+
 				emailService.sendVerificationEmail(userAddRequest.getEmailId());
 				
-				 UserMasterEntity entities =  userRepository.getOne(userMasterEntity.getId());
-				 entities.setEmailVerificationStatus("Verified");
-				 
-				 userRepository.save(entities);
+			/*
+			 * UserMasterEntity entities = userRepository.getOne(userMasterEntity.getId());
+			 * entities.setEmailVerificationStatus("Verified");
+			 * 
+			 * userRepository.save(entities);
+			 */
 				
-				
+
 			}
 			
 	

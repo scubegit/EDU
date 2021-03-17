@@ -79,6 +79,7 @@ public class AuthController {
 		try {
 			response = authService.authenticateUser(loginRequest,request);
 			
+			
 			return ResponseEntity.ok(response);
 				
 		}catch (Exception e) {
@@ -90,6 +91,7 @@ public class AuthController {
 			response.setRespData(e.getMessage());
 			
 			return ResponseEntity.badRequest().body(response);
+			
 			
 		}
 		
@@ -108,6 +110,7 @@ public class AuthController {
 			return ResponseEntity.ok(response);
 				
 		}catch (Exception e) {
+			
 			
 			logger.error(e.getMessage()); //BAD creds message comes from here
 			
@@ -177,7 +180,7 @@ public class AuthController {
 	public ResponseEntity<Object> addEmployerUser(@RequestBody UserAddRequest userRequest ,  HttpServletRequest request) {
 		
 		logger.info("********UsersControllers addUser()********");
-		
+
 		response = new BaseResponse();
 		
 		try {
@@ -204,7 +207,7 @@ public class AuthController {
 		
    }
 	
-	
+
 	@GetMapping("/verifyStudentEmail/{emailId}")
 	public  ResponseEntity<Object>   verifyStudentEmail(@PathVariable String emailId) {
 		
@@ -236,6 +239,6 @@ public class AuthController {
 		
 			
    }
-	
+
 	
 }
