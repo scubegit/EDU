@@ -1,9 +1,13 @@
 package com.scube.edu.service;
 
+import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +21,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
+import com.scube.edu.model.VerificationDocView;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.PriceMasterRepository;
+import com.scube.edu.repository.VerificationDocViewRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
@@ -28,7 +35,7 @@ import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
-
+import com.scube.edu.response.VerificationListPojoResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StreamResponse;
 
@@ -59,38 +66,43 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 @Autowired
 	VerificationRequestRepository verificationReqRepo;
 	 
+	 @Autowired
+	 VerificationDocViewRepository veriDocViewRepo;
+	 
 	 @Override
 
-		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
+		public List<VerificationListPojoResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
 
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 
 		 	List<StudentVerificationDocsResponse> List = new ArrayList<>();
 		 	
-			List<VerificationRequest> verReq = verificationReqRepository.findByUserId(userId);
+			java.util.List<Map<String, Object>> verReq = verificationReqRepository.findByUserId(userId);
+
+			List<VerificationDocView> docView = new ArrayList<>();
 			
-			for(VerificationRequest veriRequest : verReq) {
+			
+			docView = veriDocViewRepo.findByUserId(userId);
+			
+			System.out.println("---------"+ userId);
+//			System.out.println("---------"+ docView + veriDocViewRepo.findAll());
+			List<VerificationListPojoResponse> verDocRespPojo = new ArrayList<VerificationListPojoResponse>();
+			
+			System.out.println("verReq.size();----"+verReq.size());
+			final ObjectMapper mapper = new ObjectMapper();
+			for(int i=0; i<verReq.size();i++) {
 				
-				StudentVerificationDocsResponse stuDocResp = new StudentVerificationDocsResponse();
 				
-				stuDocResp.setApplication_id(veriRequest.getApplicationId());
-				stuDocResp.setCollege_name_id(veriRequest.getCollegeId());
-				stuDocResp.setDoc_name(veriRequest.getDocumentName());
-				stuDocResp.setEnroll_no(veriRequest.getEnrollmentNumber());
-				stuDocResp.setFirst_name(veriRequest.getFirstName());
-				stuDocResp.setLast_name(veriRequest.getLastName());
-//				stuDocResp.setRequest_type_id(veriRequest.get);
-				stuDocResp.setStream_id(veriRequest.getStreamId());
-				stuDocResp.setUni_id(veriRequest.getUniversityId());
-				stuDocResp.setUser_id(veriRequest.getUserId());
-				stuDocResp.setVer_req_id(veriRequest.getVerRequestId());
-				stuDocResp.setYear_of_pass_id(veriRequest.getYearOfPassingId());		
+				final VerificationListPojoResponse pojo = mapper.convertValue(verReq.get(i), VerificationListPojoResponse.class);
 				
-				List.add(stuDocResp);
-				
+				System.out.println(pojo);
+				verDocRespPojo.add(pojo);
 			}
-		return List;
+
+				
+
+		return verDocRespPojo;
 		 
 	 }
 

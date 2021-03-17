@@ -10,10 +10,11 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.VerificationListPojoResponse;
 
 public interface StudentService {
 
-	public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception;
+	public List<VerificationListPojoResponse> getVerificationDocsDataByUserid(long userId) throws Exception;
 
 	public List<StudentVerificationDocsResponse> getClosedRequests(long userId);
 

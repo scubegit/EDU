@@ -1,6 +1,9 @@
 package com.scube.edu.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,7 +18,8 @@ import com.scube.edu.response.StudentVerificationDocsResponse;
 @Repository
 public interface VerificationRequestRepository extends JpaRepository<VerificationRequest, Long>{
 
-	List<VerificationRequest> findByUserId(long userId);
+	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM edu_db.verification_request vr left join edu_db.passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1", nativeQuery = true)
+	List<Map<String ,Object>> findByUserId(long userId);
 
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and assigned_to = 0 order by created_date desc limit 5", nativeQuery = true)
 	List<VerificationRequest> getVerifierRecords();
