@@ -154,12 +154,14 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		long amtWithGST = 0;
 		
 		// assign application_id here
-		Long appId;
-		Long app_id = verificationReqRepo.getMaxApplicationId();
+		Long appId = (long) 0;
+		Long app_id;
+		app_id = verificationReqRepo.getMaxApplicationId();
 		logger.info("---------"+ app_id);
 		
-		if(String.valueOf(app_id).equalsIgnoreCase("")) {
+		if(app_id == null) {
 			appId = (long) 1;
+			System.out.println("here");
 		}else {
 			appId = app_id + 1;
 		}
