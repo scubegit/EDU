@@ -180,10 +180,7 @@ public class AuthController {
 	public ResponseEntity<Object> addEmployerUser(@RequestBody UserAddRequest userRequest ,  HttpServletRequest request) {
 		
 		logger.info("********UsersControllers addUser()********");
-<<<<<<< Updated upstream
-		
-=======
->>>>>>> Stashed changes
+
 		response = new BaseResponse();
 		
 		try {
@@ -210,8 +207,7 @@ public class AuthController {
 		
    }
 	
-	
-<<<<<<< Updated upstream
+
 	@GetMapping("/verifyStudentEmail/{emailId}")
 	public  ResponseEntity<Object>   verifyStudentEmail(@PathVariable String emailId) {
 		
@@ -243,8 +239,6 @@ public class AuthController {
 		
 			
    }
-	
-=======
->>>>>>> Stashed changes
+
 	
 }

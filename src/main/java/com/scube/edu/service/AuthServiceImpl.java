@@ -65,11 +65,7 @@ public class AuthServiceImpl implements AuthService{
         baseResponse	= new BaseResponse();
 		
 		logger.info("loginRequest.email "+ loginRequest.getUsername());
-<<<<<<< Updated upstream
-		
-		
-=======
->>>>>>> Stashed changes
+
 		
 		if(loginRequest.getUsername().equalsIgnoreCase("")) {
 			throw new Exception("Error: Login Id cannot be empty!");
@@ -78,12 +74,9 @@ public class AuthServiceImpl implements AuthService{
 			throw new Exception("Error: Password cannot be empty!");
 		}
 		
-		
-<<<<<<< Updated upstream
+
 		logger.info("---------checking values-----------  "+ userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername() ,"Y"));
-=======
-		logger.info("---------checking values-----------  "+ userRepository.existsByUsernameAndIsactive(loginRequest.getUsername() ,"Y"));
->>>>>>> Stashed changes
+
 		
 		 if(!userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername(),"Y"))
 		 {
@@ -122,11 +115,9 @@ public class AuthServiceImpl implements AuthService{
 				 userDetails.getUsername(), 
 				 userDetails.getEmail(),
 				 userDetails.getRole()
-<<<<<<< Updated upstream
-				));
-=======
+
 				 ));
->>>>>>> Stashed changes
+
 		
 		return baseResponse;
        
@@ -173,7 +164,7 @@ public class AuthServiceImpl implements AuthService{
 
 			if(userAddRequest.getRoleId() == 1) {
 				
-<<<<<<< Updated upstream
+
 				emailService.sendVerificationEmail(userAddRequest.getEmailId());
 				
 			/*
@@ -183,9 +174,7 @@ public class AuthServiceImpl implements AuthService{
 			 * userRepository.save(entities);
 			 */
 				
-				
-=======
->>>>>>> Stashed changes
+
 			}
 			
 	
