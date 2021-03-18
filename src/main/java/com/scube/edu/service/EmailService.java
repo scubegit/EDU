@@ -1,3 +1,4 @@
+
 package com.scube.edu.service;
 
 import java.nio.charset.StandardCharsets;
@@ -44,6 +45,7 @@ public class EmailService {
 		    properties.put("mail.smtp.host", host);
 	        properties.put("mail.smtp.port", "465");
 	        properties.put("mail.smtp.ssl.enable", "true");
+	        
 	        properties.put("mail.smtp.auth", "true");
 
 
@@ -169,3 +171,4 @@ public class EmailService {
 	  
 
 }
+

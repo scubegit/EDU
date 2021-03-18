@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
@@ -38,6 +39,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
 	 
+	 @Autowired
+	 YearOfPassingService yearOfPassService;
+	 
 	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
@@ -49,6 +53,9 @@ public class VerifierServiceImpl implements VerifierService{
 		 for(VerificationRequest veriReq: verReq) {
 			 
 			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
+			 
+			 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+			 
 			 
 			 resp.setId(veriReq.getId());
 			 resp.setApplication_id(veriReq.getApplicationId());
@@ -62,7 +69,7 @@ public class VerifierServiceImpl implements VerifierService{
 			 resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
 			 resp.setUser_id(veriReq.getUserId());
 			 resp.setVer_req_id(veriReq.getVerRequestId());
-			 resp.setYear_of_pass_id(veriReq.getYearOfPassingId());
+			 resp.setYear(year.getYearOfPassing());
 			 
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)

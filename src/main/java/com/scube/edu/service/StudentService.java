@@ -10,6 +10,7 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.VerificationListPojoResponse;
 
 public interface StudentService {
 

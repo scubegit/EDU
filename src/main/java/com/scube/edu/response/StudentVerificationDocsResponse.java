@@ -16,7 +16,7 @@ public class StudentVerificationDocsResponse {
 	private Long stream_id;
 	private String doc_name;
 	private String enroll_no;
-	private String year_of_pass_id;
+	private String year;
 	private Long college_name_id;
 	private Long application_id;
 	private Long uni_id;
@@ -24,7 +24,11 @@ public class StudentVerificationDocsResponse {
 	private String request_type_id;
 	private Long ver_req_id;
 	private String upload_doc_path;
-	private Long assigned_to; 
+
 	private Long docAmt;
 	private Long docAmtWithGST;
+
+	private Long assigned_to;
+	private String doc_status;
+
 }

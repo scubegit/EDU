@@ -30,6 +30,7 @@ import com.scube.edu.response.PriceMasterResponse;
 
 
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.VerificationListPojoResponse;
 import com.scube.edu.service.StudentService;
 import com.scube.edu.service.VerificationService;
 import com.scube.edu.util.StringsUtils;
@@ -61,7 +62,6 @@ public class StudentController {
 		    try {
 
 		    	List<StudentVerificationDocsResponse> list = studentService.getVerificationDocsDataByUserid(userId);
-
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
