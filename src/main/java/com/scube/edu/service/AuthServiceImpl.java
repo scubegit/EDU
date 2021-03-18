@@ -167,17 +167,7 @@ public class AuthServiceImpl implements AuthService{
 
 				emailService.sendVerificationEmail(userAddRequest.getEmailId());
 				
-			/*
-			 * UserMasterEntity entities = userRepository.getOne(userMasterEntity.getId());
-			 * entities.setEmailVerificationStatus("Verified");
-			 * 
-			 * userRepository.save(entities);
-			 */
-				
-
 			}
-			
-	
 		return true;
 		
 	}
@@ -300,15 +290,15 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public boolean verifyStudentEmail(String emailId) throws Exception {
 		
-		  Base64.Decoder decoder = Base64.getDecoder();  
+		//  Base64.Decoder decoder = Base64.getDecoder();  
 	        // Decoding string  
-	      String decodedEmail = new String(decoder.decode(emailId)); 
+	     // String decodedEmail = new String(decoder.decode(emailId)); 
 	        
-	        logger.info("---------decodedEmail-------"+decodedEmail);
+	       // logger.info("---------decodedEmail-------"+decodedEmail);
 	        
 	        
 		 
-	       UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
+	       UserMasterEntity userEntities  = userRepository.findByEmailId(emailId);
 	       
 	       
 		   if(userEntities == null) {
@@ -319,10 +309,17 @@ public class AuthServiceImpl implements AuthService{
 		 int hours = userRepository.gethoursToValidateTheLink(userEntities.getId());
 		  logger.info("---------hours-------"+hours);
 		  
-		  if(hours < 1440) {
+		  if(hours < 1440 ) {
+			   if(userEntities.getEmailVerificationStatus().equalsIgnoreCase("N"))
+			   {
+			  
 			     UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
 				 entities.setEmailVerificationStatus("Verified");
 				 userRepository.save(entities);
+			   }
+			   else {
+				   throw new Exception("Email is verified already.");
+			   }
 			  
 		  }else {
 			  

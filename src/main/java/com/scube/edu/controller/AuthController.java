@@ -214,7 +214,7 @@ public class AuthController {
 		response = new BaseResponse();
 		boolean flag;
 		
-		String s="fail ";
+		
 		
 		 try {
 			 

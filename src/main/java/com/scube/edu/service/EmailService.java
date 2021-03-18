@@ -131,6 +131,7 @@ public class EmailService {
 
 	        });
 
+	        
 	        // Used to debug SMTP issues
 	        session.setDebug(true);
 
@@ -147,7 +148,7 @@ public class EmailService {
 	            // Now set the actual messageHello User,
 	         
 	                       
-                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='localhost:8081/EDU/api/auth/verifyStudentEmail/"+encodeEmail+"'><strong>Verification Link</strong></a> "+
+                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://192.168.0.225:4200/emailVerification?emailId="+encodeEmail+"'><strong>localhost:8081/EDU/api/auth/verifyStudentEmail/"+encodeEmail+"</strong></a> "+
                                        " <br>This link is valid for 24 hours. <br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts
@@ -159,6 +160,8 @@ public class EmailService {
 	            System.out.println("Sent message successfully....");
 	            
 	        } catch (MessagingException e) {
+	        	
+	        	
 	            throw new RuntimeException(e);
 	        }
 	   }

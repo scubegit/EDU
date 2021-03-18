@@ -24,5 +24,7 @@ public class StudentVerificationDocsResponse {
 	private String request_type_id;
 	private Long ver_req_id;
 	private String upload_doc_path;
-	private Long assigned_to;
+	private Long assigned_to; 
+	private Long docAmt;
+	private Long docAmtWithGST;
 }

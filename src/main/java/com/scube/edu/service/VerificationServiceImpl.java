@@ -75,16 +75,21 @@ public class VerificationServiceImpl implements VerificationService{
 	@Override
 	public StudentVerificationDocsResponse getdatabyapplicationId(String applicationId) {
 		
-		VerificationRequest vereqEntity= verificationReqRepo.findByApplicationId(Long.parseLong(applicationId));
+		List<VerificationRequest> verlistEntity= verificationReqRepo.findByApplicationId(Long.parseLong(applicationId));
 		
 		StudentVerificationDocsResponse docResponse = new StudentVerificationDocsResponse();
 			
-			System.out.println("------In Save Req FOR LOOP----");
+			System.out.println("-----getdatabyapplicationId---");
 			
-			docResponse.setApplication_id(vereqEntity.getApplicationId());
-			docResponse.setCollege_name_id(vereqEntity.getCollegeId());
+			for(VerificationRequest verEntities : verlistEntity) {
 			
-	
+				docResponse.setApplication_id(verEntities.getApplicationId());
+				docResponse.setCollege_name_id(verEntities.getCollegeId());
+				docResponse.setDoc_name(verEntities.getDocumentName());
+				docResponse.setDocAmt(verEntities.getDocAmt());
+				docResponse.setDocAmtWithGST(verEntities.getDosAmtWithGst());
+			
+			}
 		
 		return docResponse;
 		

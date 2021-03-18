@@ -3,6 +3,8 @@ package com.scube.edu.util;
 
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.TabStop;
@@ -90,7 +92,6 @@ public class InvoicePDFExporter {
 	 
 	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 	  
-
 	        document.open();
 	        
 	     
@@ -144,18 +145,23 @@ public class InvoicePDFExporter {
 	         recptinfotable.setWidths(new int[]{50, 50});
 	               
 	             
-	               PdfPCell rcpt_NOcell = new PdfPCell(new Paragraph("Receipt No.:" + "456954" ,f10));
+	               PdfPCell rcpt_NOcell = new PdfPCell(new Paragraph("Receipt No.:" + studentVerificationDocsResponse.getApplication_id() ,f10));
 	              // Po_NOcell.addElement(PoNo_ph);
 	               rcpt_NOcell.setPaddingBottom(5);
-	            // rcpt_NOcell.setBorderWidthTop(0);
-	              // rcpt_NOcell.setBorderWidthRight(0);
-	               //rcpt_NOcell.setBorderWidthBottom(0);
+	               rcpt_NOcell.setBorderWidthTop(0);
+	               rcpt_NOcell.setBorderWidthRight(0);
+	               rcpt_NOcell.setBorderWidthBottom(0);
 	               
-
+	               DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy ");
+	               LocalDateTime now = LocalDateTime.now();
+	               System.out.println(dtf.format(now));
 	               
 	               //Phrase PoDate_ph =new Phrase(PODateH + PODateV+ chunk.NEWLINE,boldFont);
-	               PdfPCell Datecell = new PdfPCell(new Paragraph("Date : " + "45/05/2021",f10));
+	               PdfPCell Datecell = new PdfPCell(new Paragraph("Date : " + dtf.format(now),f10));
 	               Datecell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	               Datecell.setBorderWidthTop(0);
+	               Datecell.setBorderWidthLeft(0);
+		           Datecell.setBorderWidthBottom(0);
 	             //  PoDatecell.addElement(PoDate_ph);
 	        
 	               
@@ -173,9 +179,9 @@ public class InvoicePDFExporter {
            
            Paragraph skuTitle = new Paragraph();
 	     
-	        skuTitle.add("    GENERAL FUND - 1");
+	        skuTitle.add("   GENERAL FUND - 1 \n ");
 	        skuTitle.add(Chunk.NEWLINE);
-	        skuTitle.add("Received from SECURE 	credential ltd the sum of rupes");
+	        skuTitle.add("Received from SECURE 	credential ltd the sum of rupees \n \n by D.D.No. 58585368 HDFC     being the amount of \n\n FEE  FOR  VER  OF  CERT  AS  PER  LIST");
 	        skuTitle.setFont(headingFont15);
 	        skuTitle.setAlignment(Paragraph.ALIGN_CENTER);
 	        
@@ -186,8 +192,7 @@ public class InvoicePDFExporter {
 	       
 	       contentCell.addElement(skuTitle);
 	       contentCell.addElement(Chunk.NEWLINE);
-	       contentCell.addElement(new Paragraph("Mahatma Jotirao Phule Bhavan,Vidhyanagri ,Santacruz(E) ,Mumbai",f10));
-	        
+	     
 	        
 	       contentCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 	       contentCell.setVerticalAlignment(Element.ALIGN_CENTER);
@@ -196,8 +201,7 @@ public class InvoicePDFExporter {
 	       contentCell.setPaddingTop(15);
 	        
 	       contentTable.addCell(contentCell);
-	       contentTable.addCell(new Phrase("Cash Receiver's Signature                                        ",f10));
-           
+	      
            document.add(contentTable);
            
 			/*
@@ -210,6 +214,33 @@ public class InvoicePDFExporter {
 			 * document.add(skuTitle);
 			 */
 	        
+           
+ 	      PdfPTable documentTable = new PdfPTable(2);
+ 	      documentTable.setWidthPercentage(100);
+ 	      
+ 	         
+ 		 insertCell(documentTable, "Document Name", Element.ALIGN_CENTER,  f10);
+ 	     insertCell(documentTable, "Document Amount", Element.ALIGN_CENTER,  f10);
+ 	     insertCell(documentTable, "Document Amount With GST", Element.ALIGN_CENTER,  f10);
+ 	     
+ 	     
+ 	
+ 	    	
+ 	    	 insertCell(documentTable,studentVerificationDocsResponse.getDoc_name().toString() , Element.ALIGN_CENTER,  ft10);
+ 	 	     insertCell(documentTable,studentVerificationDocsResponse.getDocAmt().toString(), Element.ALIGN_CENTER,  ft10);
+ 	 	     insertCell(documentTable,studentVerificationDocsResponse.getDocAmtWithGST().toString(), Element.ALIGN_CENTER,  ft10);
+ 	 	    		
+ 	    
+ 	     
+ 	     
+ 	     
+ 
+ 	 
+ 	     document.add(documentTable);
+ 	      
+ 	      
+ 	      
+ 	      
 	      PdfPTable footerTable = new PdfPTable(1);
 	      footerTable.setWidthPercentage(100);
 	         
@@ -218,14 +249,14 @@ public class InvoicePDFExporter {
 	      
 	      footerCell.addElement(new Paragraph("1. Receipt subject to the realisation of Cheque/Draft etc., it tendered.",ft10));
 	      footerCell.addElement(new Paragraph("2. No. of duplicate  receipt will be issued.",ft10));
-	      footerCell.addElement(new Paragraph("3.The statement of marks should be collected from Ground Floor,Winmdoow No.2 after 15 working days on production of the receipt and if"+
+	      footerCell.addElement(new Paragraph("3.The statement of marks should be collected from Ground Floor,Window No.2 after 15 working days on production of the receipt and if"+
 	                                             "no collected within 3 months no responsibility lies on the unversity.",ft10));
-	      
+	      footerCell.setBorderWidthTop(0);
 	     
 	    
-	    footerTable.addCell(footerCell);
+	      footerTable.addCell(footerCell);
 	   
-	    document.add(footerTable);
+	       document.add(footerTable);
 
 	        
 	       
@@ -241,6 +272,26 @@ public class InvoicePDFExporter {
 	    
 		}
 	    
+	
+	
+	
+	 private void insertCell(PdfPTable table, String text, int align, Font font){
+		   
+		  //create a new cell with the specified Text and Font
+		  PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+		  //set the cell alignment
+		  cell.setHorizontalAlignment(align);
+		  //set the cell column span in case you want to merge two or more cells
+	
+		  //in case there is no text and you wan to create an empty row
+		  if(text.trim().equalsIgnoreCase("")){
+		   cell.setMinimumHeight(10f);
+		  }
+		  //add the call to the table
+		  table.addCell(cell);
+		   
+		 }
+		 
 		
 
 }

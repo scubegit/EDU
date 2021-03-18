@@ -157,7 +157,7 @@ public class StudentController {
         String headerValue = "attachment; filename=users_"+ applicationId+"_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
          
-        StudentVerificationDocsResponse StudentVerificationDocsResponse = verificationService.getdatabyapplicationId( applicationId) ;
+    StudentVerificationDocsResponse StudentVerificationDocsResponse = verificationService.getdatabyapplicationId( applicationId) ;
          
         
         InvoicePDFExporter exporter = new InvoicePDFExporter(StudentVerificationDocsResponse);
