@@ -59,6 +59,7 @@ public class AuthServiceImpl implements AuthService{
 	EmailService emailService;
 	
 	BaseResponse  baseResponse = null;
+    Base64.Decoder decoder = Base64.getDecoder();  
 
 	@Override
 	public BaseResponse authenticateUser(LoginRequest loginRequest, HttpServletRequest request) throws Exception {
@@ -216,19 +217,34 @@ public class AuthServiceImpl implements AuthService{
 		 logger.info("---------Email-------"+reqUserentity.getEmailId());   
 		 logger.info("---------password-------"+reqUserentity.getPassword());
 		 
-		 UserMasterEntity userEntities  = userRepository.findByEmailId(reqUserentity.getEmailId());
+		 String encodeEmailId = reqUserentity.getEmailId();
+		  String dStr = new String(decoder.decode(encodeEmailId));  
+
+
+		 UserMasterEntity userEntities  = userRepository.findByEmailId(dStr);
 		 
-		   if(userEntities == null) {
+		   if(userEntities == null || encodeEmailId== null) {
+			   
 				throw new Exception("Error: Invalid Email");
 			}
 		
+		   
+		   //Here checking password flag
 		
-		 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
-		 entities.setPassword(encoder.encode(reqUserentity.getPassword()));
-		 entities.setForgotPasswordFlag("N");
+		   if(userEntities.getForgotPasswordFlag().equalsIgnoreCase("Y")) {
+	        
+			     UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
+				 entities.setPassword(encoder.encode(reqUserentity.getPassword()));
+				 entities.setForgotPasswordFlag("N");
+				 
+				 userRepository.save(entities);
+		   }else {
+			   
+			    throw new Exception("Error: Not a valid User");
+		   }
 		 
 		 
-		 userRepository.save(entities);
+		
 		
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -244,7 +260,7 @@ public class AuthServiceImpl implements AuthService{
         baseResponse	= new BaseResponse();
         String flag = "";
 		
-        Base64.Decoder decoder = Base64.getDecoder();  
+       // Base64.Decoder decoder = Base64.getDecoder();  
         // Decoding string  
         String dStr = new String(decoder.decode(encodeEmail));  
        
@@ -262,7 +278,8 @@ public class AuthServiceImpl implements AuthService{
         	
         }else {
         	
-        	flag = "failure";
+        	throw new Exception("Forgot password Flag is not checked");
+        	//flag = "failure";
         }
         
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
@@ -291,15 +308,15 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public boolean verifyStudentEmail(String emailId) throws Exception {
 		
-		//  Base64.Decoder decoder = Base64.getDecoder();  
+	 Base64.Decoder decoder = Base64.getDecoder();  
 	        // Decoding string  
-	     // String decodedEmail = new String(decoder.decode(emailId)); 
+	  String decodedEmail = new String(decoder.decode(emailId)); 
 	        
 	       // logger.info("---------decodedEmail-------"+decodedEmail);
 	        
 	        
 		 
-	       UserMasterEntity userEntities  = userRepository.findByEmailId(emailId);
+	       UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
 	       
 	       
 		   if(userEntities == null) {

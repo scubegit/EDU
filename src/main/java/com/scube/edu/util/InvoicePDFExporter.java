@@ -4,8 +4,11 @@ package com.scube.edu.util;
 
 
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.TabStop;
@@ -13,6 +16,7 @@ import javax.swing.text.TabStop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lowagie.text.Cell;
 import com.lowagie.text.Chunk;
@@ -32,18 +36,28 @@ import com.lowagie.text.pdf.PdfDocument;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.UserMasterEntity;
+import com.scube.edu.repository.UserRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+
 
 public class InvoicePDFExporter {
 	
        private static final Logger logger = LoggerFactory.getLogger(InvoicePDFExporter.class);
     
-	    private   StudentVerificationDocsResponse studentVerificationDocsResponse  ;
+	    private   HashMap<Object, Object> studentVerificationPdfData ;
+	
+	    
+	    String applicationId = "";
+	    
+	
 
-	    public InvoicePDFExporter(StudentVerificationDocsResponse studentVerificationDocsResponse)
+	    public InvoicePDFExporter(HashMap<Object, Object> pdfData, String applicationId )
 	    {
-                     this.studentVerificationDocsResponse = studentVerificationDocsResponse;
+                     this.studentVerificationPdfData = pdfData;
+                    this.applicationId =applicationId;
 	   
 	    }
 
@@ -53,13 +67,16 @@ public class InvoicePDFExporter {
 	public void export(HttpServletResponse response) {
 		    
 	    	try {
+	    		
+	    	List<StudentVerificationDocsResponse> studentDocList =	(List<StudentVerificationDocsResponse>) studentVerificationPdfData.get("doclist");
+	    	UserMasterEntity userMasterEntity  =  (UserMasterEntity) studentVerificationPdfData.get("userEntity");
+	    	
+	 
+	    	
 	    	
 	        Document document = new Document(PageSize.A4, 30, 30, 50, 50);
 	        document.setMargins(10, 10, 10, 10);
 	      
-	      
-	        
-	        
 	        Font headingFont15 = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 	        headingFont15.setSize(15);
 	        headingFont15.setColor(Color.BLACK);
@@ -84,117 +101,259 @@ public class InvoicePDFExporter {
 	        ft10.setSize(10);
 	        ft10.setColor(Color.BLACK);
 	        
+	        Font ft12 = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+	        ft12.setSize(10);
+	        ft12.setColor(Color.BLACK);
 	        
-	        BaseFont bf_helv = BaseFont.createFont(BaseFont.HELVETICA, "Cp1252", false);
-	        BaseFont bf_times = BaseFont.createFont(BaseFont.TIMES_ROMAN, "Cp1252", false);
-	        BaseFont bf_courier = BaseFont.createFont(BaseFont.COURIER, "Cp1252", false);
-	        BaseFont bf_symbol = BaseFont.createFont(BaseFont.SYMBOL, "Cp1252", false);
+	         Font font9b = FontFactory.getFont(FontFactory.TIMES_BOLD);
+	 	     font9b.setSize(11);
 	        
-	 
 	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 	  
 	        document.open();
 	        
-	     
-	        
-	           Image img = Image.getInstance("logo.png");
-	           img.setAlignment(Element.ALIGN_CENTER);
-		   	   img.scaleToFit(100,100);
+	           Image img = Image.getInstance("ha-img.jpg");
+	         //  img.setAlignment(Element.ALIGN_CENTER);
+		   	  img.scaleToFit(100,50);
 		
-	          
-		        
-		        PdfPCell ImageCell = new PdfPCell();
-			   	  
-		   	   
+	            PdfPCell ImageCell = new PdfPCell();
+			   	ImageCell.addElement(img);
 		   	    
-		        ImageCell.addElement(img);
-		   	    ImageCell.setBorderWidthRight(0);
-		   	    ImageCell.setPaddingTop(15);
-	            ImageCell.setPaddingRight(5);
+		   	    
+		   	    
+		   	 //   ImageCell.setPaddingTop(15);
+	        //    ImageCell.setPaddingRight(5);
 		        
-		        Paragraph firstLinep= new Paragraph("       University Of Mumbai",headingFont15); 
-		      
-		   
-		        
-		        PdfPCell pdfWordCell = new PdfPCell();
-		        pdfWordCell.addElement(firstLinep);
-		        pdfWordCell.addElement(Chunk.NEWLINE);
-		        pdfWordCell.addElement(new Paragraph("Mahatma Jotirao Phule Bhavan,Vidhyanagri ,Santacruz(E) ,Mumbai",f10));
-		    
-		        
-		        pdfWordCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		        pdfWordCell.setVerticalAlignment(Element.ALIGN_CENTER);
-		        pdfWordCell.setBorderWidthLeft(0);
-		        pdfWordCell.setPaddingLeft(50);
-		        pdfWordCell.setPaddingBottom(10);
-		        pdfWordCell.setPaddingTop(15);
-		      
-		        
-		      
 	            
-	            PdfPTable tab1 = new PdfPTable(2);
-	            tab1.setWidthPercentage(100);
-	            tab1.setWidths(new int[]{25, 75});
-	            
-	            tab1.addCell(ImageCell);
-	            tab1.addCell(pdfWordCell);
-	            
-	         document.add(tab1);
-	         
-	         PdfPTable recptinfotable = new PdfPTable(2);
-	         recptinfotable.setWidthPercentage(100);
-	         recptinfotable.setWidths(new int[]{50, 50});
-	               
+	             PdfPTable tab1 = new PdfPTable(1);
+	             tab1.setWidthPercentage(100);
 	             
-	               PdfPCell rcpt_NOcell = new PdfPCell(new Paragraph("Receipt No.:" + studentVerificationDocsResponse.getApplication_id() ,f10));
-	              // Po_NOcell.addElement(PoNo_ph);
-	               rcpt_NOcell.setPaddingBottom(5);
-	               rcpt_NOcell.setBorderWidthTop(0);
-	               rcpt_NOcell.setBorderWidthRight(0);
-	               rcpt_NOcell.setBorderWidthBottom(0);
-	               
-	               DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy ");
-	               LocalDateTime now = LocalDateTime.now();
-	               System.out.println(dtf.format(now));
-	               
-	               //Phrase PoDate_ph =new Phrase(PODateH + PODateV+ chunk.NEWLINE,boldFont);
-	               PdfPCell Datecell = new PdfPCell(new Paragraph("Date : " + dtf.format(now),f10));
-	               Datecell.setHorizontalAlignment(Element.ALIGN_CENTER);
-	               Datecell.setBorderWidthTop(0);
-	               Datecell.setBorderWidthLeft(0);
-		           Datecell.setBorderWidthBottom(0);
-	             //  PoDatecell.addElement(PoDate_ph);
+	             tab1.addCell(ImageCell);
+	   
+	            
+	        document.add(tab1);
 	        
-	               
-           recptinfotable.addCell(rcpt_NOcell);
-           recptinfotable.addCell(Datecell);
-           
-           document.add(recptinfotable);
-           
-           
+	        PdfPTable  recpttable = new PdfPTable(2);
+	        recpttable.setWidthPercentage(100);
+	        recpttable.setWidths(new int[]{50, 50});
 	        
-           PdfPTable contentTable = new PdfPTable(1);
-           contentTable.setWidthPercentage(100);
+	        PdfPCell recNocell = new PdfPCell(new Paragraph("Receipt No :"+applicationId+"",f10));
+            // Po_NOcell.addElement(PoNo_ph);
+	        recNocell.setPaddingBottom(20);
+	        recNocell.setBorderWidthTop(0);
+	        recNocell.setBorderWidthRight(0);
+	        recNocell.setBorderWidthBottom(0);
          
-           
-           
-           Paragraph skuTitle = new Paragraph();
-	     
-	        skuTitle.add("   GENERAL FUND - 1 \n ");
-	        skuTitle.add(Chunk.NEWLINE);
-	        skuTitle.add("Received from SECURE 	credential ltd the sum of rupees \n \n by D.D.No. 58585368 HDFC     being the amount of \n\n FEE  FOR  VER  OF  CERT  AS  PER  LIST");
-	        skuTitle.setFont(headingFont15);
-	        skuTitle.setAlignment(Paragraph.ALIGN_CENTER);
 	        
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
+            LocalDateTime now = LocalDateTime.now();
+            System.out.println(dtf.format(now));
+       
+             
+          PdfPCell datecell = new PdfPCell(new Paragraph("Date:"+dtf.format(now),f10));
+	              // Po_NOcell.addElement(PoNo_ph);
+             datecell.setPaddingBottom(20);
+             datecell.setBorderWidthTop(0);
+             datecell.setBorderWidthBottom(0); 
+             datecell.setBorderWidthLeft(0);
+             
+             datecell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+             
+             recpttable.addCell(recNocell);
+             recpttable.addCell(datecell);
+             
+             PdfPCell InvoiceCell =new PdfPCell(new Paragraph("INVOICE",headingFont15));
+             InvoiceCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+             InvoiceCell.setColspan(2);
+             
+             document.add(recpttable); 
+            
+	         
+	         PdfPTable  studentinfotable = new PdfPTable(2);
+	         studentinfotable.setWidthPercentage(100);
+	         studentinfotable.setWidths(new int[]{50, 50});
+	         
+	          PdfPCell reqcell = new PdfPCell(new Paragraph("Requested By",f10));
+	              // Po_NOcell.addElement(PoNo_ph);
+	               reqcell.setPaddingBottom(10);
+	               reqcell.setBorderWidthTop(0);
+	               reqcell.setBorderWidthRight(0);
+	               reqcell.setBorderWidthBottom(0);
+	               reqcell.setBackgroundColor(Color.gray);
+	               
+	            PdfPCell verifiercell = new PdfPCell(new Paragraph("Verifier Details",f10));
+		              // Po_NOcell.addElement(PoNo_ph);
+	               verifiercell.setPaddingBottom(10);
+	               verifiercell.setBorderWidthTop(0);
+	               verifiercell.setBorderWidthBottom(0);
+	               verifiercell.setBackgroundColor(Color.gray);
+	             
+	               
+           studentinfotable.addCell(reqcell);
+           studentinfotable.addCell(verifiercell);
            
-	       
+           
+           
+           
+ 	      PdfPCell studentinfoCell = new PdfPCell();
+ 	      studentinfoCell.setBorderWidthTop(0);
+ 	     
+	 	     studentinfoCell.addElement(new Paragraph("Name      :"+userMasterEntity.getFirstName(),font9b));
+	 	     studentinfoCell.addElement(new Paragraph("Mobile    :"+userMasterEntity.getPhoneNo(),font9b));
+	 	     studentinfoCell.addElement(new Paragraph("Email ID :"+userMasterEntity.getEmailId(),font9b));
+	 	     studentinfoCell.addElement(new Paragraph("Country   :India",font9b));
+	 	    studentinfoCell.addElement(Chunk.NEWLINE);
+	 	    studentinfoCell.addElement(Chunk.NEWLINE);
+	 	    studentinfoCell.addElement(Chunk.NEWLINE);
+ 	 
+ 	     
+	 	    PdfPCell verifierCell = new PdfPCell();
+	 	    verifierCell.setBorderWidthTop(0);
+	 	     
+	 	    verifierCell.addElement(new Paragraph("Institue    :St.Joseph",font9b));
+	 	    verifierCell.addElement(new Paragraph("Name       :omni",font9b));
+	 	    verifierCell.addElement(new Paragraph("Email ID  :ab90c@gmail.com",font9b));
+	 	   verifierCell.addElement(new Paragraph("GSTIN  :gst58652585824586",font9b));
+	 	 
+		 	
+ 	       studentinfotable.addCell(studentinfoCell);
+	 	   studentinfotable.addCell(verifierCell);
+	 	     document.add(Chunk.NEWLINE);
+ 	         document.add(studentinfotable);
+           
+           
+           
+ 	      PdfPTable studentDocTable = new PdfPTable(8);
+ 	      studentDocTable.setWidthPercentage(100);
+ 	   
+ 	   
+ 	     
+ 	     studentDocTable.addCell(getCellH("SR NO", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Name", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Enrollment NO", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Document Name", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Passing Year", Element.ALIGN_CENTER, font9b));
+         studentDocTable.addCell(getCellH("Amount", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("GST", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Total", Element.ALIGN_CENTER, font9b));
+ 
+ 	    Long totalAmt = (long) 0;
+ 	   Long totalGst = (long) 0;
+ 	     
+ 	    for(int i=0 ;i<studentDocList.size();i++)
+        {
+ 	    	
+     	   StudentVerificationDocsResponse responseObj = studentDocList.get(i);
+ 	    	
+     	   String srno = ""+(i+1);
+     	   
+     	 
+		     	   PdfPCell srcell=new PdfPCell(new Phrase(srno,ft10));
+		     	   srcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+     	   
+				   PdfPCell namevCell =new PdfPCell(new  Paragraph(responseObj.getFirst_name(),ft12));
+				   namevCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   PdfPCell enrollCell=new PdfPCell(new Paragraph(responseObj.getEnroll_no(),ft12)); //-------------------------//
+				   enrollCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   PdfPCell docNamecell=new PdfPCell(new Paragraph(responseObj.getDoc_name(),ft12)); //-------------------------//
+				   docNamecell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   PdfPCell yearcell=new PdfPCell(new Paragraph(responseObj.getYear(),ft12)); //-------------------------//
+				   yearcell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   PdfPCell amtCell=new PdfPCell(new Paragraph(responseObj.getDocAmt().toString(),ft12)); 
+				   amtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   
+				   
+				   Long gstval = responseObj.getDocAmtWithGST() - responseObj.getDocAmt();
+				   
+				   totalGst = totalGst +gstval;
+				   
+				   PdfPCell gstAmtCell=new PdfPCell(new Paragraph(gstval.toString(),ft12)); 
+				   gstAmtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   PdfPCell totalCell=new PdfPCell(new Paragraph(responseObj.getDocAmtWithGST().toString(),ft12)); 
+				   totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				   
+				   totalAmt = totalAmt + responseObj.getDocAmtWithGST();
+				   
+				   
+     	    studentDocTable.addCell(srcell);
+     	    studentDocTable.addCell(namevCell);
+     	    studentDocTable.addCell(enrollCell);
+     	    studentDocTable.addCell(docNamecell);
+     	    studentDocTable.addCell(yearcell);
+          
+            
+     	    studentDocTable.addCell(amtCell); 
+     	    studentDocTable.addCell(gstAmtCell); 
+     	    studentDocTable.addCell(totalCell); 
+           
+     }
+        
+ 	   
+		    
+		    PdfPCell totAMTCell =new PdfPCell(new Paragraph("Total Value:",font9b));
+		    totAMTCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		    totAMTCell.setColspan(7);
+		    
+		    studentDocTable.addCell(totAMTCell);
+	        
+	        PdfPCell totAmtVCell = new PdfPCell(new Paragraph(totalAmt.toString() ,font9b));
+	        totAmtVCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+	        totAmtVCell.setPaddingBottom(5);
+	        
+	        studentDocTable.addCell(totAmtVCell);
+	        
+	        PdfPCell GstAMTCell =new PdfPCell(new Paragraph("Total GST:",font9b));
+	        GstAMTCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+	        GstAMTCell.setColspan(7);
+		    
+		    studentDocTable.addCell(GstAMTCell);
+	        
+	        PdfPCell GstAmtVCell = new PdfPCell(new Paragraph(totalGst.toString(),font9b));
+	        GstAmtVCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+	        GstAmtVCell.setPaddingBottom(5);
+	        
+	        studentDocTable.addCell(GstAmtVCell);
+	        
+	        PdfPCell grandAMTCell =new PdfPCell(new Paragraph("Grand Total:",font9b));
+	        grandAMTCell.setColspan(7);
+	        grandAMTCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		    
+		    studentDocTable.addCell(grandAMTCell);
+		    
+		    Long grandTotal = totalAmt + totalGst;
+	        
+	        PdfPCell grandAmtVCell = new PdfPCell(new Paragraph(grandTotal.toString(),font9b));
+	        grandAmtVCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+	        grandAmtVCell.setPaddingBottom(5);
+	        
+            studentDocTable.addCell(grandAmtVCell);
+        
+ 	 
+ 	     document.add(studentDocTable);
+ 	     
+ 	     
+ 	     
+ 	     
+ 	    
+          PdfPTable contentTable = new PdfPTable(1);
+          contentTable.setWidthPercentage(100);
+       
+	 
 	    
 	       PdfPCell  contentCell = new PdfPCell(); 
 	       
-	       contentCell.addElement(skuTitle);
-	       contentCell.addElement(Chunk.NEWLINE);
+	       contentCell.addElement(new Paragraph("   GENERAL FUND - 1 ",ft12));
+	       contentCell.addElement(new Paragraph("Received from SECURE Credential ltd the sum of rupees ",ft12));
+	       contentCell.addElement(new Paragraph(NumberToWordConverter1.convertToWords(totalAmt)+" only",ft12));
+	       contentCell.addElement(new Paragraph("by Online transfer  being the amount of",ft12));
+	       contentCell.addElement(new Paragraph("FEE  FOR  VER  OF  CERT  AS  PER  LIST",ft12));
 	     
-	        
 	       contentCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 	       contentCell.setVerticalAlignment(Element.ALIGN_CENTER);
 	       contentCell.setPaddingLeft(50);
@@ -203,68 +362,22 @@ public class InvoicePDFExporter {
 	        
 	       contentTable.addCell(contentCell);
 	      
-           document.add(contentTable);
-           
-			/*
-			 * Paragraph skuTitle = new Paragraph(); skuTitle.add("\n");
-			 * skuTitle.add("GENERAL FUND - 1"); skuTitle.add("\n");
-			 * skuTitle.add("Received from SECURE 	credential ltd the sum of rupes");
-			 * skuTitle.setFont(headingFont15);
-			 * skuTitle.setAlignment(Paragraph.ALIGN_CENTER);
-			 * 
-			 * document.add(skuTitle);
-			 */
-	        
-           
- 	      PdfPTable documentTable = new PdfPTable(2);
- 	      documentTable.setWidthPercentage(100);
- 	      
- 	         
- 		 insertCell(documentTable, "Document Name", Element.ALIGN_CENTER,  f10);
- 	     insertCell(documentTable, "Document Amount", Element.ALIGN_CENTER,  f10);
- 	     insertCell(documentTable, "Document Amount With GST", Element.ALIGN_CENTER,  f10);
- 	     
- 	     
+ 	  //   document.add(contentTable);
  	
- 	    	
- 	    	 insertCell(documentTable,studentVerificationDocsResponse.getDoc_name().toString() , Element.ALIGN_CENTER,  ft10);
- 	 	     insertCell(documentTable,studentVerificationDocsResponse.getDocAmt().toString(), Element.ALIGN_CENTER,  ft10);
- 	 	     insertCell(documentTable,studentVerificationDocsResponse.getDocAmtWithGST().toString(), Element.ALIGN_CENTER,  ft10);
- 	 	    		
- 	    
- 	     
- 	     
- 	     
- 
- 	 
- 	     document.add(documentTable);
- 	      
- 	      
- 	      
- 	      
-	      PdfPTable footerTable = new PdfPTable(1);
-	      footerTable.setWidthPercentage(100);
 	         
 	      
-	      PdfPCell footerCell = new PdfPCell();
+			/*
+			 * PdfPCell footerCell = new PdfPCell();
+			 * 
+			 * footerCell.addElement(new
+			 * Paragraph("System generated document does not require signature.",ft10));
+			 * footerCell.setBorderWidthTop(0);
+			 */
 	      
-	      footerCell.addElement(new Paragraph("1. Receipt subject to the realisation of Cheque/Draft etc., it tendered.",ft10));
-	      footerCell.addElement(new Paragraph("2. No. of duplicate  receipt will be issued.",ft10));
-	      footerCell.addElement(new Paragraph("3.The statement of marks should be collected from Ground Floor,Window No.2 after 15 working days on production of the receipt and if"+
-	                                             "no collected within 3 months no responsibility lies on the unversity.",ft10));
-	      footerCell.setBorderWidthTop(0);
-	     
-	    
-	      footerTable.addCell(footerCell);
-	   
-	       document.add(footerTable);
+	      document.add(new Paragraph("System generated document does not require signature.",ft12));
 
 	        
-	       
-	        
-	        
-
-	        document.close();
+	       document.close();
 	        
 	    } catch (Exception ex) {
 	    	ex.printStackTrace();
@@ -275,24 +388,20 @@ public class InvoicePDFExporter {
 	    
 	
 	
+	 
+	 public static PdfPCell getCellH(String value, int alignment, Font font) {
+	        PdfPCell cell = new PdfPCell();
+	        cell.setUseAscender(true);
+	        cell.setUseDescender(true);
+	     //   cell.setBackgroundColor(BaseColor.DARK_GRAY);
+	        Paragraph p = new Paragraph(value, font);
+	        p.setAlignment(alignment);
+	        cell.addElement(p);
+	        cell.setPaddingBottom(5);
+	        cell.setPaddingTop(5);
+	        return cell;
+	    }
 	
-	 private void insertCell(PdfPTable table, String text, int align, Font font){
-		   
-		  //create a new cell with the specified Text and Font
-		  PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
-		  //set the cell alignment
-		  cell.setHorizontalAlignment(align);
-		  //set the cell column span in case you want to merge two or more cells
-	
-		  //in case there is no text and you wan to create an empty row
-		  if(text.trim().equalsIgnoreCase("")){
-		   cell.setMinimumHeight(10f);
-		  }
-		  //add the call to the table
-		  table.addCell(cell);
-		   
-		 }
-		 
 		
 
 }

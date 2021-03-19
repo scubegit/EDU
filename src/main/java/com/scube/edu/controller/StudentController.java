@@ -150,18 +150,18 @@ public class StudentController {
     	
     	
         response.setContentType("application/pdf");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         
-        String currentDateTime = dateFormatter.format(new Date());
+        String currentDate = dateFormatter.format(new Date());
          
         String headerKey =  "Content-Disposition";
-        String headerValue = "attachment; filename=users_"+ applicationId+"_" + currentDateTime + ".pdf";
+        String headerValue = "attachment; filename= "+applicationId+"_" + currentDate + ".pdf";
         response.setHeader(headerKey, headerValue);
          
-    StudentVerificationDocsResponse StudentVerificationDocsResponse = verificationService.getdatabyapplicationId( applicationId) ;
+        HashMap<Object, Object>   pdfData  = verificationService.getdatabyapplicationId( applicationId) ;
          
         
-        InvoicePDFExporter exporter = new InvoicePDFExporter(StudentVerificationDocsResponse);
+        InvoicePDFExporter exporter = new InvoicePDFExporter(pdfData,applicationId);
         
         exporter.export(response);
          

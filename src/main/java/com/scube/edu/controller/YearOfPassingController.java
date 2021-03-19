@@ -41,7 +41,6 @@ public class YearOfPassingController {
 		
 		try {
 			
-			
 			//response = masterServices.getStreamList(request);
 			
              List<YearOfPassingResponse> responseData = yearOfPassingservice.getYearOfPassingList(request);
