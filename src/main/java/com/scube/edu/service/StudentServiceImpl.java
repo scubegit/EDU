@@ -195,7 +195,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		
 		List<VerificationRequest> list = new ArrayList<>();
-		
+		Long ver_req = (long) 1;
 		for(StudentDocVerificationRequest req : studentDocReq) {
 			
 			VerificationRequest resp = new VerificationRequest();
@@ -231,11 +231,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setUniversityId(req.getUniId());
 			resp.setUploadDocumentPath(req.getUploadDocPath());
 			resp.setUserId(req.getUserId());
-			resp.setVerRequestId(req.getVerReqId());
+			resp.setVerRequestId(ver_req);
 			resp.setYearOfPassingId(String.valueOf(req.getYearOfPassId()));
 			
 			resp.setDocAmt(total);
 			resp.setDosAmtWithGst(totalWithGST);
+			
+			ver_req += 1;
 			
 			list.add(resp);
 			
@@ -248,6 +250,70 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		logger.info("list------------"+ list);
 		
 		return map;
+	}
+
+	@Override
+	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
+			HttpServletRequest request) {
+		
+		System.out.println("********StudentServiceImpl saveStudentSingleVerificationDoc********"+ studentDocReq.getDocName());
+		
+		VerificationRequest verDoc = new VerificationRequest();
+		
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		long total;
+		long totalWithGST;
+		
+		long amtWithoutGST = 0;
+		long amtWithGST = 0;
+		
+		// assign application_id here
+		Long appId = (long) 0;
+		Long app_id;
+		app_id = verificationReqRepo.getMaxApplicationId();
+		logger.info("---------"+ app_id);
+		
+		if(app_id == null) {
+			appId = (long) 1;
+			System.out.println("here");
+		}else {
+			appId = app_id + 1;
+		}
+		
+		logger.info("---------"+ appId);
+		
+		PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , studentDocReq.getYearOfPassId());
+		
+		total = diff.getTotalAmt();
+		totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+		
+		verDoc.setApplicationId(appId);
+		verDoc.setAssignedTo((long)0);
+		verDoc.setCollegeId(studentDocReq.getCollegeNameId());
+		verDoc.setCreateby(String.valueOf(studentDocReq.getUserId()));
+		verDoc.setDocAmt(total);
+		verDoc.setDocStatus("Requested");
+		verDoc.setDocumentName(studentDocReq.getDocName());
+		verDoc.setDosAmtWithGst(totalWithGST);
+		verDoc.setEnrollmentNumber(studentDocReq.getEnrollNo());
+		verDoc.setFirstName(studentDocReq.getFirstName());
+		verDoc.setLastName(studentDocReq.getLastName());
+		verDoc.setIsdeleted("N");
+		verDoc.setStreamId(studentDocReq.getStreamId());
+		verDoc.setUniversityId((long) 1);
+		verDoc.setUploadDocumentPath(studentDocReq.getUploadDocPath());
+		verDoc.setVerRequestId((long) 1);
+		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearOfPassId()));
+		verDoc.setUserId(studentDocReq.getUserId());
+		verificationReqRepo.save(verDoc);
+		
+		HashMap<String, Long> map = new HashMap<String, Long>();
+		
+		map.put("total_without_gst", total);
+		map.put("total_with_gst", totalWithGST);
+		
+		return map;
+//		return null;
 	}
 
 	

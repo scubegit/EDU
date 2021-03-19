@@ -20,6 +20,9 @@ public interface StudentService {
 
 	public HashMap<String, Long> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
 
+	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
+			HttpServletRequest request);
+
 
 
 

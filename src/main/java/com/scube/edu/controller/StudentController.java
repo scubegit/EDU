@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -112,12 +113,12 @@ public class StudentController {
    }
 	
 	
-	@GetMapping("/saveVerificationDocAndCalculateAmount")
+	@PostMapping("/saveVerificationDocAndCalculateAmount")
 	public  ResponseEntity<Object> saveVerificationDocAndCalculateAmount(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
-		
 		response = new BaseResponse();
-		
+		System.out.println("----"+ studentDocReq);
 		    try {
+		    	
 		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
@@ -165,6 +166,36 @@ public class StudentController {
         exporter.export(response);
          
     }
+    
+	@PostMapping("/saveStudentSingleVerificationDoc")
+	public  ResponseEntity<Object> saveStudentSingleVerificationDoc(@RequestBody StudentDocVerificationRequest studentDocReq, HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		System.out.println("----"+studentDocReq.getFirstName());
+		
+		    try {
+		    	
+		    	HashMap<String, Long> list = studentService.saveStudentSingleVerificationDoc(studentDocReq, request);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 	
 	
 

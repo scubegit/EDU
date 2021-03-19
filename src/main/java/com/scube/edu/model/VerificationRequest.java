@@ -73,7 +73,7 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "yearOfPassingId")
 	private String yearOfPassingId;
 	
-	@NotBlank
+
 	@Size(max = 100)
 	@Column(name = "uploadDocumentPath")
 	private String uploadDocumentPath;
