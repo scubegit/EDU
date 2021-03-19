@@ -79,7 +79,7 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://192.168.0.228:4200/resetPassword'><strong>Reset Link</strong></a> "+
+                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://192.168.0.225:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
                                       "<br><br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts

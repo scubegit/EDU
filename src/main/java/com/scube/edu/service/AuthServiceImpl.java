@@ -291,15 +291,15 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public boolean verifyStudentEmail(String emailId) throws Exception {
 		
-		//  Base64.Decoder decoder = Base64.getDecoder();  
+	 Base64.Decoder decoder = Base64.getDecoder();  
 	        // Decoding string  
-	     // String decodedEmail = new String(decoder.decode(emailId)); 
+	  String decodedEmail = new String(decoder.decode(emailId)); 
 	        
 	       // logger.info("---------decodedEmail-------"+decodedEmail);
 	        
 	        
 		 
-	       UserMasterEntity userEntities  = userRepository.findByEmailId(emailId);
+	       UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
 	       
 	       
 		   if(userEntities == null) {

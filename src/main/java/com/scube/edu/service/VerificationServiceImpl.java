@@ -1,7 +1,9 @@
 package com.scube.edu.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
-
+import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.LoginRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.UserAddRequest;
@@ -31,7 +36,14 @@ public class VerificationServiceImpl implements VerificationService{
 	
 	@Autowired
 	VerificationRequestRepository verificationReqRepo;
+	
+	@Autowired
+	YearOfPassingRepository  yearOfPassingRepository;
 
+	
+	@Autowired
+	UserRepository  userRepository;
+	
 	@Override
 	public boolean saveStudentVerificationDoc(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
@@ -72,26 +84,56 @@ public class VerificationServiceImpl implements VerificationService{
 		return true;
 	}
 
+	
+	
 	@Override
-	public StudentVerificationDocsResponse getdatabyapplicationId(String applicationId) {
+	public HashMap<Object, Object> getdatabyapplicationId(String applicationId) {
+		
+		HashMap<Object, Object>  map = new HashMap<>();
+		
+		Long id = (long) 0;
+		
+		
+		
 		
 		List<VerificationRequest> verlistEntity= verificationReqRepo.findByApplicationId(Long.parseLong(applicationId));
 		
-		StudentVerificationDocsResponse docResponse = new StudentVerificationDocsResponse();
+		List<StudentVerificationDocsResponse> studentDocList = new ArrayList<>();
 			
 			System.out.println("-----getdatabyapplicationId---");
 			
-			for(VerificationRequest verEntities : verlistEntity) {
 			
+			for(VerificationRequest verEntities : verlistEntity) {
+				
+				StudentVerificationDocsResponse docResponse = new StudentVerificationDocsResponse();
+				
+			    id  = verEntities.getUserId();
+				
 				docResponse.setApplication_id(verEntities.getApplicationId());
 				docResponse.setCollege_name_id(verEntities.getCollegeId());
 				docResponse.setDoc_name(verEntities.getDocumentName());
 				docResponse.setDocAmt(verEntities.getDocAmt());
 				docResponse.setDocAmtWithGST(verEntities.getDosAmtWithGst());
+				docResponse.setEnroll_no(verEntities.getEnrollmentNumber());
+				docResponse.setFirst_name(verEntities.getFirstName());
+				docResponse.setLast_name(verEntities.getLastName());
+				
+				docResponse.setId(verEntities.getId());
+				Long yearid = Long.parseLong(verEntities.getYearOfPassingId());
+				PassingYearMaster passingYearMaster = yearOfPassingRepository.getOne(yearid);
+				docResponse.setYear(passingYearMaster.getYearOfPassing());
+				
+				studentDocList.add(docResponse);
 			
 			}
 		
-		return docResponse;
+			UserMasterEntity userEntity = userRepository.getOne(id);
+		
+			
+			map.put("doclist", studentDocList);
+			map.put("userEntity", userEntity);
+			
+		return map;
 		
 	}
 	

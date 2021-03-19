@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -18,7 +19,7 @@ public interface VerificationService {
 
 	public boolean saveStudentVerificationDoc(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
 
-	public StudentVerificationDocsResponse getdatabyapplicationId(String applicationId);
+	public HashMap getdatabyapplicationId(String applicationId);
 
 
 }
