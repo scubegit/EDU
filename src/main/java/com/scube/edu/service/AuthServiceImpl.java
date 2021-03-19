@@ -59,6 +59,7 @@ public class AuthServiceImpl implements AuthService{
 	EmailService emailService;
 	
 	BaseResponse  baseResponse = null;
+    Base64.Decoder decoder = Base64.getDecoder();  
 
 	@Override
 	public BaseResponse authenticateUser(LoginRequest loginRequest, HttpServletRequest request) throws Exception {
@@ -216,13 +217,19 @@ public class AuthServiceImpl implements AuthService{
 		 logger.info("---------Email-------"+reqUserentity.getEmailId());   
 		 logger.info("---------password-------"+reqUserentity.getPassword());
 		 
-		 UserMasterEntity userEntities  = userRepository.findByEmailId(reqUserentity.getEmailId());
+		 String encodeEmailId = reqUserentity.getEmailId();
+		  String dStr = new String(decoder.decode(encodeEmailId));  
+
+
+		 UserMasterEntity userEntities  = userRepository.findByEmailId(dStr);
 		 
-		   if(userEntities == null) {
+		   if(userEntities == null || encodeEmailId== null) {
 			   
 				throw new Exception("Error: Invalid Email");
 			}
 		
+		   
+		   //Here checking password flag
 		
 		   if(userEntities.getForgotPasswordFlag().equalsIgnoreCase("Y")) {
 	        
@@ -253,7 +260,7 @@ public class AuthServiceImpl implements AuthService{
         baseResponse	= new BaseResponse();
         String flag = "";
 		
-        Base64.Decoder decoder = Base64.getDecoder();  
+       // Base64.Decoder decoder = Base64.getDecoder();  
         // Decoding string  
         String dStr = new String(decoder.decode(encodeEmail));  
        
