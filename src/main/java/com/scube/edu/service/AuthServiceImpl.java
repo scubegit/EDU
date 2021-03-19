@@ -219,16 +219,25 @@ public class AuthServiceImpl implements AuthService{
 		 UserMasterEntity userEntities  = userRepository.findByEmailId(reqUserentity.getEmailId());
 		 
 		   if(userEntities == null) {
+			   
 				throw new Exception("Error: Invalid Email");
 			}
 		
 		
-		 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
-		 entities.setPassword(encoder.encode(reqUserentity.getPassword()));
-		 entities.setForgotPasswordFlag("N");
+		   if(userEntities.getForgotPasswordFlag().equalsIgnoreCase("Y")) {
+	        
+			     UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
+				 entities.setPassword(encoder.encode(reqUserentity.getPassword()));
+				 entities.setForgotPasswordFlag("N");
+				 
+				 userRepository.save(entities);
+		   }else {
+			   
+			    throw new Exception("Error: Not a valid User");
+		   }
 		 
 		 
-		 userRepository.save(entities);
+		
 		
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -262,7 +271,8 @@ public class AuthServiceImpl implements AuthService{
         	
         }else {
         	
-        	flag = "failure";
+        	throw new Exception("Forgot password Flag is not checked");
+        	//flag = "failure";
         }
         
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

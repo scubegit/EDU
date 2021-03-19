@@ -162,6 +162,10 @@ public class InvoicePDFExporter {
              recpttable.addCell(recNocell);
              recpttable.addCell(datecell);
              
+             PdfPCell InvoiceCell =new PdfPCell(new Paragraph("INVOICE",headingFont15));
+             InvoiceCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+             InvoiceCell.setColspan(2);
+             
              document.add(recpttable); 
             
 	         
@@ -209,6 +213,7 @@ public class InvoicePDFExporter {
 	 	    verifierCell.addElement(new Paragraph("Institue    :St.Joseph",font9b));
 	 	    verifierCell.addElement(new Paragraph("Name       :omni",font9b));
 	 	    verifierCell.addElement(new Paragraph("Email ID  :ab90c@gmail.com",font9b));
+	 	   verifierCell.addElement(new Paragraph("GSTIN  :gst58652585824586",font9b));
 	 	 
 		 	
  	       studentinfotable.addCell(studentinfoCell);
@@ -320,8 +325,10 @@ public class InvoicePDFExporter {
 	        grandAMTCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 		    
 		    studentDocTable.addCell(grandAMTCell);
+		    
+		    Long grandTotal = totalAmt + totalGst;
 	        
-	        PdfPCell grandAmtVCell = new PdfPCell(new Paragraph(totalAmt.toString(),font9b));
+	        PdfPCell grandAmtVCell = new PdfPCell(new Paragraph(grandTotal.toString(),font9b));
 	        grandAmtVCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 	        grandAmtVCell.setPaddingBottom(5);
 	        
