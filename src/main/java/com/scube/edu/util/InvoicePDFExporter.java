@@ -1,8 +1,6 @@
 
 package com.scube.edu.util;
 
-
-
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -109,29 +107,53 @@ public class InvoicePDFExporter {
 	 	     font9b.setSize(11);
 	        
 	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
-	  
-	        document.open();
+	
+
+            HeaderFooter footer =    new HeaderFooter( new Phrase("System generated document does not require signature.", f10), false);
+            footer.setAlignment(Element.ALIGN_CENTER);
+            footer.setBorder(Rectangle.NO_BORDER);
+            document.setFooter(footer);
+            
+            
+            document.open();
 	        
 	           Image img = Image.getInstance("ha-img.jpg");
 	         //  img.setAlignment(Element.ALIGN_CENTER);
-		   	  img.scaleToFit(100,50);
+			/*
+			 * img.scaleAbsolute(107, 107); img.setAlignment(20);
+			 * img.setAbsolutePosition(200, 500);
+			 */
+		   	  
+		   	  
 		
 	            PdfPCell ImageCell = new PdfPCell();
 			   	ImageCell.addElement(img);
-		   	    
-		   	    
-		   	    
-		   	 //   ImageCell.setPaddingTop(15);
-	        //    ImageCell.setPaddingRight(5);
-		        
-	            
-	             PdfPTable tab1 = new PdfPTable(1);
-	             tab1.setWidthPercentage(100);
+		   	  
+	            PdfPTable tab1 = new PdfPTable(1);
+	            tab1.setWidthPercentage(100);
 	             
-	             tab1.addCell(ImageCell);
-	   
+	            tab1.addCell(ImageCell);
+	          document.add(tab1);
 	            
-	        document.add(tab1);
+			/*
+			 * Phrase phrase1 = new Phrase(""+document.add(ImageCell));
+			 * 
+			 * HeaderFooter header =new HeaderFooter(phrase1,false);
+			 * header.setAlignment(HeaderFooter.ALIGN_CENTER);
+			 * header.setBorder(Rectangle.NO_BORDER); document.setHeader(header);
+			 */
+	             
+	             
+	           
+	             
+	             
+	             
+	             
+	         
+	             
+	               // Phrase phrase1 = new Phrase(img + "", FontFactory.getFont(FontFactory.TIMES_ROMAN, 7, Font.NORMAL));
+
+	     
 	        
 	        PdfPTable  recpttable = new PdfPTable(2);
 	        recpttable.setWidthPercentage(100);
@@ -162,9 +184,13 @@ public class InvoicePDFExporter {
              recpttable.addCell(recNocell);
              recpttable.addCell(datecell);
              
-             PdfPCell InvoiceCell =new PdfPCell(new Paragraph("INVOICE",headingFont15));
-             InvoiceCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+             PdfPCell InvoiceCell =new PdfPCell(new Paragraph("\nINVOICE\n\n",headingFont15));
+         
              InvoiceCell.setColspan(2);
+             InvoiceCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        
+             
+             recpttable.addCell(InvoiceCell);
              
              document.add(recpttable); 
             
@@ -213,7 +239,7 @@ public class InvoicePDFExporter {
 	 	    verifierCell.addElement(new Paragraph("Institue    :St.Joseph",font9b));
 	 	    verifierCell.addElement(new Paragraph("Name       :omni",font9b));
 	 	    verifierCell.addElement(new Paragraph("Email ID  :ab90c@gmail.com",font9b));
-	 	   verifierCell.addElement(new Paragraph("GSTIN  :gst58652585824586",font9b));
+	 	   verifierCell.addElement(new Paragraph("GSTIN     :gst58652585824586",font9b));
 	 	 
 		 	
  	       studentinfotable.addCell(studentinfoCell);
@@ -374,7 +400,11 @@ public class InvoicePDFExporter {
 			 * footerCell.setBorderWidthTop(0);
 			 */
 	      
-	      document.add(new Paragraph("System generated document does not require signature.",ft12));
+	       
+	       
+	    		    
+	    		    
+	  //    document.add(new Paragraph("System generated document does not require signature.",ft12));
 
 	        
 	       document.close();
