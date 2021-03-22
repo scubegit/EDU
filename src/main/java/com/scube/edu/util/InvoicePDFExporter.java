@@ -30,9 +30,11 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.alignment.HorizontalAlignment;
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfDocument;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.UserMasterEntity;
@@ -73,7 +75,18 @@ public class InvoicePDFExporter {
 	    	
 	    	
 	        Document document = new Document(PageSize.A4, 30, 30, 50, 50);
+	        
+	       // document = new Document(PageSize.A4, 36, 36, 150, 80);
+	        
 	        document.setMargins(10, 10, 10, 10);
+	        
+	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+	        
+	        
+	       // HeaderFooterPageEvent  event = new HeaderFooterPageEvent ();
+		   //  writer.setPageEvent(event);
+	        
 	      
 	        Font headingFont15 = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 	        headingFont15.setSize(15);
@@ -106,7 +119,6 @@ public class InvoicePDFExporter {
 	         Font font9b = FontFactory.getFont(FontFactory.TIMES_BOLD);
 	 	     font9b.setSize(11);
 	        
-	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 	
 
             HeaderFooter footer =    new HeaderFooter( new Phrase("System generated document does not require signature.", f10), false);
@@ -114,48 +126,28 @@ public class InvoicePDFExporter {
             footer.setBorder(Rectangle.NO_BORDER);
             document.setFooter(footer);
             
-            
             document.open();
-	        
-	           Image img = Image.getInstance("ha-img.jpg");
-	         //  img.setAlignment(Element.ALIGN_CENTER);
-			/*
-			 * img.scaleAbsolute(107, 107); img.setAlignment(20);
-			 * img.setAbsolutePosition(200, 500);
-			 */
-		   	  
-		   	  
-		
-	            PdfPCell ImageCell = new PdfPCell();
-			   	ImageCell.addElement(img);
-		   	  
-	            PdfPTable tab1 = new PdfPTable(1);
-	            tab1.setWidthPercentage(100);
-	             
-	            tab1.addCell(ImageCell);
-	          document.add(tab1);
-	            
-			/*
-			 * Phrase phrase1 = new Phrase(""+document.add(ImageCell));
-			 * 
-			 * HeaderFooter header =new HeaderFooter(phrase1,false);
-			 * header.setAlignment(HeaderFooter.ALIGN_CENTER);
-			 * header.setBorder(Rectangle.NO_BORDER); document.setHeader(header);
-			 */
-	             
-	             
-	           
-	             
-	             
-	             
-	             
-	         
-	             
-	               // Phrase phrase1 = new Phrase(img + "", FontFactory.getFont(FontFactory.TIMES_ROMAN, 7, Font.NORMAL));
-
-	     
-	        
-	        PdfPTable  recpttable = new PdfPTable(2);
+            
+               Image logo = Image.getInstance("ha-img.jpg");
+               logo.setAbsolutePosition(10, 300);
+                Phrase phrase1 = new Phrase(logo.HEADER);
+               HeaderFooter header =new HeaderFooter(phrase1,false);
+               document.setHeader(header);
+            
+			
+			
+			  Image img = Image.getInstance("ha-img.jpg"); //
+			  img.setAlignment(Element.ALIGN_CENTER);
+			  
+			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
+			  
+			  PdfPTable tab1 = new PdfPTable(1); tab1.setWidthPercentage(100);
+			  
+			  tab1.addCell(ImageCell1); 
+			  document.add(tab1);
+			
+			 
+			PdfPTable  recpttable = new PdfPTable(2);
 	        recpttable.setWidthPercentage(100);
 	        recpttable.setWidths(new int[]{50, 50});
 	        
@@ -228,9 +220,9 @@ public class InvoicePDFExporter {
 	 	     studentinfoCell.addElement(new Paragraph("Mobile    :"+userMasterEntity.getPhoneNo(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Email ID :"+userMasterEntity.getEmailId(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Country   :India",font9b));
-	 	    studentinfoCell.addElement(Chunk.NEWLINE);
-	 	    studentinfoCell.addElement(Chunk.NEWLINE);
-	 	    studentinfoCell.addElement(Chunk.NEWLINE);
+	 	     studentinfoCell.addElement(Chunk.NEWLINE);
+	 	     studentinfoCell.addElement(Chunk.NEWLINE);
+	 	     studentinfoCell.addElement(Chunk.NEWLINE);
  	 
  	     
 	 	    PdfPCell verifierCell = new PdfPCell();
@@ -239,11 +231,12 @@ public class InvoicePDFExporter {
 	 	    verifierCell.addElement(new Paragraph("Institue    :St.Joseph",font9b));
 	 	    verifierCell.addElement(new Paragraph("Name       :omni",font9b));
 	 	    verifierCell.addElement(new Paragraph("Email ID  :ab90c@gmail.com",font9b));
-	 	   verifierCell.addElement(new Paragraph("GSTIN     :gst58652585824586",font9b));
+	 	    verifierCell.addElement(new Paragraph("GSTIN     :gst58652585824586",font9b));
 	 	 
 		 	
  	       studentinfotable.addCell(studentinfoCell);
 	 	   studentinfotable.addCell(verifierCell);
+	 	    
 	 	     document.add(Chunk.NEWLINE);
  	         document.add(studentinfotable);
            
@@ -264,7 +257,7 @@ public class InvoicePDFExporter {
  	     studentDocTable.addCell(getCellH("Total", Element.ALIGN_CENTER, font9b));
  
  	    Long totalAmt = (long) 0;
- 	   Long totalGst = (long) 0;
+ 	    Long totalGst = (long) 0;
  	     
  	    for(int i=0 ;i<studentDocList.size();i++)
         {
@@ -361,7 +354,7 @@ public class InvoicePDFExporter {
             studentDocTable.addCell(grandAmtVCell);
         
  	 
- 	     document.add(studentDocTable);
+ 	      document.add(studentDocTable);
  	     
  	     
  	     
@@ -390,21 +383,6 @@ public class InvoicePDFExporter {
 	      
  	  //   document.add(contentTable);
  	
-	         
-	      
-			/*
-			 * PdfPCell footerCell = new PdfPCell();
-			 * 
-			 * footerCell.addElement(new
-			 * Paragraph("System generated document does not require signature.",ft10));
-			 * footerCell.setBorderWidthTop(0);
-			 */
-	      
-	       
-	       
-	    		    
-	    		    
-	  //    document.add(new Paragraph("System generated document does not require signature.",ft12));
 
 	        
 	       document.close();

@@ -142,11 +142,19 @@ public class AuthServiceImpl implements AuthService{
 		 
 		 UserMasterEntity userEntities  = userRepository.findByEmailId(userAddRequest.getEmailId());
 		 
-			if(userEntities != null) {
+		
+			if(userEntities != null && userAddRequest.getRoleId() == 1 ) {
+				
 				throw new Exception("Error: This email id already exists");
 			}
 		
 		 userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
+		 userMasterEntity.setCompanyEmailId(userAddRequest.getCompanyEmailId());
+		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
+		 userMasterEntity.setContactPersonName(userAddRequest.getContactPersonName());
+		 userMasterEntity.setContactPersonPhone(userAddRequest.getContactPersonPhoneNo());
+		 
+		 
 		 userMasterEntity.setFirstName(userAddRequest.getFirstName());
 		 userMasterEntity.setLastName(userAddRequest.getLastName());
 		 userMasterEntity.setEmailId(userAddRequest.getEmailId()); 
@@ -155,20 +163,18 @@ public class AuthServiceImpl implements AuthService{
 		 userMasterEntity.setEmailVerificationStatus("N");
 		 userMasterEntity.setUniversityId(userAddRequest.getUniversityId());
 		 userMasterEntity.setUsername(userAddRequest.getEmailId());
-	
-		 userMasterEntity.setRoleId(userAddRequest.getRoleId());
+	     userMasterEntity.setRoleId(userAddRequest.getRoleId());
 		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
 		 userMasterEntity.setIsactive("Y");
+		 
+	
 	
 		 
 		 userRepository.save(userMasterEntity);
 		 
 
 			if(userAddRequest.getRoleId() == 1) {
-				
-
 				emailService.sendVerificationEmail(userAddRequest.getEmailId());
-				
 			}
 		return true;
 		

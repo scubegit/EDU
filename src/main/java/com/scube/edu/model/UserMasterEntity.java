@@ -47,6 +47,9 @@ public class UserMasterEntity  extends CreateUpdate{
 	@Column(name = "companyName")
 	private String companyName;
 	
+	@Size(max = 100)
+	@Column(name = "companyEmailId")
+	private String companyEmailId;
 
 	@Size(max = 100)
 	@Column(name = "emailId")
