@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,5 +46,17 @@ public class DocumentServiceImpl implements DocumentService{
 			docList.add(documentResponse);
 		}
 		return docList;
+	}
+
+	@Override
+	public DocumentMaster getNameById(String documentName) {
+		
+		Long ID = Long.parseLong(documentName);
+		System.out.println(ID);
+		
+		Optional<DocumentMaster> docMas = documentRespository.findById(ID);
+		DocumentMaster resp = docMas.get();
+		
+		return resp;
 	}
 }

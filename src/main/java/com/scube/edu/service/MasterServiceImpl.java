@@ -90,15 +90,43 @@ public class MasterServiceImpl implements MasterService {
 
 	@Override
 	public List<CollegeResponse> getCollegeList(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<CollegeResponse> List = new ArrayList<>();
+		List<CollegeMaster> Entities    = collegeRespository.findAll();
+		
+		for(CollegeMaster entity : Entities) {
+			
+			CollegeResponse collegeResponse = new CollegeResponse();
+
+			collegeResponse.setId(entity.getId());
+			collegeResponse.setCollegeName(entity.getCollegeName());
+			collegeResponse.setUniversityId(entity.getUniversityId());
+			
+			List.add(collegeResponse);
+		}
+		
+		return List;
 	}
 
 
 	@Override
 	public List<YearOfPassingResponse> getYearOfPassingMasterList(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<YearOfPassingResponse> List = new ArrayList<>();
+		List<PassingYearMaster> Entities    = yearOfPassingRepository.findAll();
+		
+		for(PassingYearMaster entity : Entities) {
+			
+			YearOfPassingResponse yearOfPassing = new YearOfPassingResponse();
+
+			yearOfPassing.setId(entity.getId());
+			yearOfPassing.setYearOfPassing(entity.getYearOfPassing());
+//			yearOfPassing.setUniversityId(entity.get);
+			
+			List.add(yearOfPassing);
+		}
+		
+		return List;
 	}
 
 

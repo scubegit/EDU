@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
@@ -42,6 +43,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 YearOfPassingService yearOfPassService;
 	 
+	 @Autowired
+		DocumentService	documentService;
+	 
 	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
@@ -55,12 +59,12 @@ public class VerifierServiceImpl implements VerifierService{
 			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
 			 
 			 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
-			 
+			 DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
 			 
 			 resp.setId(veriReq.getId());
 			 resp.setApplication_id(veriReq.getApplicationId());
 			 resp.setCollege_name_id(veriReq.getCollegeId());
-			 resp.setDoc_name(veriReq.getDocumentName());
+			 resp.setDoc_name(doc.getDocumentName());
 			 resp.setEnroll_no(veriReq.getEnrollmentNumber());
 			 resp.setFirst_name(veriReq.getFirstName());
 			 resp.setLast_name(veriReq.getLastName());

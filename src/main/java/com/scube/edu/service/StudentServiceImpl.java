@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.VerificationDocView;
@@ -63,6 +64,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 @Autowired
 	 YearOfPassingRepository yearOfPassRepo;
 	 
+	@Autowired
+	DocumentService	documentService;
+	 
 	 @Autowired
 	VerificationRequestRepository verificationReqRepo;
 	 
@@ -87,15 +91,19 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			for(VerificationRequest req: verReq) {
 				
+				System.out.println("verReq---"+ req.getDocumentId());
+				
 				StudentVerificationDocsResponse studentVerificationList = new StudentVerificationDocsResponse();
 				
 				PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
+				
+				DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 				
 				studentVerificationList.setDoc_status(req.getDocStatus());
 				studentVerificationList.setId(req.getId());
 				studentVerificationList.setApplication_id(req.getApplicationId());
 //				closedDocResp.setCollege_name_id(req.getCollegeId());
-				studentVerificationList.setDoc_name(req.getDocumentName());
+				studentVerificationList.setDoc_name(doc.getDocumentName()); //
 				studentVerificationList.setEnroll_no(req.getEnrollmentNumber());
 				studentVerificationList.setFirst_name(req.getFirstName());
 				studentVerificationList.setLast_name(req.getLastName());
@@ -142,12 +150,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 			
+			DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 			
 			closedDocResp.setDoc_status(req.getDocStatus());
 			closedDocResp.setId(req.getId());
 			closedDocResp.setApplication_id(req.getApplicationId());
 //			closedDocResp.setCollege_name_id(req.getCollegeId());
-			closedDocResp.setDoc_name(req.getDocumentName());
+			closedDocResp.setDoc_name(doc.getDocumentName());
 			closedDocResp.setEnroll_no(req.getEnrollmentNumber());
 			closedDocResp.setFirst_name(req.getFirstName());
 			closedDocResp.setLast_name(req.getLastName());
@@ -222,7 +231,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setAssignedTo(assign_to);
 			resp.setCollegeId(req.getCollegeNameId());
 			resp.setDocStatus("Requested");
-			resp.setDocumentName(req.getDocName());
+			resp.setDocumentId(req.getDocName());
 			resp.setEnrollmentNumber(req.getEnrollNo());
 			resp.setFirstName(req.getFirstName());
 			resp.setLastName(req.getLastName());
@@ -293,7 +302,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setCreateby(String.valueOf(studentDocReq.getUserId()));
 		verDoc.setDocAmt(total);
 		verDoc.setDocStatus("Requested");
-		verDoc.setDocumentName(studentDocReq.getDocName());
+		verDoc.setDocumentId(studentDocReq.getDocName());
 		verDoc.setDosAmtWithGst(totalWithGST);
 		verDoc.setEnrollmentNumber(studentDocReq.getEnrollNo());
 		verDoc.setFirstName(studentDocReq.getFirstName());

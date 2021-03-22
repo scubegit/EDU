@@ -60,7 +60,7 @@ public class VerificationServiceImpl implements VerificationService{
 				
 				verReq.setCollegeId(stuReq.getCollegeNameId());
 				verReq.setYearOfPassingId(String.valueOf(stuReq.getYearOfPassId()));
-				verReq.setDocumentName(stuReq.getDocName());
+//				verReq.setDocumentName(stuReq.getDocName());
 				verReq.setEnrollmentNumber(stuReq.getEnrollNo());
 				verReq.setApplicationId(stuReq.getApplicationId());
 				verReq.setFirstName(stuReq.getFirstName());
@@ -111,7 +111,7 @@ public class VerificationServiceImpl implements VerificationService{
 				
 				docResponse.setApplication_id(verEntities.getApplicationId());
 				docResponse.setCollege_name_id(verEntities.getCollegeId());
-				docResponse.setDoc_name(verEntities.getDocumentName());
+				docResponse.setDoc_name(verEntities.getDocumentId());
 				docResponse.setDocAmt(verEntities.getDocAmt());
 				docResponse.setDocAmtWithGST(verEntities.getDosAmtWithGst());
 				docResponse.setEnroll_no(verEntities.getEnrollmentNumber());

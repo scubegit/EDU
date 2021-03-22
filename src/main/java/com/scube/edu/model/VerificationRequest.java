@@ -60,8 +60,8 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@NotBlank
 	@Size(max = 100)
-	@Column(name = "document_name")
-	private String documentName;
+	@Column(name = "document_id")
+	private String documentId;
 	
 	@NotBlank
 	@Size(max = 100)
