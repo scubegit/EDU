@@ -29,7 +29,6 @@ public class RaiseDespute extends CreateUpdate{
 	private Long applicationId;
 	
 	
-	@NotBlank
 	@Size(max = 200)
 	@Column(name = "contactPersonName")
 	private String contactPersonName;
@@ -54,7 +53,6 @@ public class RaiseDespute extends CreateUpdate{
 	@Column(name = "status")
 	private String status;
 	
-	@NotBlank
 	@Size(max = 100)
 	@Column(name = "comment")
 	private String comment;

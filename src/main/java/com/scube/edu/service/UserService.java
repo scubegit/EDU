@@ -13,4 +13,6 @@ public interface UserService {
 	
 	public List<UserResponse> getUserList();
 
+	public UserResponse getUserInfoById(Long userId);
+
 }

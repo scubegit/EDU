@@ -118,4 +118,40 @@ public class UserController {
 		 return flag;
    }
 	
+	
+	@GetMapping("/getUserInfoById/{userId}")
+	public ResponseEntity<Object> getUserInfoById(@PathVariable Long userId , HttpServletRequest request) {
+		
+	
+		logger.info("********************UsersControllers getAllUsers******************");
+		response = new BaseResponse();
+		
+		try {
+
+			UserResponse userResponses = userService.getUserInfoById(userId);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(userResponses);
+			
+			return ResponseEntity.ok(response);
+			
+		}
+		catch (Exception e) {
+			
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+   }
+	
+	
+	
+	
 }

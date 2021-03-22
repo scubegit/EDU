@@ -2,6 +2,7 @@ package com.scube.edu.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,6 +46,25 @@ public class UserServiceImpl implements UserService {
 		return userList;
 	
 	}
+	
+	public UserResponse getUserInfoById(Long userId) {
+			
+			System.out.println("********UserServiceImpl getUserInfoById********"+ userId);
+			
+			UserResponse user = new UserResponse();
+			
+			Optional<UserMasterEntity> ent = userRepository.findById(userId);
+			UserMasterEntity entt = ent.get();
+			
+			user.setEmail(entt.getEmailId());
+			user.setPhone_no(entt.getPhoneNo());
+			user.setId(entt.getId());
+			user.setCompany_name(entt.getCompanyName());
+			user.setName(entt.getFirstName() +" " + entt.getLastName());
+			
+			return user;
+		
+		}
 
 	
 	
