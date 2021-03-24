@@ -106,7 +106,7 @@ public class EmailService {
 	   
 	  void sendVerificationEmail(String emailId) throws MessagingException {
 		  
-		  String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
+		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 
 		   String to = emailId;
 
@@ -128,15 +128,12 @@ public class EmailService {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
 	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
-
 	            }
 
 	        });
-
 	        
 	        // Used to debug SMTP issues
 	        session.setDebug(true);
-
 	        try {
 	          
 	            MimeMessage message = new MimeMessage(session);
@@ -149,8 +146,7 @@ public class EmailService {
 
 	            // Now set the actual messageHello User,
 	         
-	                       
-                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://192.168.0.225:4200/emailVerification?emailId="+encodeEmail+"'><strong>localhost:8081/EDU/api/auth/verifyStudentEmail/"+encodeEmail+"</strong></a> "+
+                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://192.168.0.225:4200/emailVerification?emailId="+encodeEmail+"'><strong>localhost:8081/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
                                        " <br>This link is valid for 24 hours. <br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts
