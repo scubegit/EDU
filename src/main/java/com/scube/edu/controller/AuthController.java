@@ -209,7 +209,7 @@ public class AuthController {
    }
 	
 
-	@GetMapping("/verifyStudentEmail/{emailId}")
+	@GetMapping("/verifyEmail/{emailId}")
 	public  ResponseEntity<Object>   verifyStudentEmail(@PathVariable String emailId) {
 		
 		response = new BaseResponse();
@@ -219,7 +219,7 @@ public class AuthController {
 		
 		 try {
 			 
-			flag = authService.verifyStudentEmail(emailId);
+			flag = authService.verifyEmail(emailId);
 
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -241,6 +241,6 @@ public class AuthController {
 			
    }
 
-	
+
 }
 

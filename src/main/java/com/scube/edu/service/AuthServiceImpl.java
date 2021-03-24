@@ -68,26 +68,24 @@ public class AuthServiceImpl implements AuthService{
 		
 		logger.info("loginRequest.email "+ loginRequest.getUsername());
 
-		
-		if(loginRequest.getUsername().equalsIgnoreCase("")) {
-			throw new Exception("Error: Login Id cannot be empty!");
-		}
-		if(loginRequest.getPassword().equalsIgnoreCase("")) {
-			throw new Exception("Error: Password cannot be empty!");
-		}
-		
-
-		logger.info("---------checking values-----------  "+ userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername() ,"Y"));
+		/*
+		 * if(loginRequest.getUsername().equalsIgnoreCase("")) { throw new
+		 * Exception("Error: Login Id cannot be empty!"); }
+		 * if(loginRequest.getPassword().equalsIgnoreCase("")) { throw new
+		 * Exception("Error: Password cannot be empty!"); }
+		 * 
+		 */
+		logger.info("---------checking values-----------  "+ userRepository.existsByUsernameAndIsactive(loginRequest.getUsername() ,"Y"));
 
 		
-		 if(!userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername(),"Y"))
+		 if(!userRepository.existsByUsernameAndIsactive(loginRequest.getUsername(),"Y"))
 		 {
 			 
 			 //  msg = "User is not active";
 			 throw new Exception("Error: User unauthorized!");
 		}
 		 
-		UserMasterEntity masterEntity =  userRepository.findByEmailId(loginRequest.getUsername());
+		UserMasterEntity masterEntity =  userRepository.findByUsername(loginRequest.getUsername());
 		
 		
 		System.out.println("===masterEntity======="+masterEntity.getEmailVerificationStatus());
@@ -132,24 +130,19 @@ public class AuthServiceImpl implements AuthService{
 		
 		
 		 UserMasterEntity userMasterEntity  =new  UserMasterEntity();
-		 System.out.println("------------"+userMasterEntity);
+		 
+		 System.out.println("------------"+userMasterEntity.getEmailId());
+		 
+		  UserMasterEntity userEntities  = userRepository.findByUsername(userAddRequest.getEmailId());
 		 
 		
-		 if (userAddRequest.getPassword() == null) { 
-			 throw new Exception("Error: Password is mandatory!"); 
-		 }
-		 
-		 
-		 UserMasterEntity userEntities  = userRepository.findByEmailId(userAddRequest.getEmailId());
-		 
-		
-			if(userEntities != null && userAddRequest.getRoleId() == 1 ) {
+			if(userEntities != null) {
 				
 				throw new Exception("Error: This email id already exists");
 			}
 		
 		 userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
-		 userMasterEntity.setCompanyEmailId(userAddRequest.getCompanyEmailId());
+		 userMasterEntity.setCompanyEmailId(userAddRequest.getEmailId());
 		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
 		 userMasterEntity.setContactPersonName(userAddRequest.getContactPersonName());
 		 userMasterEntity.setContactPersonPhone(userAddRequest.getContactPersonPhoneNo());
@@ -157,7 +150,11 @@ public class AuthServiceImpl implements AuthService{
 		 
 		 userMasterEntity.setFirstName(userAddRequest.getFirstName());
 		 userMasterEntity.setLastName(userAddRequest.getLastName());
-		 userMasterEntity.setEmailId(userAddRequest.getEmailId()); 
+		 
+		 if(userAddRequest.getRoleId() == 1) {
+			 userMasterEntity.setEmailId(userAddRequest.getEmailId());  
+		 }
+
 		 userMasterEntity.setPhoneNo(userAddRequest.getPhoneNumber());
 		 userMasterEntity.setPassword(encoder.encode(userAddRequest.getPassword()));
 		 userMasterEntity.setEmailVerificationStatus("N");
@@ -168,14 +165,10 @@ public class AuthServiceImpl implements AuthService{
 		 userMasterEntity.setIsactive("Y");
 		 
 	
+	     userRepository.save(userMasterEntity);
 	
-		 
-		 userRepository.save(userMasterEntity);
-		 
-
-			if(userAddRequest.getRoleId() == 1) {
-				emailService.sendVerificationEmail(userAddRequest.getEmailId());
-			}
+		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
+			
 		return true;
 		
 	}
@@ -188,7 +181,7 @@ public class AuthServiceImpl implements AuthService{
 			
 		logger.info("----------resetPasswordBySendingEMail---------");
 		
-		 UserMasterEntity userEntities  = userRepository.findByEmailId(email);
+		 UserMasterEntity userEntities  = userRepository.findByUsername(email);
 		 
 			if(userEntities == null) {
 				throw new Exception("Error: Invalid Email");
@@ -220,14 +213,15 @@ public class AuthServiceImpl implements AuthService{
 		
 		baseResponse	= new BaseResponse();
 		
-		 logger.info("---------Email-------"+reqUserentity.getEmailId());   
+		 logger.info("---------Email-------"+reqUserentity.getUsername());   
 		 logger.info("---------password-------"+reqUserentity.getPassword());
 		 
-		 String encodeEmailId = reqUserentity.getEmailId();
+		 String encodeEmailId = reqUserentity.getUsername();
+		 
 		  String dStr = new String(decoder.decode(encodeEmailId));  
 
 
-		 UserMasterEntity userEntities  = userRepository.findByEmailId(dStr);
+		 UserMasterEntity userEntities  = userRepository.findByUsername(dStr);
 		 
 		   if(userEntities == null || encodeEmailId== null) {
 			   
@@ -270,7 +264,7 @@ public class AuthServiceImpl implements AuthService{
         // Decoding string  
         String dStr = new String(decoder.decode(encodeEmail));  
        
-        UserMasterEntity userEntities  = userRepository.findByEmailId(dStr);
+        UserMasterEntity userEntities  = userRepository.findByUsername(dStr);
         
         if(userEntities == null) {
         	
@@ -312,7 +306,7 @@ public class AuthServiceImpl implements AuthService{
 
 
 	@Override
-	public boolean verifyStudentEmail(String emailId) throws Exception {
+	public boolean verifyEmail(String emailId) throws Exception {
 		
 	 Base64.Decoder decoder = Base64.getDecoder();  
 	        // Decoding string  
@@ -320,9 +314,7 @@ public class AuthServiceImpl implements AuthService{
 	        
 	       // logger.info("---------decodedEmail-------"+decodedEmail);
 	        
-	        
-		 
-	       UserMasterEntity userEntities  = userRepository.findByEmailId(decodedEmail);
+	       UserMasterEntity userEntities  = userRepository.findByUsername(decodedEmail);
 	       
 	       
 		   if(userEntities == null) {
@@ -356,6 +348,7 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 
+	
 	
 }
 

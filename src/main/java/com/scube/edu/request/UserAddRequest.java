@@ -12,7 +12,7 @@ public class UserAddRequest {
 	private String firstName;
 	private String lastName;
 	
-	private String emailId;
+	private String emailId; //companyEmailID same as  emailId
 	private String password;
 	private String phoneNumber;
 	private long roleId;
@@ -23,7 +23,7 @@ public class UserAddRequest {
 	private String companyName; 
 	private long universityId; 
 	private String contactPersonPhoneNo;
-	private String companyEmailId;
+	//private String companyEmailId;
 
 	
 }

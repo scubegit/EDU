@@ -83,7 +83,8 @@ public class InvoicePDFExporter {
 	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
 	        
-	        
+
+            
 	       // HeaderFooterPageEvent  event = new HeaderFooterPageEvent ();
 		   //  writer.setPageEvent(event);
 	        
@@ -125,8 +126,16 @@ public class InvoicePDFExporter {
             footer.setAlignment(Element.ALIGN_CENTER);
             footer.setBorder(Rectangle.NO_BORDER);
             document.setFooter(footer);
+			/*
+			 * document.open(); Image logo1 = Image.getInstance("ha-img.jpg");
+			 * logo1.setAbsolutePosition(100,900);
+			 * 
+			 * writer.getDirectContent().addImage(logo1);
+			 */
             
-            document.open();
+            //document.setHeader();
+            
+            
             
                Image logo = Image.getInstance("ha-img.jpg");
                logo.setAbsolutePosition(10, 300);
