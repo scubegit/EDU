@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService{
 		 {
 			 
 			 //  msg = "User is not active";
-			 throw new Exception("Error: User unauthorized!");
+			 throw new Exception("User unauthorized!");
 		}
 		 
 		UserMasterEntity masterEntity =  userRepository.findByUsername(loginRequest.getUsername());
@@ -138,7 +138,7 @@ public class AuthServiceImpl implements AuthService{
 		
 			if(userEntities != null) {
 				
-				throw new Exception("Error: This email id already exists");
+				throw new Exception("This email id already exists");
 			}
 		
 		 userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
@@ -184,7 +184,7 @@ public class AuthServiceImpl implements AuthService{
 		 UserMasterEntity userEntities  = userRepository.findByUsername(email);
 		 
 			if(userEntities == null) {
-				throw new Exception("Error: Invalid Email");
+				throw new Exception("User Unauthorised");
 			}
 		
 			 UserMasterEntity entities =  userRepository.getOne(userEntities.getId());
@@ -225,7 +225,7 @@ public class AuthServiceImpl implements AuthService{
 		 
 		   if(userEntities == null || encodeEmailId== null) {
 			   
-				throw new Exception("Error: Invalid Email");
+				throw new Exception(" Invalid Email");
 			}
 		
 		   
@@ -240,7 +240,7 @@ public class AuthServiceImpl implements AuthService{
 				 userRepository.save(entities);
 		   }else {
 			   
-			    throw new Exception("Error: Not a valid User");
+			    throw new Exception("Not a valid User");
 		   }
 		 
 		 
@@ -318,7 +318,7 @@ public class AuthServiceImpl implements AuthService{
 	       
 	       
 		   if(userEntities == null) {
-				throw new Exception("Error: Invalid Email");
+				throw new Exception("Invalid Email");
 			}
 		   
 		   

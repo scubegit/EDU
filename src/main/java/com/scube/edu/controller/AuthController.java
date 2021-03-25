@@ -62,8 +62,8 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
-			
+			//return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 		}
 		
    }
@@ -91,7 +91,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 			
 		}
@@ -119,7 +119,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -169,7 +169,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -202,7 +202,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -235,7 +235,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 		}
 		
 			

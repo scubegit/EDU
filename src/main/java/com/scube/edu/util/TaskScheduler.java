@@ -4,8 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 public class TaskScheduler {
 	
-	@Scheduled(cron="${cron.expression}"
-			)
+	@Scheduled(cron="${cron.expression}")
 	public void doSomething() {
 	    // Something
 	}
