@@ -21,7 +21,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM edu_db.verification_request vr left join edu_db.passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1", nativeQuery = true)
 	List<VerificationRequest> findByUserId(long userId);
 
-	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and assigned_to = 0 order by created_date desc limit 5", nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and assigned_to = 0 order by created_date asc limit 5", nativeQuery = true)
 	List<VerificationRequest> getVerifierRecords();
 
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Verified' and user_id = ?1" , nativeQuery = true)

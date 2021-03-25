@@ -3,7 +3,7 @@ package com.scube.edu.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 
@@ -44,7 +46,10 @@ public class VerifierServiceImpl implements VerifierService{
 	 YearOfPassingService yearOfPassService;
 	 
 	 @Autowired
-		DocumentService	documentService;
+	 DocumentService	documentService;
+	 
+	 @Autowired
+	 UserRepository userRepository;
 	 
 	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
@@ -59,7 +64,13 @@ public class VerifierServiceImpl implements VerifierService{
 			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
 			 
 			 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+			 
+			 System.out.println(veriReq.getDocumentId());
+			 
 			 DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
+			 
+			 Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
+			 UserMasterEntity userr = user.get();
 			 
 			 resp.setId(veriReq.getId());
 			 resp.setApplication_id(veriReq.getApplicationId());
@@ -74,7 +85,7 @@ public class VerifierServiceImpl implements VerifierService{
 			 resp.setUser_id(veriReq.getUserId());
 			 resp.setVer_req_id(veriReq.getVerRequestId());
 			 resp.setYear(year.getYearOfPassing());
-			 
+			 resp.setCompany_name(userr.getCompanyName());
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
 			 Long a = (long) 1;

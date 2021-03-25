@@ -30,5 +30,7 @@ public class StudentVerificationDocsResponse {
 
 	private Long assigned_to;
 	private String doc_status;
+	
+	private String company_name;
 
 }
