@@ -6,6 +6,8 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.PriceMasterResponse;
@@ -22,6 +24,8 @@ public interface StudentService {
 
 	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
 			HttpServletRequest request);
+
+	public String saveDocument(MultipartFile file);
 
 
 

@@ -41,7 +41,7 @@ public class VerificationRequestController {
 	public ResponseEntity<?> saveStudentVerificationDoc (@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 
 		
-		logger.info("********VerificationRequestController********");
+		logger.info("********VerificationRequestController********"+ studentDocReq.get(1));
 		
 		response = new BaseResponse();
 		

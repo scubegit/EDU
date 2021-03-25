@@ -95,5 +95,9 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "doc_amt_with_gst")
 	private Long dosAmtWithGst;
 	
+	@Size(max = 100)
+	@Column(name = "request_type")
+	private String requestType;
+	
 
 }

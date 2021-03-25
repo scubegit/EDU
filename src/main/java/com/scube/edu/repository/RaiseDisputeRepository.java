@@ -7,6 +7,8 @@ import com.scube.edu.model.RaiseDespute;
 
 @Repository
 public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long>{
+
+	RaiseDespute findByApplicationId(Long application_id);
 	
 	
 

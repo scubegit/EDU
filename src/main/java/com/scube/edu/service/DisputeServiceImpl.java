@@ -1,5 +1,7 @@
 package com.scube.edu.service;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -31,6 +33,12 @@ public class DisputeServiceImpl implements DisputeService{
 		
 		RaiseDespute rd = new RaiseDespute();
 		
+		RaiseDespute check = disputeRepo.findByApplicationId(disputeReq.getApplication_id());
+		
+		if(Objects.isNull(check)) {
+			System.out.println("NULL---");
+		
+		
 		rd.setApplicationId(disputeReq.getApplication_id());
 		rd.setContactPersonEmail(disputeReq.getEmail());
 		rd.setContactPersonPhone(disputeReq.getPhone_no());
@@ -41,8 +49,9 @@ public class DisputeServiceImpl implements DisputeService{
 		rd.setStatus(disputeReq.getStatus());
 		// dummy values of comment, contact person name and status have been sent through postman right now!
 		disputeRepo.save(rd);
-		
 		return true;
+		}
+		return false;
 	}
 	
 }

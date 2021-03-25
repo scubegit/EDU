@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
@@ -57,7 +59,6 @@ public class StudentController {
 	
 	@GetMapping("/getVerificationDataByUserid/{userId}")
 	public  ResponseEntity<Object> getVerificationDataByUserid(@PathVariable long userId) {
-		
 		response = new BaseResponse();
 		
 		    try {
@@ -116,7 +117,7 @@ public class StudentController {
 	@PostMapping("/saveVerificationDocAndCalculateAmount")
 	public  ResponseEntity<Object> saveVerificationDocAndCalculateAmount(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		response = new BaseResponse();
-		System.out.println("----"+ studentDocReq);
+		System.out.println("----studentDocReq----"+ studentDocReq.get(1).getUploaddocpath());
 		    try {
 		    	
 		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
@@ -129,6 +130,7 @@ public class StudentController {
 						
 				}catch (Exception e) {
 					
+					
 					logger.error(e.getMessage()); //BAD creds message comes from here
 					
 					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
@@ -140,6 +142,36 @@ public class StudentController {
 				}
 			
    }
+	
+	
+	@PostMapping(value = "/uploadVerificationDocumentFile" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<BaseResponse> upload (@RequestParam MultipartFile file) {
+		
+		System.out.println("*******StudentController uploadVerificationDocumentFile********"+ file);
+		
+		response = new BaseResponse();
+		
+	    try {
+	    	String path = studentService.saveDocument(file);
+				
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespData(path);
+				
+				return ResponseEntity.ok(response);
+					
+			}catch (Exception e) {
+				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response);
+				
+			}
+	}
 	
 	
 	
@@ -171,7 +203,7 @@ public class StudentController {
 	public  ResponseEntity<Object> saveStudentSingleVerificationDoc(@RequestBody StudentDocVerificationRequest studentDocReq, HttpServletRequest request) {
 		
 		response = new BaseResponse();
-		System.out.println("----"+studentDocReq.getFirstName());
+		System.out.println("----"+studentDocReq.getFirstname());
 		
 		    try {
 		    	

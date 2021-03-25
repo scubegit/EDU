@@ -10,19 +10,19 @@ import lombok.Setter;
 
 public class StudentDocVerificationRequest {
 	
-	private String firstName; 
-	private String lastName;
-	private Long streamId;
-	private String docName;
-	private String enrollNo;
-	private Long yearOfPassId;
-	private Long collegeNameId;
-	private Long applicationId;
-	private Long uniId;
-	private Long userId;
-	private String requestTypeId;
-	private Long verReqId;
-	private String uploadDocPath;
+	private String firstname; 
+	private String lastname;
+	private Long streamid;
+	private String docname;
+	private String enrollno;
+	private Long yearofpassid;
+	private Long collegenameid;
+	private Long applicationid;
+	private Long uniid;
+	private Long userid;
+	private String requesttypeid;
+	private Long verreqid;
+	private String uploaddocpath;
 	
 //	private MultipartFile file; 
 

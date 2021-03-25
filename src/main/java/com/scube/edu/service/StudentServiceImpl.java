@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.model.DocumentMaster;
@@ -41,6 +42,7 @@ import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StreamResponse;
 
 import com.scube.edu.security.JwtUtils;
+import com.scube.edu.util.FileStorageService;
 import com.scube.edu.util.StringsUtils;
 
 
@@ -75,6 +77,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 
 	 @Autowired
 	 YearOfPassingService yearOfPassService;
+	 
+	 @Autowired
+	 private FileStorageService fileStorageService;
 	 
 	 @Override
 
@@ -206,13 +211,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		List<VerificationRequest> list = new ArrayList<>();
 		Long ver_req = (long) 1;
 		for(StudentDocVerificationRequest req : studentDocReq) {
-			
+			System.out.println(req);
 			VerificationRequest resp = new VerificationRequest();
 			
 			Long assign_to = (long) 0;
 			System.out.println("------In Save and calculate Req FOR LOOP----");
 			
-			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearOfPassId());
+			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
 			
 			// diff fetches * from pricemaster where year diff is between year_range_start and year_range_end
 			
@@ -226,22 +231,21 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			// Make a verificationRequestRepo function which will save total and totalWithoutGST against each application id
 			
-//			resp.setApplicationId(req.getApplicationId());
 			resp.setApplicationId(appId);
 			resp.setAssignedTo(assign_to);
-			resp.setCollegeId(req.getCollegeNameId());
+			resp.setCollegeId(req.getCollegenameid());
 			resp.setDocStatus("Requested");
-			resp.setDocumentId(req.getDocName());
-			resp.setEnrollmentNumber(req.getEnrollNo());
-			resp.setFirstName(req.getFirstName());
-			resp.setLastName(req.getLastName());
+			resp.setDocumentId(req.getDocname());
+			resp.setEnrollmentNumber(req.getEnrollno());
+			resp.setFirstName(req.getFirstname());
+			resp.setLastName(req.getLastname());
 			resp.setIsdeleted("N");
-			resp.setStreamId(req.getStreamId());
-			resp.setUniversityId(req.getUniId());
-			resp.setUploadDocumentPath(req.getUploadDocPath());
-			resp.setUserId(req.getUserId());
+			resp.setStreamId(req.getStreamid());
+			resp.setUniversityId((long) 1);
+			resp.setUploadDocumentPath(req.getUploaddocpath());
+			resp.setUserId(req.getUserid());
 			resp.setVerRequestId(ver_req);
-			resp.setYearOfPassingId(String.valueOf(req.getYearOfPassId()));
+			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
 			
 			resp.setDocAmt(total);
 			resp.setDosAmtWithGst(totalWithGST);
@@ -265,7 +269,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
 			HttpServletRequest request) {
 		
-		System.out.println("********StudentServiceImpl saveStudentSingleVerificationDoc********"+ studentDocReq.getDocName());
+		System.out.println("********StudentServiceImpl saveStudentSingleVerificationDoc********"+ studentDocReq.getDocname());
 		
 		VerificationRequest verDoc = new VerificationRequest();
 		
@@ -291,29 +295,29 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		logger.info("---------"+ appId);
 		
-		PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , studentDocReq.getYearOfPassId());
+		PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , studentDocReq.getYearofpassid());
 		
 		total = diff.getTotalAmt();
 		totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
 		
 		verDoc.setApplicationId(appId);
 		verDoc.setAssignedTo((long)0);
-		verDoc.setCollegeId(studentDocReq.getCollegeNameId());
-		verDoc.setCreateby(String.valueOf(studentDocReq.getUserId()));
+		verDoc.setCollegeId(studentDocReq.getCollegenameid());
+		verDoc.setCreateby(String.valueOf(studentDocReq.getUserid()));
 		verDoc.setDocAmt(total);
 		verDoc.setDocStatus("Requested");
-		verDoc.setDocumentId(studentDocReq.getDocName());
+		verDoc.setDocumentId(studentDocReq.getDocname());
 		verDoc.setDosAmtWithGst(totalWithGST);
-		verDoc.setEnrollmentNumber(studentDocReq.getEnrollNo());
-		verDoc.setFirstName(studentDocReq.getFirstName());
-		verDoc.setLastName(studentDocReq.getLastName());
+		verDoc.setEnrollmentNumber(studentDocReq.getEnrollno());
+		verDoc.setFirstName(studentDocReq.getFirstname());
+		verDoc.setLastName(studentDocReq.getLastname());
 		verDoc.setIsdeleted("N");
-		verDoc.setStreamId(studentDocReq.getStreamId());
+		verDoc.setStreamId(studentDocReq.getStreamid());
 		verDoc.setUniversityId((long) 1);
-		verDoc.setUploadDocumentPath(studentDocReq.getUploadDocPath());
+		verDoc.setUploadDocumentPath(studentDocReq.getUploaddocpath());
 		verDoc.setVerRequestId((long) 1);
-		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearOfPassId()));
-		verDoc.setUserId(studentDocReq.getUserId());
+		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
+		verDoc.setUserId(studentDocReq.getUserid());
 		verificationReqRepo.save(verDoc);
 		
 		HashMap<String, Long> map = new HashMap<String, Long>();
@@ -323,6 +327,17 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		return map;
 //		return null;
+	}
+	
+	
+	public String saveDocument (MultipartFile file) {
+		String fileSubPath = "file/";
+		String filePath = fileStorageService.storeFile(file , fileSubPath);
+		
+		
+		
+		return filePath;
+		
 	}
 
 	

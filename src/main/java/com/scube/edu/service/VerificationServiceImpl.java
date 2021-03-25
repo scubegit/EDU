@@ -58,19 +58,19 @@ public class VerificationServiceImpl implements VerificationService{
 				VerificationRequest verReq = new VerificationRequest();
 				System.out.println("------In Save Req FOR LOOP----");
 				
-				verReq.setCollegeId(stuReq.getCollegeNameId());
-				verReq.setYearOfPassingId(String.valueOf(stuReq.getYearOfPassId()));
+				verReq.setCollegeId(stuReq.getCollegenameid());
+				verReq.setYearOfPassingId(String.valueOf(stuReq.getYearofpassid()));
 //				verReq.setDocumentName(stuReq.getDocName());
-				verReq.setEnrollmentNumber(stuReq.getEnrollNo());
-				verReq.setApplicationId(stuReq.getApplicationId());
-				verReq.setFirstName(stuReq.getFirstName());
-				verReq.setLastName(stuReq.getLastName());
-				verReq.setStreamId(stuReq.getStreamId());
-				verReq.setUniversityId(stuReq.getUniId());
-				verReq.setUserId(stuReq.getUserId());
+				verReq.setEnrollmentNumber(stuReq.getEnrollno());
+				verReq.setApplicationId(stuReq.getApplicationid());
+				verReq.setFirstName(stuReq.getFirstname());
+				verReq.setLastName(stuReq.getLastname());
+				verReq.setStreamId(stuReq.getStreamid());
+				verReq.setUniversityId(stuReq.getUniid());
+				verReq.setUserId(stuReq.getUserid());
 				verReq.setDocStatus("Requested");
-				verReq.setUploadDocumentPath(stuReq.getUploadDocPath());
-				verReq.setVerRequestId(stuReq.getVerReqId());
+				verReq.setUploadDocumentPath(stuReq.getUploaddocpath());
+				verReq.setVerRequestId(stuReq.getVerreqid());
 				verReq.setAssignedTo(assign_to);
 				
 				verificationRequests.add(verReq);
