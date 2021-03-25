@@ -32,5 +32,5 @@ public class StudentVerificationDocsResponse {
 	private String doc_status;
 	
 	private String company_name;
-
+	private String stream_name;
 }

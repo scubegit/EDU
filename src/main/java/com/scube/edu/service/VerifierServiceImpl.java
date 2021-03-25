@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
@@ -51,6 +53,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 UserRepository userRepository;
 	 
+	 @Autowired
+	 StreamRepository  streamRespository;
+	 
 	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
@@ -72,6 +77,9 @@ public class VerifierServiceImpl implements VerifierService{
 			 Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
 			 UserMasterEntity userr = user.get();
 			 
+			 Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId());
+			 StreamMaster str = stream.get();
+			 
 			 resp.setId(veriReq.getId());
 			 resp.setApplication_id(veriReq.getApplicationId());
 			 resp.setCollege_name_id(veriReq.getCollegeId());
@@ -79,7 +87,7 @@ public class VerifierServiceImpl implements VerifierService{
 			 resp.setEnroll_no(veriReq.getEnrollmentNumber());
 			 resp.setFirst_name(veriReq.getFirstName());
 			 resp.setLast_name(veriReq.getLastName());
-			 resp.setStream_id(veriReq.getStreamId());
+			 resp.setStream_name(str.getStreamName());
 			 resp.setUni_id(veriReq.getUniversityId());
 			 resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
 			 resp.setUser_id(veriReq.getUserId());
