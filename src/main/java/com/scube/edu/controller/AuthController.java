@@ -62,8 +62,8 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
-			
+			//return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 		}
 		
    }
@@ -119,7 +119,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -169,7 +169,7 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -202,14 +202,14 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
    }
 	
 
-	@GetMapping("/verifyStudentEmail/{emailId}")
+	@GetMapping("/verifyEmail/{emailId}")
 	public  ResponseEntity<Object>   verifyStudentEmail(@PathVariable String emailId) {
 		
 		response = new BaseResponse();
@@ -219,7 +219,7 @@ public class AuthController {
 		
 		 try {
 			 
-			flag = authService.verifyStudentEmail(emailId);
+			flag = authService.verifyEmail(emailId);
 
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -235,12 +235,12 @@ public class AuthController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 		}
 		
 			
    }
 
-	
+
 }
 

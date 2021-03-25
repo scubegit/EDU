@@ -93,6 +93,7 @@ public class UserMasterEntity  extends CreateUpdate{
 	@Size(max = 100)
 	@Column(name = "forgotPasswordFlag")
 	private String forgotPasswordFlag;
+
 	
 	
 	public UserMasterEntity() {
