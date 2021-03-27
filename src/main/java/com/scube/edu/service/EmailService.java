@@ -147,7 +147,7 @@ public class EmailService {
 	            // Now set the actual messageHello User,
 	         
                 String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://192.168.0.225:4200/emailVerification?emailId="+encodeEmail+"'><strong>localhost:8081/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
-                                       " <br>This link is valid for 24 hours. <br><br> Thanks,<br>Team University";
+                                       " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");

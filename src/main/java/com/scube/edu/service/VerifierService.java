@@ -9,5 +9,8 @@ public interface VerifierService {
 
 	public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception;
 
+	public List<StudentVerificationDocsResponse> verifyDocument(Long id);
+
+
 
 }

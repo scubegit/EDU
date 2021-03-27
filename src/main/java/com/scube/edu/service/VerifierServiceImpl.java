@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.StreamMaster;
+import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.StreamRepository;
@@ -56,6 +57,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 StreamRepository  streamRespository;
 	 
+	 
+	   @Autowired
+		  UniversityStudentDocService  stuDocService;
 	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
@@ -112,4 +116,37 @@ public class VerifierServiceImpl implements VerifierService{
 		 
 	 }
 
+	 
+	 
+	@Override
+	public List<StudentVerificationDocsResponse> verifyDocument(Long id) {
+
+		List<StudentVerificationDocsResponse> verificationDataList = new ArrayList<StudentVerificationDocsResponse>();
+		
+		
+		 List<VerificationRequest> verifierData = verificationReqRepository.getDataByIdToVerify(id);
+				 
+		        for(VerificationRequest veriReq: verifierData) {
+					 
+					 StudentVerificationDocsResponse resEntity = new StudentVerificationDocsResponse();
+					 
+					 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+					 
+					 
+					 resEntity.setId(veriReq.getId());
+					 resEntity.setEnroll_no(veriReq.getEnrollmentNumber());
+					 resEntity.setUpload_doc_path("http://192.168.0.220:8081/EDU/api/verifier/getimage/Student/"+veriReq.getId());
+					 resEntity.setYear(year.getYearOfPassing());
+					 
+					 UniversityStudentDocument doc = stuDocService.getDocDataByEnrollmentNO(veriReq.getEnrollmentNumber());
+					 
+					 resEntity.setOriginalDocUploadFilePath("http://192.168.0.220:8081/EDU/api/verifier/getimage/University/"+doc.getId());
+					
+					 verificationDataList.add(resEntity);
+		        }
+				 
+		return verificationDataList;
+	}
+
+	
 }
