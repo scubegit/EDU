@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.scube.edu.exception.FileStorageException;
 import com.scube.edu.model.FileStorageProperties;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.service.UniversityStudentDocServiceImpl;
 
 
 @Service
@@ -32,6 +34,10 @@ public class FileStorageService {
 	 
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
+	 
+	 
+	 @Autowired
+	 UniversityStudentDocServiceImpl universityStudentDocServiceImpl ;
 	 
 	 
 	  public FileStorageService(FileStorageProperties fileStorageProperties) {
@@ -87,17 +93,22 @@ public class FileStorageService {
 	        	
 	        	String newPAth = this.fileBaseLocation;
 	        	
-	        	if(userFor.equalsIgnoreCase("Student")) {
+	        	if(userFor.equalsIgnoreCase("VR")) {
 	        		
 	        		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
 	        		VerificationRequest data = verifierData.get();
 	        		
-	        		fileName = data.getUploadDocumentPath();
+	        		fileName = "file/"+data.getUploadDocumentPath();
+	        		
+	        		System.out.println("------------fileName--------------"+fileName);
 	        		
 	        		
 	        	}else {
 	        		
+	        		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
+	        		fileName = "file/"+doc.getOriginalDOCuploadfilePath();
 	        		
+	        		System.out.println("--------InsideElse----fileName--------------"+fileName);
 	        		
 	        	}
 	        

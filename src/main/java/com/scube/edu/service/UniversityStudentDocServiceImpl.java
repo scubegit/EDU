@@ -46,4 +46,19 @@ public class UniversityStudentDocServiceImpl implements UniversityStudentDocServ
 		}
 	
 	
+
+	public UniversityStudentDocument getUniversityDocDataById(Long id) {
+	
+			
+				Optional<UniversityStudentDocument> docEntity    = studentDocumentRepository.findById(id);
+				
+				UniversityStudentDocument universtyStudentData = docEntity.get();
+				
+				System.out.println("-----Entities---"+universtyStudentData);
+				
+		         return universtyStudentData;
+		         
+		         
+		}
+	
 }
