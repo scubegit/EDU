@@ -30,9 +30,8 @@ public interface UserRepository extends JpaRepository<UserMasterEntity, Long>{
 	  @Query(value = "SELECT TIMESTAMPDIFF(minute,um.created_date,now() ) as miutes from user_master as um where um.id= ?1", nativeQuery = true)
 	  int gethoursToValidateTheLink(Long id);
 
-	  @Query(value = "SELECT TIMESTAMPDIFF(minute,um.verEmailResendDate,now() ) as minutes from user_master as um where um.id= ?1", nativeQuery = true)
-	  int gethoursToResendTheLink(Long id);
 	  
+	  List<UserMasterEntity> findByEmailVerificationStatus(String emailVerificationStatus);
 	  
 	//List<UserMasterEntity> getAll();
 	//boolean existsByAndIsdeletedAndIsactive(String username, String IsDeleted);

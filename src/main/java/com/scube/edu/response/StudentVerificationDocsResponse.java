@@ -33,4 +33,6 @@ public class StudentVerificationDocsResponse {
 	
 	private String company_name;
 	private String stream_name;
+	
+	private String originalDocUploadFilePath;
 }
