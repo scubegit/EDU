@@ -17,4 +17,7 @@ public class UserResponse {
     private String gstno;
     private String phone_no;
     private String name;
+    private String contact_person_phone;
+    private String company_email;
+    private String contact_person_name;
 }

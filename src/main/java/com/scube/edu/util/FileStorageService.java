@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,20 @@ public class FileStorageService {
 		
 		System.out.println("****fileStorageService storeFile*****"+file);
 		
+		Date date = new Date(System.currentTimeMillis());
+		
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//		System.out.println(fileName);
+		
+		String filename = fileName.split("\\.")[0];
+		String extension = fileName.split("\\.")[1];
+		
+		String fileNewName = filename + "_" + date.getTime() + "." + extension;
+		
+		System.out.println(fileNewName);
 		
 		try {
 			
-			if(fileName.contains("..")) {
+			if(fileNewName.contains("..")) {
 				throw new FileStorageException("Sorry! File Name contains invalid path sequence!");
 			}
 			
@@ -51,14 +60,16 @@ public class FileStorageService {
 			
 			Files.createDirectories(this.fileStorageLocation);
 			
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
+			Path targetLocation = this.fileStorageLocation.resolve(fileNewName);
 			
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 			
-			System.out.println("fileName" + fileName+ " ---filePath" + targetLocation);
+			System.out.println("fileName" + fileNewName+ " ---filePath" + targetLocation);
+			
+			String returnPath = fileSubPath + fileNewName;
 			
 			
-			return String.valueOf(targetLocation);
+			return String.valueOf(returnPath);
 		}catch (IOException ex) {
 			throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
 		}

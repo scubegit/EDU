@@ -60,7 +60,10 @@ public class UserServiceImpl implements UserService {
 			user.setPhone_no(entt.getPhoneNo());
 			user.setId(entt.getId());
 			user.setCompany_name(entt.getCompanyName());
+			user.setContact_person_phone(entt.getContactPersonPhone());
+			user.setCompany_email(entt.getCompanyEmailId());
 			user.setName(entt.getFirstName() +" " + entt.getLastName());
+			user.setContact_person_name(entt.getContactPersonName());
 			
 			return user;
 		
