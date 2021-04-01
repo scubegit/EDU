@@ -118,7 +118,7 @@ public class StudentController {
 	public  ResponseEntity<Object> saveVerificationDocAndCalculateAmount(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		response = new BaseResponse();
 		    try {
-		    	
+		    	System.out.println(studentDocReq.get(0).getDocname());
 		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

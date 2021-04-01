@@ -252,7 +252,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setIsdeleted("N");
 			resp.setStreamId(req.getStreamid());
 			resp.setUniversityId((long) 1);
-			resp.setUploadDocumentPath(req.getUploaddocpath());
+			resp.setUploadDocumentPath(req.getFilepath());
 			resp.setUserId(req.getUserid());
 			resp.setVerRequestId(ver_req);
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
@@ -324,7 +324,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setIsdeleted("N");
 		verDoc.setStreamId(studentDocReq.getStreamid());
 		verDoc.setUniversityId((long) 1);
-		verDoc.setUploadDocumentPath(studentDocReq.getUploaddocpath());
+		verDoc.setUploadDocumentPath(studentDocReq.getFilepath());
 		verDoc.setVerRequestId((long) 1);
 		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
 		verDoc.setUserId(studentDocReq.getUserid());
