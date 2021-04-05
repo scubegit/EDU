@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,4 +46,17 @@ public class StreamServiceImpl  implements StreamService{
 			}
 			return List;
 		}
+
+		@Override
+		public StreamMaster getNameById(Long streamId) {
+			
+			System.out.println("*******streamServiceImpl getNameById*******");
+			
+			Optional<StreamMaster> stream = streamRespository.findById(streamId);
+			StreamMaster stre = stream.get();
+			
+			return stre;
+		}
+		
+
 }

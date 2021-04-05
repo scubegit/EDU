@@ -20,10 +20,9 @@ public class StudentDocVerificationRequest {
 	private Long applicationid;
 	private Long uniid;
 	private Long userid;
-	private String requesttypeid;
+//	private String requesttypeid;
 	private Long verreqid;
 	private String uploaddocpath;
-	
-//	private MultipartFile file; 
+	private String filepath;
 
 }

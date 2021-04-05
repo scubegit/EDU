@@ -113,11 +113,9 @@ public class StudentController {
 			
    }
 	
-	
 	@PostMapping("/saveVerificationDocAndCalculateAmount")
 	public  ResponseEntity<Object> saveVerificationDocAndCalculateAmount(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		response = new BaseResponse();
-//		System.out.println("----studentDocReq----"+ studentDocReq.get(1).getUploaddocpath());
 		    try {
 		    	
 		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);

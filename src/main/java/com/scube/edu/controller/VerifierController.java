@@ -26,7 +26,7 @@ import com.scube.edu.util.StringsUtils;
 
 import lombok.var;
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/verifier")
 public class VerifierController {
