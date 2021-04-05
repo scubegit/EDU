@@ -110,7 +110,7 @@ public class FileStorageService {
 	        		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
 	        		VerificationRequest data = verifierData.get();
 	        		
-	        		fileName = "file/"+data.getUploadDocumentPath();
+	        		fileName = data.getUploadDocumentPath();
 	        		
 	        		System.out.println("------------fileName--------------"+fileName);
 	        		
