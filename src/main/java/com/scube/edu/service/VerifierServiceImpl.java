@@ -148,5 +148,23 @@ public class VerifierServiceImpl implements VerifierService{
 		return verificationDataList;
 	}
 
+
+
+	@Override
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status) {
+		
+			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" + id + status);
+			
+			Optional<VerificationRequest> ent =  verificationReqRepository.findById(id);
+			VerificationRequest entt = ent.get();
+			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
+			
+			entt.setDocStatus(status);
+			
+			verificationReqRepository.save(entt);
+		
+		return null;
+	}
+
 	
 }
