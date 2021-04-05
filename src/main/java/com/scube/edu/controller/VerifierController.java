@@ -14,6 +14,7 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -119,5 +120,34 @@ public class VerifierController {
 	                             .contentType(MediaType.IMAGE_JPEG)
 	                             .body(bytes);
 	    }
+	 
+		@PostMapping("/setStatusForVerifierDocument/{id}/{status}")
+		public  ResponseEntity<Object> setStatusForVerifierDocument(@PathVariable Long id ,@PathVariable String status) {
+			
+			response = new BaseResponse();
+			System.out.println("*****VerifierController setStatusForVerifierDocument*****"+id + status);
+			    try {
+			    	
+			    	List<StudentVerificationDocsResponse> list = verifierService.setStatusForVerifierDocument(id,status);
+
+			    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(null);
+						
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
+						
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
 
 }
