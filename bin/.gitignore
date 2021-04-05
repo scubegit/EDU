@@ -1,0 +1,6 @@
+<<<<<<< HEAD
+/target/
+=======
+/target/*
+.classpath
+>>>>>>> 6102233930640c60ba9b43f709fc2e61a64ae35b
