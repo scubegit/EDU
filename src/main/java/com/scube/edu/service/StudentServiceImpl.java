@@ -255,6 +255,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setUploadDocumentPath(req.getFilepath());
 			resp.setUserId(req.getUserid());
 			resp.setVerRequestId(ver_req);
+			resp.setRequestType(req.getRequesttype());
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
 			
 			resp.setDocAmt(total);

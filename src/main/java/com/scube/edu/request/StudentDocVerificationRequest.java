@@ -14,6 +14,7 @@ public class StudentDocVerificationRequest {
 	private String lastname;
 	private Long streamid;
 	private String docname;
+	private String requesttype;
 	private String enrollno;
 	private Long yearofpassid;
 	private Long collegenameid;
