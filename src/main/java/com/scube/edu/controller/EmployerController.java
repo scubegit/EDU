@@ -33,7 +33,7 @@ public class EmployerController {
 	@Autowired
 	EmployerService	employerService;
 	
-	@PostMapping("/getVerificationDataByUserid/{userId}/{fromDate}/{toDate}")
+	@GetMapping("/getVerificationDataByUserid/{userId}/{fromDate}/{toDate}")
 	public  ResponseEntity<Object> getVerificationDataByUserid(@PathVariable long userId, @PathVariable String fromDate, @PathVariable String toDate) {
 		response = new BaseResponse();
 		
