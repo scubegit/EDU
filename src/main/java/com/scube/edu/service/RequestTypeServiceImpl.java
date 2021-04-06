@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,6 +46,30 @@ public class RequestTypeServiceImpl implements RequestTypeService {
 		}
 		
 		return reqTypeList;
+	}
+
+	@Override
+	public RequestTypeResponse getNameById(Long requestType) {
+		
+		logger.info("********RequestTypeServiceImpl getNameById********");
+		
+		RequestTypeResponse reqTypeList = new RequestTypeResponse();
+		
+		Optional<RequestTypeMaster> ent = reqTypeRepo.findById(requestType);
+		RequestTypeMaster entt = ent.get();
+		
+		
+			
+			RequestTypeResponse reqTypeResponse = new RequestTypeResponse();
+
+			reqTypeResponse.setId(entt.getId());
+			reqTypeResponse.setRequestType(entt.getRequestType());
+			reqTypeResponse.setUniversityId(entt.getUniversityId());
+			
+			
+		
+		
+		return reqTypeResponse;
 	}
 	
 	

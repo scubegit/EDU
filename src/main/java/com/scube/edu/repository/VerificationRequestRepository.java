@@ -24,7 +24,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and assigned_to = 0 order by created_date asc limit 5", nativeQuery = true)
 	List<VerificationRequest> getVerifierRecords();
 
-	@Query(value = "SELECT * FROM verification_request where doc_status = 'Verified' and user_id = ?1" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status != 'Requested' and user_id = ?1" , nativeQuery = true)
 	List<VerificationRequest> findByStatusAndUserId(long userId);
 
 
@@ -37,6 +37,9 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	List<VerificationRequest> getDataByIdToVerify(long id);
 	
 	VerificationRequest findById(long id);
+
+	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and created_date > (?2) and created_date < (?3)" , nativeQuery = true)
+	List<VerificationRequest> findByUserIdAndDates(long userId, String fromDate, String toDate);
 	
 
 }

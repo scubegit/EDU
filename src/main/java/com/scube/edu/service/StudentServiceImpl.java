@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
+import com.scube.edu.model.RequestTypeMaster;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.VerificationDocView;
 import com.scube.edu.model.VerificationRequest;
@@ -37,6 +39,7 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.PriceMasterResponse;
+import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationListPojoResponse;
 import com.scube.edu.response.JwtResponse;
@@ -85,6 +88,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 @Autowired 
 	 StreamService streamService;
 	 
+	 @Autowired 
+	 RequestTypeService reqTypeService;
+	 
 	 @Override
 
 		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
@@ -109,6 +115,12 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 				
 				StreamMaster stream = streamService.getNameById(req.getStreamId());
+				if(req.getRequestType() != null) {
+				RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
+				studentVerificationList.setRequest_type_id(request.getRequestType());
+				}
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+				String strDate= formatter.format(req.getCreatedate());
 				
 				studentVerificationList.setDoc_status(req.getDocStatus());
 				studentVerificationList.setId(req.getId());
@@ -118,6 +130,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setEnroll_no(req.getEnrollmentNumber());
 				studentVerificationList.setFirst_name(req.getFirstName());
 				studentVerificationList.setLast_name(req.getLastName());
+				
 ////				studentVerificationList.setRequest_type_id(req.get);
 //				studentVerificationList.setStream_id(req.getStreamId());
 //				studentVerificationList.setUni_id(req.getUniversityId());
@@ -126,6 +139,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setYear(year.getYearOfPassing());	
 				studentVerificationList.setUpload_doc_path(req.getUploadDocumentPath());
 				studentVerificationList.setStream_name(stream.getStreamName());
+				studentVerificationList.setReq_date(strDate);
 				
 				List.add(studentVerificationList);
 			}
@@ -166,6 +180,14 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+			String strDate= formatter.format(req.getCreatedate());
+			
+			if(req.getRequestType() != null) {
+			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
+			closedDocResp.setRequest_type_id(request.getRequestType());
+			}
+			
 			closedDocResp.setDoc_status(req.getDocStatus());
 			closedDocResp.setId(req.getId());
 			closedDocResp.setApplication_id(req.getApplicationId());
@@ -181,6 +203,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			closedDocResp.setVer_req_id(req.getVerRequestId());
 			closedDocResp.setYear(year.getYearOfPassing());	
 			closedDocResp.setStream_name(stream.getStreamName());
+			closedDocResp.setReq_date(strDate);
+			
 			
 			List.add(closedDocResp);
 			

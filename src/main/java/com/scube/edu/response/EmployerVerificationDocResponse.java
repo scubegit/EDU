@@ -1,7 +1,5 @@
 package com.scube.edu.response;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,8 +7,7 @@ import lombok.ToString;
 @Getter 
 @Setter
 @ToString
-
-public class StudentVerificationDocsResponse {
+public class EmployerVerificationDocResponse {
 	
 	private Long id;
 	private String first_name; 
@@ -39,4 +36,5 @@ public class StudentVerificationDocsResponse {
 	private String stream_name;
 	
 	private String originalDocUploadFilePath;
+
 }
