@@ -38,7 +38,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	
 	VerificationRequest findById(long id);
 
-	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and created_date > (?2) and created_date < (?3)" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and created_date >= (?2) and created_date <= (?3)" , nativeQuery = true)
 	List<VerificationRequest> findByUserIdAndDates(long userId, String fromDate, String toDate);
 	
 
