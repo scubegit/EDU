@@ -42,6 +42,7 @@ import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationListPojoResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StreamResponse;
 
@@ -93,12 +94,12 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 
 	 @Override
 
-		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
+		public List<VerificationResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
 
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 
-		 	List<StudentVerificationDocsResponse> List = new ArrayList<>();
+		 	List<VerificationResponse> List = new ArrayList<>();
 		 	
 		 	List<VerificationRequest> verReq = verificationReqRepository.findByUserId(userId);
 			
@@ -108,7 +109,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				
 				System.out.println("verReq---"+ req.getDocumentId());
 				
-				StudentVerificationDocsResponse studentVerificationList = new StudentVerificationDocsResponse();
+				VerificationResponse studentVerificationList = new VerificationResponse();
 				
 				PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 				
@@ -161,18 +162,18 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 }
 
 	@Override
-	public List<StudentVerificationDocsResponse> getClosedRequests(long userId) {
+	public List<VerificationResponse> getClosedRequests(long userId) {
 		
 		logger.info("********StudentServiceImpl getClosedRequests********"+ userId);
 		
-		List<StudentVerificationDocsResponse> List = new ArrayList<>();
+		List<VerificationResponse> List = new ArrayList<>();
 		
 		List<VerificationRequest> closedReqs = verificationReqRepository.findByStatusAndUserId(userId);
 		System.out.println("---------------------"+ closedReqs);
 		
 		for(VerificationRequest req: closedReqs) {
 			
-			StudentVerificationDocsResponse closedDocResp = new StudentVerificationDocsResponse();
+			VerificationResponse closedDocResp = new VerificationResponse();
 			
 			PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 			

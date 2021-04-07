@@ -40,6 +40,9 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 
 	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and created_date >= (?2) and created_date <= (?3)" , nativeQuery = true)
 	List<VerificationRequest> findByUserIdAndDates(long userId, String fromDate, String toDate);
+
+	@Query(value = "SELECT * FROM verification_request where doc_status in ('Rejected', 'Unable To Verify', 'Offline') and created_date >= (?1) and created_date <= (?2)" , nativeQuery = true)
+	List<VerificationRequest> findByStatus(String fromDate, String toDate);
 	
 
 }

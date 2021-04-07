@@ -2,8 +2,6 @@ package com.scube.edu.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -19,11 +17,10 @@ import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
-import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
 
 @Service
-public class EmployerServiceImpl implements EmployerService {
+public class SuperVerifierServiceImpl implements SuperVerifierService {
 	
 private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl.class);
 	
@@ -43,18 +40,15 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired
 	DocumentService	documentService;
-	
+
 	@Override
-	public List<VerificationResponse> getOneMonthVerificationDocsDataByUserid(long userId, String fromDate, String toDate ) throws Exception {
+	public List<VerificationResponse> getVerificationDocList(String fromDate, String toDate) {
 		
-		logger.info("********EmployerServiceImpl getOneMonthVerificationDocsDataByUserid");
-		logger.info("------------"+ userId + fromDate + toDate);
+		logger.info("*******SuperVerifierServiceImpl getVerificationDocList*******");
 		
 		List<VerificationResponse> responseList = new ArrayList<>();
 		
-		List<VerificationRequest> list = verificationReqRepository.findByUserIdAndDates(userId , fromDate , toDate);
-		
-		//Date should be in yyyy-MM-dd format
+		List<VerificationRequest> list = verificationReqRepository.findByStatus(fromDate, toDate);
 		
 		for(VerificationRequest req: list) {
 			
