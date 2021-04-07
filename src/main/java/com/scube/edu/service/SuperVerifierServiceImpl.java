@@ -95,7 +95,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setUpload_doc_path(req.getUploadDocumentPath());
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
-			resp.setVerifier_name(userr.getContactPersonName());
+			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
 			
 			responseList.add(resp);
 			
