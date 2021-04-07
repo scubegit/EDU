@@ -11,7 +11,7 @@ public interface VerifierService {
 
 	public List<StudentVerificationDocsResponse> verifyDocument(Long id);
 
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status);
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy);
 
 
 

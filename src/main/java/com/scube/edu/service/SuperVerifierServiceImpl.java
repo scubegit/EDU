@@ -3,6 +3,7 @@ package com.scube.edu.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.StreamMaster;
+import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
@@ -40,6 +43,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired
 	DocumentService	documentService;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@Override
 	public List<VerificationResponse> getVerificationDocList(String fromDate, String toDate) {
@@ -59,6 +65,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
+			
+			Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
+			UserMasterEntity userr = user.get();
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
@@ -86,6 +95,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setUpload_doc_path(req.getUploadDocumentPath());
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
+			resp.setVerifier_name(userr.getContactPersonName());
 			
 			responseList.add(resp);
 			

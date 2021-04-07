@@ -58,8 +58,10 @@ public class VerifierServiceImpl implements VerifierService{
 	 StreamRepository  streamRespository;
 	 
 	 
-	   @Autowired
-		  UniversityStudentDocService  stuDocService;
+	 @Autowired
+	 UniversityStudentDocService  stuDocService;
+	 
+	 @Override
 	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
@@ -70,44 +72,46 @@ public class VerifierServiceImpl implements VerifierService{
 		 
 		 for(VerificationRequest veriReq: verReq) {
 			 
-			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
+			
+			  StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
+			  
+			  PassingYearMaster year =
+			  yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+			  
+			  System.out.println(veriReq.getDocumentId());
+			  
+			  DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
+			  
+			  Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
+			  UserMasterEntity userr = user.get();
+			  
+			  Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId()); 
+			  StreamMaster str = stream.get();
+			  
+			  resp.setId(veriReq.getId());
+			  resp.setApplication_id(veriReq.getApplicationId());
+			  resp.setCollege_name_id(veriReq.getCollegeId());
+			  resp.setDoc_name(doc.getDocumentName());
+			  resp.setEnroll_no(veriReq.getEnrollmentNumber());
+			  resp.setFirst_name(veriReq.getFirstName());
+			  resp.setLast_name(veriReq.getLastName());
+			  resp.setStream_name(str.getStreamName());
+			  resp.setUni_id(veriReq.getUniversityId());
+			  resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
+			  resp.setUser_id(veriReq.getUserId());
+			  resp.setVer_req_id(veriReq.getVerRequestId());
+			  resp.setYear(year.getYearOfPassing());
+			  resp.setCompany_name(userr.getCompanyName());
 			 
-			 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
-			 
-			 System.out.println(veriReq.getDocumentId());
-			 
-			 DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
-			 
-			 Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
-			 UserMasterEntity userr = user.get();
-			 
-			 Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId());
-			 StreamMaster str = stream.get();
-			 
-			 resp.setId(veriReq.getId());
-			 resp.setApplication_id(veriReq.getApplicationId());
-			 resp.setCollege_name_id(veriReq.getCollegeId());
-			 resp.setDoc_name(doc.getDocumentName());
-			 resp.setEnroll_no(veriReq.getEnrollmentNumber());
-			 resp.setFirst_name(veriReq.getFirstName());
-			 resp.setLast_name(veriReq.getLastName());
-			 resp.setStream_name(str.getStreamName());
-			 resp.setUni_id(veriReq.getUniversityId());
-			 resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
-			 resp.setUser_id(veriReq.getUserId());
-			 resp.setVer_req_id(veriReq.getVerRequestId());
-			 resp.setYear(year.getYearOfPassing());
-			 resp.setCompany_name(userr.getCompanyName());
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
 			 Long a = (long) 1;
-			 VerificationRequest ent = verificationReqRepository.getOne(veriReq.getId());
-			 ent.setAssignedTo(a);
-			 verificationReqRepository.save(ent);
+			 veriReq.setAssignedTo(a);
+			 verificationReqRepository.save(veriReq);
 			 
 			 // ON logout, change 'assignedTo' field back to 0
 			 
-			 List.add(resp);
+			  List.add(resp);
 		 }
 		 
 		 System.out.println("----------"+ verReq);
@@ -151,7 +155,7 @@ public class VerifierServiceImpl implements VerifierService{
 
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status) {
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) {
 		
 			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" + id + status);
 			
@@ -160,7 +164,7 @@ public class VerifierServiceImpl implements VerifierService{
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
 			
 			entt.setDocStatus(status);
-			
+			entt.setVerifiedBy(verifiedBy);
 			verificationReqRepository.save(entt);
 		
 		return null;

@@ -121,14 +121,14 @@ public class VerifierController {
 	                             .body(bytes);
 	    }
 	 
-		@PostMapping("/setStatusForVerifierDocument/{id}/{status}")
-		public  ResponseEntity<Object> setStatusForVerifierDocument(@PathVariable Long id ,@PathVariable String status) {
+		@PostMapping("/setStatusForVerifierDocument/{id}/{status}/{verifiedBy}")
+		public  ResponseEntity<Object> setStatusForVerifierDocument(@PathVariable Long id ,@PathVariable String status, @PathVariable Long verifiedBy) {
 			
 			response = new BaseResponse();
 			System.out.println("*****VerifierController setStatusForVerifierDocument*****"+id + status);
 			    try {
 			    	
-			    	List<StudentVerificationDocsResponse> list = verifierService.setStatusForVerifierDocument(id,status);
+			    	List<StudentVerificationDocsResponse> list = verifierService.setStatusForVerifierDocument(id,status, verifiedBy);
 
 			    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

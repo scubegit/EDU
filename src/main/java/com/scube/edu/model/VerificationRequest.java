@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+//@Transactional
 @Table(	name = "verificationRequest")
 @Getter @Setter
 public class VerificationRequest extends CreateUpdate {
@@ -95,9 +97,11 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "doc_amt_with_gst")
 	private Long dosAmtWithGst;
 	
-	@Size(max = 100)
 	@Column(name = "request_type")
 	private Long requestType;
+	
+	@Column(name = "verified_by")
+	private Long verifiedBy;
 	
 
 }

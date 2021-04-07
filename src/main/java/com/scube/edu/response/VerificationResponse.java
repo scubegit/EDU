@@ -35,6 +35,8 @@ public class VerificationResponse {
 	private String company_name;
 	private String stream_name;
 	
+	private String verifier_name;
+	
 	private String originalDocUploadFilePath;
 
 
