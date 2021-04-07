@@ -20,6 +20,7 @@ import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
 
 @Service
@@ -102,6 +103,23 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		}
 		
 		return responseList;
+	}
+
+	@Override
+	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status) {
+		
+		logger.info("*******SuperVerifierServiceImpl setStatusForSuperVerifierDocument*******");
+		
+		Optional<VerificationRequest> vr =  verificationReqRepository.findById(id);
+		VerificationRequest veriReq = vr.get();
+		
+		System.out.println(veriReq.getDocStatus() + veriReq.getApplicationId());
+		
+		veriReq.setDocStatus(status);
+		
+		verificationReqRepository.save(veriReq);
+		
+		return null;
 	}
 	
 	
