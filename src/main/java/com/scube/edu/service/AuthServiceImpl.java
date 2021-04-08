@@ -68,27 +68,31 @@ public class AuthServiceImpl implements AuthService{
 		
 		logger.info("loginRequest.email "+ loginRequest.getUsername());
 
-		/*
-		 * if(loginRequest.getUsername().equalsIgnoreCase("")) { throw new
-		 * Exception("Error: Login Id cannot be empty!"); }
-		 * if(loginRequest.getPassword().equalsIgnoreCase("")) { throw new
-		 * Exception("Error: Password cannot be empty!"); }
-		 * 
-		 */
-		logger.info("---------checking values-----------  "+ userRepository.existsByUsernameAndIsactive(loginRequest.getUsername() ,"Y"));
+		
+		  if(loginRequest.getUsername().equalsIgnoreCase("")) { 
+			  throw new Exception("Error: Login Id cannot be empty!"); 
+		  }
+		  if(loginRequest.getPassword().equalsIgnoreCase("")) { 
+			  throw new Exception("Error: Password cannot be empty!"); 
+		  }
+		  
+		 
+		// logger.info("---------checking values-----------  "+ userRepository.existsByUsernameAndIsactive(loginRequest.getUsername() ,"Y"));
 
 		
-		 if(!userRepository.existsByUsernameAndIsactive(loginRequest.getUsername(),"Y"))
+		// if(!userRepository.existsByUsernameAndIsactive(loginRequest.getUsername(),"Y"))
+	    if(!userRepository.existsByEmailIdAndIsactive(loginRequest.getUsername(),"Y"))
 		 {
 			 
 			 //  msg = "User is not active";
 			 throw new Exception("User unauthorized!");
 		}
-		 
-		UserMasterEntity masterEntity =  userRepository.findByUsername(loginRequest.getUsername());
+	    
+		// UserMasterEntity masterEntity =  userRepository.findByUsername(loginRequest.getUsername());
+
+		UserMasterEntity masterEntity =  userRepository.findByEmailId(loginRequest.getUsername());
 		
-		
-		System.out.println("===masterEntity======="+masterEntity.getEmailVerificationStatus());
+	//	System.out.println("===masterEntity======="+masterEntity.getEmailVerificationStatus());
 		 
 		 if(!masterEntity.getEmailVerificationStatus().equalsIgnoreCase("Verified"))
 		 {
@@ -133,7 +137,7 @@ public class AuthServiceImpl implements AuthService{
 		 
 		 System.out.println("------------"+userMasterEntity.getEmailId());
 		 
-		  UserMasterEntity userEntities  = userRepository.findByUsername(userAddRequest.getEmailId());
+		  UserMasterEntity userEntities  = userRepository.findByEmailId(userAddRequest.getEmailId());
 		 
 		
 			if(userEntities != null) {
@@ -167,7 +171,7 @@ public class AuthServiceImpl implements AuthService{
 	
 	     userRepository.save(userMasterEntity);
 	
-		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
+//		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
 			
 		return true;
 		
