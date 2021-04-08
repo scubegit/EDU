@@ -15,18 +15,22 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.RequestTypeMaster;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.RequestTypeRepository;
 import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.JwtResponse;
+import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
 
@@ -61,19 +65,22 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 UniversityStudentDocService  stuDocService;
 	 
+	 @Autowired
+	 RequestTypeService reqTypeService;
+	 
 	 @Override
-	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
+	 public List<VerificationResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
 		 
-		 List<StudentVerificationDocsResponse> List = new ArrayList<>();
+		 List<VerificationResponse> List = new ArrayList<>();
 		 
 		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords();
 		 
 		 for(VerificationRequest veriReq: verReq) {
 			 
 			
-			  StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
+			 VerificationResponse resp = new VerificationResponse();
 			  
 			  PassingYearMaster year =
 			  yearOfPassService.getYearById(veriReq.getYearOfPassingId());
@@ -87,6 +94,8 @@ public class VerifierServiceImpl implements VerifierService{
 			  
 			  Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId()); 
 			  StreamMaster str = stream.get();
+			  
+			  RequestTypeResponse reqMaster = reqTypeService.getNameById(veriReq.getRequestType());
 			  
 			  resp.setId(veriReq.getId());
 			  resp.setApplication_id(veriReq.getApplicationId());
@@ -102,6 +111,7 @@ public class VerifierServiceImpl implements VerifierService{
 			  resp.setVer_req_id(veriReq.getVerRequestId());
 			  resp.setYear(year.getYearOfPassing());
 			  resp.setCompany_name(userr.getCompanyName());
+			  resp.setRequest_type_id(reqMaster.getRequestType());
 			 
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
