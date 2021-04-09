@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.UserResponse;
 import com.scube.edu.response.VerificationResponse;
 
 @Service
@@ -47,6 +50,12 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	EmailService emailService;
+	
+	@Autowired
+	UserService userService;
 
 	@Override
 	public List<VerificationResponse> getVerificationDocList(String fromDate, String toDate) {
@@ -106,7 +115,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	}
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status) {
+	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status) throws Exception {
 		
 		logger.info("*******SuperVerifierServiceImpl setStatusForSuperVerifierDocument*******");
 		
@@ -118,6 +127,15 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		veriReq.setDocStatus(status);
 		
 		verificationReqRepository.save(veriReq);
+		
+		if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected")) {
+			
+		UserResponse ume = userService.getUserInfoById(veriReq.getUserId());
+		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), status);
+		
+		}
+		
+
 		
 		return null;
 	}

@@ -115,11 +115,15 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				
 				DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 				
+				RequestTypeResponse reqMaster = reqTypeService.getNameById(req.getRequestType());
+				
 				StreamMaster stream = streamService.getNameById(req.getStreamId());
+				
 				if(req.getRequestType() != null) {
 				RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
 				studentVerificationList.setRequest_type_id(request.getRequestType());
 				}
+				
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 				String strDate= formatter.format(req.getCreatedate());
 				
@@ -141,6 +145,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setUpload_doc_path(req.getUploadDocumentPath());
 				studentVerificationList.setStream_name(stream.getStreamName());
 				studentVerificationList.setReq_date(strDate);
+				studentVerificationList.setRequest_type_id(reqMaster.getRequestType());
 				
 				List.add(studentVerificationList);
 			}
