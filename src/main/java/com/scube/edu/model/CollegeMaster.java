@@ -22,8 +22,7 @@ public class CollegeMaster extends CreateUpdate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotBlank
-	@Size(max = 100)
+
 	@Column(name = "universityId")
 	private Long universityId;
 	

@@ -41,36 +41,34 @@ public class PriceMaster extends CreateUpdate{
 	
 
 	@Column(name = "gst")
-	@Size(max = 100)
 	private Long gst;
 	
 
 
 	@Column(name = "securCharge")
-	@Size(max = 100)
 	private Long securCharge;
 	
 	
 	
 	@Column(name = "securGst")
-	@Size(max = 100)
 	private Long securGst;
 	
 	
 	
 	@Column(name = "totalAmt")
-	@Size(max = 100)
 	private Long totalAmt;
 	
 	
 	@Column(name = "totalGst")
-	@Size(max = 100)
 	private Long totalGst;
 	
 	
 	
 	@Column(name = "discount")
-	@Size(max = 100)
 	private Long discount;
+	
+	
+	@Column(name = "service_name")	
+	private String serviceName;
 	
 }
