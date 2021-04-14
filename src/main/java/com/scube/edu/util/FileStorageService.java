@@ -86,7 +86,7 @@ public class FileStorageService {
 			String returnPath = fileSubPath + fileNewName;
 			
 			
-			return String.valueOf(returnPath);
+			return String.valueOf(targetLocation);
 		}catch (IOException ex) {
 			throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
 		}

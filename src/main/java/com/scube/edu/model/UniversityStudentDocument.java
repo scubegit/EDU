@@ -28,15 +28,31 @@ public class UniversityStudentDocument {
 		@Column(name = "enrollmentNo")
 		private String enrollmentNo;
 		
-		@NotBlank
+		@Size(max = 100)
+		@Column(name = "First_Name")
+		private String firstName;
+		
+		@Size(max = 100)
+		@Column(name = "Last_Name")
+		private String lastName;
+		
+		@Size(max = 100)
+		@Column(name = "Stream")
+		private String stream;
+		
+		@Size(max = 100)
+		@Column(name = "College_Name")
+		private String collegeName;
+		
+		//@NotBlank
 		@Size(max = 100)
 		@Column(name = "OriginalDOC_UploadfilePath")
 		private String OriginalDOCuploadfilePath;
 		
-		@NotBlank
-		@Size(max = 100)
+		//@NotBlank
+	//	@Size(max = 100)
 		@Column(name = "passingYear")
-		private String passingYear;
+		private Integer passingYear;
 
 
 

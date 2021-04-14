@@ -10,6 +10,6 @@ public interface SuperVerifierService {
 
 	List<VerificationResponse> getVerificationDocList(String fromDate, String toDate);
 
-	List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status);
+	List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status) throws Exception;
 
 }

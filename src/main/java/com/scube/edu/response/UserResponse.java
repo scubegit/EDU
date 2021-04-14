@@ -20,4 +20,5 @@ public class UserResponse {
     private String contact_person_phone;
     private String company_email;
     private String contact_person_name;
+    private String enroll_no;
 }

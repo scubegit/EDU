@@ -24,7 +24,7 @@ public class StreamMaster extends CreateUpdate{
     private Long id;
 	
 	
-	@Size(max = 100)
+
 	@Column(name = "universityId")
 	private Long universityId;
 	

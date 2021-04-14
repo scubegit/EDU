@@ -3,6 +3,7 @@ package com.scube.edu.service;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,9 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.repository.CollegeRepository;
+import com.scube.edu.request.CollegeAddRequest;
+import com.scube.edu.request.DocumentAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.CollegeResponse;
+import com.scube.edu.util.StringsUtils;
 
 @Service
 public class CollegeSeviceImpl implements CollegeSevice {
@@ -46,4 +51,64 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 			return collegeList;
 	}
 
+	
+	
+	
+	//Abhishek Added
+	
+	@Override
+	public Boolean addCollege(CollegeAddRequest collegeRequest) throws Exception {
+		
+		
+		
+		CollegeMaster collegeMasterEntity  = new  CollegeMaster();
+		
+		collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());//1
+		collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());//Name Document
+		collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id 
+		collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N	
+	
+	     collegeRespository.save(collegeMasterEntity);
+	
+		
+			
+		return true;
+		
+	}
+	
+	
+	
+	
+	@Override
+	public BaseResponse UpdateCollege(CollegeMaster collegeMaster) throws Exception {
+		
+		baseResponse	= new BaseResponse();	
+
+		Optional<CollegeMaster> collegeEntities  = collegeRespository.findById(collegeMaster.getId());
+		
+		   if(collegeEntities == null) {
+			   
+				throw new Exception(" Invalid ID");
+			}
+		
+		
+		CollegeMaster collegeEntit = collegeEntities.get();
+		
+		
+		collegeEntit.setCollegeName(collegeMaster.getCollegeName());
+		
+		
+		collegeRespository.save(collegeEntit);
+		
+		   
+	
+		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		baseResponse.setRespData("success");
+		 
+		return baseResponse;
+	}
+	
+	
+	//Abhishek Added
 }

@@ -24,7 +24,7 @@ public class DocumentMaster extends CreateUpdate {
     private Long id;
 	
 	
-	@Size(max = 100)
+	
 	@Column(name = "universityId")
 	private Long universityId;
 	
@@ -32,5 +32,11 @@ public class DocumentMaster extends CreateUpdate {
 	@Size(max = 100)
 	@Column(name = "documentName")
 	private String documentName;
+	
+	
+	
+	
+
+
 
 }

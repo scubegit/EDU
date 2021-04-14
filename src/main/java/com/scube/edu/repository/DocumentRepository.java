@@ -6,5 +6,7 @@ import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.UserMasterEntity;
 
 public interface DocumentRepository extends JpaRepository<DocumentMaster, Long>{
+	
+	DocumentMaster findById(long id);
 
 }

@@ -9,8 +9,7 @@ import lombok.ToString;
 @ToString
 public class StreamResponse {
 	private long id;
-    private String streamName;
-   
+    private String streamName;   
     private long universityId;
 
 }

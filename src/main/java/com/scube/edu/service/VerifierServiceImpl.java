@@ -1,9 +1,12 @@
 package com.scube.edu.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+
+import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.BadElementException;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RequestTypeMaster;
@@ -30,6 +34,7 @@ import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.UserResponse;
 import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
@@ -67,6 +72,12 @@ public class VerifierServiceImpl implements VerifierService{
 	 
 	 @Autowired
 	 RequestTypeService reqTypeService;
+	 
+		@Autowired
+		EmailService emailService;
+		
+		@Autowired
+		UserService userService;
 	 
 	 @Override
 	 public List<VerificationResponse> getVerifierRequestList() throws Exception {
@@ -165,7 +176,7 @@ public class VerifierServiceImpl implements VerifierService{
 
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) {
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) throws BadElementException, MessagingException, IOException {
 		
 			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" + id + status);
 			
@@ -176,6 +187,13 @@ public class VerifierServiceImpl implements VerifierService{
 			entt.setDocStatus(status);
 			entt.setVerifiedBy(verifiedBy);
 			verificationReqRepository.save(entt);
+			
+			if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")) {
+				
+				UserResponse ume = userService.getUserInfoById(entt.getUserId());
+				emailService.sendStatusMail(ume.getEmail(), entt.getId() , status);
+				
+				}
 		
 		return null;
 	}

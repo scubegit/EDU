@@ -10,9 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.model.DocumentMaster;
+import com.scube.edu.model.StreamMaster;
+import com.scube.edu.request.DocumentAddRequest;
+import com.scube.edu.request.StreamRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.service.MasterService;
@@ -63,5 +69,76 @@ public class StreamController {
 		}
 		
 	}
+	
+	
+	
+	//Abhishek Added
+	
+	@PostMapping("/streamAdd")
+	public ResponseEntity<Object> addStream(@RequestBody StreamRequest streamRequest ,  HttpServletRequest request) {
+		
+		logger.info("********StreamController addStream()********");
+		response = new BaseResponse();
+		
+		try {
+
+			Boolean flag = streamServices.addStream(streamRequest);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(flag);
+			
+			return ResponseEntity.ok(response);
+			
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			//return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+		}
+		
+   }
+	
+	
+	@PostMapping("/streamUpdate")
+	public ResponseEntity<Object> updateStream(@RequestBody StreamMaster streamMaster ,  HttpServletRequest request) {
+		
+		logger.info("********StreamController updateStream()********");
+		response = new BaseResponse();
+				
+		
+		
+		try {
+			
+			response = streamServices.updateStream(streamMaster);
+
+			//Boolean flag = documentServices.addDocument(documentRequest);
+			
+			//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			//response.setRespData(flag);
+			
+			return ResponseEntity.ok(response);
+			
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			//return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+		}
+		
+   }
+	
+	//Abhishek Added
 	
 }
