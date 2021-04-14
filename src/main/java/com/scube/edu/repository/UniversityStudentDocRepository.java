@@ -9,7 +9,8 @@ import com.scube.edu.model.UserMasterEntity;
 
 public interface UniversityStudentDocRepository extends JpaRepository<UniversityStudentDocument, Long> {
 
-	Optional<UniversityStudentDocument> findByEnrollmentNo(String enrollmentNo);
+	UniversityStudentDocument findByEnrollmentNo(String enrollmentNo);
+
 	
 
 }

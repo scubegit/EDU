@@ -34,9 +34,9 @@ public class UniversityStudentDocServiceImpl implements UniversityStudentDocServ
 	public UniversityStudentDocument getDocDataByEnrollmentNO(String  enrollNo) {
 	
 			
-				Optional<UniversityStudentDocument> docEntity    = studentDocumentRepository.findByEnrollmentNo(enrollNo);
+				UniversityStudentDocument docEntity    = studentDocumentRepository.findByEnrollmentNo(enrollNo);
 				
-				UniversityStudentDocument stuEnt = docEntity.get();
+				UniversityStudentDocument stuEnt = docEntity;
 				
 				System.out.println("-----Entities---"+stuEnt);
 				

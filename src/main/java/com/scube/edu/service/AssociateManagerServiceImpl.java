@@ -34,45 +34,71 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	
 	
 	@Override
-	public String saveStudentInfo(MultipartFile excelfile,MultipartFile datafile) throws IOException {
+	public List<String> saveStudentInfo(List<UniversityStudentDocument> list) throws IOException {
+		
+		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		 UniversityStudentDocument docEntity =null;
+		 List<String> rejectedData=new ArrayList<>();
+		 
+		 for(UniversityStudentDocument Data:list) {
+			 			
+			 docEntity=universityStudentDocRepository.findByEnrollmentNo(Data.getEnrollmentNo());
+			
+			 if(docEntity==null) {	
+				 UniversityStudentDocument studentData=new UniversityStudentDocument();
+				 studentData.setFirstName(Data.getFirstName());
+		        studentData.setLastName(Data.getLastName());
+		        studentData.setCollegeName(Data.getCollegeName());	
+		        studentData.setStream(Data.getStream());	
+		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+		        studentData.setPassingYear(Data.getPassingYear());	
+		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		        studentDataList.add(studentData);    
+			 }
+			 else
+			 {				
+				 rejectedData.add(Data.getEnrollmentNo());				
+			 }
+			
+		 }
+		 logger.info("rejectedData : "+rejectedData);
+		 universityStudentDocRepository.saveAll(studentDataList);
+		 return rejectedData;
+		 
+	}
+
+
+	@Override
+	public List<UniversityStudentDocument> ReviewStudentData(MultipartFile excelfile, MultipartFile datafile) throws IOException {
 		
 		 workbook = new XSSFWorkbook(excelfile.getInputStream());
 		 XSSFSheet worksheet = workbook.getSheetAt(0);
-		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		 List<UniversityStudentDocument> studentDataReviewList = new ArrayList<UniversityStudentDocument>();
 		 List<UniversityStudentDocument> response = new ArrayList<UniversityStudentDocument>();
-
-		 List<String> rejectedData=new ArrayList<>();
+		
+		 String fileSubPath = "file/";
+		 String filePath = fileStorageService.storeFile(datafile , fileSubPath);
 		 for(int i=1;i<worksheet.getPhysicalNumberOfRows() ;i++) {
 			 
 			 XSSFRow row = worksheet.getRow(i);
-			 Optional<UniversityStudentDocument> docEntity =universityStudentDocRepository.findByEnrollmentNo(row.getCell(4).getStringCellValue());
-			 if(docEntity==null) {
-			 UniversityStudentDocument studentData = new UniversityStudentDocument();	            
+			 UniversityStudentDocument docEntity =null;
+			 
+			 
+				 UniversityStudentDocument studentData = new UniversityStudentDocument();	            
 		        
 		        studentData.setFirstName(row.getCell(0).getStringCellValue());
 		        studentData.setLastName(row.getCell(1).getStringCellValue());
 		        studentData.setCollegeName(row.getCell(2).getStringCellValue());	
 		        studentData.setStream(row.getCell(3).getStringCellValue());	
 		        studentData.setEnrollmentNo(row.getCell(4).getStringCellValue());
-		        studentData.setPassingYear((int) row.getCell(5).getNumericCellValue());		        
-		        studentDataList.add(studentData);    
+		        studentData.setPassingYear((int) row.getCell(5).getNumericCellValue());	
+		        studentData.setOriginalDOCuploadfilePath(filePath);
+		        studentDataReviewList.add(studentData);    
 			 }
-			 else
-			 {				
-				 rejectedData.add(row.getCell(4).getStringCellValue());
-				
-			 }
-			
-		 }
-		 logger.info("rejectedData : "+rejectedData);
-		 universityStudentDocRepository.saveAll(studentDataList);
-		 String fileSubPath = "file/";
-		 String filePath = fileStorageService.storeFile(datafile , fileSubPath);
-		 return "success";
-		 
-	}
-
-
 	
+
+
+		 return studentDataReviewList;
+	}
 
 }
