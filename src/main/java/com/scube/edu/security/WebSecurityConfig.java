@@ -59,6 +59,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("/api/auth/**").permitAll()
+			//.antMatchers("/api/verifier/getimage/**/**").permitAll()
+			//.antMatchers("/api/superVerifier/setStatusForSuperVerifierDocument/**/**").permitAll()
+			//.antMatchers("/api/verifier/setStatusForVerifierDocument/**/**").permitAll()
+			//http://192.168.0.219:8081/EDU/api/verifier/getimage/VR/35
 //			.antMatchers("/api/**/**").permitAll()
 //			.authorizeRequests().antMatchers("/api/**/**").permitAll()
 			.anyRequest().authenticated();
