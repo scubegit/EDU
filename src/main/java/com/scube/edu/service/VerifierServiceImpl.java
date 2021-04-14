@@ -1,9 +1,12 @@
 package com.scube.edu.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+
+import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,20 +16,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.BadElementException;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.RequestTypeMaster;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.RequestTypeRepository;
 import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.JwtResponse;
+import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.UserResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
 
@@ -58,56 +67,72 @@ public class VerifierServiceImpl implements VerifierService{
 	 StreamRepository  streamRespository;
 	 
 	 
-	   @Autowired
-		  UniversityStudentDocService  stuDocService;
-	 public List<StudentVerificationDocsResponse> getVerifierRequestList() throws Exception {
+	 @Autowired
+	 UniversityStudentDocService  stuDocService;
+	 
+	 @Autowired
+	 RequestTypeService reqTypeService;
+	 
+		@Autowired
+		EmailService emailService;
+		
+		@Autowired
+		UserService userService;
+	 
+	 @Override
+	 public List<VerificationResponse> getVerifierRequestList() throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
 		 
-		 List<StudentVerificationDocsResponse> List = new ArrayList<>();
+		 List<VerificationResponse> List = new ArrayList<>();
 		 
 		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords();
 		 
 		 for(VerificationRequest veriReq: verReq) {
 			 
-			 StudentVerificationDocsResponse resp = new StudentVerificationDocsResponse();
+			
+			 VerificationResponse resp = new VerificationResponse();
+			  
+			  PassingYearMaster year =
+			  yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+			  
+			  System.out.println(veriReq.getDocumentId());
+			  
+			  DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
+			  
+			  Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
+			  UserMasterEntity userr = user.get();
+			  
+			  Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId()); 
+			  StreamMaster str = stream.get();
+			  
+			  RequestTypeResponse reqMaster = reqTypeService.getNameById(veriReq.getRequestType());
+			  
+			  resp.setId(veriReq.getId());
+			  resp.setApplication_id(veriReq.getApplicationId());
+			  resp.setCollege_name_id(veriReq.getCollegeId());
+			  resp.setDoc_name(doc.getDocumentName());
+			  resp.setEnroll_no(veriReq.getEnrollmentNumber());
+			  resp.setFirst_name(veriReq.getFirstName());
+			  resp.setLast_name(veriReq.getLastName());
+			  resp.setStream_name(str.getStreamName());
+			  resp.setUni_id(veriReq.getUniversityId());
+			  resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
+			  resp.setUser_id(veriReq.getUserId());
+			  resp.setVer_req_id(veriReq.getVerRequestId());
+			  resp.setYear(year.getYearOfPassing());
+			  resp.setCompany_name(userr.getCompanyName());
+			  resp.setRequest_type_id(reqMaster.getRequestType());
 			 
-			 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
-			 
-			 System.out.println(veriReq.getDocumentId());
-			 
-			 DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
-			 
-			 Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
-			 UserMasterEntity userr = user.get();
-			 
-			 Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId());
-			 StreamMaster str = stream.get();
-			 
-			 resp.setId(veriReq.getId());
-			 resp.setApplication_id(veriReq.getApplicationId());
-			 resp.setCollege_name_id(veriReq.getCollegeId());
-			 resp.setDoc_name(doc.getDocumentName());
-			 resp.setEnroll_no(veriReq.getEnrollmentNumber());
-			 resp.setFirst_name(veriReq.getFirstName());
-			 resp.setLast_name(veriReq.getLastName());
-			 resp.setStream_name(str.getStreamName());
-			 resp.setUni_id(veriReq.getUniversityId());
-			 resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
-			 resp.setUser_id(veriReq.getUserId());
-			 resp.setVer_req_id(veriReq.getVerRequestId());
-			 resp.setYear(year.getYearOfPassing());
-			 resp.setCompany_name(userr.getCompanyName());
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
 			 Long a = (long) 1;
-			 VerificationRequest ent = verificationReqRepository.getOne(veriReq.getId());
-			 ent.setAssignedTo(a);
-			 verificationReqRepository.save(ent);
+			 veriReq.setAssignedTo(a);
+			 verificationReqRepository.save(veriReq);
 			 
 			 // ON logout, change 'assignedTo' field back to 0
 			 
-			 List.add(resp);
+			  List.add(resp);
 		 }
 		 
 		 System.out.println("----------"+ verReq);
@@ -135,17 +160,42 @@ public class VerifierServiceImpl implements VerifierService{
 					 
 					 resEntity.setId(veriReq.getId());
 					 resEntity.setEnroll_no(veriReq.getEnrollmentNumber());
-					 resEntity.setUpload_doc_path("http://192.168.0.220:8081/EDU/api/verifier/getimage/Student/"+veriReq.getId());
+					 resEntity.setUpload_doc_path("http://192.168.0.221:8081/EDU/api/verifier/getimage/VR/"+veriReq.getId());
 					 resEntity.setYear(year.getYearOfPassing());
 					 
 					 UniversityStudentDocument doc = stuDocService.getDocDataByEnrollmentNO(veriReq.getEnrollmentNumber());
 					 
-					 resEntity.setOriginalDocUploadFilePath("http://192.168.0.220:8081/EDU/api/verifier/getimage/University/"+doc.getId());
+					 resEntity.setOriginalDocUploadFilePath("http://192.168.0.221:8081/EDU/api/verifier/getimage/U/"+doc.getId());
 					
 					 verificationDataList.add(resEntity);
 		        }
 				 
 		return verificationDataList;
+	}
+
+
+
+	@Override
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) throws BadElementException, MessagingException, IOException {
+		
+			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" + id + status);
+			
+			Optional<VerificationRequest> ent =  verificationReqRepository.findById(id);
+			VerificationRequest entt = ent.get();
+			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
+			
+			entt.setDocStatus(status);
+			entt.setVerifiedBy(verifiedBy);
+			verificationReqRepository.save(entt);
+			
+			if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")) {
+				
+				UserResponse ume = userService.getUserInfoById(entt.getUserId());
+				emailService.sendStatusMail(ume.getEmail(), entt.getId() , status);
+				
+				}
+		
+		return null;
 	}
 
 	

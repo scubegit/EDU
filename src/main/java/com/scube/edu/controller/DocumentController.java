@@ -72,7 +72,7 @@ public class DocumentController {
 	
 	//Abhishek Added
 	
-	@PostMapping("/documnetUpload")
+	@PostMapping("/documentUpload")
 	public ResponseEntity<Object> addDocument(@RequestBody DocumentAddRequest documentRequest ,  HttpServletRequest request) {
 		
 		logger.info("********DocumentController addDocument()********");

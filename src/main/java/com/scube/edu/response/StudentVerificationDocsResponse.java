@@ -1,5 +1,7 @@
 package com.scube.edu.response;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,6 +26,8 @@ public class StudentVerificationDocsResponse {
 	private String request_type_id;
 	private Long ver_req_id;
 	private String upload_doc_path;
+	
+	private String req_date;
 
 	private Long docAmt;
 	private Long docAmtWithGST;

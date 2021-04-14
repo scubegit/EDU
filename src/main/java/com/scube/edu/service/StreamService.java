@@ -20,4 +20,6 @@ public interface StreamService {
 
 		public BaseResponse updateStream(StreamMaster streamMaster) throws Exception;
 		//Abhishek Added
+		StreamMaster getNameById(Long streamId);
+
 }

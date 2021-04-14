@@ -152,7 +152,9 @@ public class InvoicePDFExporter {
 			  
 			  PdfPTable tab1 = new PdfPTable(1); tab1.setWidthPercentage(100);
 			  
+			  
 			  tab1.addCell(ImageCell1); 
+			  document.open();
 			  document.add(tab1);
 			
 			 

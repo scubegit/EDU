@@ -18,13 +18,13 @@ import com.scube.edu.response.StudentVerificationDocsResponse;
 @Repository
 public interface VerificationRequestRepository extends JpaRepository<VerificationRequest, Long>{
 
-	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM edu_db.verification_request vr left join edu_db.passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1", nativeQuery = true)
+	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM verification_request vr left join passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1", nativeQuery = true)
 	List<VerificationRequest> findByUserId(long userId);
 
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and assigned_to = 0 order by created_date asc limit 5", nativeQuery = true)
 	List<VerificationRequest> getVerifierRecords();
 
-	@Query(value = "SELECT * FROM verification_request where doc_status = 'Verified' and user_id = ?1" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status != 'Requested' and user_id = ?1" , nativeQuery = true)
 	List<VerificationRequest> findByStatusAndUserId(long userId);
 
 
@@ -33,10 +33,16 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT MAX(application_id) from verification_request " , nativeQuery = true)
 	Long getMaxApplicationId();
 
-	@Query(value = "SELECT * FROM verification_request where id = 1" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where id = (?1)" , nativeQuery = true)
 	List<VerificationRequest> getDataByIdToVerify(long id);
 	
 	VerificationRequest findById(long id);
+
+	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and created_date >= (?2) and created_date <= (?3)" , nativeQuery = true)
+	List<VerificationRequest> findByUserIdAndDates(long userId, String fromDate, String toDate);
+
+	@Query(value = "SELECT * FROM verification_request where doc_status in ('Rejected', 'Unable To Verify', 'Offline') and created_date >= (?1) and created_date <= (?2)" , nativeQuery = true)
+	List<VerificationRequest> findByStatus(String fromDate, String toDate);
 	
 
 }

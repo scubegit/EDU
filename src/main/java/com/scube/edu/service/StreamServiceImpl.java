@@ -110,4 +110,17 @@ public class StreamServiceImpl  implements StreamService{
 		//Abhishek Added
 		
 		
+
+		@Override
+		public StreamMaster getNameById(Long streamId) {
+			
+			System.out.println("*******streamServiceImpl getNameById*******");
+			
+			Optional<StreamMaster> stream = streamRespository.findById(streamId);
+			StreamMaster stre = stream.get();
+			
+			return stre;
+		}
+		
+
 }

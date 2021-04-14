@@ -14,16 +14,16 @@ public class StudentDocVerificationRequest {
 	private String lastname;
 	private Long streamid;
 	private String docname;
+	private Long requesttype;
 	private String enrollno;
 	private Long yearofpassid;
 	private Long collegenameid;
 	private Long applicationid;
 	private Long uniid;
 	private Long userid;
-	private String requesttypeid;
+//	private String requesttypeid;
 	private Long verreqid;
 	private String uploaddocpath;
-	
-//	private MultipartFile file; 
+	private String filepath;
 
 }

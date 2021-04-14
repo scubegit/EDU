@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
+import com.scube.edu.model.RequestTypeMaster;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.VerificationDocView;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.PriceMasterRepository;
@@ -36,8 +39,10 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.PriceMasterResponse;
+import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationListPojoResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StreamResponse;
 
@@ -81,14 +86,20 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 @Autowired
 	 private FileStorageService fileStorageService;
 	 
+	 @Autowired 
+	 StreamService streamService;
+	 
+	 @Autowired 
+	 RequestTypeService reqTypeService;
+	 
 	 @Override
 
-		public List<StudentVerificationDocsResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
+		public List<VerificationResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
 
 		 
 		 logger.info("********StudentServiceImpl getVerificationDataByUserid********");
 		 
-		 	List<StudentVerificationDocsResponse> List = new ArrayList<>();
+		 	List<VerificationResponse> List = new ArrayList<>();
 		 	
 		 	List<VerificationRequest> verReq = verificationReqRepository.findByUserId(userId);
 			
@@ -98,11 +109,23 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				
 				System.out.println("verReq---"+ req.getDocumentId());
 				
-				StudentVerificationDocsResponse studentVerificationList = new StudentVerificationDocsResponse();
+				VerificationResponse studentVerificationList = new VerificationResponse();
 				
 				PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 				
 				DocumentMaster doc = documentService.getNameById(req.getDocumentId());
+				
+				RequestTypeResponse reqMaster = reqTypeService.getNameById(req.getRequestType());
+				
+				StreamMaster stream = streamService.getNameById(req.getStreamId());
+				
+				if(req.getRequestType() != null) {
+				RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
+				studentVerificationList.setRequest_type_id(request.getRequestType());
+				}
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+				String strDate= formatter.format(req.getCreatedate());
 				
 				studentVerificationList.setDoc_status(req.getDocStatus());
 				studentVerificationList.setId(req.getId());
@@ -112,6 +135,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setEnroll_no(req.getEnrollmentNumber());
 				studentVerificationList.setFirst_name(req.getFirstName());
 				studentVerificationList.setLast_name(req.getLastName());
+				
 ////				studentVerificationList.setRequest_type_id(req.get);
 //				studentVerificationList.setStream_id(req.getStreamId());
 //				studentVerificationList.setUni_id(req.getUniversityId());
@@ -119,6 +143,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setVer_req_id(req.getVerRequestId());
 				studentVerificationList.setYear(year.getYearOfPassing());	
 				studentVerificationList.setUpload_doc_path(req.getUploadDocumentPath());
+				studentVerificationList.setStream_name(stream.getStreamName());
+				studentVerificationList.setReq_date(strDate);
+				studentVerificationList.setRequest_type_id(reqMaster.getRequestType());
 				
 				List.add(studentVerificationList);
 			}
@@ -140,22 +167,32 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 }
 
 	@Override
-	public List<StudentVerificationDocsResponse> getClosedRequests(long userId) {
+	public List<VerificationResponse> getClosedRequests(long userId) {
 		
 		logger.info("********StudentServiceImpl getClosedRequests********"+ userId);
 		
-		List<StudentVerificationDocsResponse> List = new ArrayList<>();
+		List<VerificationResponse> List = new ArrayList<>();
 		
 		List<VerificationRequest> closedReqs = verificationReqRepository.findByStatusAndUserId(userId);
 		System.out.println("---------------------"+ closedReqs);
 		
 		for(VerificationRequest req: closedReqs) {
 			
-			StudentVerificationDocsResponse closedDocResp = new StudentVerificationDocsResponse();
+			VerificationResponse closedDocResp = new VerificationResponse();
 			
 			PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 			
 			DocumentMaster doc = documentService.getNameById(req.getDocumentId());
+			
+			StreamMaster stream = streamService.getNameById(req.getStreamId());
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+			String strDate= formatter.format(req.getCreatedate());
+			
+			if(req.getRequestType() != null) {
+			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
+			closedDocResp.setRequest_type_id(request.getRequestType());
+			}
 			
 			closedDocResp.setDoc_status(req.getDocStatus());
 			closedDocResp.setId(req.getId());
@@ -171,6 +208,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			closedDocResp.setUser_id(req.getUserId());
 			closedDocResp.setVer_req_id(req.getVerRequestId());
 			closedDocResp.setYear(year.getYearOfPassing());	
+			closedDocResp.setStream_name(stream.getStreamName());
+			closedDocResp.setReq_date(strDate);
+			
 			
 			List.add(closedDocResp);
 			
@@ -242,9 +282,10 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setIsdeleted("N");
 			resp.setStreamId(req.getStreamid());
 			resp.setUniversityId((long) 1);
-			resp.setUploadDocumentPath(req.getUploaddocpath());
+			resp.setUploadDocumentPath(req.getFilepath());
 			resp.setUserId(req.getUserid());
 			resp.setVerRequestId(ver_req);
+			resp.setRequestType(req.getRequesttype());
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
 			
 			resp.setDocAmt(total);
@@ -314,7 +355,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setIsdeleted("N");
 		verDoc.setStreamId(studentDocReq.getStreamid());
 		verDoc.setUniversityId((long) 1);
-		verDoc.setUploadDocumentPath(studentDocReq.getUploaddocpath());
+		verDoc.setUploadDocumentPath(studentDocReq.getFilepath());
 		verDoc.setVerRequestId((long) 1);
 		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
 		verDoc.setUserId(studentDocReq.getUserid());

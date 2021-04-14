@@ -34,6 +34,7 @@ import com.scube.edu.response.PriceMasterResponse;
 
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationListPojoResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.StudentService;
 import com.scube.edu.service.VerificationService;
 import com.scube.edu.util.StringsUtils;
@@ -63,7 +64,7 @@ public class StudentController {
 		
 		    try {
 
-		    	List<StudentVerificationDocsResponse> list = studentService.getVerificationDocsDataByUserid(userId);
+		    	List<VerificationResponse> list = studentService.getVerificationDocsDataByUserid(userId);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -91,7 +92,7 @@ public class StudentController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentVerificationDocsResponse> list = studentService.getClosedRequests(userId);
+		    	List<VerificationResponse> list = studentService.getClosedRequests(userId);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -113,11 +114,9 @@ public class StudentController {
 			
    }
 	
-	
 	@PostMapping("/saveVerificationDocAndCalculateAmount")
 	public  ResponseEntity<Object> saveVerificationDocAndCalculateAmount(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		response = new BaseResponse();
-		System.out.println("----studentDocReq----"+ studentDocReq.get(1).getUploaddocpath());
 		    try {
 		    	
 		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);

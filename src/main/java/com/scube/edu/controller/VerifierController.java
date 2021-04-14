@@ -14,12 +14,13 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
-
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.VerifierService;
 import com.scube.edu.util.FileStorageService;
 import com.scube.edu.util.StringsUtils;
@@ -48,7 +49,7 @@ public class VerifierController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<StudentVerificationDocsResponse> list = verifierService.getVerifierRequestList();
+		    	List<VerificationResponse> list = verifierService.getVerifierRequestList();
 					// this list has FIFO mechanism for getting records for verifier (limit 5)
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -119,5 +120,34 @@ public class VerifierController {
 	                             .contentType(MediaType.IMAGE_JPEG)
 	                             .body(bytes);
 	    }
+	 
+		@PostMapping("/setStatusForVerifierDocument/{id}/{status}/{verifiedBy}")
+		public  ResponseEntity<Object> setStatusForVerifierDocument(@PathVariable Long id ,@PathVariable String status, @PathVariable Long verifiedBy) {
+			
+			response = new BaseResponse();
+			System.out.println("*****VerifierController setStatusForVerifierDocument*****"+id + status);
+			    try {
+			    	
+			    	List<StudentVerificationDocsResponse> list = verifierService.setStatusForVerifierDocument(id,status, verifiedBy);
+
+			    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(null);
+						
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
+						
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
 
 }
