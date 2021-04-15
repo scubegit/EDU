@@ -32,7 +32,7 @@ public class AssociateManagerController {
 	 AssociateManagerService associateManagerService;
 	 
 	
-	@PostMapping(value = "/uploadStudentInfoFromFile" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/uploadStudentInfoFromFile" )
 	public ResponseEntity<BaseResponse> saveStudentData (@RequestParam List<UniversityStudentDocument> list) {
 		
 		System.out.println("*******AssociateManagerController saveStudentData********"+ list);
