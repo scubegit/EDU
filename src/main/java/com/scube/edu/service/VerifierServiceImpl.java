@@ -160,12 +160,12 @@ public class VerifierServiceImpl implements VerifierService{
 					 
 					 resEntity.setId(veriReq.getId());
 					 resEntity.setEnroll_no(veriReq.getEnrollmentNumber());
-					 resEntity.setUpload_doc_path("http://192.168.0.219:8081/EDU/api/verifier/getimage/VR/"+veriReq.getId());
+					 resEntity.setUpload_doc_path("/verifier/getimage/VR/"+veriReq.getId());
 					 resEntity.setYear(year.getYearOfPassing());
 					 
 					 UniversityStudentDocument doc = stuDocService.getDocDataByEnrollmentNO(veriReq.getEnrollmentNumber());
 					 
-					 resEntity.setOriginalDocUploadFilePath("http://192.168.0.219:8081/EDU/api/verifier/getimage/U/"+doc.getId());
+					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
 					
 					 verificationDataList.add(resEntity);
 		        }
