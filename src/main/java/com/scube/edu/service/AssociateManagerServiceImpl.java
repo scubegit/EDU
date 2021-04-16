@@ -2,7 +2,9 @@ package com.scube.edu.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -34,12 +36,12 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	
 	
 	@Override
-	public List<String> saveStudentInfo(List<UniversityStudentDocument> list) throws IOException {
+	public  HashMap<String,List<UniversityStudentDocument>> saveStudentInfo(List<UniversityStudentDocument> list) throws IOException {
 		
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 UniversityStudentDocument docEntity =null;
-		 List<String> rejectedData=new ArrayList<>();
-		 
+		 List<UniversityStudentDocument> rejectedData=new ArrayList<UniversityStudentDocument>();
+		 HashMap<String,List<UniversityStudentDocument>> datalist=new HashMap<String,List<UniversityStudentDocument>>();
 		 for(UniversityStudentDocument Data:list) {
 			 			
 			 docEntity=universityStudentDocRepository.findByEnrollmentNo(Data.getEnrollmentNo());
@@ -56,14 +58,24 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentDataList.add(studentData);    
 			 }
 			 else
-			 {				
-				 rejectedData.add(Data.getEnrollmentNo());				
+			 {	 UniversityStudentDocument studentData=new UniversityStudentDocument();
+			     studentData.setFirstName(Data.getFirstName());
+		        studentData.setLastName(Data.getLastName());
+		        studentData.setCollegeName(Data.getCollegeName());	
+		        studentData.setStream(Data.getStream());	
+		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+		        studentData.setPassingYear(Data.getPassingYear());	
+		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		        //studentDataList.add(studentData);   			
+				rejectedData.add(studentData);				
 			 }
 			
 		 }
 		 logger.info("rejectedData : "+rejectedData);
 		 universityStudentDocRepository.saveAll(studentDataList);
-		 return rejectedData;
+		 datalist.put("savedStudentData", studentDataList);
+		 datalist.put("RejectedData", rejectedData);
+		 return datalist;
 		 
 	}
 
@@ -96,9 +108,18 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentDataReviewList.add(studentData);    
 			 }
 	
-
-
 		 return studentDataReviewList;
+	}
+
+	@Override
+	public List<UniversityStudentDocument> getStudentData(Integer yrOfPassing,String stream,String clgNm ) {
+		
+		logger.info("********AssociateManagerServiceImpl getStudentData********");
+
+		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		 
+		 studentDataList=universityStudentDocRepository.findAllByCollegeNameOrStreamOrPassingYear( clgNm, stream,yrOfPassing );
+		return studentDataList;
 	}
 
 }
