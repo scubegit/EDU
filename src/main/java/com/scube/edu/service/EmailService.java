@@ -380,7 +380,7 @@ public class EmailService {
 	    		+ "M.J. Phule Bhavan, \r"
 	    		+ "Vidyanagari, Santacruz (East), \r"
 	    		+ "Mumbai- 400 098. \r"
-	    		+ "Date: 08/04/2021");
+	    		+ "Date: "+java.time.LocalDate.now());
 	    document.add(headAddr);
 	    
 	    Paragraph Addr = new Paragraph();
@@ -415,9 +415,9 @@ public class EmailService {
 	    document.add(para);
 	    
 	    
-	    PdfPTable detailsTable = new PdfPTable(6);
+	    PdfPTable detailsTable = new PdfPTable(5);
 	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {16,16,16,16,16,16});
+	    detailsTable.setWidths(new int[] {20,20,20,20,20});
 	    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
@@ -425,7 +425,6 @@ public class EmailService {
 	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
-	    PdfPCell cell6 = new PdfPCell(new Paragraph("Remarks"));
 	    
 	    
 	    
@@ -434,7 +433,6 @@ public class EmailService {
 	    detailsTable.addCell(cell3);
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
-	    detailsTable.addCell(cell6);
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
@@ -453,14 +451,12 @@ public class EmailService {
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
-	    	PdfPCell remark = new PdfPCell(new Paragraph("remark here"));
 	    	
 	    	detailsTable.addCell(dateCell);
 	    	detailsTable.addCell(nameCell);
 	    	detailsTable.addCell(docCell);
 	    	detailsTable.addCell(yearCell);
 	    	detailsTable.addCell(enrollCell);
-	    	detailsTable.addCell(remark);
 	    
 	    
 	    	document.add(detailsTable);
@@ -518,6 +514,8 @@ public class EmailService {
 		
 		System.out.println("******EmailServiceImpl writeApprovalPdf*******");
 		
+		System.out.println("--------------"+java.time.LocalDate.now());   
+		
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
 		
@@ -574,7 +572,7 @@ public class EmailService {
 	    		+ "M.J. Phule Bhavan, \r"
 	    		+ "Vidyanagari, Santacruz (East), \r"
 	    		+ "Mumbai- 400 098. \r"
-	    		+ "Date: 08/04/2021");
+	    		+ "Date: "+java.time.LocalDate.now());
 	    document.add(headAddr);
 	    
 	    Paragraph Addr = new Paragraph();
@@ -619,9 +617,9 @@ public class EmailService {
 	    document.add(greeting);
 	    document.add(para);
 	    
-	    PdfPTable detailsTable = new PdfPTable(6);
+	    PdfPTable detailsTable = new PdfPTable(5);
 	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {16,16,16,16,16,16});
+	    detailsTable.setWidths(new int[] {20,20,20,20,20});
 	    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
@@ -629,7 +627,6 @@ public class EmailService {
 	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
-	    PdfPCell cell6 = new PdfPCell(new Paragraph("Remarks"));
 	    
 	    
 	    
@@ -638,7 +635,6 @@ public class EmailService {
 	    detailsTable.addCell(cell3);
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
-	    detailsTable.addCell(cell6);
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
@@ -657,14 +653,12 @@ public class EmailService {
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
-	    	PdfPCell remark = new PdfPCell(new Paragraph("remark here"));
 	    	
 	    	detailsTable.addCell(dateCell);
 	    	detailsTable.addCell(nameCell);
 	    	detailsTable.addCell(docCell);
 	    	detailsTable.addCell(yearCell);
 	    	detailsTable.addCell(enrollCell);
-	    	detailsTable.addCell(remark);
 	    	
 	    	
 	    	
