@@ -179,10 +179,10 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 logger.info(query);
 		 
 		 EntityManager em = emf.createEntityManager();
-		 List<UniversityStudentDocument> testValues = em.createQuery(query).getResultList();
+		 studentDataList= em.createQuery(query).getResultList();
 		// studentDataList=universityStudentDocRepository.getStudData(query);
 		 logger.info("Data"+studentDataList);
-		return testValues;
+		return studentDataList;
 	}
 
 }
