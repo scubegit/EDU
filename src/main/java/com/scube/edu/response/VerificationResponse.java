@@ -37,6 +37,8 @@ public class VerificationResponse {
 	
 	private String verifier_name;
 	
+	private String fullName;
+
 	private String originalDocUploadFilePath;
 
 

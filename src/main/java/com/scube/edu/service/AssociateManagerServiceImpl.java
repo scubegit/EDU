@@ -140,7 +140,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				 
 			 if(!universityStudData.getLastName().isEmpty())
 			 {
-				 query=query+"lastName='"+universityStudData.getLastName()+"'";
+				 query=query+" lastName='"+universityStudData.getLastName()+"'";
 				 if(!universityStudData.getStream().isEmpty())
 				 {
 					
