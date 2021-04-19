@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.scube.edu.controller.MasterController;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.repository.UniversityStudentDocRepository;
+import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.util.FileStorageService;
 
 @Service
@@ -181,8 +182,22 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 EntityManager em = emf.createEntityManager();
 		 studentDataList= em.createQuery(query).getResultList();
 		// studentDataList=universityStudentDocRepository.getStudData(query);
-		 logger.info("Data"+studentDataList);
-		return studentDataList;
+		 List<UniversityStudentDocument> studData=new ArrayList<>();
+		 for(UniversityStudentDocument setStudentdata:studentDataList)
+		 {
+			 UniversityStudentDocument studDataResponse=new UniversityStudentDocument();
+			 studDataResponse.setFirstName(setStudentdata.getFirstName());
+			 studDataResponse.setLastName(setStudentdata.getLastName());
+			 studDataResponse.setCollegeName(setStudentdata.getCollegeName());
+			 studDataResponse.setEnrollmentNo(setStudentdata.getEnrollmentNo());
+			 studDataResponse.setStream(setStudentdata.getStream());
+			 studDataResponse.setPassingYear(setStudentdata.getPassingYear());
+			 //String Path=
+			 studDataResponse.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+setStudentdata.getId());
+			 studData.add(studDataResponse);
+		 }
+		 logger.info("Data"+studData);
+		return studData;
 	}
 
 }

@@ -19,6 +19,4 @@ public interface VerifierService {
 
 	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) throws BadElementException, MessagingException, IOException;
 
-
-
 }
