@@ -104,7 +104,7 @@ public class DocumentController {
 	
 	
 	
-	@PostMapping("/documnetUpdate")
+	@PostMapping("/documentUpdate")
 	public ResponseEntity<Object> updateDocument(@RequestBody DocumentMaster documentMaster ,  HttpServletRequest request) {
 		
 		logger.info("********DocumentController updateDocument()********");
