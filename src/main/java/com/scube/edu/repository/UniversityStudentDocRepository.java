@@ -3,6 +3,8 @@ package com.scube.edu.repository;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Convert;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,9 +18,9 @@ public interface UniversityStudentDocRepository extends JpaRepository<University
 
 	UniversityStudentDocument findByEnrollmentNo(String enrollmentNo);
 
-	//@Query("SELECT * FROM UniversityStudentDocument ms "
-			//+ "where ms.passingYear=?1 or ms.stream=?2 or ms.collegeName=?3")
-	List<UniversityStudentDocument> findAllByCollegeNameOrStreamOrPassingYear(String clgNm ,String  stream,Integer yearofPassing);
-	
+	/*
+	 * @Query(nativeQuery = true, value= ":query") List<UniversityStudentDocument>
+	 * getStudData(@Param("query") String query) ;
+	 */
 	
 }

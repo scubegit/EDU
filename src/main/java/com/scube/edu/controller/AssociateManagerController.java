@@ -93,8 +93,8 @@ public class AssociateManagerController {
 				
 			}
 	}
-	@GetMapping(value = "/getStudenData")
-	public ResponseEntity<BaseResponse> getstudentData (@RequestParam int yearofPassing,@RequestParam String stream,@RequestParam String clgnm) {
+	@GetMapping(value = "/getUniversityStudenData")
+	public ResponseEntity<BaseResponse> getstudentData (@RequestBody UniversityStudentDocument stuentData) {
 		
 		System.out.println("*******AssociateManagerController getstudentData********");
 		
@@ -102,7 +102,7 @@ public class AssociateManagerController {
 		
 	    try {
 	    	
-	    	  List<UniversityStudentDocument> List=associateManagerService.getStudentData(yearofPassing, stream, clgnm) ;
+	    	  List<UniversityStudentDocument> List=associateManagerService.getStudentData(stuentData) ;
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
