@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -28,6 +32,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 
 	@Autowired
 	 UniversityStudentDocRepository 	 universityStudentDocRepository ;
+	
+	@PersistenceUnit
+	 private EntityManagerFactory emf;
 	
 	 @Autowired
 	 private FileStorageService fileStorageService;
@@ -79,7 +86,6 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 
 	}
 
-
 	@Override
 	public List<UniversityStudentDocument> ReviewStudentData(MultipartFile excelfile, MultipartFile datafile) throws IOException {
 		
@@ -112,14 +118,71 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	}
 
 	@Override
-	public List<UniversityStudentDocument> getStudentData(Integer yrOfPassing,String stream,String clgNm ) {
+	public List<UniversityStudentDocument> getStudentData(UniversityStudentDocument universityStudData ) {
 		
 		logger.info("********AssociateManagerServiceImpl getStudentData********");
 
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		 String query="";
+		 query="Select data from UniversityStudentDocument data where ";
 		 
-		 studentDataList=universityStudentDocRepository.findAllByCollegeNameOrStreamOrPassingYear( clgNm, stream,yrOfPassing );
-		return studentDataList;
+		 if(universityStudData!=null)
+		 {
+			 if(!universityStudData.getFirstName().isEmpty())
+			 {
+				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
+				 if(!universityStudData.getLastName().isEmpty())
+				 {
+				 query=query+" and";
+				 }
+			 }
+				 
+			 if(!universityStudData.getLastName().isEmpty())
+			 {
+				 query=query+"lastName='"+universityStudData.getLastName()+"'";
+				 if(!universityStudData.getStream().isEmpty())
+				 {
+					
+				 query=query+" and";
+				 }
+			 }
+			 if(!universityStudData.getStream().isEmpty())
+			 {
+				 query=query+"  stream='"+universityStudData.getStream()+"'";
+				 if(!universityStudData.getCollegeName().isEmpty())
+				 {
+				  query=query+" and";
+				 }
+			 }
+			 if(!universityStudData.getCollegeName().isEmpty())
+			 {
+				 query=query+"  collegeName='"+universityStudData.getCollegeName()+"'";
+				 if(!universityStudData.getEnrollmentNo().isEmpty())
+				 {
+				 query=query+" and";
+				 }
+			 }
+			 if(!universityStudData.getEnrollmentNo().isEmpty())
+			 {
+				 query=query+"  enrollmentNo='"+universityStudData.getEnrollmentNo()+"'";
+				 if(universityStudData.getPassingYear()!=null)
+				 {
+				 query=query+" and";
+				 }
+			 }
+			 if(universityStudData.getPassingYear()!=null)
+			 {
+				 query=query+" passingYear="+universityStudData.getPassingYear()+"";
+			 }
+		 }
+		 
+		 logger.info(query);
+		 
+		 EntityManager em = emf.createEntityManager();
+		 List<UniversityStudentDocument> testValues = em.createQuery(query).getResultList();
+		// studentDataList=universityStudentDocRepository.getStudData(query);
+		 logger.info("Data"+studentDataList);
+		return testValues;
 	}
 
 }
