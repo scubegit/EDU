@@ -171,7 +171,7 @@ public class AuthServiceImpl implements AuthService{
 	
 	     userRepository.save(userMasterEntity);
 	
-//		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
+		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
 			
 		return true;
 		
