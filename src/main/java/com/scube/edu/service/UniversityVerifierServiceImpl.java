@@ -77,9 +77,19 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 		StreamMaster stream = streamService.getNameById(req.getStreamId());
 				
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
-		Date date=new Date();
+		//Date date=new Date();
 		
 		Date closedDate=req.getClosedDate();
+        Date date = new Date();
+
+        long difference_In_Time =  date.getTime() - closedDate.getTime() ;
+        logger.info("time"+difference_In_Time);
+
+		//long difference_In_Days = (difference_In_Time / (1000 60 60 * 24)) % 365;
+		
+		
+			//resp.setNoOfDays(difference_In_Time);
+		
 		if(doc!=null) {
 		resp.setStatus(req.getDocStatus());
 		resp.setDocName(doc.getDocumentName()); 
@@ -91,6 +101,8 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 		resp.setStream(stream.getStreamName());
 		}
 		resp.setFullName(req.getFirstName() + " " + req.getLastName());
+		resp.setId(req.getId());
+		resp.setFilePath(req.getUploadDocumentPath());
 		
 		responseList.add(resp);
 		

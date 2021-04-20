@@ -212,7 +212,7 @@ public class EmailService {
 	   }
 	  
 	  
-	  void sendStatusMail(String emailId, Long id, String status) throws MessagingException, BadElementException, IOException {
+	  public void sendStatusMail(String emailId, Long id, String status) throws MessagingException, BadElementException, IOException {
 		  
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 		  
@@ -227,6 +227,7 @@ public class EmailService {
 		   
 		   Long Id = id;
 
+		   
 	        // Sender's email ID needs to be mentioned
 	        String from = "universityscube@gmail.com";
 
@@ -267,12 +268,12 @@ public class EmailService {
                
                outputStream = new ByteArrayOutputStream();
                
-               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")) {
+               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")) {
             	   
                writeApprovalPdf(outputStream, Id);
                
                }
-               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected")) {
+               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")) {
             	   
             	   writeRejectionPdf(outputStream , id);
             	   
