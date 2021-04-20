@@ -15,6 +15,8 @@ public class UniversityVerifierResponse {
 		private String DocName;
 		private String status;
 		private long NoOfDays;
+		private long id;
+		private String filePath;
 
 
 

@@ -101,6 +101,8 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 		resp.setStream(stream.getStreamName());
 		}
 		resp.setFullName(req.getFirstName() + " " + req.getLastName());
+		resp.setId(req.getId());
+		resp.setFilePath(req.getUploadDocumentPath());
 		
 		responseList.add(resp);
 		
