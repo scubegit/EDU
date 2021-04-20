@@ -85,10 +85,10 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
         long difference_In_Time =  date.getTime() - closedDate.getTime() ;
         logger.info("time"+difference_In_Time);
 
-		//long difference_In_Days = (difference_In_Time / (1000 60 60 * 24)) % 365;
+		long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
 		
 		
-			//resp.setNoOfDays(difference_In_Time);
+			resp.setNoOfDays(difference_In_Days);
 		
 		if(doc!=null) {
 		resp.setStatus(req.getDocStatus());
