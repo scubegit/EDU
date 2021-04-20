@@ -186,6 +186,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 for(UniversityStudentDocument setStudentdata:studentDataList)
 		 {
 			 UniversityStudentDocument studDataResponse=new UniversityStudentDocument();
+			 studDataResponse.setId(setStudentdata.getId());
 			 studDataResponse.setFirstName(setStudentdata.getFirstName());
 			 studDataResponse.setLastName(setStudentdata.getLastName());
 			 studDataResponse.setCollegeName(setStudentdata.getCollegeName());
