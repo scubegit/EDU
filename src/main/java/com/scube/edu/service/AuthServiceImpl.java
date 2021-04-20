@@ -145,6 +145,7 @@ public class AuthServiceImpl implements AuthService{
 				throw new Exception("This email id already exists");
 			}
 		
+		 userMasterEntity.setPanNumber(userAddRequest.getPanNumber());
 		 userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
 		 userMasterEntity.setCompanyEmailId(userAddRequest.getEmailId());
 		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
