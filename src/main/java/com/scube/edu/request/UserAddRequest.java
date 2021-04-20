@@ -23,6 +23,7 @@ public class UserAddRequest {
 	private String companyName; 
 	private long universityId; 
 	private String contactPersonPhoneNo;
+	private String panNumber;
 	//private String companyEmailId;
 
 	
