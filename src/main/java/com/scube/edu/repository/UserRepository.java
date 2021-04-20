@@ -32,6 +32,9 @@ public interface UserRepository extends JpaRepository<UserMasterEntity, Long>{
 
 	  
 	  List<UserMasterEntity> findByEmailVerificationStatus(String emailVerificationStatus);
+
+//	  @Query(value = "SELECT * FROM user_master where role_id = 7" , nativeQuery = true)
+	  UserMasterEntity findByRoleId(long roleId);
 	  
 	//List<UserMasterEntity> getAll();
 	//boolean existsByAndIsdeletedAndIsactive(String username, String IsDeleted);
