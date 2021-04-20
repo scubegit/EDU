@@ -1,5 +1,7 @@
 package com.scube.edu.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -103,5 +105,7 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "verified_by")
 	private Long verifiedBy;
 	
+	@Column(name = "closed_date")
+	private Date closedDate;
 
 }

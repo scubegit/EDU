@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.UniversityVerifierResponse;
 import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.UniversityVerifierService;
 import com.scube.edu.util.StringsUtils;
@@ -35,7 +36,7 @@ public class UniversityVerifierController {
 		response = new BaseResponse();
 		
 		    try {
-		    	List<VerificationResponse> list = universityVerifierService.getUniversityVerifierRequestList();
+		    	List<UniversityVerifierResponse> list = universityVerifierService.getUniversityVerifierRequestList();
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData(list);

@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.RequestTypeResponse;
+import com.scube.edu.response.UniversityVerifierResponse;
 import com.scube.edu.response.VerificationResponse;
 
 @Service
@@ -56,43 +58,41 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 	@Autowired
 	UserService userService;
 	@Override
-	public List<VerificationResponse> getUniversityVerifierRequestList() throws Exception {
+	public List<UniversityVerifierResponse> getUniversityVerifierRequestList() throws Exception {
 	logger.info("*******UniversityVerifierServiceImpl getUniversityVerifierRequestList*******");
 		
 	
-	List<VerificationResponse> responseList = new ArrayList<>();
+	List<UniversityVerifierResponse> responseList = new ArrayList<>();
 	
 	List<VerificationRequest> list = universityVerifierRepository.findByStatus();
-	
+	logger.info("uvlist"+list);
 	for(VerificationRequest req: list) {
 		
-		VerificationResponse resp = new VerificationResponse();
+		UniversityVerifierResponse resp = new UniversityVerifierResponse();
 		
 		PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 		
 		DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 		
 		StreamMaster stream = streamService.getNameById(req.getStreamId());
-		
-		Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
-		UserMasterEntity userr = user.get();
-		
-		
+				
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
-		//String strDate= formatter.format(req.getCreatedate());
-		
-		resp.setDoc_status(req.getDocStatus());
-		resp.setDoc_name(doc.getDocumentName()); //
-		resp.setLast_name(req.getLastName());
-		resp.setYear(year.getYearOfPassing());	
-		resp.setUpload_doc_path(req.getUploadDocumentPath());
-		resp.setStream_name(stream.getStreamName());
-		resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
+		Date date=new Date();
+		if(doc!=null) {
+		resp.setStatus(req.getDocStatus());
+		resp.setDocName(doc.getDocumentName()); 
+		}
+		if(year!=null) {
+		resp.setYearofPassing(year.getYearOfPassing());	
+		}
+		if(stream!=null) {
+		resp.setStream(stream.getStreamName());
+		}
+		resp.setFullName(req.getFirstName() + " " + req.getLastName());
 		
 		responseList.add(resp);
 		
-	}
-		
+	}		
 		return responseList;
 	}
 	
