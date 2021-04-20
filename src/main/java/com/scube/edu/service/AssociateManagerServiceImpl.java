@@ -129,10 +129,17 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 
 		 if(universityStudData!=null)
 		 {
-			 if(!universityStudData.getFirstName().isEmpty())
+			 String Name=universityStudData.getFirstName();
+			 String lastName=universityStudData.getLastName();
+			 String Stream=universityStudData.getStream();
+			 String clgName=universityStudData.getCollegeName();
+			 String enrollNo=universityStudData.getEnrollmentNo();
+			 Integer YearOfPassing=universityStudData.getPassingYear(); 
+			 
+			 if(!Name.isEmpty())
 			 {
 				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
-				 if(!universityStudData.getLastName().isEmpty())
+				 if(!lastName.isEmpty()||!Stream.isEmpty()||!clgName.isEmpty()||!enrollNo.isEmpty()||YearOfPassing!=null)
 				 {
 				 query=query+" and";
 				 }
@@ -141,8 +148,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 if(!universityStudData.getLastName().isEmpty())
 			 {
 				 query=query+" lastName='"+universityStudData.getLastName()+"'";
-				 if(!universityStudData.getStream().isEmpty())
-				 {
+				 if(!Stream.isEmpty()||!clgName.isEmpty()||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
 					
 				 query=query+" and";
 				 }
@@ -150,16 +156,14 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 if(!universityStudData.getStream().isEmpty())
 			 {
 				 query=query+"  stream='"+universityStudData.getStream()+"'";
-				 if(!universityStudData.getCollegeName().isEmpty())
-				 {
+				 if(!clgName.isEmpty()||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
 				  query=query+" and";
 				 }
 			 }
 			 if(!universityStudData.getCollegeName().isEmpty())
 			 {
 				 query=query+"  collegeName='"+universityStudData.getCollegeName()+"'";
-				 if(!universityStudData.getEnrollmentNo().isEmpty())
-				 {
+				 if(!enrollNo.isEmpty()||YearOfPassing!=null)				 {
 				 query=query+" and";
 				 }
 			 }

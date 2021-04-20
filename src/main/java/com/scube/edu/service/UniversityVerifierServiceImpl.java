@@ -78,6 +78,8 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 				
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 		Date date=new Date();
+		
+		Date closedDate=req.getClosedDate();
 		if(doc!=null) {
 		resp.setStatus(req.getDocStatus());
 		resp.setDocName(doc.getDocumentName()); 
