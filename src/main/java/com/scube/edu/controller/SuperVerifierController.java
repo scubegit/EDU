@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
@@ -60,14 +62,14 @@ public class SuperVerifierController {
 			
    }
 	
-	@PostMapping("/setStatusForSuperVerifierDocument/{id}/{status}")
-	public  ResponseEntity<Object> setStatusForVerifierDocument(@PathVariable Long id ,@PathVariable String status) {
+	@PostMapping("/setStatusForSuperVerifierDocument")
+	public  ResponseEntity<Object> setStatusForVerifierDocument(@RequestBody StatusChangeRequest statusChangeRequest) {
 		
 		response = new BaseResponse();
-		System.out.println("*****VerifierController setStatusForVerifierDocument*****"+id + status);
+		System.out.println("*****VerifierController setStatusForVerifierDocument*****"+statusChangeRequest.getRemark());
 		    try {
 		    	
-		    	List<StudentVerificationDocsResponse> list = superVerifierService.setStatusForSuperVerifierDocument(id,status);
+		    	List<StudentVerificationDocsResponse> list = superVerifierService.setStatusForSuperVerifierDocument(statusChangeRequest);
 
 		    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

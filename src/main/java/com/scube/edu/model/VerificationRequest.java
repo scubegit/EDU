@@ -107,5 +107,8 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "closed_date")
 	private Date closedDate;
+	
+	@Column(name = "remark")
+	private String remark;
 
 }

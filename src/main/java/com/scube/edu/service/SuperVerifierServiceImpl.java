@@ -19,6 +19,7 @@ import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
@@ -115,23 +116,27 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	}
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status) throws Exception {
+	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(StatusChangeRequest statusChangeRequest) throws Exception {
 		
 		logger.info("*******SuperVerifierServiceImpl setStatusForSuperVerifierDocument*******");
 		
-		Optional<VerificationRequest> vr =  verificationReqRepository.findById(id);
-		VerificationRequest veriReq = vr.get();
+		VerificationRequest veriReq =  verificationReqRepository.findById(statusChangeRequest.getId());
+//		VerificationRequest veriReq = vr.get();
 		
 		System.out.println(veriReq.getDocStatus() + veriReq.getApplicationId());
 		
-		veriReq.setDocStatus(status);
+		veriReq.setDocStatus(statusChangeRequest.getStatus());
+		veriReq.setRemark("SVR_"+statusChangeRequest.getRemark());
 		
 		verificationReqRepository.save(veriReq);
 		
-		if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected")) {
+		if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("Rejected") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("SV_Rejected")) {
 			
 		UserResponse ume = userService.getUserInfoById(veriReq.getUserId());
-		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), status);
+		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), statusChangeRequest.getStatus());
 		
 		}
 		
