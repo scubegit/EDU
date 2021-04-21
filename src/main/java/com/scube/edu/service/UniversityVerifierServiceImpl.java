@@ -19,8 +19,10 @@ import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.UniversityVerifierRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.RequestTypeResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.UniversityVerifierResponse;
 import com.scube.edu.response.VerificationResponse;
 
@@ -108,6 +110,27 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 		
 	}		
 		return responseList;
+	}
+	@Override
+	public List<StudentVerificationDocsResponse> setStatusForUniversityDocument(
+			StatusChangeRequest statusChangeRequest) {
+		
+		logger.info("*******UniversityVerifierServiceImpl setStatusForUniversityDocument*******");
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+	    Date date = new Date();  
+	    String currentDate = formatter.format(date); 
+	    
+	    VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
+	    
+	    System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
+	    
+	    entt.setDocStatus(statusChangeRequest.getStatus());
+//		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
+		entt.setRemark("UN_"+currentDate+"-"+statusChangeRequest.getRemark());
+		verificationReqRepository.save(entt);
+		
+		return null;
 	}
 	
 

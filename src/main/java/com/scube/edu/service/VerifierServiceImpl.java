@@ -1,8 +1,10 @@
 package com.scube.edu.service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,13 +183,17 @@ public class VerifierServiceImpl implements VerifierService{
 		
 			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" +statusChangeRequest.getRemark());
 			
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+		    Date date = new Date();  
+		    String currentDate = formatter.format(date);  
+			
 			VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
 //			VerificationRequest entt = ent.get();
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
 			
 			entt.setDocStatus(statusChangeRequest.getStatus());
 			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
-			entt.setRemark("VR_"+statusChangeRequest.getRemark());
+			entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
 			verificationReqRepository.save(entt);
 			
 			if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
