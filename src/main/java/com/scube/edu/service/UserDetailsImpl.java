@@ -19,19 +19,25 @@ public class UserDetailsImpl implements UserDetails {
 	private String userid;
 
 	private String email;
+	
+	private String firstname;
+	
+	private String lastname;
 
 	@JsonIgnore
 	private String password;
 
 	private Long authorities;
 
-	public UserDetailsImpl(Long id, String username, String email, String password,	Long roleid) {
+	public UserDetailsImpl(Long id, String username, String email, String password,	Long roleid, String firstname, String lastname) {
 		this.id = id;
 		
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = roleid;
+		this.firstname = firstname;
+		this.lastname = lastname;
 	}
 
 	public static UserDetailsImpl build(UserMasterEntity user) {
@@ -48,7 +54,9 @@ public class UserDetailsImpl implements UserDetails {
 				user.getUsername(), 
 				user.getEmailId(),
 				user.getPassword(), 
-				user.getRoleId());
+				user.getRoleId(),
+				user.getFirstName(),
+				user.getLastName());
 
 		
 	}
@@ -77,6 +85,14 @@ public class UserDetailsImpl implements UserDetails {
 	
 	public String getUserid() {
 		return userid;
+	}
+	
+	public String getFirstname() {
+		return firstname;
+	}
+	
+	public String getLastname() {
+		return lastname;
 	}
 
 	@Override

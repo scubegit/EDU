@@ -28,6 +28,7 @@ import com.scube.edu.repository.RequestTypeRepository;
 import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.JwtResponse;
@@ -176,22 +177,24 @@ public class VerifierServiceImpl implements VerifierService{
 
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) throws BadElementException, MessagingException, IOException {
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException {
 		
-			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" + id + status);
+			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" +statusChangeRequest.getRemark());
 			
-			Optional<VerificationRequest> ent =  verificationReqRepository.findById(id);
-			VerificationRequest entt = ent.get();
+			VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
+//			VerificationRequest entt = ent.get();
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
 			
-			entt.setDocStatus(status);
-			entt.setVerifiedBy(verifiedBy);
+			entt.setDocStatus(statusChangeRequest.getStatus());
+			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
+			entt.setRemark("VR_"+statusChangeRequest.getRemark());
 			verificationReqRepository.save(entt);
 			
-			if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")) {
+			if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
+					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {
 				
 				UserResponse ume = userService.getUserInfoById(entt.getUserId());
-				emailService.sendStatusMail(ume.getEmail(), entt.getId() , status);
+				emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
 				
 				}
 		
