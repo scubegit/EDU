@@ -699,6 +699,80 @@ public class EmailService {
 	    document.close();
 		
 	}
+	
+	void sendDisputeSaveMail(String emailId, long appId, long id) throws MessagingException {
+		   
+
+		   String to = emailId;
+		   
+		   
+
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
+	        String host = "smtp.gmail.com";
+
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        
+	        properties.put("mail.smtp.auth", "true");
+
+
+
+	        // Get the Session object.// and pass username and password
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+	            protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+
+	            }
+
+	        });
+
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+
+	        try {
+	            // Create a default MimeMessage object.
+	            MimeMessage message = new MimeMessage(session);
+
+	            // Set From: header field of the header.
+	            message.setFrom(new InternetAddress(from));
+
+	            // Set To: header field of the header.
+	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+	            // Set Subject: header field
+	            message.setSubject("Dispute Confirmation");
+
+	            // Now set the actual message
+	                       
+             String vmFileContent = "Hello User, <br><br> We have raised the dispute against application Id = "+appId+". "
+             		+ "The raised dispute has reference number: "+id+". <br><br> "
+             				+ "The record will be checked again and we will get back to you within 7-10 working days.";
+
+             //  Send the complete message parts
+             message.setContent(vmFileContent,"text/html");
+
+	            System.out.println("sending...");
+	            // Send message
+	             Transport.send(message);
+	            
+	           // javaMailSender.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+
+	        } catch (MessagingException e) {
+	            throw new RuntimeException(e);
+	        }
+
+	     
+	    }
 	  
 	  
 

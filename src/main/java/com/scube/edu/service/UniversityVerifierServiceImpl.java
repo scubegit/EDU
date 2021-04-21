@@ -127,7 +127,10 @@ private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDo
 	    
 	    entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
+	    if(statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
 		entt.setRemark("UN_"+currentDate+"-"+statusChangeRequest.getRemark());
+	    }
+		
 		verificationReqRepository.save(entt);
 		
 		return null;

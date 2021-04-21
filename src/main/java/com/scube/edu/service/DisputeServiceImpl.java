@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.Objects;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -26,19 +27,23 @@ public class DisputeServiceImpl implements DisputeService{
 	@Autowired
 	RaiseDisputeRepository disputeRepo;
 	
+	@Autowired
+	EmailService emailService;
+	
 	@Override
-	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) {
+	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) throws MessagingException {
 		
 		logger.info("********DisputeServiceImpl saveDispute********");
 		
 		RaiseDespute rd = new RaiseDespute();
 		
-		RaiseDespute check = disputeRepo.findByApplicationId(disputeReq.getApplication_id());
+//		RaiseDespute check = disputeRepo.findByApplicationId(disputeReq.getApplication_id());
+		RaiseDespute check = disputeRepo.findByVerificationId(disputeReq.getId());
 		
 		if(Objects.isNull(check)) {
 			System.out.println("NULL---");
 		
-		
+		rd.setVerificationId(disputeReq.getId());
 		rd.setApplicationId(disputeReq.getApplication_id());
 		rd.setContactPersonEmail(disputeReq.getEmail());
 		rd.setContactPersonPhone(disputeReq.getPhone_no());
@@ -48,10 +53,15 @@ public class DisputeServiceImpl implements DisputeService{
 		rd.setContactPersonName(disputeReq.getContact_person_name()); 
 		rd.setStatus(disputeReq.getStatus());
 		// dummy values of comment, contact person name and status have been sent through postman right now!
-		disputeRepo.save(rd);
+		RaiseDespute raised = disputeRepo.save(rd);
+		logger.info("------" + raised.getId());
+		//send email to applicant from here
+		emailService.sendDisputeSaveMail(disputeReq.getEmail(), disputeReq.getApplication_id(), raised.getId());
+		
 		return true;
 		}
 		return false;
+		
 	}
 	
 }
