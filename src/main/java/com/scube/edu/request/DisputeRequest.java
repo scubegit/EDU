@@ -10,6 +10,7 @@ import lombok.Setter;
 
 public class DisputeRequest {
 	
+	private Long id;
 	private Long application_id;
 	private String phone_no;
 	private String email;

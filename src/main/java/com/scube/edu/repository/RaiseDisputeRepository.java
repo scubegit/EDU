@@ -9,6 +9,8 @@ import com.scube.edu.model.RaiseDespute;
 public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long>{
 
 	RaiseDespute findByApplicationId(Long application_id);
+
+	RaiseDespute findByVerificationId(Long id);
 	
 	
 
