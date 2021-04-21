@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,13 +121,17 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		
 		logger.info("*******SuperVerifierServiceImpl setStatusForSuperVerifierDocument*******");
 		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+	    Date date = new Date();  
+	    String currentDate = formatter.format(date);  
+		
 		VerificationRequest veriReq =  verificationReqRepository.findById(statusChangeRequest.getId());
 //		VerificationRequest veriReq = vr.get();
 		
 		System.out.println(veriReq.getDocStatus() + veriReq.getApplicationId());
 		
 		veriReq.setDocStatus(statusChangeRequest.getStatus());
-		veriReq.setRemark("SVR_"+statusChangeRequest.getRemark());
+		veriReq.setRemark("SVR_"+currentDate+"-"+statusChangeRequest.getRemark());
 		
 		verificationReqRepository.save(veriReq);
 		
