@@ -15,13 +15,16 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.RaiseDespute;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.RaiseDisputeRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.DisputeResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
@@ -40,6 +43,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired 
 	StreamService streamService;
+	
+	@Autowired
+	RaiseDisputeRepository disputeRepo;
 	 
 	@Autowired 
 	RequestTypeService reqTypeService;
@@ -148,6 +154,35 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 
 		
 		return null;
+	}
+
+	@Override
+	public List<DisputeResponse> getDisputeList() {
+		
+		logger.info("*******superVerifierServiceImpl getDisputeList*******");
+		
+		List<RaiseDespute> rd = disputeRepo.findAll();
+		
+		List<DisputeResponse> responses = new ArrayList<>();
+		
+		for(RaiseDespute res: rd) {
+			
+			DisputeResponse resp = new DisputeResponse();
+			
+			resp.setId(res.getId());
+			resp.setCreated_by(res.getCreateby());
+			resp.setEmailid(res.getContactPersonEmail());
+			resp.setApplication_id(res.getApplicationId());
+			resp.setPhone_no(res.getContactPersonPhone());
+			resp.setReason(res.getReasonForDispute());
+			resp.setVerification_id(res.getVerificationId());
+			
+			responses.add(resp);
+			
+			
+		}
+		
+		return responses;
 	}
 	
 	
