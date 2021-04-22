@@ -40,6 +40,8 @@ public class VerificationResponse {
 	private String fullName;
 
 	private String originalDocUploadFilePath;
+	
+	private String remark;
 
 
 }
