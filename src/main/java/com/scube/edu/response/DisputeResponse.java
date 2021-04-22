@@ -16,5 +16,7 @@ public class DisputeResponse {
 	private String phone_no;
 	private String reason;
 	private long verification_id;
+	private String first_name;
+	private String last_name;
 
 }

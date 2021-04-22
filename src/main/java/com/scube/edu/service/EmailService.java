@@ -773,7 +773,186 @@ public class EmailService {
 
 	     
 	    }
-	  
+	
+	
+	void sendNoStatusChangeMail(String emailId) throws MessagingException {
+		   
+
+		   String to = emailId;
+
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
+	        String host = "smtp.gmail.com";
+
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        
+	        properties.put("mail.smtp.auth", "true");
+
+
+
+	        // Get the Session object.// and pass username and password
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+	            protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+
+	            }
+
+	        });
+
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+
+	        try {
+	            // Create a default MimeMessage object.
+	            MimeMessage message = new MimeMessage(session);
+
+	            // Set From: header field of the header.
+	            message.setFrom(new InternetAddress(from));
+
+	            // Set To: header field of the header.
+	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+	            // Set Subject: header field
+	            message.setSubject("Raised Dispute Result");
+
+	            // Now set the actual message
+	                       
+             String vmFileContent = "Hello User, <br><br> After going through the raised dispute, the record still has the same status as before."
+             +"<br><br><br> Thanks,<br>Team University";
+
+             //  Send the complete message parts
+             message.setContent(vmFileContent,"text/html");
+
+	            System.out.println("sending...");
+	            // Send message
+	             Transport.send(message);
+	            
+	           // javaMailSender.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+
+	        } catch (MessagingException e) {
+	            throw new RuntimeException(e);
+	        }
+
+	     
+	    }
+	
+	
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId) throws MessagingException, BadElementException, IOException {
+		  
+//		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
+		  	
+		  	Optional<VerificationRequest> vrr = verificationReqRepository.findById(verificationId);
+			VerificationRequest vr = vrr.get();
+			
+			PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+	    	
+	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+
+	    	Long Id = verificationId;
+	    	
+		   String to = emailId;
+		   
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
+	        String host = "smtp.gmail.com";
+
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        properties.put("mail.smtp.auth", "true");
+
+	        String vmFileContent = "Hello User, The raised dispute against dispute reference number:"+disputeId+" has been checked and we have changed the status of the verification record."
+	        		+ "Please find the details of the same in the attachment below. "
+	        		+ "Thanks,Team University";
+	        
+	        String subject = "Verification Result";
+
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+	                 protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	            }
+
+	        });
+//	        Session session = Session.getDefaultInstance(properties, null);
+	        ByteArrayOutputStream outputStream = null;
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+	        try {
+	          
+	        	
+	        	
+	        	
+	            MimeMessage mimeMessage = new MimeMessage(session);
+	            
+	            MimeBodyPart textBodyPart = new MimeBodyPart();
+	            textBodyPart.setText(vmFileContent);
+            
+            outputStream = new ByteArrayOutputStream();
+            
+             if(vr.getDocStatus().equalsIgnoreCase("SV_Rejected")) {
+            writeApprovalPdf(outputStream, Id);
+             }
+             if(vr.getDocStatus().equalsIgnoreCase("SV_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
+            	 writeRejectionPdf(outputStream, Id);
+             }
+            byte[] bytes = outputStream.toByteArray();
+            
+            //construct the pdf body part
+            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+            MimeBodyPart pdfBodyPart = new MimeBodyPart();
+            pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+            
+          //construct the mime multi part
+            MimeMultipart mimeMultipart = new MimeMultipart();
+            mimeMultipart.addBodyPart(textBodyPart);
+            mimeMultipart.addBodyPart(pdfBodyPart);
+            pdfBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
+            
+            
+            
+            
+            //create the sender/recipient addresses
+            InternetAddress iaSender = new InternetAddress(from);
+            InternetAddress iaRecipient = new InternetAddress(to);
+            
+            //construct the mime message
+//            MimeMessage mimeMessage = new MimeMessage(session);
+            mimeMessage.setSender(iaSender);
+            mimeMessage.setSubject(subject);
+            mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
+            mimeMessage.setContent(mimeMultipart);
+
+            //send off the email
+            
+            
+
+	            System.out.println("sending...");
+	            Transport.send(mimeMessage);
+//	            Transport.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+	        } catch (MessagingException e) {
+	        	
+	        	
+	            throw new RuntimeException(e);
+	        }
+	   }
+
 	  
 
 }

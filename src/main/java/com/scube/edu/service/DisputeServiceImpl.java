@@ -1,6 +1,8 @@
 package com.scube.edu.service;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.BadElementException;
 import com.scube.edu.model.RaiseDespute;
+import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.RaiseDisputeRepository;
+import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.DisputeRequest;
+import com.scube.edu.request.UpdateDisputeRequest;
 
 
 
@@ -29,6 +35,9 @@ public class DisputeServiceImpl implements DisputeService{
 	
 	@Autowired
 	EmailService emailService;
+	
+	@Autowired
+	VerificationRequestRepository verificationReqRepository;
 	
 	@Override
 	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) throws MessagingException {
@@ -62,6 +71,79 @@ public class DisputeServiceImpl implements DisputeService{
 		}
 		return false;
 		
+	}
+
+	@Override
+	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws MessagingException, BadElementException, IOException {
+		
+		logger.info("********DisputeServiceImpl updateDispute********"+ updateDisputeReq.getStatus());
+		
+		Optional<RaiseDespute> rd = disputeRepo.findById(updateDisputeReq.getId());
+		RaiseDespute rdd = rd.get();
+		logger.info(String.valueOf(rdd.getVerificationId()));
+		
+		Optional<VerificationRequest> vr = verificationReqRepository.findById(rdd.getVerificationId());
+		VerificationRequest vrr = vr.get();
+		
+		if(vrr.getDocStatus().equalsIgnoreCase("SV_Rejected")) {
+//			|| verr.getDocStatus().equalsIgnoreCase("UN_Rejected")
+			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
+				
+				rdd.setStatus(updateDisputeReq.getStatus());
+				disputeRepo.save(rdd);
+				
+				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+				
+				vrr.setDocStatus("SVD_Approved");
+				verificationReqRepository.save(vrr);
+				
+				// send mail saying that after checking dispute status has been changed + PDF 
+				
+			}
+			if(updateDisputeReq.getStatus().equalsIgnoreCase("NCL")) {
+				
+				rdd.setStatus(updateDisputeReq.getStatus());
+				disputeRepo.save(rdd);
+				
+				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail());
+				
+				vrr.setDocStatus("SVD_Rejected");
+				verificationReqRepository.save(vrr);
+				
+			}
+		
+		}
+		
+		if(vrr.getDocStatus().equalsIgnoreCase("SV_Approved") || vrr.getDocStatus().equalsIgnoreCase("Approved")) {
+//			|| verr.getDocStatus().equalsIgnoreCase("UN_Approved")
+			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
+				
+				rdd.setStatus(updateDisputeReq.getStatus());
+				disputeRepo.save(rdd);
+				
+				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+				
+				vrr.setDocStatus("SVD_Rejected");
+				verificationReqRepository.save(vrr);
+				
+				// send mail saying the previously approved record's status has been changed and also attach PDF
+//				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+			}
+			if(updateDisputeReq.getStatus().equalsIgnoreCase("NCL")) {
+				
+				rdd.setStatus(updateDisputeReq.getStatus());
+				disputeRepo.save(rdd);
+				
+				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail());
+				
+				vrr.setDocStatus("SVD_Approved");
+				verificationReqRepository.save(vrr);
+				
+			}
+			
+		}
+		
+		return false;
 	}
 	
 }
