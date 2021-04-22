@@ -169,6 +169,11 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			
 			DisputeResponse resp = new DisputeResponse();
 			
+			Long id = Long.parseLong(res.getCreateby());
+			
+			Optional<UserMasterEntity> ume = userRepository.findById(id);
+			UserMasterEntity umee = ume.get();
+			
 			resp.setId(res.getId());
 			resp.setCreated_by(res.getCreateby());
 			resp.setEmailid(res.getContactPersonEmail());
@@ -176,6 +181,8 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setPhone_no(res.getContactPersonPhone());
 			resp.setReason(res.getReasonForDispute());
 			resp.setVerification_id(res.getVerificationId());
+			resp.setFirst_name(umee.getFirstName());
+			resp.setLast_name(umee.getLastName());
 			
 			responses.add(resp);
 			
