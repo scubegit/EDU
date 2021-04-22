@@ -137,7 +137,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		System.out.println(veriReq.getDocStatus() + veriReq.getApplicationId());
 		
 		veriReq.setDocStatus(statusChangeRequest.getStatus());
-		veriReq.setRemark("SVR_"+currentDate+"-"+statusChangeRequest.getRemark());
+		veriReq.setRemark(veriReq.getRemark()+" SVR_"+currentDate+"-"+statusChangeRequest.getRemark());
 		
 		verificationReqRepository.save(veriReq);
 		
@@ -183,6 +183,55 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		}
 		
 		return responses;
+	}
+
+	@Override
+	public VerificationResponse getVerificationRequestDetails(long verification_id) {
+		
+		logger.info("*******DisputeServiceImpl getVerificationRequestDetails*******"+ verification_id);
+		
+		VerificationRequest vr = verificationReqRepository.findById(verification_id);
+		
+		VerificationResponse resp = new VerificationResponse();
+		
+		PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+		
+		DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+		
+		StreamMaster stream = streamService.getNameById(vr.getStreamId());
+		
+		Optional<UserMasterEntity> user = userRepository.findById(vr.getVerifiedBy());
+		UserMasterEntity userr = user.get();
+		
+		if(vr.getRequestType() != null) {
+			RequestTypeResponse request = reqTypeService.getNameById(vr.getRequestType());
+			resp.setRequest_type_id(request.getRequestType());
+			}
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+			String strDate= formatter.format(vr.getCreatedate());
+			
+			resp.setDoc_status(vr.getDocStatus());
+			resp.setId(vr.getId());
+			resp.setApplication_id(vr.getApplicationId());
+//			closedDocResp.setCollege_name_id(vr.getCollegeId());
+			resp.setDoc_name(doc.getDocumentName()); //
+			resp.setEnroll_no(vr.getEnrollmentNumber());
+			resp.setFirst_name(vr.getFirstName());
+			resp.setLast_name(vr.getLastName());
+			
+////			resp.setRequest_type_id(vr.get);
+//			resp.setStream_id(vr.getStreamId());
+//			resp.setUni_id(vr.getUniversityId());
+			resp.setUser_id(vr.getUserId());
+			resp.setVer_req_id(vr.getVerRequestId());
+			resp.setYear(year.getYearOfPassing());	
+			resp.setUpload_doc_path(vr.getUploadDocumentPath());
+			resp.setStream_name(stream.getStreamName());
+			resp.setReq_date(strDate);
+			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
+		
+		return resp;
 	}
 	
 	

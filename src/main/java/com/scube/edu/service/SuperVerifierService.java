@@ -16,4 +16,6 @@ public interface SuperVerifierService {
 
 	List<DisputeResponse> getDisputeList();
 
+	VerificationResponse getVerificationRequestDetails(long verification_id);
+
 }

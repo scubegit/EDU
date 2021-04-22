@@ -119,5 +119,33 @@ public class SuperVerifierController {
 				}
 			
    }
+	
+	@GetMapping("/getVerificationRequestDetails/{verification_id}")
+	public  ResponseEntity<Object> getVerificationRequestDetails(@PathVariable long verification_id ) {
+		response = new BaseResponse();
+		
+		    try {
+
+		    	VerificationResponse list = superVerifierService.getVerificationRequestDetails(verification_id);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 
 }
