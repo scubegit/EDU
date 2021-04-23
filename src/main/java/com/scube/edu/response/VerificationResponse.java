@@ -16,6 +16,7 @@ public class VerificationResponse {
 	private String doc_name;
 	private String enroll_no;
 	private String year;
+	private String year_of_pass_id;
 	private Long college_name_id;
 	private Long application_id;
 	private Long uni_id;

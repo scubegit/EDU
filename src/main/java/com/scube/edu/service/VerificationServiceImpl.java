@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.DocumentRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
@@ -25,6 +27,7 @@ import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.StringsUtils;
 
@@ -39,6 +42,9 @@ public class VerificationServiceImpl implements VerificationService{
 	
 	@Autowired
 	YearOfPassingRepository  yearOfPassingRepository;
+	
+	@Autowired
+	DocumentRepository  docRepo;
 
 	
 	@Autowired
@@ -98,20 +104,20 @@ public class VerificationServiceImpl implements VerificationService{
 		
 		List<VerificationRequest> verlistEntity= verificationReqRepo.findByApplicationId(Long.parseLong(applicationId));
 		
-		List<StudentVerificationDocsResponse> studentDocList = new ArrayList<>();
+		List<VerificationResponse> studentDocList = new ArrayList<>();
 			
 			System.out.println("-----getdatabyapplicationId---");
 			
 			
 			for(VerificationRequest verEntities : verlistEntity) {
 				
-				StudentVerificationDocsResponse docResponse = new StudentVerificationDocsResponse();
+				VerificationResponse docResponse = new VerificationResponse();
 				
 			    id  = verEntities.getUserId();
 				
 				docResponse.setApplication_id(verEntities.getApplicationId());
 				docResponse.setCollege_name_id(verEntities.getCollegeId());
-				docResponse.setDoc_name(verEntities.getDocumentId());
+//				docResponse.setDoc_name(verEntities.getDocumentId());
 				docResponse.setDocAmt(verEntities.getDocAmt());
 				docResponse.setDocAmtWithGST(verEntities.getDosAmtWithGst());
 				docResponse.setEnroll_no(verEntities.getEnrollmentNumber());
@@ -119,10 +125,16 @@ public class VerificationServiceImpl implements VerificationService{
 				docResponse.setLast_name(verEntities.getLastName());
 				
 				docResponse.setId(verEntities.getId());
+				
+				docResponse.setYear_of_pass_id(verEntities.getYearOfPassingId());
+				
 				Long yearid = Long.parseLong(verEntities.getYearOfPassingId());
 				PassingYearMaster passingYearMaster = yearOfPassingRepository.getOne(yearid);
-				docResponse.setYear(passingYearMaster.getYearOfPassing());
+				Long docid = Long.parseLong(verEntities.getDocumentId());
+				DocumentMaster docMaster = docRepo.getOne(docid);
 				
+				docResponse.setYear(passingYearMaster.getYearOfPassing());
+				docResponse.setDoc_name(docMaster.getDocumentName());
 				studentDocList.add(docResponse);
 			
 			}

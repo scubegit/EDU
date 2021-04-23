@@ -96,7 +96,7 @@ public class DisputeServiceImpl implements DisputeService{
 				
 				vrr.setDocStatus("SVD_Approved");
 				verificationReqRepository.save(vrr);
-				
+				return true;
 				// send mail saying that after checking dispute status has been changed + PDF 
 				
 			}
@@ -105,11 +105,11 @@ public class DisputeServiceImpl implements DisputeService{
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
 				
-				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail());
+				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
 				
 				vrr.setDocStatus("SVD_Rejected");
 				verificationReqRepository.save(vrr);
-				
+				return true;
 			}
 		
 		}
@@ -125,7 +125,7 @@ public class DisputeServiceImpl implements DisputeService{
 				
 				vrr.setDocStatus("SVD_Rejected");
 				verificationReqRepository.save(vrr);
-				
+				return true;
 				// send mail saying the previously approved record's status has been changed and also attach PDF
 //				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
 			}
@@ -134,11 +134,11 @@ public class DisputeServiceImpl implements DisputeService{
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
 				
-				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail());
+				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
 				
 				vrr.setDocStatus("SVD_Approved");
 				verificationReqRepository.save(vrr);
-				
+				return true;
 			}
 			
 		}
