@@ -21,4 +21,6 @@ public interface CollegeSevice {
 		
 		public BaseResponse UpdateCollege(CollegeMaster collegeMaster) throws Exception;
 		//Abhishek Added
+
+		CollegeResponse getNameById(Long collegeId);
 }

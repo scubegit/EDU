@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RaiseDespute;
@@ -24,6 +25,7 @@ import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.DisputeResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
@@ -61,6 +63,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired
 	EmailService emailService;
+	
+	@Autowired
+	CollegeSevice	collegeServices;
 	
 	@Autowired
 	UserService userService;
@@ -207,6 +212,8 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		
 		StreamMaster stream = streamService.getNameById(vr.getStreamId());
 		
+		CollegeResponse college = collegeServices.getNameById(vr.getCollegeId());
+		
 		Optional<UserMasterEntity> user = userRepository.findById(vr.getVerifiedBy());
 		UserMasterEntity userr = user.get();
 		
@@ -221,7 +228,8 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setDoc_status(vr.getDocStatus());
 			resp.setId(vr.getId());
 			resp.setApplication_id(vr.getApplicationId());
-//			closedDocResp.setCollege_name_id(vr.getCollegeId());
+//			resp.setCollege_name_id(college.getCollegeName());
+			resp.setCollege_name(college.getCollegeName());
 			resp.setDoc_name(doc.getDocumentName()); //
 			resp.setEnroll_no(vr.getEnrollmentNumber());
 			resp.setFirst_name(vr.getFirstName());

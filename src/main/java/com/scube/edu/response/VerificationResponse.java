@@ -38,6 +38,8 @@ public class VerificationResponse {
 	private String verifier_name;
 	
 	private String fullName;
+	
+	private String college_name;
 
 	private String originalDocUploadFilePath;
 	
