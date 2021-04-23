@@ -358,7 +358,7 @@ public class EmailService {
         document.setFooter(footer);
         
         document.open();
-	    
+//	    EduCred_Logo.jpg
 	    Image img = Image.getInstance("logo.png");
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
@@ -550,7 +550,7 @@ public class EmailService {
 		
 	    
 	    document.open();
-	    
+//	    EduCred_Logo.jpg
 	    Image img = Image.getInstance("logo.png");
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
@@ -752,9 +752,10 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-             String vmFileContent = "Hello User, <br><br> We have raised the dispute against application Id = "+appId+". "
-             		+ "The raised dispute has reference number: "+id+". <br><br> "
-             				+ "The record will be checked again and we will get back to you within 7-10 working days.";
+             String vmFileContent = "Hello User, <br><br> "
+             		+ "We have recieved the dispute that you raised. Sorry for the inconvenience caused. We will get back to you in 7-10 working days with a resolution. <br><br> "
+             				+ "For reference your dispute reference id is:"+id+". <br><br> "
+             						+ "Thanks, <br><br> Team University";
 
              //  Send the complete message parts
              message.setContent(vmFileContent,"text/html");
@@ -775,7 +776,7 @@ public class EmailService {
 	    }
 	
 	
-	void sendNoStatusChangeMail(String emailId) throws MessagingException {
+	void sendNoStatusChangeMail(String emailId, Long id) throws MessagingException {
 		   
 
 		   String to = emailId;
@@ -825,7 +826,9 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-             String vmFileContent = "Hello User, <br><br> After going through the raised dispute, the record still has the same status as before."
+             String vmFileContent = "Hello User, <br><br> This is in relation with the dispute ref no.:"+id+". "
+             		+ "As mentioned in the above dispute, we cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. <br><br> "
+             		+ "Sorry for the incon caused. <br><br> "
              +"<br><br><br> Thanks,<br>Team University";
 
              //  Send the complete message parts
@@ -875,9 +878,10 @@ public class EmailService {
 	        properties.put("mail.smtp.ssl.enable", "true");
 	        properties.put("mail.smtp.auth", "true");
 
-	        String vmFileContent = "Hello User, The raised dispute against dispute reference number:"+disputeId+" has been checked and we have changed the status of the verification record."
-	        		+ "Please find the details of the same in the attachment below. "
-	        		+ "Thanks,Team University";
+	        String vmFileContent = "Hello User, <br><br> This is in relation with the dispute ref no.:"+disputeId+". "
+	        		+ "As mentioned in the above dispute, we cross checked the document and the corrected result can be found in the attached document. <br><br> "
+	        		+ "Sorry for the incon caused. <br><br> "
+	        		+ "Thanks, <br> Team University";
 	        
 	        String subject = "Verification Result";
 

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,15 +38,21 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.UserMasterEntity;
+import com.scube.edu.repository.PriceMasterRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.VerificationResponse;
 
 
 public class InvoicePDFExporter {
 	
        private static final Logger logger = LoggerFactory.getLogger(InvoicePDFExporter.class);
+       
+  	 @Autowired
+  	 PriceMasterRepository priceMasterRepo;
     
 	    private   HashMap<Object, Object> studentVerificationPdfData ;
 	
@@ -68,7 +75,7 @@ public class InvoicePDFExporter {
 		    
 	    	try {
 	    		
-	    	List<StudentVerificationDocsResponse> studentDocList =	(List<StudentVerificationDocsResponse>) studentVerificationPdfData.get("doclist");
+	    	List<VerificationResponse> studentDocList =	(List<VerificationResponse>) studentVerificationPdfData.get("doclist");
 	    	UserMasterEntity userMasterEntity  =  (UserMasterEntity) studentVerificationPdfData.get("userEntity");
 	    	
 	 
@@ -136,7 +143,7 @@ public class InvoicePDFExporter {
             //document.setHeader();
             
             
-            
+//            EduCred_Logo.jpg
                Image logo = Image.getInstance("ha-img.jpg");
                logo.setAbsolutePosition(10, 300);
                 Phrase phrase1 = new Phrase(logo.HEADER);
@@ -273,7 +280,12 @@ public class InvoicePDFExporter {
  	    for(int i=0 ;i<studentDocList.size();i++)
         {
  	    	
-     	   StudentVerificationDocsResponse responseObj = studentDocList.get(i);
+     	   VerificationResponse responseObj = studentDocList.get(i);
+//     	   responseObj.get
+//     	  int year = Calendar.getInstance().get(Calendar.YEAR);
+//     	  Long yearOfPassId = Long.parseLong(responseObj.getYear_of_pass_id());
+////     	 PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , yearOfPassId);
+//     	  PriceMaster diff = priceMasterRepo.findById(1);
  	    	
      	   String srno = ""+(i+1);
      	   
