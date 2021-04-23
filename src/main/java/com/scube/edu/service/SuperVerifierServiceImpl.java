@@ -161,7 +161,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		
 		logger.info("*******superVerifierServiceImpl getDisputeList*******");
 		
-		List<RaiseDespute> rd = disputeRepo.findAll();
+		List<RaiseDespute> rd = disputeRepo.findByStatus("1");
 		
 		List<DisputeResponse> responses = new ArrayList<>();
 		
