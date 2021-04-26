@@ -12,5 +12,9 @@ public interface CollegeRepository extends JpaRepository<CollegeMaster, Long> {
 
 	
 	CollegeMaster findById(long id);
+	CollegeMaster findByCollegeName(String collegeName);
+	
+	
+	CollegeMaster deleteById(long id);
 	
 }

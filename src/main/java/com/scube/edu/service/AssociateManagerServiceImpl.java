@@ -34,7 +34,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	
 	
 	@Override
-	public List<String> saveStudentInfo(List<UniversityStudentDocument> list) throws IOException {
+	public List<String> saveStudentInfo(List<UniversityStudentDocument> list){
 		
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 UniversityStudentDocument docEntity =null;
@@ -74,15 +74,12 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 workbook = new XSSFWorkbook(excelfile.getInputStream());
 		 XSSFSheet worksheet = workbook.getSheetAt(0);
 		 List<UniversityStudentDocument> studentDataReviewList = new ArrayList<UniversityStudentDocument>();
-		 List<UniversityStudentDocument> response = new ArrayList<UniversityStudentDocument>();
 		
 		 String fileSubPath = "file/";
 		 String filePath = fileStorageService.storeFile(datafile , fileSubPath);
 		 for(int i=1;i<worksheet.getPhysicalNumberOfRows() ;i++) {
 			 
-			 XSSFRow row = worksheet.getRow(i);
-			 UniversityStudentDocument docEntity =null;
-			 
+			 XSSFRow row = worksheet.getRow(i);		 
 			 
 				 UniversityStudentDocument studentData = new UniversityStudentDocument();	            
 		        

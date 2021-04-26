@@ -9,7 +9,7 @@ import com.scube.edu.model.UniversityStudentDocument;
 
 public interface AssociateManagerService {
 	
-	public List<String>  saveStudentInfo( List<UniversityStudentDocument> list) throws IOException;
+	public List<String>  saveStudentInfo( List<UniversityStudentDocument> list);
 	public List<UniversityStudentDocument> ReviewStudentData(MultipartFile excelfile,MultipartFile datafile) throws IOException;
 
 	//UniversityStudentDocument  getStudentDataByenrollmentNo(String enrollmentNo);

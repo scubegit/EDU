@@ -57,11 +57,23 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	//Abhishek Added
 	
 	@Override
-	public Boolean addCollege(CollegeAddRequest collegeRequest) throws Exception {
+	public String addCollege(CollegeAddRequest collegeRequest) throws Exception {
 		
+		String output;
+		CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(collegeRequest.getCollegeName());
+		
+		
+		if(collegeEntities != null) {
+			output = "College Name Already Exist"; 
+			throw new Exception("College Name Already Exist");
+	
+			
+		}else {
 		
 		
 		CollegeMaster collegeMasterEntity  = new  CollegeMaster();
+		
+		
 		
 		collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());//1
 		collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());//Name Document
@@ -69,10 +81,12 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N	
 	
 	     collegeRespository.save(collegeMasterEntity);
+	     
+			output = "Success";
 	
-		
+		}
 			
-		return true;
+		return output;
 		
 	}
 	
@@ -108,6 +122,36 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		 
 		return baseResponse;
 	}
+	
+	
+	@Override
+	public BaseResponse deleteClgRequest(long id, HttpServletRequest request) throws Exception{
+		
+		baseResponse	= new BaseResponse();	
+		
+		
+		CollegeMaster collegeEntities  = collegeRespository.findById(id);
+		
+		   if(collegeEntities == null) {
+			   
+				throw new Exception(" Invalid ID");
+			}else {
+							
+
+		 collegeEntities  = collegeRespository.deleteById(id);
+		
+		 
+		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		baseResponse.setRespData("success");
+			
+			
+	}
+		 
+		return baseResponse;
+	
+	}
+	
 	
 	
 	//Abhishek Added

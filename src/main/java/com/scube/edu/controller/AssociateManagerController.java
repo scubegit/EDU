@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +33,8 @@ public class AssociateManagerController {
 	 AssociateManagerService associateManagerService;
 	 
 	
-	@PostMapping(value = "/uploadStudentInfoFromFile" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<BaseResponse> saveStudentData (@RequestParam List<UniversityStudentDocument> list) {
+	@PostMapping(value = "/uploadStudentInfoFromFile" )
+	public ResponseEntity<BaseResponse> saveStudentData (@RequestBody List<UniversityStudentDocument> list) {
 		
 		System.out.println("*******AssociateManagerController saveStudentData********"+ list);
 		
@@ -64,7 +65,7 @@ public class AssociateManagerController {
 	@PostMapping(value = "/reviewUploadStudentInfo" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<BaseResponse> reviewStudentData (@RequestParam MultipartFile excelfile,@RequestParam MultipartFile datafile) {
 		
-		System.out.println("*******AssociateManagerController saveStudentData********"+ datafile);
+		System.out.println("*******AssociateManagerController reviewUploadStudentInfo********"+ datafile);
 		
 		response = new BaseResponse();
 		

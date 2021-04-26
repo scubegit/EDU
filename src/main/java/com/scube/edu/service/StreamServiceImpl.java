@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.repository.DocumentRepository;
@@ -121,6 +122,37 @@ public class StreamServiceImpl  implements StreamService{
 			
 			return stre;
 		}
+		
+		
+		
+		@Override
+		public BaseResponse deleteStreamRequest(long id, HttpServletRequest request) throws Exception{
+			
+			baseResponse	= new BaseResponse();	
+			
+			
+			StreamMaster streamEntities  = streamRespository.findById(id);
+			
+			   if(streamEntities == null) {
+				   
+					throw new Exception(" Invalid ID");
+				}else {
+								
+
+					streamEntities  = streamRespository.deleteById(id);
+			
+			 
+			baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			baseResponse.setRespData("success");
+				
+				
+		}
+			 
+			return baseResponse;
+		
+		}
+		
 		
 
 }

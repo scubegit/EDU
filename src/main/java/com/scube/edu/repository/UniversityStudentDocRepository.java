@@ -11,6 +11,4 @@ public interface UniversityStudentDocRepository extends JpaRepository<University
 
 	UniversityStudentDocument findByEnrollmentNo(String enrollmentNo);
 
-	
-
 }
