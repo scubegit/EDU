@@ -25,8 +25,9 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.service.DocumentService;
-import com.scube.edu.service.MasterService;
+
 import com.scube.edu.util.StringsUtils;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
