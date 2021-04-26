@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.BadElementException;
+import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RequestTypeMaster;
@@ -32,7 +33,7 @@ import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
-
+import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StreamResponse;
@@ -57,6 +58,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
 	 
+	 @Autowired 
+	 StreamService streamService;
+	 
 	 @Autowired
 	 YearOfPassingService yearOfPassService;
 	 
@@ -69,6 +73,8 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 StreamRepository  streamRespository;
 	 
+	 @Autowired 
+	 CollegeSevice collegeService;
 	 
 	 @Autowired
 	 UniversityStudentDocService  stuDocService;
@@ -160,16 +166,21 @@ public class VerifierServiceImpl implements VerifierService{
 					 
 					 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
 					 
+					 StreamMaster stream = streamService.getNameById(veriReq.getStreamId());
+					 
+					 CollegeResponse college = collegeService.getNameById(veriReq.getCollegeId());
+					 
 					 
 					 resEntity.setId(veriReq.getId());
 					 resEntity.setEnroll_no(veriReq.getEnrollmentNumber());
 					 resEntity.setUpload_doc_path("/verifier/getimage/VR/"+veriReq.getId());
 					 resEntity.setYear(year.getYearOfPassing());
 					 
-					 UniversityStudentDocument doc = stuDocService.getDocDataByEnrollmentNO(veriReq.getEnrollmentNumber());
+					 UniversityStudentDocument doc = stuDocService.getDocDataBySixFields(veriReq.getEnrollmentNumber(), 
+							 veriReq.getFirstName(), veriReq.getLastName(), stream.getStreamName(), year.getYearOfPassing()
+							 , college.getCollegeName());
 					 
 					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
-					
 					 verificationDataList.add(resEntity);
 		        }
 				 

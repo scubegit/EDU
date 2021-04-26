@@ -31,10 +31,10 @@ public class UniversityStudentDocServiceImpl implements UniversityStudentDocServ
 
 	
 	@Override
-	public UniversityStudentDocument getDocDataByEnrollmentNO(String  enrollNo) {
+	public UniversityStudentDocument getDocDataBySixFields(String  enrollNo, String firstName, String lastName, String streamName, String yearOfPassing, String collegeName) {
 	
 			
-				UniversityStudentDocument docEntity    = studentDocumentRepository.findByEnrollmentNo(enrollNo);
+				UniversityStudentDocument docEntity    = studentDocumentRepository.getDocDataBySixFields(enrollNo, firstName, lastName, streamName, yearOfPassing, collegeName);
 				
 				UniversityStudentDocument stuEnt = docEntity;
 				
