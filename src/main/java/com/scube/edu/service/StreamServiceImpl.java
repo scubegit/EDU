@@ -1,6 +1,7 @@
 package com.scube.edu.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,55 +57,62 @@ public class StreamServiceImpl  implements StreamService{
 		//Abhishek Added
 		
 		@Override
-		public Boolean addStream(StreamRequest streamRequest) throws Exception {
-			
-			
+		public String addStream(StreamRequest streamRequest) throws Exception {
 			
 			StreamMaster streamMasterEntity  = new  StreamMaster();
-			
+			StreamMaster Response =streamRespository.findByStreamName(streamRequest.getStreamName());
+			String resp;
+			if(Response!=null)
+			{
+				resp="Stream already exist!";
+			}
+			else
+			{
 			streamMasterEntity.setUniversityId(streamRequest.getUniversityId());//1
 			streamMasterEntity.setStreamName(streamRequest.getStreamName());//Name Document
 			streamMasterEntity.setCreateby(streamRequest.getCreated_by()); // Logged User Id 
 			streamMasterEntity.setIsdeleted(streamRequest.getIs_deleted()); // By Default N	
 		
 			streamRespository.save(streamMasterEntity);
-		
-			
+			resp="success";
+			}
 				
-			return true;
+			return resp;
 			
 		}
 		
 		
 
 		@Override
-		public BaseResponse updateStream(StreamMaster streamMaster) throws Exception {
+		public String updateStream(StreamMaster streamMaster) throws Exception {
 			
-			baseResponse	= new BaseResponse();	
-
-			Optional<StreamMaster> streamEntities  = streamRespository.findById(streamMaster.getId());
+			String resp = null;	
+			boolean flg;
+			StreamMaster streamEntities  = streamRespository.findByStreamName(streamMaster.getStreamName());
 			
-			   if(streamEntities == null) {
+			   if(streamEntities != null) {
 				   
-					throw new Exception(" Invalid ID");
+					resp="Stream Already existed!";
+					flg=true;
 				}
+			else
+			{
+				flg=false;
+			}
+			   if (flg==false) {
+				   Optional<StreamMaster> streamEntit = streamRespository.findById(streamMaster.getId());
+			      if(streamEntit!=null) {
+				   StreamMaster entity=new StreamMaster(); 
+				   entity.setId(streamMaster.getId());
+				   entity.setStreamName(streamMaster.getStreamName());
+				   entity.setUpdatedate(new Date());
+			       streamRespository.save(entity);
+			       resp = "Success";
+			      }
+			   }
 			
-			
-			StreamMaster streamEntit = streamEntities.get();
-			
-			streamEntit.setStreamName(streamMaster.getStreamName());
-			//streamEntit.setUpdateby(streamMaster.getStreamName());
-			
-			
-			streamRespository.save(streamEntit);
-			
-			   
-		
-			baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			baseResponse.setRespData("success");
 			 
-			return baseResponse;
+			return resp;
 		}
 		
 		
@@ -136,6 +144,7 @@ public class StreamServiceImpl  implements StreamService{
 			   if(streamEntities == null) {
 				   
 					throw new Exception(" Invalid ID");
+					
 				}else {
 								
 

@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,22 +74,27 @@ public class DocumentServiceImpl implements DocumentService{
 	//Abhishek Added
 	
 	@Override
-	public Boolean addDocument(DocumentAddRequest documentRequest) throws Exception {
+	public String addDocument(DocumentAddRequest documentRequest) throws Exception {
 		
-		
-		
+		String resp;
+		DocumentMaster docMasterResponse=documentRespository.findByDocumentName( documentRequest.getDocumentName());
+		if(docMasterResponse!=null)
+		{
+			resp="DocumentName Already exist!";
+		}
+		else
+		{
 		DocumentMaster docMasterEntity  = new  DocumentMaster();
 		
 		docMasterEntity.setUniversityId(documentRequest.getUniversityId());//1
 		docMasterEntity.setDocumentName(documentRequest.getDocumentName());//Name Document
 		docMasterEntity.setCreateby(documentRequest.getCreated_by()); // Logged User Id 
-		docMasterEntity.setIsdeleted(documentRequest.getIs_deleted()); // By Default N	
+		docMasterEntity.setIsdeleted(documentRequest.getIs_deleted()); // By Default N
+	    documentRespository.save(docMasterEntity);
 	
-	     documentRespository.save(docMasterEntity);
-	
-		
-			
-		return true;
+	    resp="Success";
+		}
+		return resp;
 		
 	}
 	
@@ -96,32 +102,43 @@ public class DocumentServiceImpl implements DocumentService{
 	
 	
 	@Override
-	public BaseResponse UpdateDocument(DocumentMaster documentMaster) throws Exception {
+	public String UpdateDocument(DocumentMaster documentMaster) throws Exception {
 		
-		baseResponse	= new BaseResponse();	
-
-		Optional<DocumentMaster> docEntities  = documentRespository.findById(documentMaster.getId());
+		String resp = null;	
+		boolean flg;
+		DocumentMaster docResponse=documentRespository.findByDocumentName( documentMaster.getDocumentName());
+		if(docResponse!=null)
+		{
+			resp="Document Already exist!";
+			flg=true;
+		}
 		
-		   if(docEntities == null) {
+		else {
+			flg=false;
+		}
+		if(flg==false) {
+		
+			Optional<DocumentMaster> docEntities  = documentRespository.findById(documentMaster.getId());
+		
+		    if(docEntities == null) {
 			   
-				throw new Exception(" Invalid ID");
-			}
+				resp="Invalid Id";
+			  }
 		
-		
-		DocumentMaster docEntit = docEntities.get();
-		
-		docEntit.setDocumentName(documentMaster.getDocumentName());
-		
+		    else
+		    {
+		    DocumentMaster docEntit = new DocumentMaster();
+		    
+		    docEntit.setId(documentMaster.getId());
+		    docEntit.setDocumentName(documentMaster.getDocumentName());
+		    docEntit.setUpdatedate(new Date());
 		
 		 documentRespository.save(docEntit);
+		 resp="Success";
+		    }
 		
-		   
-	
-		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-		baseResponse.setRespData("success");
-		 
-		return baseResponse;
+		}
+		return resp;
 	}
 	
 	

@@ -18,10 +18,10 @@ public interface DocumentService {
 	DocumentMaster getNameById(String documentName);
 	
 	//Abhishek Added
-	public Boolean addDocument(DocumentAddRequest documentRequest) throws Exception;
+	public String addDocument(DocumentAddRequest documentRequest) throws Exception;
 	
 	
-	public BaseResponse UpdateDocument(DocumentMaster documentMaster) throws Exception;
+	public String UpdateDocument(DocumentMaster documentMaster) throws Exception;
 	
 	public BaseResponse deleteDocument(long id, HttpServletRequest request) throws Exception;
 	//Abhishek Added

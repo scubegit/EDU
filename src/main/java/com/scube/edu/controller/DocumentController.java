@@ -82,7 +82,7 @@ public class DocumentController {
 		
 		try {
 
-			Boolean flag = documentServices.addDocument(documentRequest);
+			String flag = documentServices.addDocument(documentRequest);
 			
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -116,13 +116,13 @@ public class DocumentController {
 		
 		try {
 			
-			response = documentServices.UpdateDocument(documentMaster);
+			String resp = documentServices.UpdateDocument(documentMaster);
 
-			//Boolean flag = documentServices.addDocument(documentRequest);
 			
-			//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			//response.setRespData(flag);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(resp);
 			
 			return ResponseEntity.ok(response);
 			
