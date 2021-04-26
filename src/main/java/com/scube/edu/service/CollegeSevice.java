@@ -19,7 +19,7 @@ public interface CollegeSevice {
 	//Abhishek Added
 		public String addCollege(CollegeAddRequest collegeRequest) throws Exception;
 		
-		public BaseResponse UpdateCollege(CollegeMaster collegeMaster) throws Exception;
+		public String UpdateCollege(CollegeMaster collegeMaster) throws Exception;
 		
 		public BaseResponse deleteClgRequest(long id, HttpServletRequest request) throws Exception;
 		

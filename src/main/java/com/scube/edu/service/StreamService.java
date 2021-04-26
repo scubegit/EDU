@@ -16,9 +16,9 @@ public interface StreamService {
 	List<StreamResponse> getStreamList(HttpServletRequest request);
 	
 	//Abhishek Added
-		public Boolean addStream(StreamRequest streamRequest) throws Exception;
+		public String addStream(StreamRequest streamRequest) throws Exception;
 
-		public BaseResponse updateStream(StreamMaster streamMaster) throws Exception;
+		public String updateStream(StreamMaster streamMaster) throws Exception;
 		
 		
 		public BaseResponse deleteStreamRequest(long id, HttpServletRequest request) throws Exception;

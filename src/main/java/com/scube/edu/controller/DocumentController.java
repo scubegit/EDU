@@ -25,8 +25,9 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.service.DocumentService;
-import com.scube.edu.service.MasterService;
+
 import com.scube.edu.util.StringsUtils;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -82,7 +83,7 @@ public class DocumentController {
 		
 		try {
 
-			Boolean flag = documentServices.addDocument(documentRequest);
+			String flag = documentServices.addDocument(documentRequest);
 			
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -106,7 +107,7 @@ public class DocumentController {
 	
 	
 	
-	@PostMapping("/documentUpdate")
+	@PostMapping("/documnetUpdate")
 	public ResponseEntity<Object> updateDocument(@RequestBody DocumentMaster documentMaster ,  HttpServletRequest request) {
 		
 		logger.info("********DocumentController updateDocument()********");
@@ -116,13 +117,13 @@ public class DocumentController {
 		
 		try {
 			
-			response = documentServices.UpdateDocument(documentMaster);
+			String resp = documentServices.UpdateDocument(documentMaster);
 
-			//Boolean flag = documentServices.addDocument(documentRequest);
 			
-			//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			//response.setRespData(flag);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(resp);
 			
 			return ResponseEntity.ok(response);
 			

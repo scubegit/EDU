@@ -11,6 +11,7 @@ import com.scube.edu.model.UserMasterEntity;
 public interface DocumentRepository extends JpaRepository<DocumentMaster, Long>{
 	
 	DocumentMaster findById(long id);
+	DocumentMaster findByDocumentName(String docName);
 	
 	DocumentMaster deleteById(long id);
 

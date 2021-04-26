@@ -1,7 +1,7 @@
 package com.scube.edu.service;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,34 +59,32 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	@Override
 	public String addCollege(CollegeAddRequest collegeRequest) throws Exception {
 		
-		String output;
+		String resp;
 		CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(collegeRequest.getCollegeName());
 		
 		
 		if(collegeEntities != null) {
-			output = "College Name Already Exist"; 
+			resp = "College Name Already Exist!"; 
 			throw new Exception("College Name Already Exist");
 	
 			
-		}else {
-		
-		
-		CollegeMaster collegeMasterEntity  = new  CollegeMaster();
-		
-		
-		
-		collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());//1
-		collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());//Name Document
-		collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id 
-		collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N	
+		}
+		else {
 	
-	     collegeRespository.save(collegeMasterEntity);
+			CollegeMaster collegeMasterEntity = new CollegeMaster();
+
+			collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());// 1
+			collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());// Name Document
+			collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id
+			collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N
+
+			collegeRespository.save(collegeMasterEntity);
 	     
-			output = "Success";
+	     resp = "Success";
 	
 		}
 			
-		return output;
+		return resp;
 		
 	}
 	
@@ -94,33 +92,44 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	
 	
 	@Override
-	public BaseResponse UpdateCollege(CollegeMaster collegeMaster) throws Exception {
+	public String UpdateCollege(CollegeMaster collegeMaster) throws Exception {
 		
-		baseResponse	= new BaseResponse();	
+		
+		String resp = null;
+		boolean flg;
+		CollegeMaster response=collegeRespository.findByCollegeName(collegeMaster.getCollegeName());
 
+		if(response!=null){
+			resp="College Name Already exist!";
+			flg=true;
+		}
+		else {
+			flg=false;
+		}
+		
+		
+		if(flg==false) {
 		Optional<CollegeMaster> collegeEntities  = collegeRespository.findById(collegeMaster.getId());
 		
 		   if(collegeEntities == null) {
 			   
-				throw new Exception(" Invalid ID");
+				resp="Invalid Id";
 			}
 		
+		   else
+		   {
+		CollegeMaster collegeEntit = new CollegeMaster();
 		
-		CollegeMaster collegeEntit = collegeEntities.get();
-		
-		
+		collegeEntit.setId(collegeMaster.getId());
 		collegeEntit.setCollegeName(collegeMaster.getCollegeName());
+		collegeEntit.setUpdatedate(new Date());
 		
 		
 		collegeRespository.save(collegeEntit);
-		
-		   
-	
-		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-		baseResponse.setRespData("success");
-		 
-		return baseResponse;
+		resp="Success";
+		   }
+		}
+		return resp;
 	}
 
 

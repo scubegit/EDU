@@ -84,7 +84,7 @@ public class StreamController {
 		
 		try {
 
-			Boolean flag = streamServices.addStream(streamRequest);
+			String flag = streamServices.addStream(streamRequest);
 			
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -117,13 +117,11 @@ public class StreamController {
 		
 		try {
 			
-			response = streamServices.updateStream(streamMaster);
-
-			//Boolean flag = documentServices.addDocument(documentRequest);
-			
-			//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			//response.setRespData(flag);
+			String resp = streamServices.updateStream(streamMaster);
+		
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(resp);
 			
 			return ResponseEntity.ok(response);
 			

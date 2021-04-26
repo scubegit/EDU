@@ -121,15 +121,14 @@ public class CollegeController {
 			
 			try {
 				
-				response = collegeServices.UpdateCollege(collegeMaster);
+				String resp = collegeServices.UpdateCollege(collegeMaster);
 
-				//Boolean flag = documentServices.addDocument(documentRequest);
 				
-				//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-				//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-				//response.setRespData(flag);
-				
-				return ResponseEntity.ok(response);
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(resp);
+
+			return ResponseEntity.ok(response);
 				
 			}
 			catch (Exception e) {
