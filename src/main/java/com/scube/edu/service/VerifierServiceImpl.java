@@ -1,8 +1,10 @@
 package com.scube.edu.service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,7 @@ import com.scube.edu.repository.RequestTypeRepository;
 import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.JwtResponse;
@@ -160,12 +163,12 @@ public class VerifierServiceImpl implements VerifierService{
 					 
 					 resEntity.setId(veriReq.getId());
 					 resEntity.setEnroll_no(veriReq.getEnrollmentNumber());
-					 resEntity.setUpload_doc_path("http://192.168.0.221:8081/EDU/api/verifier/getimage/VR/"+veriReq.getId());
+					 resEntity.setUpload_doc_path("/verifier/getimage/VR/"+veriReq.getId());
 					 resEntity.setYear(year.getYearOfPassing());
 					 
 					 UniversityStudentDocument doc = stuDocService.getDocDataByEnrollmentNO(veriReq.getEnrollmentNumber());
 					 
-					 resEntity.setOriginalDocUploadFilePath("http://192.168.0.221:8081/EDU/api/verifier/getimage/U/"+doc.getId());
+					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
 					
 					 verificationDataList.add(resEntity);
 		        }
@@ -176,22 +179,28 @@ public class VerifierServiceImpl implements VerifierService{
 
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) throws BadElementException, MessagingException, IOException {
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException {
 		
-			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" + id + status);
+			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" +statusChangeRequest.getRemark());
 			
-			Optional<VerificationRequest> ent =  verificationReqRepository.findById(id);
-			VerificationRequest entt = ent.get();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+		    Date date = new Date();  
+		    String currentDate = formatter.format(date);  
+			
+			VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
+//			VerificationRequest entt = ent.get();
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
 			
-			entt.setDocStatus(status);
-			entt.setVerifiedBy(verifiedBy);
+			entt.setDocStatus(statusChangeRequest.getStatus());
+			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
+			entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
 			verificationReqRepository.save(entt);
 			
-			if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")) {
+			if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
+					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {
 				
 				UserResponse ume = userService.getUserInfoById(entt.getUserId());
-				emailService.sendStatusMail(ume.getEmail(), entt.getId() , status);
+				emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
 				
 				}
 		

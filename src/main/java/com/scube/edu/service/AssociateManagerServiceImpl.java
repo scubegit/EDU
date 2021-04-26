@@ -2,8 +2,14 @@ package com.scube.edu.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -17,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.scube.edu.controller.MasterController;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.repository.UniversityStudentDocRepository;
+import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.util.FileStorageService;
 
 @Service
@@ -27,6 +34,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	@Autowired
 	 UniversityStudentDocRepository 	 universityStudentDocRepository ;
 	
+	@PersistenceUnit
+	 private EntityManagerFactory emf;
+	
 	 @Autowired
 	 private FileStorageService fileStorageService;
 	
@@ -34,12 +44,12 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	
 	
 	@Override
-	public List<String> saveStudentInfo(List<UniversityStudentDocument> list){
+	public  HashMap<String,List<UniversityStudentDocument>> saveStudentInfo(List<UniversityStudentDocument> list) throws IOException {
 		
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 UniversityStudentDocument docEntity =null;
-		 List<String> rejectedData=new ArrayList<>();
-		 
+		 List<UniversityStudentDocument> rejectedData=new ArrayList<UniversityStudentDocument>();
+		 HashMap<String,List<UniversityStudentDocument>> datalist=new HashMap<String,List<UniversityStudentDocument>>();
 		 for(UniversityStudentDocument Data:list) {
 			 			
 			 docEntity=universityStudentDocRepository.findByEnrollmentNo(Data.getEnrollmentNo());
@@ -56,17 +66,26 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentDataList.add(studentData);    
 			 }
 			 else
-			 {				
-				 rejectedData.add(Data.getEnrollmentNo());				
+			 {	 UniversityStudentDocument studentData=new UniversityStudentDocument();
+			     studentData.setFirstName(Data.getFirstName());
+		        studentData.setLastName(Data.getLastName());
+		        studentData.setCollegeName(Data.getCollegeName());	
+		        studentData.setStream(Data.getStream());	
+		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+		        studentData.setPassingYear(Data.getPassingYear());	
+		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		        //studentDataList.add(studentData);   			
+				rejectedData.add(studentData);				
 			 }
 			
 		 }
 		 logger.info("rejectedData : "+rejectedData);
 		 universityStudentDocRepository.saveAll(studentDataList);
-		 return rejectedData;
+		 datalist.put("savedStudentData", studentDataList);
+		 datalist.put("RejectedData", rejectedData);
+		 return datalist;
 		 
 	}
-
 
 	@Override
 	public List<UniversityStudentDocument> ReviewStudentData(MultipartFile excelfile, MultipartFile datafile) throws IOException {
@@ -93,9 +112,94 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentDataReviewList.add(studentData);    
 			 }
 	
-
-
 		 return studentDataReviewList;
+	}
+
+	@Override
+	public List<UniversityStudentDocument> getStudentData(UniversityStudentDocument universityStudData ) {
+		
+		logger.info("********AssociateManagerServiceImpl getStudentData********");
+
+		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		 String query="";
+		 query="Select data from UniversityStudentDocument data where ";
+		 
+		 if(universityStudData!=null)
+		 {
+			 String Name=universityStudData.getFirstName();
+			 String lastName=universityStudData.getLastName();
+			 String Stream=universityStudData.getStream();
+			 String clgName=universityStudData.getCollegeName();
+			 String enrollNo=universityStudData.getEnrollmentNo();
+			 Integer YearOfPassing=universityStudData.getPassingYear(); 
+			 
+			 if(!Name.isEmpty())
+			 {
+				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
+				 if(!lastName.isEmpty()||!Stream.isEmpty()||!clgName.isEmpty()||!enrollNo.isEmpty()||YearOfPassing!=null)
+				 {
+				 query=query+" and";
+				 }
+			 }
+				 
+			 if(!universityStudData.getLastName().isEmpty())
+			 {
+				 query=query+" lastName='"+universityStudData.getLastName()+"'";
+				 if(!Stream.isEmpty()||!clgName.isEmpty()||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
+					
+				 query=query+" and";
+				 }
+			 }
+			 if(!universityStudData.getStream().isEmpty())
+			 {
+				 query=query+"  stream='"+universityStudData.getStream()+"'";
+				 if(!clgName.isEmpty()||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
+				  query=query+" and";
+				 }
+			 }
+			 if(!universityStudData.getCollegeName().isEmpty())
+			 {
+				 query=query+"  collegeName='"+universityStudData.getCollegeName()+"'";
+				 if(!enrollNo.isEmpty()||YearOfPassing!=null)				 {
+				 query=query+" and";
+				 }
+			 }
+			 if(!universityStudData.getEnrollmentNo().isEmpty())
+			 {
+				 query=query+"  enrollmentNo='"+universityStudData.getEnrollmentNo()+"'";
+				 if(universityStudData.getPassingYear()!=null)
+				 {
+				 query=query+" and";
+				 }
+			 }
+			 if(universityStudData.getPassingYear()!=null)
+			 {
+				 query=query+" passingYear="+universityStudData.getPassingYear()+"";
+			 }
+		 }
+		 
+		 logger.info(query);
+		 
+		 EntityManager em = emf.createEntityManager();
+		 studentDataList= em.createQuery(query).getResultList();
+		// studentDataList=universityStudentDocRepository.getStudData(query);
+		 List<UniversityStudentDocument> studData=new ArrayList<>();
+		 for(UniversityStudentDocument setStudentdata:studentDataList)
+		 {
+			 UniversityStudentDocument studDataResponse=new UniversityStudentDocument();
+			 studDataResponse.setId(setStudentdata.getId());
+			 studDataResponse.setFirstName(setStudentdata.getFirstName());
+			 studDataResponse.setLastName(setStudentdata.getLastName());
+			 studDataResponse.setCollegeName(setStudentdata.getCollegeName());
+			 studDataResponse.setEnrollmentNo(setStudentdata.getEnrollmentNo());
+			 studDataResponse.setStream(setStudentdata.getStream());
+			 studDataResponse.setPassingYear(setStudentdata.getPassingYear());
+			 //String Path=
+			 studDataResponse.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+setStudentdata.getId());
+			 studData.add(studDataResponse);
+		 }
+		 logger.info("Data"+studData);
+		return studData;
 	}
 
 }

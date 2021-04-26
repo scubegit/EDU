@@ -1,3 +1,45 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package com.scube.edu.util;
 
 import java.io.IOException;
@@ -118,7 +160,7 @@ public class FileStorageService {
 	        	}else {
 	        		
 	        		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
-	        		fileName = "file/"+doc.getOriginalDOCuploadfilePath();
+	        		fileName = doc.getOriginalDOCuploadfilePath();
 	        		
 	        		System.out.println("--------InsideElse----fileName--------------"+fileName);
 	        		

@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.DisputeResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
@@ -60,18 +63,74 @@ public class SuperVerifierController {
 			
    }
 	
-	@PostMapping("/setStatusForSuperVerifierDocument/{id}/{status}")
-	public  ResponseEntity<Object> setStatusForVerifierDocument(@PathVariable Long id ,@PathVariable String status) {
+	@PostMapping("/setStatusForSuperVerifierDocument")
+	public  ResponseEntity<Object> setStatusForVerifierDocument(@RequestBody StatusChangeRequest statusChangeRequest) {
 		
 		response = new BaseResponse();
-		System.out.println("*****VerifierController setStatusForVerifierDocument*****"+id + status);
+		System.out.println("*****VerifierController setStatusForVerifierDocument*****"+statusChangeRequest.getRemark());
 		    try {
 		    	
-		    	List<StudentVerificationDocsResponse> list = superVerifierService.setStatusForSuperVerifierDocument(id,status);
+		    	List<StudentVerificationDocsResponse> list = superVerifierService.setStatusForSuperVerifierDocument(statusChangeRequest);
 
 		    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData(null);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
+	
+	@GetMapping("/getDisputeList")
+	public  ResponseEntity<Object> getDisputeList() {
+		response = new BaseResponse();
+		
+		    try {
+
+		    	List<DisputeResponse> list = superVerifierService.getDisputeList();
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
+	
+	@GetMapping("/getVerificationRequestDetails/{verification_id}")
+	public  ResponseEntity<Object> getVerificationRequestDetails(@PathVariable long verification_id ) {
+		response = new BaseResponse();
+		
+		    try {
+
+		    	VerificationResponse list = superVerifierService.getVerificationRequestDetails(verification_id);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
 					
 					return ResponseEntity.ok(response);
 						

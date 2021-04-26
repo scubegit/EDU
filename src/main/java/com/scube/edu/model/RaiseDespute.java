@@ -56,6 +56,9 @@ public class RaiseDespute extends CreateUpdate{
 	@Size(max = 100)
 	@Column(name = "comment")
 	private String comment;
+	
+	@Column(name = "verification_id")
+	private Long verificationId;
 
 
 }

@@ -24,4 +24,6 @@ public interface CollegeSevice {
 		public BaseResponse deleteClgRequest(long id, HttpServletRequest request) throws Exception;
 		
 		//Abhishek Added
+
+		CollegeResponse getNameById(Long collegeId);
 }

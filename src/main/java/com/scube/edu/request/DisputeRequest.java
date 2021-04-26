@@ -4,12 +4,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter 
 @Setter
-
+@ToString
 public class DisputeRequest {
 	
+	private Long id;
 	private Long application_id;
 	private String phone_no;
 	private String email;

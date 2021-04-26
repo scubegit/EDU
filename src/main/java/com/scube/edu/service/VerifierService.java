@@ -6,6 +6,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import com.lowagie.text.BadElementException;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
@@ -17,8 +18,6 @@ public interface VerifierService {
 
 	public List<StudentVerificationDocsResponse> verifyDocument(Long id);
 
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(Long id, String status, Long verifiedBy) throws BadElementException, MessagingException, IOException;
-
-
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException;
 
 }

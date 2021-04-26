@@ -21,4 +21,6 @@ public class UserResponse {
     private String company_email;
     private String contact_person_name;
     private String enroll_no;
+    private String first_name;
+    private String last_name;
 }

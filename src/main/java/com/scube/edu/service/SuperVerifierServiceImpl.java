@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,14 +13,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.RaiseDespute;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.RaiseDisputeRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.CollegeResponse;
+import com.scube.edu.response.DisputeResponse;
 import com.scube.edu.response.EmployerVerificationDocResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
@@ -38,6 +45,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired 
 	StreamService streamService;
+	
+	@Autowired
+	RaiseDisputeRepository disputeRepo;
 	 
 	@Autowired 
 	RequestTypeService reqTypeService;
@@ -53,6 +63,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired
 	EmailService emailService;
+	
+	@Autowired
+	CollegeSevice	collegeServices;
 	
 	@Autowired
 	UserService userService;
@@ -95,7 +108,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setEnroll_no(req.getEnrollmentNumber());
 			resp.setFirst_name(req.getFirstName());
 			resp.setLast_name(req.getLastName());
-			
+			resp.setRemark(req.getRemark());
 ////			resp.setRequest_type_id(req.get);
 //			resp.setStream_id(req.getStreamId());
 //			resp.setUni_id(req.getUniversityId());
@@ -115,29 +128,125 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	}
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(Long id, String status) throws Exception {
+	public List<StudentVerificationDocsResponse> setStatusForSuperVerifierDocument(StatusChangeRequest statusChangeRequest) throws Exception {
 		
 		logger.info("*******SuperVerifierServiceImpl setStatusForSuperVerifierDocument*******");
 		
-		Optional<VerificationRequest> vr =  verificationReqRepository.findById(id);
-		VerificationRequest veriReq = vr.get();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+	    Date date = new Date();  
+	    String currentDate = formatter.format(date);  
+		
+		VerificationRequest veriReq =  verificationReqRepository.findById(statusChangeRequest.getId());
+//		VerificationRequest veriReq = vr.get();
 		
 		System.out.println(veriReq.getDocStatus() + veriReq.getApplicationId());
 		
-		veriReq.setDocStatus(status);
+		veriReq.setDocStatus(statusChangeRequest.getStatus());
+		veriReq.setRemark(veriReq.getRemark()+" SVR_"+currentDate+"-"+statusChangeRequest.getRemark());
 		
 		verificationReqRepository.save(veriReq);
 		
-		if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected")) {
+		if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("Rejected") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("SV_Rejected")) {
 			
 		UserResponse ume = userService.getUserInfoById(veriReq.getUserId());
-		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), status);
+		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), statusChangeRequest.getStatus());
 		
 		}
 		
 
 		
 		return null;
+	}
+
+	@Override
+	public List<DisputeResponse> getDisputeList() {
+		
+		logger.info("*******superVerifierServiceImpl getDisputeList*******");
+		
+		List<RaiseDespute> rd = disputeRepo.findByStatus("1");
+		
+		List<DisputeResponse> responses = new ArrayList<>();
+		
+		for(RaiseDespute res: rd) {
+			
+			DisputeResponse resp = new DisputeResponse();
+			
+			Long id = Long.parseLong(res.getCreateby());
+			
+			Optional<UserMasterEntity> ume = userRepository.findById(id);
+			UserMasterEntity umee = ume.get();
+			
+			resp.setId(res.getId());
+			resp.setCreated_by(res.getCreateby());
+			resp.setEmailid(res.getContactPersonEmail());
+			resp.setApplication_id(res.getApplicationId());
+			resp.setPhone_no(res.getContactPersonPhone());
+			resp.setReason(res.getReasonForDispute());
+			resp.setVerification_id(res.getVerificationId());
+			resp.setFirst_name(umee.getFirstName());
+			resp.setLast_name(umee.getLastName());
+			
+			responses.add(resp);
+			
+			
+		}
+		
+		return responses;
+	}
+
+	@Override
+	public VerificationResponse getVerificationRequestDetails(long verification_id) {
+		
+		logger.info("*******DisputeServiceImpl getVerificationRequestDetails*******"+ verification_id);
+		
+		VerificationRequest vr = verificationReqRepository.findById(verification_id);
+		
+		VerificationResponse resp = new VerificationResponse();
+		
+		PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+		
+		DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+		
+		StreamMaster stream = streamService.getNameById(vr.getStreamId());
+		
+		CollegeResponse college = collegeServices.getNameById(vr.getCollegeId());
+		
+		Optional<UserMasterEntity> user = userRepository.findById(vr.getVerifiedBy());
+		UserMasterEntity userr = user.get();
+		
+		if(vr.getRequestType() != null) {
+			RequestTypeResponse request = reqTypeService.getNameById(vr.getRequestType());
+			resp.setRequest_type_id(request.getRequestType());
+			}
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+			String strDate= formatter.format(vr.getCreatedate());
+			
+			resp.setDoc_status(vr.getDocStatus());
+			resp.setId(vr.getId());
+			resp.setApplication_id(vr.getApplicationId());
+//			resp.setCollege_name_id(college.getCollegeName());
+			resp.setCollege_name(college.getCollegeName());
+			resp.setDoc_name(doc.getDocumentName()); //
+			resp.setEnroll_no(vr.getEnrollmentNumber());
+			resp.setFirst_name(vr.getFirstName());
+			resp.setLast_name(vr.getLastName());
+			
+////			resp.setRequest_type_id(vr.get);
+//			resp.setStream_id(vr.getStreamId());
+//			resp.setUni_id(vr.getUniversityId());
+			resp.setUser_id(vr.getUserId());
+			resp.setVer_req_id(vr.getVerRequestId());
+			resp.setYear(year.getYearOfPassing());	
+			resp.setUpload_doc_path(vr.getUploadDocumentPath());
+			resp.setStream_name(stream.getStreamName());
+			resp.setReq_date(strDate);
+			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
+			resp.setRemark(vr.getRemark());
+		return resp;
 	}
 	
 	

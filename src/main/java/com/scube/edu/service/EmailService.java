@@ -212,7 +212,7 @@ public class EmailService {
 	   }
 	  
 	  
-	  void sendStatusMail(String emailId, Long id, String status) throws MessagingException, BadElementException, IOException {
+	  public void sendStatusMail(String emailId, Long id, String status) throws MessagingException, BadElementException, IOException {
 		  
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 		  
@@ -227,6 +227,7 @@ public class EmailService {
 		   
 		   Long Id = id;
 
+		   
 	        // Sender's email ID needs to be mentioned
 	        String from = "universityscube@gmail.com";
 
@@ -267,12 +268,12 @@ public class EmailService {
                
                outputStream = new ByteArrayOutputStream();
                
-               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")) {
+               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")) {
             	   
                writeApprovalPdf(outputStream, Id);
                
                }
-               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected")) {
+               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")) {
             	   
             	   writeRejectionPdf(outputStream , id);
             	   
@@ -357,8 +358,9 @@ public class EmailService {
         document.setFooter(footer);
         
         document.open();
-	    
-	    Image img = Image.getInstance("logo.png");
+//	    EduCred_Logo.jpg
+	    Image img = Image.getInstance("EduCred_Logo.jpg");
+	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
 	    img.setAbsolutePosition(243, 720);
@@ -380,7 +382,7 @@ public class EmailService {
 	    		+ "M.J. Phule Bhavan, \r"
 	    		+ "Vidyanagari, Santacruz (East), \r"
 	    		+ "Mumbai- 400 098. \r"
-	    		+ "Date: 08/04/2021");
+	    		+ "Date: "+java.time.LocalDate.now());
 	    document.add(headAddr);
 	    
 	    Paragraph Addr = new Paragraph();
@@ -415,9 +417,9 @@ public class EmailService {
 	    document.add(para);
 	    
 	    
-	    PdfPTable detailsTable = new PdfPTable(6);
+	    PdfPTable detailsTable = new PdfPTable(5);
 	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {16,16,16,16,16,16});
+	    detailsTable.setWidths(new int[] {20,20,20,20,20});
 	    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
@@ -425,7 +427,6 @@ public class EmailService {
 	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
-	    PdfPCell cell6 = new PdfPCell(new Paragraph("Remarks"));
 	    
 	    
 	    
@@ -434,7 +435,6 @@ public class EmailService {
 	    detailsTable.addCell(cell3);
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
-	    detailsTable.addCell(cell6);
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
@@ -453,14 +453,12 @@ public class EmailService {
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
-	    	PdfPCell remark = new PdfPCell(new Paragraph("remark here"));
 	    	
 	    	detailsTable.addCell(dateCell);
 	    	detailsTable.addCell(nameCell);
 	    	detailsTable.addCell(docCell);
 	    	detailsTable.addCell(yearCell);
 	    	detailsTable.addCell(enrollCell);
-	    	detailsTable.addCell(remark);
 	    
 	    
 	    	document.add(detailsTable);
@@ -518,6 +516,8 @@ public class EmailService {
 		
 		System.out.println("******EmailServiceImpl writeApprovalPdf*******");
 		
+		System.out.println("--------------"+java.time.LocalDate.now());   
+		
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
 		
@@ -551,8 +551,9 @@ public class EmailService {
 		
 	    
 	    document.open();
-	    
-	    Image img = Image.getInstance("logo.png");
+//	    EduCred_Logo.jpg
+	    Image img = Image.getInstance("EduCred_Logo.jpg");
+	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
 	    img.setAbsolutePosition(243, 720);
@@ -574,7 +575,7 @@ public class EmailService {
 	    		+ "M.J. Phule Bhavan, \r"
 	    		+ "Vidyanagari, Santacruz (East), \r"
 	    		+ "Mumbai- 400 098. \r"
-	    		+ "Date: 08/04/2021");
+	    		+ "Date: "+java.time.LocalDate.now());
 	    document.add(headAddr);
 	    
 	    Paragraph Addr = new Paragraph();
@@ -619,9 +620,9 @@ public class EmailService {
 	    document.add(greeting);
 	    document.add(para);
 	    
-	    PdfPTable detailsTable = new PdfPTable(6);
+	    PdfPTable detailsTable = new PdfPTable(5);
 	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {16,16,16,16,16,16});
+	    detailsTable.setWidths(new int[] {20,20,20,20,20});
 	    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
@@ -629,7 +630,6 @@ public class EmailService {
 	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
-	    PdfPCell cell6 = new PdfPCell(new Paragraph("Remarks"));
 	    
 	    
 	    
@@ -638,7 +638,6 @@ public class EmailService {
 	    detailsTable.addCell(cell3);
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
-	    detailsTable.addCell(cell6);
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
@@ -657,14 +656,12 @@ public class EmailService {
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
-	    	PdfPCell remark = new PdfPCell(new Paragraph("remark here"));
 	    	
 	    	detailsTable.addCell(dateCell);
 	    	detailsTable.addCell(nameCell);
 	    	detailsTable.addCell(docCell);
 	    	detailsTable.addCell(yearCell);
 	    	detailsTable.addCell(enrollCell);
-	    	detailsTable.addCell(remark);
 	    	
 	    	
 	    	
@@ -704,7 +701,264 @@ public class EmailService {
 	    document.close();
 		
 	}
-	  
+	
+	void sendDisputeSaveMail(String emailId, long appId, long id) throws MessagingException {
+		   
+
+		   String to = emailId;
+		   
+		   
+
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
+	        String host = "smtp.gmail.com";
+
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        
+	        properties.put("mail.smtp.auth", "true");
+
+
+
+	        // Get the Session object.// and pass username and password
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+	            protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+
+	            }
+
+	        });
+
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+
+	        try {
+	            // Create a default MimeMessage object.
+	            MimeMessage message = new MimeMessage(session);
+
+	            // Set From: header field of the header.
+	            message.setFrom(new InternetAddress(from));
+
+	            // Set To: header field of the header.
+	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+	            // Set Subject: header field
+	            message.setSubject("Dispute Confirmation");
+
+	            // Now set the actual message
+	                       
+             String vmFileContent = "Hello User, <br><br> "
+             		+ "We have recieved the dispute that you raised. Sorry for the inconvenience caused. We will get back to you in 7-10 working days with a resolution. <br><br> "
+             				+ "For reference your dispute reference id is:"+id+". <br><br> "
+             						+ "Thanks, <br><br> Team University";
+
+             //  Send the complete message parts
+             message.setContent(vmFileContent,"text/html");
+
+	            System.out.println("sending...");
+	            // Send message
+	             Transport.send(message);
+	            
+	           // javaMailSender.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+
+	        } catch (MessagingException e) {
+	            throw new RuntimeException(e);
+	        }
+
+	     
+	    }
+	
+	
+	void sendNoStatusChangeMail(String emailId, Long id) throws MessagingException {
+		   
+
+		   String to = emailId;
+
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
+	        String host = "smtp.gmail.com";
+
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        
+	        properties.put("mail.smtp.auth", "true");
+
+
+
+	        // Get the Session object.// and pass username and password
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+	            protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+
+	            }
+
+	        });
+
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+
+	        try {
+	            // Create a default MimeMessage object.
+	            MimeMessage message = new MimeMessage(session);
+
+	            // Set From: header field of the header.
+	            message.setFrom(new InternetAddress(from));
+
+	            // Set To: header field of the header.
+	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+	            // Set Subject: header field
+	            message.setSubject("Raised Dispute Result");
+
+	            // Now set the actual message
+	                       
+             String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+id+". "
+             		+ "As mentioned in the above dispute, we cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. \r\n "
+             		+ "Sorry for the inconvenience caused. \r\n "
+             +"\r\n Thanks, \r\n Team University";
+
+             //  Send the complete message parts
+             message.setContent(vmFileContent,"text/html");
+
+	            System.out.println("sending...");
+	            // Send message
+	             Transport.send(message);
+	            
+	           // javaMailSender.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+
+	        } catch (MessagingException e) {
+	            throw new RuntimeException(e);
+	        }
+
+	     
+	    }
+	
+	
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId) throws MessagingException, BadElementException, IOException {
+		  
+//		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
+		  	
+		  	Optional<VerificationRequest> vrr = verificationReqRepository.findById(verificationId);
+			VerificationRequest vr = vrr.get();
+			
+			PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+	    	
+	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+
+	    	Long Id = verificationId;
+	    	
+		   String to = emailId;
+		   
+	        // Sender's email ID needs to be mentioned
+	        String from = "universityscube@gmail.com";
+
+	        // Assuming you are sending email from through gmails smtp
+	        String host = "smtp.gmail.com";
+
+	        Properties properties = System.getProperties();
+		   
+		    properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.port", "465");
+	        properties.put("mail.smtp.ssl.enable", "true");
+	        properties.put("mail.smtp.auth", "true");
+
+	        String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+disputeId+". "
+	        		+ "As mentioned in the above dispute, we cross checked the document and the corrected result can be found in the attached document. \r\n "
+	        		+ "Sorry for the incon caused. \r\n "
+	        		+ "Thanks, \r\n Team University";
+	        
+	        String subject = "Verification Result";
+
+	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+	                 protected PasswordAuthentication getPasswordAuthentication() {
+
+	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	            }
+
+	        });
+//	        Session session = Session.getDefaultInstance(properties, null);
+	        ByteArrayOutputStream outputStream = null;
+	        // Used to debug SMTP issues
+	        session.setDebug(true);
+	        try {
+	          
+	        	
+	        	
+	        	
+	            MimeMessage mimeMessage = new MimeMessage(session);
+	            
+	            MimeBodyPart textBodyPart = new MimeBodyPart();
+	            textBodyPart.setText(vmFileContent);
+            
+            outputStream = new ByteArrayOutputStream();
+            
+             if(vr.getDocStatus().equalsIgnoreCase("SV_Rejected")) {
+            writeApprovalPdf(outputStream, Id);
+             }
+             if(vr.getDocStatus().equalsIgnoreCase("SV_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
+            	 writeRejectionPdf(outputStream, Id);
+             }
+            byte[] bytes = outputStream.toByteArray();
+            
+            //construct the pdf body part
+            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+            MimeBodyPart pdfBodyPart = new MimeBodyPart();
+            pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+            
+          //construct the mime multi part
+            MimeMultipart mimeMultipart = new MimeMultipart();
+            mimeMultipart.addBodyPart(textBodyPart);
+            mimeMultipart.addBodyPart(pdfBodyPart);
+            pdfBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
+            
+            
+            
+            
+            //create the sender/recipient addresses
+            InternetAddress iaSender = new InternetAddress(from);
+            InternetAddress iaRecipient = new InternetAddress(to);
+            
+            //construct the mime message
+//            MimeMessage mimeMessage = new MimeMessage(session);
+            mimeMessage.setSender(iaSender);
+            mimeMessage.setSubject(subject);
+            mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
+            mimeMessage.setContent(mimeMultipart);
+
+            //send off the email
+            
+            
+
+	            System.out.println("sending...");
+	            Transport.send(mimeMessage);
+//	            Transport.send(message);
+	            System.out.println("Sent message successfully....");
+	            
+	        } catch (MessagingException e) {
+	        	
+	        	
+	            throw new RuntimeException(e);
+	        }
+	   }
+
 	  
 
 }

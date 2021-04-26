@@ -122,6 +122,25 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		 
 		return baseResponse;
 	}
+
+
+
+
+	@Override
+	public CollegeResponse getNameById(Long collegeId) {
+		
+		Optional<CollegeMaster> cm = collegeRespository.findById(collegeId);
+		CollegeMaster cmm = cm.get();
+		
+		CollegeResponse cresp = new CollegeResponse();
+		
+		cresp.setCollegeName(cmm.getCollegeName());
+		cresp.setId(cmm.getId());
+		cresp.setUniversityId(cmm.getUniversityId());
+		
+		
+		return cresp;
+	}
 	
 	
 	@Override

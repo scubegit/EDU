@@ -118,7 +118,9 @@ public class AuthServiceImpl implements AuthService{
 				 userDetails.getId(), 
 				 userDetails.getUsername(), 
 				 userDetails.getEmail(),
-				 userDetails.getRole()
+				 userDetails.getRole(), 
+				 userDetails.getFirstname(),
+				 userDetails.getLastname()
 
 				 ));
 
@@ -145,6 +147,7 @@ public class AuthServiceImpl implements AuthService{
 				throw new Exception("This email id already exists");
 			}
 		
+		 userMasterEntity.setPanNumber(userAddRequest.getPanNumber());
 		 userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
 		 userMasterEntity.setCompanyEmailId(userAddRequest.getEmailId());
 		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
@@ -171,7 +174,7 @@ public class AuthServiceImpl implements AuthService{
 	
 	     userRepository.save(userMasterEntity);
 	
-//		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
+		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
 			
 		return true;
 		
