@@ -108,7 +108,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setEnroll_no(req.getEnrollmentNumber());
 			resp.setFirst_name(req.getFirstName());
 			resp.setLast_name(req.getLastName());
-			
+			resp.setRemark(req.getRemark());
 ////			resp.setRequest_type_id(req.get);
 //			resp.setStream_id(req.getStreamId());
 //			resp.setUni_id(req.getUniversityId());
