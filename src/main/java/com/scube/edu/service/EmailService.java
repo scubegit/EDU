@@ -359,7 +359,8 @@ public class EmailService {
         
         document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("logo.png");
+	    Image img = Image.getInstance("EduCred_Logo.jpg");
+	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
 	    img.setAbsolutePosition(243, 720);
@@ -551,7 +552,8 @@ public class EmailService {
 	    
 	    document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("logo.png");
+	    Image img = Image.getInstance("EduCred_Logo.jpg");
+	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
 	    img.setAbsolutePosition(243, 720);

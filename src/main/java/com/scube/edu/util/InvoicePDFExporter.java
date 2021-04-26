@@ -144,17 +144,18 @@ public class InvoicePDFExporter {
             
             
 //            EduCred_Logo.jpg
-               Image logo = Image.getInstance("ha-img.jpg");
+               Image logo = Image.getInstance("EduCred_Logo.jpg");
                logo.setAbsolutePosition(10, 300);
+               
                 Phrase phrase1 = new Phrase(logo.HEADER);
                HeaderFooter header =new HeaderFooter(phrase1,false);
                document.setHeader(header);
             
 			
 			
-			  Image img = Image.getInstance("ha-img.jpg"); //
+			  Image img = Image.getInstance("EduCred_Logo.jpg"); //
 			  img.setAlignment(Element.ALIGN_CENTER);
-			  
+			  img.scaleToFit(100, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
 			  
 			  PdfPTable tab1 = new PdfPTable(1); tab1.setWidthPercentage(100);
