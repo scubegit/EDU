@@ -80,7 +80,7 @@ public class DocumentServiceImpl implements DocumentService{
 		DocumentMaster docMasterResponse=documentRespository.findByDocumentName( documentRequest.getDocumentName());
 		if(docMasterResponse!=null)
 		{
-			resp="DocumentName Already exist!";
+			resp="Document Name Already exist!";
 		}
 		else
 		{
@@ -109,7 +109,7 @@ public class DocumentServiceImpl implements DocumentService{
 		DocumentMaster docResponse=documentRespository.findByDocumentName( documentMaster.getDocumentName());
 		if(docResponse!=null)
 		{
-			resp="Document Already exist!";
+			resp="Document Name Already exist!";
 			flg=true;
 		}
 		
