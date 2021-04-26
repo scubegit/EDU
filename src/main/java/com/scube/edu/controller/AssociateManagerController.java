@@ -93,7 +93,7 @@ public class AssociateManagerController {
 				
 			}
 	}
-	@GetMapping(value = "/getUniversityStudenData")
+	@PostMapping(value = "/getUniversityStudenData")
 	public ResponseEntity<BaseResponse> getstudentData (@RequestBody UniversityStudentDocument stuentData) {
 		
 		System.out.println("*******AssociateManagerController getstudentData********");
