@@ -826,10 +826,10 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-             String vmFileContent = "Hello User, <br><br> This is in relation with the dispute ref no.:"+id+". "
-             		+ "As mentioned in the above dispute, we cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. <br><br> "
-             		+ "Sorry for the incon caused. <br><br> "
-             +"<br><br><br> Thanks,<br>Team University";
+             String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+id+". "
+             		+ "As mentioned in the above dispute, we cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. \r\n "
+             		+ "Sorry for the inconvenience caused. \r\n "
+             +"\r\n Thanks, \r\n Team University";
 
              //  Send the complete message parts
              message.setContent(vmFileContent,"text/html");
@@ -878,10 +878,10 @@ public class EmailService {
 	        properties.put("mail.smtp.ssl.enable", "true");
 	        properties.put("mail.smtp.auth", "true");
 
-	        String vmFileContent = "Hello User, <br><br> This is in relation with the dispute ref no.:"+disputeId+". "
-	        		+ "As mentioned in the above dispute, we cross checked the document and the corrected result can be found in the attached document. <br><br> "
-	        		+ "Sorry for the incon caused. <br><br> "
-	        		+ "Thanks, <br> Team University";
+	        String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+disputeId+". "
+	        		+ "As mentioned in the above dispute, we cross checked the document and the corrected result can be found in the attached document. \r\n "
+	        		+ "Sorry for the incon caused. \r\n "
+	        		+ "Thanks, \r\n Team University";
 	        
 	        String subject = "Verification Result";
 
