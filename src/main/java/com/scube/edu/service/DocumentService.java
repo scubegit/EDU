@@ -22,6 +22,8 @@ public interface DocumentService {
 	
 	
 	public BaseResponse UpdateDocument(DocumentMaster documentMaster) throws Exception;
+	
+	public BaseResponse deleteDocument(long id, HttpServletRequest request) throws Exception;
 	//Abhishek Added
 
 }

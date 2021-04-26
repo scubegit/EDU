@@ -19,6 +19,10 @@ public interface StreamService {
 		public Boolean addStream(StreamRequest streamRequest) throws Exception;
 
 		public BaseResponse updateStream(StreamMaster streamMaster) throws Exception;
+		
+		
+		public BaseResponse deleteStreamRequest(long id, HttpServletRequest request) throws Exception;
+		
 		//Abhishek Added
 		StreamMaster getNameById(Long streamId);
 

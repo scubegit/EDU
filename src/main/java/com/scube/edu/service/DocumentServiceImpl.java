@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.repository.CollegeRepository;
 import com.scube.edu.repository.DocumentRepository;
@@ -123,6 +124,35 @@ public class DocumentServiceImpl implements DocumentService{
 		return baseResponse;
 	}
 	
+	
+	
+	@Override
+	public BaseResponse deleteDocument(long id, HttpServletRequest request) throws Exception{
+		
+		baseResponse	= new BaseResponse();	
+		
+		
+		DocumentMaster docEntities  = documentRespository.findById(id);
+		
+		   if(docEntities == null) {
+			   
+				throw new Exception(" Invalid ID");
+			}else {
+							
+
+		docEntities  = documentRespository.deleteById(id);
+		
+		 
+		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		baseResponse.setRespData("success");
+			
+			
+	}
+		 
+		return baseResponse;
+	
+	}
 	
 	//Abhishek Added
 }

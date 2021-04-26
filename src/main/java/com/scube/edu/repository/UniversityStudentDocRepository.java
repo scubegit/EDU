@@ -22,5 +22,5 @@ public interface UniversityStudentDocRepository extends JpaRepository<University
 	 * @Query(nativeQuery = true, value= ":query") List<UniversityStudentDocument>
 	 * getStudData(@Param("query") String query) ;
 	 */
-	
+
 }

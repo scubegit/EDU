@@ -67,7 +67,7 @@ public class AssociateManagerController {
 	@PostMapping(value = "/reviewUploadStudentInfo" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<BaseResponse> reviewStudentData (@RequestParam MultipartFile excelfile,@RequestParam MultipartFile datafile) {
 		
-		System.out.println("*******AssociateManagerController saveStudentData********"+ datafile);
+		System.out.println("*******AssociateManagerController reviewUploadStudentInfo********"+ datafile);
 		
 		response = new BaseResponse();
 		
