@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,10 +84,21 @@ public class StreamController {
 		
 		try {
 
-			Boolean flag = streamServices.addStream(streamRequest);
-			
-			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			String flag = streamServices.addStream(streamRequest);
+			if(!flag.equals("success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+
+			}
 			response.setRespData(flag);
 			
 			return ResponseEntity.ok(response);
@@ -115,13 +128,23 @@ public class StreamController {
 		
 		try {
 			
-			response = streamServices.updateStream(streamMaster);
+			String resp = streamServices.updateStream(streamMaster);
+		
+			if(!resp.equals("success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
 
-			//Boolean flag = documentServices.addDocument(documentRequest);
-			
-			//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			//response.setRespData(flag);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+
+			}
+			response.setRespData(resp);
 			
 			return ResponseEntity.ok(response);
 			
@@ -138,6 +161,43 @@ public class StreamController {
 		}
 		
    }
+	
+	
+	
+
+	
+	@DeleteMapping("/deleteStreamById/{id}")
+	public ResponseEntity<Object> deleteStreamById(@PathVariable long id,  HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+
+			
+			response = streamServices.deleteStreamRequest(id, request); 
+			
+		/*
+		 * response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		 * response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		 * response.setRespData(response);
+		 */
+			
+			return ResponseEntity.ok(response);
+			
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+		
+	}
 	
 	//Abhishek Added
 	

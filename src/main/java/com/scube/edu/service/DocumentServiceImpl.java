@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.repository.CollegeRepository;
 import com.scube.edu.repository.DocumentRepository;
@@ -72,22 +74,27 @@ public class DocumentServiceImpl implements DocumentService{
 	//Abhishek Added
 	
 	@Override
-	public Boolean addDocument(DocumentAddRequest documentRequest) throws Exception {
+	public String addDocument(DocumentAddRequest documentRequest) throws Exception {
 		
-		
-		
+		String resp;
+		DocumentMaster docMasterResponse=documentRespository.findByDocumentName( documentRequest.getDocumentName());
+		if(docMasterResponse!=null)
+		{
+			resp="Document Name Already exist!";
+		}
+		else
+		{
 		DocumentMaster docMasterEntity  = new  DocumentMaster();
 		
 		docMasterEntity.setUniversityId(documentRequest.getUniversityId());//1
 		docMasterEntity.setDocumentName(documentRequest.getDocumentName());//Name Document
 		docMasterEntity.setCreateby(documentRequest.getCreated_by()); // Logged User Id 
-		docMasterEntity.setIsdeleted(documentRequest.getIs_deleted()); // By Default N	
+		docMasterEntity.setIsdeleted(documentRequest.getIs_deleted()); // By Default N
+	    documentRespository.save(docMasterEntity);
 	
-	     documentRespository.save(docMasterEntity);
-	
-		
-			
-		return true;
+	    resp="Success";
+		}
+		return resp;
 		
 	}
 	
@@ -95,34 +102,74 @@ public class DocumentServiceImpl implements DocumentService{
 	
 	
 	@Override
-	public BaseResponse UpdateDocument(DocumentMaster documentMaster) throws Exception {
+	public String UpdateDocument(DocumentMaster documentMaster) throws Exception {
+		
+		String resp = null;	
+		boolean flg;
+		DocumentMaster docResponse=documentRespository.findByDocumentName( documentMaster.getDocumentName());
+		if(docResponse!=null)
+		{
+			resp="Document Name Already exist!";
+			flg=true;
+		}
+		
+		else {
+			flg=false;
+		}
+		if(flg==false) {
+		
+			Optional<DocumentMaster> docEntities  = documentRespository.findById(documentMaster.getId());
+		
+		    if(docEntities == null) {
+			   
+				resp="Invalid Id";
+			  }
+		
+		    else
+		    {
+		    DocumentMaster docEntit = new DocumentMaster();
+		    
+		    docEntit.setId(documentMaster.getId());
+		    docEntit.setDocumentName(documentMaster.getDocumentName());
+		    docEntit.setUpdatedate(new Date());
+		
+		 documentRespository.save(docEntit);
+		 resp="Success";
+		    }
+		
+		}
+		return resp;
+	}
+	
+	
+	
+	@Override
+	public BaseResponse deleteDocument(long id, HttpServletRequest request) throws Exception{
 		
 		baseResponse	= new BaseResponse();	
-
-		Optional<DocumentMaster> docEntities  = documentRespository.findById(documentMaster.getId());
+		
+		
+		DocumentMaster docEntities  = documentRespository.findById(id);
 		
 		   if(docEntities == null) {
 			   
 				throw new Exception(" Invalid ID");
-			}
+			}else {
+							
+
+		docEntities  = documentRespository.deleteById(id);
 		
-		
-		DocumentMaster docEntit = docEntities.get();
-		
-		docEntit.setDocumentName(documentMaster.getDocumentName());
-		
-		
-		 documentRespository.save(docEntit);
-		
-		   
-	
+		 
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 		baseResponse.setRespData("success");
+			
+			
+	}
 		 
 		return baseResponse;
-	}
 	
+	}
 	
 	//Abhishek Added
 }

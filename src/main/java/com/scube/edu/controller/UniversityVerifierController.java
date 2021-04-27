@@ -41,7 +41,7 @@ public class UniversityVerifierController {
 		
 		    try {
 		    	List<UniversityVerifierResponse> list = universityVerifierService.getUniversityVerifierRequestList();
-					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			 		response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData(list);
 					

@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +25,9 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.service.DocumentService;
-import com.scube.edu.service.MasterService;
+
 import com.scube.edu.util.StringsUtils;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -80,10 +83,22 @@ public class DocumentController {
 		
 		try {
 
-			Boolean flag = documentServices.addDocument(documentRequest);
+			String flag = documentServices.addDocument(documentRequest);
 			
-			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			if (!flag.equals("Success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+
+			}
 			response.setRespData(flag);
 			
 			return ResponseEntity.ok(response);
@@ -114,13 +129,24 @@ public class DocumentController {
 		
 		try {
 			
-			response = documentServices.UpdateDocument(documentMaster);
+			String resp = documentServices.UpdateDocument(documentMaster);
 
-			//Boolean flag = documentServices.addDocument(documentRequest);
 			
-			//response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			//response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			//response.setRespData(flag);
+			if (!resp.equals("Success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+
+			}
+			response.setRespData(resp);
 			
 			return ResponseEntity.ok(response);
 			
@@ -137,6 +163,43 @@ public class DocumentController {
 		}
 		
    }
+	
+	
+	
+	
+	@DeleteMapping("/deleteDocumentById/{id}")
+	public ResponseEntity<Object> deleteDocumentById(@PathVariable long id,  HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+
+			
+			response =documentServices.deleteDocument(id, request); 
+			
+		/*
+		 * response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		 * response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		 * response.setRespData(response);
+		 */
+			
+			return ResponseEntity.ok(response);
+			
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+		
+	}
+	
 	
 	//Abhishek Added
 	

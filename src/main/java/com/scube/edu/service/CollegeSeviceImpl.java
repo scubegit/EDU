@@ -1,7 +1,7 @@
 package com.scube.edu.service;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,22 +57,34 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	//Abhishek Added
 	
 	@Override
-	public Boolean addCollege(CollegeAddRequest collegeRequest) throws Exception {
+	public String addCollege(CollegeAddRequest collegeRequest) throws Exception {
+		
+		String resp;
+		CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(collegeRequest.getCollegeName());
 		
 		
-		
-		CollegeMaster collegeMasterEntity  = new  CollegeMaster();
-		
-		collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());//1
-		collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());//Name Document
-		collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id 
-		collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N	
+		if(collegeEntities != null) {
+			resp = "College Name Already Exist!"; 
+			throw new Exception("College Name Already Exist");
 	
-	     collegeRespository.save(collegeMasterEntity);
-	
-		
 			
-		return true;
+		}
+		else {
+	
+			CollegeMaster collegeMasterEntity = new CollegeMaster();
+
+			collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());// 1
+			collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());// Name Document
+			collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id
+			collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N
+
+			collegeRespository.save(collegeMasterEntity);
+	     
+	     resp = "Success";
+	
+		}
+			
+		return resp;
 		
 	}
 	
@@ -80,33 +92,44 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	
 	
 	@Override
-	public BaseResponse UpdateCollege(CollegeMaster collegeMaster) throws Exception {
+	public String UpdateCollege(CollegeMaster collegeMaster) throws Exception {
 		
-		baseResponse	= new BaseResponse();	
+		
+		String resp = null;
+		boolean flg;
+		CollegeMaster response=collegeRespository.findByCollegeName(collegeMaster.getCollegeName());
 
+		if(response!=null){
+			resp="College Name Already exist!";
+			flg=true;
+		}
+		else {
+			flg=false;
+		}
+		
+		
+		if(flg==false) {
 		Optional<CollegeMaster> collegeEntities  = collegeRespository.findById(collegeMaster.getId());
 		
 		   if(collegeEntities == null) {
 			   
-				throw new Exception(" Invalid ID");
+				resp="Invalid Id";
 			}
 		
+		   else
+		   {
+		CollegeMaster collegeEntit = new CollegeMaster();
 		
-		CollegeMaster collegeEntit = collegeEntities.get();
-		
-		
+		collegeEntit.setId(collegeMaster.getId());
 		collegeEntit.setCollegeName(collegeMaster.getCollegeName());
+		collegeEntit.setUpdatedate(new Date());
 		
 		
 		collegeRespository.save(collegeEntit);
-		
-		   
-	
-		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-		baseResponse.setRespData("success");
-		 
-		return baseResponse;
+		resp="Success";
+		   }
+		}
+		return resp;
 	}
 
 
@@ -127,6 +150,36 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		return cresp;
 	}
+	
+	
+	@Override
+	public BaseResponse deleteClgRequest(long id, HttpServletRequest request) throws Exception{
+		
+		baseResponse	= new BaseResponse();	
+		
+		
+		CollegeMaster collegeEntities  = collegeRespository.findById(id);
+		
+		   if(collegeEntities == null) {
+			   
+				throw new Exception(" Invalid ID");
+			}else {
+							
+
+		 collegeEntities  = collegeRespository.deleteById(id);
+		
+		 
+		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		baseResponse.setRespData("success");
+			
+			
+	}
+		 
+		return baseResponse;
+	
+	}
+	
 	
 	
 	//Abhishek Added
