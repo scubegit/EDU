@@ -3,3 +3,5 @@
 *.class
 
 
+/target/classes/com/scube/edu/controller/DocumentController.class
+/target/classes/com/scube/edu/controller/DocumentController.class
