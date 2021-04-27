@@ -85,9 +85,20 @@ public class StreamController {
 		try {
 
 			String flag = streamServices.addStream(streamRequest);
-			
-			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			if(!flag.equals("success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+
+			}
 			response.setRespData(flag);
 			
 			return ResponseEntity.ok(response);
@@ -119,8 +130,20 @@ public class StreamController {
 			
 			String resp = streamServices.updateStream(streamMaster);
 		
-			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			if(!resp.equals("success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+
+			}
 			response.setRespData(resp);
 			
 			return ResponseEntity.ok(response);
