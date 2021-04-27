@@ -23,6 +23,7 @@ public interface UniversityStudentDocRepository extends JpaRepository<University
 
 	UniversityStudentDocument findByEnrollmentNo(String enrollmentNo);
 
+	
 	/*
 	 * @Query(nativeQuery = true, value= ":query") List<UniversityStudentDocument>
 	 * getStudData(@Param("query") String query) ;

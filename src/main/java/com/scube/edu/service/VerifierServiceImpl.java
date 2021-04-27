@@ -165,6 +165,7 @@ public class VerifierServiceImpl implements VerifierService{
 					 StudentVerificationDocsResponse resEntity = new StudentVerificationDocsResponse();
 					 
 					 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+				
 					 
 					 StreamMaster stream = streamService.getNameById(veriReq.getStreamId());
 					 

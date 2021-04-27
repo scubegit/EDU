@@ -881,8 +881,8 @@ public class EmailService {
 	        properties.put("mail.smtp.auth", "true");
 
 	        String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+disputeId+". "
-	        		+ "As mentioned in the above dispute, we cross checked the document and the corrected result can be found in the attached document. \r\n "
-	        		+ "Sorry for the incon caused. \r\n "
+	        		+ "As mentioned in the dispute, we cross checked the document and the corrected result can be found in the attached document. \r\n "
+	        		+ "Sorry for the inconvenience caused. \r\n "
 	        		+ "Thanks, \r\n Team University";
 	        
 	        String subject = "Verification Result";
