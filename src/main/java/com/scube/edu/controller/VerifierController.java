@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.request.StatusChangeRequest;
@@ -46,12 +47,12 @@ public class VerifierController {
 	 private FileStorageService fileStorageService;
 	
 	@GetMapping("/getVerifierRequestList")
-	public  ResponseEntity<Object> getVerifierRequestList() {
+	public  ResponseEntity<Object> getVerifierRequestList(@RequestParam long id) {
 		
 		response = new BaseResponse();
 		
 		    try {
-		    	List<VerificationResponse> list = verifierService.getVerifierRequestList();
+		    	List<VerificationResponse> list = verifierService.getVerifierRequestList(id);
 					// this list has FIFO mechanism for getting records for verifier (limit 5)
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

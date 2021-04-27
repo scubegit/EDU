@@ -100,8 +100,15 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		CollegeMaster response=collegeRespository.findByCollegeName(collegeMaster.getCollegeName());
 
 		if(response!=null){
+			logger.info("ids"+response.getId()+""+collegeMaster.getId());
+			if(response.getId()!=collegeMaster.getId())
+			{
 			resp="College Name Already exist!";
 			flg=true;
+			}
+			else {
+				flg=false;
+			}
 		}
 		else {
 			flg=false;
@@ -122,6 +129,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		collegeEntit.setId(collegeMaster.getId());
 		collegeEntit.setCollegeName(collegeMaster.getCollegeName());
+		collegeEntit.setUniversityId(collegeMaster.getUniversityId());
 		collegeEntit.setUpdatedate(new Date());
 		
 		

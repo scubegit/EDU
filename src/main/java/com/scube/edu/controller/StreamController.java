@@ -130,7 +130,7 @@ public class StreamController {
 			
 			String resp = streamServices.updateStream(streamMaster);
 		
-			if(!resp.equals("success"))
+			if(!resp.equals("Success"))
 			{
 				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
 

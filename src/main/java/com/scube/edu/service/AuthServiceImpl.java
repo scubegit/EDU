@@ -56,6 +56,9 @@ public class AuthServiceImpl implements AuthService{
 	JwtUtils jwtUtils;
 	
 	@Autowired
+	VerifierService verifierService;
+	
+	@Autowired
 	EmailService emailService;
 	
 	BaseResponse  baseResponse = null;
@@ -355,7 +358,28 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 
+	@Override
+	public String logout(long userid,String UserRole) throws Exception {
+		
+		logger.info("----------authController logout---------");
+		
+		int rowcnt;
+		String resp = null;
+		UserMasterEntity entities=userRepository.findById(userid);
+		if(entities!=null)
+		{
+		
+		if(entities.getRoleId()==3)
+		{
+			rowcnt=verifierService.updateListonLogout(userid);
+			resp="Succesfully updated " +rowcnt+ " records";
+			
+		}
+		
+		}
+		return resp;
+
 	
 	
 }
-
+}

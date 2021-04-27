@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.model.UserMasterEntity;
@@ -239,8 +240,38 @@ public class AuthController {
 		}
 		
 			
+		 
    }
+	
+	@PostMapping("/logout")
+	public ResponseEntity<Object> UserlogOut (@RequestParam long userId,@RequestParam String UserRole) {
 
+		logger.info("********************AuthController authenticateUser******************");
+		
+		response = new BaseResponse();
+		
+		try {
+			String res = authService.logout(userId,UserRole);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(res);
+			return ResponseEntity.ok(response);
+				
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.ok(response);
+			
+			
+		}
+		
+	}
 
 }
 
