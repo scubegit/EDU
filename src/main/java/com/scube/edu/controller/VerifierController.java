@@ -46,13 +46,13 @@ public class VerifierController {
 	@Autowired
 	 private FileStorageService fileStorageService;
 	
-	@GetMapping("/getVerifierRequestList")
-	public  ResponseEntity<Object> getVerifierRequestList(@RequestParam long id) {
+	@GetMapping("/getVerifierRequestList/{userid}")
+	public  ResponseEntity<Object> getVerifierRequestList(@RequestParam long userid) {
 		
 		response = new BaseResponse();
 		
 		    try {
-		    	List<VerificationResponse> list = verifierService.getVerifierRequestList(id);
+		    	List<VerificationResponse> list = verifierService.getVerifierRequestList(userid);
 					// this list has FIFO mechanism for getting records for verifier (limit 5)
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
