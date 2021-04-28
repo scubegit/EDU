@@ -47,7 +47,7 @@ public class VerifierController {
 	 private FileStorageService fileStorageService;
 	
 	@GetMapping("/getVerifierRequestList/{userid}")
-	public  ResponseEntity<Object> getVerifierRequestList(@RequestParam long userid) {
+	public  ResponseEntity<Object> getVerifierRequestList(@PathVariable long userid) {
 		
 		response = new BaseResponse();
 		

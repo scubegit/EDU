@@ -50,7 +50,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	
 	@Modifying(clearAutomatically = true)
 	@Transactional
-	@Query(value = "UPDATE verification_request set assigned_to=0 where assigned_to=(?1) and doc_status is null", nativeQuery = true)
+	@Query(value = "UPDATE verification_request set assigned_to=0 where assigned_to=(?1) and doc_status='Requested'", nativeQuery = true)
 	Integer updateList(long id);
 
 
