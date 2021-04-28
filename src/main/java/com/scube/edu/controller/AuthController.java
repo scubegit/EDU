@@ -243,7 +243,7 @@ public class AuthController {
 		 
    }
 	
-	@PostMapping("/logout")
+	@PostMapping("/logout/{userId}/{UserRole}")
 	public ResponseEntity<Object> UserlogOut (@RequestParam long userId,@RequestParam String UserRole) {
 
 		logger.info("********************AuthController authenticateUser******************");
