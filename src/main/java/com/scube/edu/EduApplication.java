@@ -22,6 +22,7 @@ import javafx.application.Application;
 
 public class EduApplication extends SpringBootServletInitializer  {
 
+	
 	/*
 	 * @Override protected SpringApplicationBuilder
 	 * configure(SpringApplicationBuilder application) { return

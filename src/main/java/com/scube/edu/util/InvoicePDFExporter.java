@@ -71,7 +71,7 @@ public class InvoicePDFExporter {
 		
 	   
 
-	public void export(HttpServletResponse response) {
+	public void export(HttpServletResponse response) throws Exception {
 		    
 	    	try {
 	    		
@@ -79,17 +79,18 @@ public class InvoicePDFExporter {
 	    	UserMasterEntity userMasterEntity  =  (UserMasterEntity) studentVerificationPdfData.get("userEntity");
 	    	
 	 
-	    	
+	    	logger.info("Entry point for pdf exporter--------->1");
 	    	
 	        Document document = new Document(PageSize.A4, 30, 30, 50, 50);
 	        
+	        logger.info("Entry point for pdf exporter--------->2");
 	       // document = new Document(PageSize.A4, 36, 36, 150, 80);
 	        
 	        document.setMargins(10, 10, 10, 10);
-	        
+	        logger.info("Entry point for pdf exporter--------->3");
 	        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
-	        
+	        logger.info("Entry point for pdf exporter--------->4");
 
             
 	       // HeaderFooterPageEvent  event = new HeaderFooterPageEvent ();
@@ -100,9 +101,13 @@ public class InvoicePDFExporter {
 	        headingFont15.setSize(15);
 	        headingFont15.setColor(Color.BLACK);
 	        
+	        logger.info("Entry point for pdf exporter--------->5");
+	        
 	        Font paraFont10 = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE);
 	        paraFont10.setSize(10);
 	        paraFont10.setColor(Color.BLACK);
+	        
+	        
 	        
 	        Font addrFont8 = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 	        addrFont8.setSize(8);
@@ -127,7 +132,7 @@ public class InvoicePDFExporter {
 	         Font font9b = FontFactory.getFont(FontFactory.TIMES_BOLD);
 	 	     font9b.setSize(11);
 	        
-	
+	 	    logger.info("Entry point for pdf exporter--------->6");
 
             HeaderFooter footer =    new HeaderFooter( new Phrase("System generated document does not require signature.", f10), false);
             footer.setAlignment(Element.ALIGN_CENTER);
@@ -142,18 +147,20 @@ public class InvoicePDFExporter {
             
             //document.setHeader();
             
-            
-//            EduCred_Logo.jpg
-               Image logo = Image.getInstance("EduCred_Logo.jpg");
+            logger.info("Entry point for pdf exporter--------->7");
+//            EduCred_Logo.jpg 
+               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
                logo.setAbsolutePosition(10, 300);
+               
+               logger.info("Entry point for pdf exporter--------->8");
                
                 Phrase phrase1 = new Phrase(logo.HEADER);
                HeaderFooter header =new HeaderFooter(phrase1,false);
                document.setHeader(header);
             
+               logger.info("Entry point for pdf exporter--------->9");
 			
-			
-			  Image img = Image.getInstance("EduCred_Logo.jpg"); //
+			  Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(100, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
@@ -164,11 +171,13 @@ public class InvoicePDFExporter {
 			  tab1.addCell(ImageCell1); 
 			  document.open();
 			  document.add(tab1);
-			
+			  logger.info("document.open()--------->10");
 			 
 			PdfPTable  recpttable = new PdfPTable(2);
 	        recpttable.setWidthPercentage(100);
 	        recpttable.setWidths(new int[]{50, 50});
+	        
+	        logger.info("Entry point for pdf exporter--------->11");
 	        
 	        PdfPCell recNocell = new PdfPCell(new Paragraph("Receipt No :"+applicationId+"",f10));
             // Po_NOcell.addElement(PoNo_ph);
@@ -195,6 +204,8 @@ public class InvoicePDFExporter {
              recpttable.addCell(recNocell);
              recpttable.addCell(datecell);
              
+             logger.info("Entry point for pdf exporter--------->12");
+             
              PdfPCell InvoiceCell =new PdfPCell(new Paragraph("\nINVOICE\n\n",headingFont15));
          
              InvoiceCell.setColspan(2);
@@ -205,7 +216,8 @@ public class InvoicePDFExporter {
              
              document.add(recpttable); 
             
-	         
+             logger.info("Entry point for pdf exporter--------->13");
+             
 	         PdfPTable  studentinfotable = new PdfPTable(2);
 	         studentinfotable.setWidthPercentage(100);
 	         studentinfotable.setWidths(new int[]{50, 50});
@@ -229,7 +241,7 @@ public class InvoicePDFExporter {
            studentinfotable.addCell(reqcell);
            studentinfotable.addCell(verifiercell);
            
-           
+           logger.info("Entry point for pdf exporter--------->14");
            
            
  	      PdfPCell studentinfoCell = new PdfPCell();
@@ -259,7 +271,7 @@ public class InvoicePDFExporter {
 	 	     document.add(Chunk.NEWLINE);
  	         document.add(studentinfotable);
            
-           
+ 	        logger.info("Entry point for pdf exporter--------->15");
            
  	      PdfPTable studentDocTable = new PdfPTable(8);
  	      studentDocTable.setWidthPercentage(100);
@@ -280,7 +292,7 @@ public class InvoicePDFExporter {
  	     
  	    for(int i=0 ;i<studentDocList.size();i++)
         {
- 	    	
+ 	    	logger.info("Inside for loop--------->16");
      	   VerificationResponse responseObj = studentDocList.get(i);
 //     	   responseObj.get
 //     	  int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -337,7 +349,7 @@ public class InvoicePDFExporter {
            
      }
         
- 	   
+ 	   logger.info("just outside for loop--------->17");
 		    
 		    PdfPCell totAMTCell =new PdfPCell(new Paragraph("Total Value:",font9b));
 		    totAMTCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -380,7 +392,7 @@ public class InvoicePDFExporter {
  	 
  	      document.add(studentDocTable);
  	     
- 	     
+ 	     logger.info("Entry point for pdf exporter--------->18");
  	     
  	     
  	    
@@ -407,13 +419,13 @@ public class InvoicePDFExporter {
 	      
  	  //   document.add(contentTable);
  	
-
+	       logger.info("just before document.close()--------->19");
 	        
 	       document.close();
 	        
 	    } catch (Exception ex) {
 	    	ex.printStackTrace();
-	        System.err.println(ex.getMessage());
+	    	throw new Exception(ex.getMessage());
 	    }
 	    
 		}

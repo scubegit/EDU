@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.BadElementException;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.ExceptionConverter;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
@@ -93,30 +95,33 @@ public class VerifierServiceImpl implements VerifierService{
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
 		 
-		 List<VerificationResponse> List = new ArrayList<>();
 		 
+		 List<VerificationResponse> List = new ArrayList<>();
+		 try {
 		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords();
+		 
+		 logger.info("------>1"+verReq.toString());
 		 
 		 for(VerificationRequest veriReq: verReq) {
 			 
-			
+			 logger.info("------>2");
 			 VerificationResponse resp = new VerificationResponse();
 			  
 			  PassingYearMaster year =
 			  yearOfPassService.getYearById(veriReq.getYearOfPassingId());
-			  
+			  logger.info("------>3"+ year.getYearOfPassing());
 			  System.out.println(veriReq.getDocumentId());
 			  
 			  DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
-			  
+			  logger.info("------>4"+ doc.getDocumentName());
 			  Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
 			  UserMasterEntity userr = user.get();
-			  
+			  logger.info("------>5"+ userr.getEmailId());
 			  Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId()); 
 			  StreamMaster str = stream.get();
-			  
+			  logger.info("------>6"+ str.getStreamName());
 			  RequestTypeResponse reqMaster = reqTypeService.getNameById(veriReq.getRequestType());
-			  
+			  logger.info("------>7"+ reqMaster.getRequestType());
 			  resp.setId(veriReq.getId());
 			  resp.setApplication_id(veriReq.getApplicationId());
 			  resp.setCollege_name_id(veriReq.getCollegeId());
@@ -138,7 +143,7 @@ public class VerifierServiceImpl implements VerifierService{
 			// Long a = (long) 1;
 			 veriReq.setAssignedTo(id);
 			 verificationReqRepository.save(veriReq);
-			 
+			 logger.info("------>saved--->8");
 			 // ON logout, change 'assignedTo' field back to 0
 			 
 			  List.add(resp);
@@ -147,6 +152,9 @@ public class VerifierServiceImpl implements VerifierService{
 		 System.out.println("----------"+ verReq);
 		 
 		 return List;
+		 }catch(Exception e) {
+			 throw new Exception(e.getMessage());
+		 }
 		 
 	 }
 
@@ -156,12 +164,13 @@ public class VerifierServiceImpl implements VerifierService{
 	public List<StudentVerificationDocsResponse> verifyDocument(Long id) {
 
 		List<StudentVerificationDocsResponse> verificationDataList = new ArrayList<StudentVerificationDocsResponse>();
+		logger.info("verifyDocument");
 		
-		
+		try {
 		 List<VerificationRequest> verifierData = verificationReqRepository.getDataByIdToVerify(id);
-				 
+				 logger.info("just outside for");
 		        for(VerificationRequest veriReq: verifierData) {
-					 
+		        	logger.info("just inside for");
 					 StudentVerificationDocsResponse resEntity = new StudentVerificationDocsResponse();
 					 
 					 PassingYearMaster year = yearOfPassService.getYearById(veriReq.getYearOfPassingId());
@@ -177,13 +186,21 @@ public class VerifierServiceImpl implements VerifierService{
 					 resEntity.setUpload_doc_path("/verifier/getimage/VR/"+veriReq.getId());
 					 resEntity.setYear(year.getYearOfPassing());
 					 
+					 logger.info("VR upload set just above");
+					 
 					 UniversityStudentDocument doc = stuDocService.getDocDataBySixFields(veriReq.getEnrollmentNumber(), 
 							 veriReq.getFirstName(), veriReq.getLastName(), stream.getStreamName(), year.getYearOfPassing()
 							 , college.getCollegeName());
 					 
+					 if(doc != null) {
 					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
+					 }
+					 logger.info("University upload path set just above");
 					 verificationDataList.add(resEntity);
 		        }
+		} catch(Exception e) {
+            throw new ExceptionConverter(e);
+      }
 				 
 		return verificationDataList;
 	}

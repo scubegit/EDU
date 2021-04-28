@@ -158,10 +158,10 @@ public class EmailService {
 		   String to = emailId;
 
 	        // Sender's email ID needs to be mentioned
-	        String from = "universityscube@gmail.com";
+	        String from = "verify@educred.co.in";
 
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "smtp.gmail.com";
+	        String host = "mail.educred.co.in";
 
 	        Properties properties = System.getProperties();
 		   
@@ -174,7 +174,7 @@ public class EmailService {
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 	            }
 
 	        });
@@ -193,7 +193,7 @@ public class EmailService {
 
 	            // Now set the actual messageHello User,
 	         
-                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://192.168.0.225:4200/emailVerification?emailId="+encodeEmail+"'><strong>localhost:8081/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
+                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://103.143.39.76:8080/University/emailVerification?emailId="+encodeEmail+"'><strong>103.143.39.76:8080/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
                                        " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
                 //  Send the complete message parts
@@ -229,10 +229,12 @@ public class EmailService {
 
 		   
 	        // Sender's email ID needs to be mentioned
-	        String from = "universityscube@gmail.com";
+//	        String from = "universityscube@gmail.com";
+	        String from = "verify@educred.co.in";
+
 
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "smtp.gmail.com";
+	        String host = "mail.educred.co.in";
 
 	        Properties properties = System.getProperties();
 		   
@@ -248,7 +250,7 @@ public class EmailService {
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 	            }
 
 	        });
@@ -359,7 +361,7 @@ public class EmailService {
         
         document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("EduCred_Logo.jpg");
+	    Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
 	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
@@ -784,10 +786,10 @@ public class EmailService {
 		   String to = emailId;
 
 	        // Sender's email ID needs to be mentioned
-	        String from = "universityscube@gmail.com";
+	        String from = "resolution@educred.co.in";
 
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "smtp.gmail.com";
+	        String host = "mail.educred.co.in";
 
 	        Properties properties = System.getProperties();
 		   
@@ -804,7 +806,7 @@ public class EmailService {
 
 	            protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 
 	            }
 
@@ -868,10 +870,10 @@ public class EmailService {
 		   String to = emailId;
 		   
 	        // Sender's email ID needs to be mentioned
-	        String from = "universityscube@gmail.com";
+	        String from = "resolution@educred.co.in";
 
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "smtp.gmail.com";
+	        String host = "mail.educred.co.in";
 
 	        Properties properties = System.getProperties();
 		   
@@ -890,7 +892,7 @@ public class EmailService {
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 	            }
 
 	        });
