@@ -89,7 +89,7 @@ public class VerifierServiceImpl implements VerifierService{
 		UserService userService;
 	 
 	 @Override
-	 public List<VerificationResponse> getVerifierRequestList() throws Exception {
+	 public List<VerificationResponse> getVerifierRequestList( long id) throws Exception {
 		 
 		 logger.info("********VerifierServiceImpl getVerifierRequestList********");
 		 
@@ -135,8 +135,8 @@ public class VerifierServiceImpl implements VerifierService{
 			 
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
-			 Long a = (long) 1;
-			 veriReq.setAssignedTo(a);
+			// Long a = (long) 1;
+			 veriReq.setAssignedTo(id);
 			 verificationReqRepository.save(veriReq);
 			 
 			 // ON logout, change 'assignedTo' field back to 0
@@ -217,6 +217,18 @@ public class VerifierServiceImpl implements VerifierService{
 				}
 		
 		return null;
+	}
+
+
+
+	@Override
+	public Integer updateListonLogout(long id) throws Exception {
+		System.out.println("******VerifierServiceImpl updateListonLogout******" );
+		logger.info("id"+id);
+		Integer rowcnt=verificationReqRepository.updateList(id);
+
+		logger.info("List"+rowcnt);
+		return rowcnt;
 	}
 
 	

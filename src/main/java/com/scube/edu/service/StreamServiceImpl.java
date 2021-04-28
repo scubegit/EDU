@@ -91,9 +91,16 @@ public class StreamServiceImpl  implements StreamService{
 			StreamMaster streamEntities  = streamRespository.findByStreamName(streamMaster.getStreamName());
 			
 			   if(streamEntities != null) {
-				   
+					logger.info("ids"+streamEntities.getId()+""+streamMaster.getId());
+
+				   if(streamEntities.getId()!=streamMaster.getId()) {
 					resp="Stream Already existed!";
 					flg=true;
+				   }
+				   else
+				   {
+					   flg=false;
+				   }
 				}
 			else
 			{
@@ -104,6 +111,7 @@ public class StreamServiceImpl  implements StreamService{
 			      if(streamEntit!=null) {
 				   StreamMaster entity=new StreamMaster(); 
 				   entity.setId(streamMaster.getId());
+				   entity.setUniversityId(streamMaster.getUniversityId());
 				   entity.setStreamName(streamMaster.getStreamName());
 				   entity.setUpdatedate(new Date());
 			       streamRespository.save(entity);

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
@@ -47,5 +48,10 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT * FROM verification_request where doc_status in ('Approved','SV_Approved','SV_Rejected')", nativeQuery = true)
 	List<VerificationRequest> findByStatusForUniversityMail();
 	
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	@Query(value = "UPDATE verification_request set assigned_to=0 where assigned_to=(?1) and doc_status is null", nativeQuery = true)
+	Integer updateList(long id);
+
 
 }

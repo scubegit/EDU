@@ -14,10 +14,12 @@ import com.scube.edu.response.VerificationResponse;
 
 public interface VerifierService {
 
-	public List<VerificationResponse> getVerifierRequestList() throws Exception;
+	public List<VerificationResponse> getVerifierRequestList(long id) throws Exception;
 
 	public List<StudentVerificationDocsResponse> verifyDocument(Long id);
 
 	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException;
+
+	public Integer  updateListonLogout (long id) throws Exception;
 
 }

@@ -27,6 +27,7 @@ public interface AuthService {
 
 	public boolean verifyEmail(String emailId) throws Exception;
 
+	public String logout (long userid,String UserRole) throws Exception;
 
 
 }

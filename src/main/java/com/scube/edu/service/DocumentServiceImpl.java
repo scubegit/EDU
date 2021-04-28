@@ -80,7 +80,9 @@ public class DocumentServiceImpl implements DocumentService{
 		DocumentMaster docMasterResponse=documentRespository.findByDocumentName( documentRequest.getDocumentName());
 		if(docMasterResponse!=null)
 		{
+			
 			resp="Document Name Already exist!";
+			
 		}
 		else
 		{
@@ -105,12 +107,21 @@ public class DocumentServiceImpl implements DocumentService{
 	public String UpdateDocument(DocumentMaster documentMaster) throws Exception {
 		
 		String resp = null;	
-		boolean flg;
+		boolean flg = false;
 		DocumentMaster docResponse=documentRespository.findByDocumentName( documentMaster.getDocumentName());
 		if(docResponse!=null)
-		{
+		{				
+			logger.info("ids"+docResponse.getId()+" "+documentMaster.getId());
+
+			if(docResponse.getId()!=documentMaster.getId())
+			{
+
 			resp="Document Name Already exist!";
 			flg=true;
+			}
+			else {
+				flg=false;
+			}
 		}
 		
 		else {
@@ -131,6 +142,7 @@ public class DocumentServiceImpl implements DocumentService{
 		    
 		    docEntit.setId(documentMaster.getId());
 		    docEntit.setDocumentName(documentMaster.getDocumentName());
+		    docEntit.setUniversityId(documentMaster.getUniversityId());
 		    docEntit.setUpdatedate(new Date());
 		
 		 documentRespository.save(docEntit);
