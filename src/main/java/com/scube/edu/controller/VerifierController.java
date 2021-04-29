@@ -82,8 +82,9 @@ public class VerifierController {
 		
 		response = new BaseResponse();
 		
+		logger.info("getVerifyDoc");
 		    try {
-		    	
+		    	logger.info("---getVerifyDoc");
 		    	List<StudentVerificationDocsResponse> list = verifierService.verifyDocument(id);
 
 		    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

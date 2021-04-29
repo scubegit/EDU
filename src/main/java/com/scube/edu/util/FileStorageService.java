@@ -51,7 +51,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -59,6 +60,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.controller.VerifierController;
 import com.scube.edu.exception.FileStorageException;
 import com.scube.edu.model.FileStorageProperties;
 import com.scube.edu.model.PassingYearMaster;
@@ -75,6 +77,7 @@ public class FileStorageService {
 	
 	private final String fileBaseLocation;
 
+	private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 	 
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
@@ -151,35 +154,42 @@ public class FileStorageService {
 	        		
 	        		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
 	        		VerificationRequest data = verifierData.get();
+	        		logger.info("doc.vollegename--->"+data.getEnrollmentNumber());
 	        		
 	        		fileName = data.getUploadDocumentPath();
 	        		
 	        		System.out.println("------------fileName--------------"+fileName);
-	        		
+	        		logger.info("VR------fileName----->"+ fileName);
 	        		
 	        	}else {
 	        		
 	        		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
+	        		logger.info("doc.vollegename--->"+doc.getCollegeName());
 	        		fileName = doc.getOriginalDOCuploadfilePath();
 	        		
 	        		System.out.println("--------InsideElse----fileName--------------"+fileName);
-	        		
+	        		logger.info("U------fileName----->"+ fileName);
 	        	}
 	        
 	        	
 	          this.fileStorageLocation = Paths.get(newPAth).toAbsolutePath().normalize();
-	        	
+	            logger.info("newPath"+ newPAth);
+	        	logger.info("fileStorageLocation"+ this.fileStorageLocation);
 	            System.out.println(this.fileStorageLocation);
 	            
 	            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-	            
+	            logger.info("filePath"+ filePath);
 	            System.out.println(filePath);
 	            System.out.println(filePath.toUri());
+//	            logger.info(filePath.toUri());
+	            
 	            
 	            Resource resource = new UrlResource(filePath.toUri());
 	            if(resource.exists()) {
+	            	logger.info("Inside IF(resource.exists)");
 	                return resource;
 	            } else {
+	            	logger.info("Inside else()");
 	                throw new Exception("File not found " + fileName);
 	            }
 	        } catch (Exception ex) {

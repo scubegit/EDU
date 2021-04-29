@@ -188,13 +188,17 @@ public class StudentController {
         String headerKey =  "Content-Disposition";
         String headerValue = "attachment; filename= "+applicationId+"_" + currentDate + ".pdf";
         response.setHeader(headerKey, headerValue);
-         
+        try {
         HashMap<Object, Object>   pdfData  = verificationService.getdatabyapplicationId( applicationId) ;
          
-        
+        logger.info("before export");
         InvoicePDFExporter exporter = new InvoicePDFExporter(pdfData,applicationId);
         
         exporter.export(response);
+        logger.info("after export"+ response.toString());
+        }catch(Exception e) {
+        	throw new Exception(e.getMessage());
+        }
          
     }
     

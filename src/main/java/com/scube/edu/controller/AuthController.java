@@ -74,7 +74,19 @@ public class AuthController {
 	@PostMapping("/signin")
 	public ResponseEntity<Object> authenticateUser(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 
-		logger.info("********************AuthController authenticateUser******************");
+		logger.info("********************AuthController authenticateUser0******************");
+		
+		logger.info("********************AuthController authenticateUser1******************");
+		logger.error("Message logged at ERROR level");
+		
+		logger.info("********************AuthController authenticateUser2******************");
+		logger.warn("Message logged at WARN level");
+		
+		logger.info("********************AuthController authenticateUser3******************");
+		logger.info("Message logged at INFO level");
+		
+		logger.info("********************AuthController authenticateUser4******************");
+		logger.debug("Message logged at DEBUG level");
 		
 		response = new BaseResponse();
 		
