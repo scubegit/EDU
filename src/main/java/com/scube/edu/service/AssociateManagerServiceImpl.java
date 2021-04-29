@@ -21,8 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.controller.MasterController;
+import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
+import com.scube.edu.repository.CollegeRepository;
+import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UniversityStudentDocRepository;
+import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.util.FileStorageService;
 
@@ -39,6 +45,14 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	
 	 @Autowired
 	 private FileStorageService fileStorageService;
+	 
+	 @Autowired
+	CollegeRepository collegeRespository;
+	 
+	 @Autowired
+		StreamRepository  streamRespository;
+	 @Autowired
+		YearOfPassingRepository yearOfPassingRespository;
 	
 	private XSSFWorkbook workbook;
 	
@@ -50,13 +64,27 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 UniversityStudentDocument docEntity =null;
 		 List<UniversityStudentDocument> rejectedData=new ArrayList<UniversityStudentDocument>();
 		 HashMap<String,List<UniversityStudentDocument>> datalist=new HashMap<String,List<UniversityStudentDocument>>();
+		
 		 for(UniversityStudentDocument Data:list) {
-			 			
-			 docEntity=universityStudentDocRepository.findByEnrollmentNo(Data.getEnrollmentNo());
-			
+			 
+			 			String enrollNo=Data.getEnrollmentNo();
+			 			String fnm=Data.getFirstName();
+			 			String lnm=Data.getLastName();
+			 			String strm=Data.getStream();
+			 			String clgnm=Data.getCollegeName();
+			 			Integer passyr=Data.getPassingYear();
+			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndFirstNameAndLastNameAndStreamAndCollegeNameAndPassingYear(enrollNo,fnm,lnm,strm,clgnm,passyr);
+			String reason = null;
 			 if(docEntity==null) {	
-				 UniversityStudentDocument studentData=new UniversityStudentDocument();
-				 studentData.setFirstName(Data.getFirstName());
+				
+				CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(Data.getCollegeName());
+				StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
+				PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Integer.toString(Data.getPassingYear()));
+				
+				if(collegeEntities!=null && stream!=null && passingyr!=null) {
+					
+				UniversityStudentDocument studentData=new UniversityStudentDocument();
+				studentData.setFirstName(Data.getFirstName());
 		        studentData.setLastName(Data.getLastName());
 		        studentData.setCollegeName(Data.getCollegeName());	
 		        studentData.setStream(Data.getStream());	
@@ -64,9 +92,54 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setPassingYear(Data.getPassingYear());	
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
 		        studentDataList.add(studentData);    
+				}
+				
+					 else
+					 {	
+						 UniversityStudentDocument studentData=new UniversityStudentDocument();
+						 if(collegeEntities==null && stream==null && passingyr==null) {
+						 reason="Invalid College Name, Stream and Year of Passing";
+						 }
+						 else if(collegeEntities==null && stream==null)
+						 {
+							 reason="Invalid College Name and Stream";
+						 }
+						 else if(collegeEntities==null && passingyr==null)
+						 {
+							 reason="Invalid College Name and Year of Passing";
+						 }
+						 else if(stream==null && passingyr==null)
+						 {
+							 reason="Invalid Year of Passing and Stream";
+						 }
+						 else if(collegeEntities==null)
+						 {
+							 reason="Invalid College Name";
+
+						 }
+						 else if(stream==null)
+				   		 {
+							 reason="Invalid Stream";
+
+						 }
+						 else if(passingyr==null)
+						 {
+							 reason="Invalid Year of Passing";
+						 }
+					    studentData.setFirstName(Data.getFirstName());
+				        studentData.setLastName(Data.getLastName());
+				        studentData.setCollegeName(Data.getCollegeName());	
+				        studentData.setStream(Data.getStream());	
+				        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+				        studentData.setPassingYear(Data.getPassingYear());	
+				        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+				        studentData.setReason(reason);
+				        rejectedData.add(studentData);				
+					 }
 			 }
 			 else
 			 {	 UniversityStudentDocument studentData=new UniversityStudentDocument();
+			 	reason="Duplicate record";
 			     studentData.setFirstName(Data.getFirstName());
 		        studentData.setLastName(Data.getLastName());
 		        studentData.setCollegeName(Data.getCollegeName());	
@@ -74,8 +147,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        studentData.setPassingYear(Data.getPassingYear());	
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
-		        //studentDataList.add(studentData);   			
-				rejectedData.add(studentData);				
+		        studentData.setReason(reason);
+
+		        rejectedData.add(studentData);				
 			 }
 			
 		 }
@@ -90,6 +164,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	@Override
 	public List<UniversityStudentDocument> ReviewStudentData(MultipartFile excelfile, MultipartFile datafile) throws IOException {
 		
+		logger.info("********AssociateManagerServiceImpl ReviewStudentData********");
+
 		 workbook = new XSSFWorkbook(excelfile.getInputStream());
 		 XSSFSheet worksheet = workbook.getSheetAt(0);
 		 List<UniversityStudentDocument> studentDataReviewList = new ArrayList<UniversityStudentDocument>();
@@ -106,7 +182,18 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setLastName(row.getCell(1).getStringCellValue());
 		        studentData.setCollegeName(row.getCell(2).getStringCellValue());	
 		        studentData.setStream(row.getCell(3).getStringCellValue());	
+		        int cellType=row.getCell(4).getCellType();
+		        
+		 logger.info("celltype "+cellType);
+		 if(cellType==1)
+		 {
 		        studentData.setEnrollmentNo(row.getCell(4).getStringCellValue());
+		 }
+		 else
+		 {
+		        Integer enrollNo=(int) row.getCell(4).getNumericCellValue();		        
+		        studentData.setEnrollmentNo(enrollNo.toString());			 
+		 }
 		        studentData.setPassingYear((int) row.getCell(5).getNumericCellValue());	
 		        studentData.setOriginalDOCuploadfilePath(filePath);
 		        studentDataReviewList.add(studentData);    

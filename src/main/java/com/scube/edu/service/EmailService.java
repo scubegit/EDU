@@ -158,7 +158,11 @@ public class EmailService {
 		   String to = emailId;
 
 	        // Sender's email ID needs to be mentioned
+<<<<<<< Updated upstream
 	        String from = "verify@educred.co.in";
+=======
+	        String from = "support@educred.co.in";
+>>>>>>> Stashed changes
 
 	        // Assuming you are sending email from through gmails smtp
 	        String host = "mail.educred.co.in";
@@ -174,7 +178,11 @@ public class EmailService {
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
+<<<<<<< Updated upstream
 	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+=======
+	                return new PasswordAuthentication("support@educred.co.in", "EduCred$2021$");
+>>>>>>> Stashed changes
 	            }
 
 	        });

@@ -27,114 +27,116 @@ import com.scube.edu.response.UniversityVerifierResponse;
 import com.scube.edu.response.VerificationResponse;
 
 @Service
-public class UniversityVerifierServiceImpl implements UniversityVerifierService{
-private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDocServiceImpl.class);
-	
-	BaseResponse	baseResponse	= null;
-	
+public class UniversityVerifierServiceImpl implements UniversityVerifierService {
+	private static final Logger logger = LoggerFactory.getLogger(UniversityStudentDocServiceImpl.class);
+
+	BaseResponse baseResponse = null;
+
 	@Autowired
 	UniversityVerifierRepository universityVerifierRepository;
-	
-	
+
 	@Autowired
 	VerificationRequestRepository verificationReqRepository;
-	
-	@Autowired 
+
+	@Autowired
 	StreamService streamService;
-	 
-	@Autowired 
+
+	@Autowired
 	RequestTypeService reqTypeService;
-	
+
 	@Autowired
 	YearOfPassingService yearOfPassService;
-	
+
 	@Autowired
-	DocumentService	documentService;
-	
+	DocumentService documentService;
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	EmailService emailService;
-	
+
 	@Autowired
 	UserService userService;
+
 	@Override
 	public List<UniversityVerifierResponse> getUniversityVerifierRequestList() throws Exception {
-	logger.info("*******UniversityVerifierServiceImpl getUniversityVerifierRequestList*******");
-		
-	
-	List<UniversityVerifierResponse> responseList = new ArrayList<>();
-	
-	List<VerificationRequest> list = universityVerifierRepository.findByStatus();
-	logger.info("uvlist"+list);
-	for(VerificationRequest req: list) {
-		
-		UniversityVerifierResponse resp = new UniversityVerifierResponse();
-		
-		PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
-		
-		DocumentMaster doc = documentService.getNameById(req.getDocumentId());
-		
-		StreamMaster stream = streamService.getNameById(req.getStreamId());
-				
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
-		//Date date=new Date();
-		
-		Date closedDate=req.getClosedDate();
-        Date date = new Date();
+		logger.info("*******UniversityVerifierServiceImpl getUniversityVerifierRequestList*******");
 
-        long difference_In_Time =  date.getTime() - closedDate.getTime() ;
-        logger.info("time"+difference_In_Time);
+		List<UniversityVerifierResponse> responseList = new ArrayList<>();
 
-		long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
-		
-		
-			resp.setNoOfDays(difference_In_Days);
-		
-		if(doc!=null) {
-		resp.setStatus(req.getDocStatus());
-		resp.setDocName(doc.getDocumentName()); 
+		List<VerificationRequest> list = universityVerifierRepository.findByStatus();
+		logger.info("uvlist" + list);
+		for (VerificationRequest req : list) {
+
+			UniversityVerifierResponse resp = new UniversityVerifierResponse();
+
+			PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
+
+			DocumentMaster doc = documentService.getNameById(req.getDocumentId());
+
+			StreamMaster stream = streamService.getNameById(req.getStreamId());
+
+			// Date date=new Date();
+			Date closedDate;
+
+			Integer days = null;
+			Date date = new Date();
+			if (req.getClosedDate() != null) {
+				closedDate = req.getClosedDate();
+				logger.info("date" + closedDate);
+				long difference_In_Time = date.getTime() - closedDate.getTime();
+				logger.info("time" + difference_In_Time);
+				long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
+				days = (int) (100 - difference_In_Days);
+			}
+			if (days != null) {
+				resp.setNoOfDays(days);
+			}
+
+			if (doc != null) {
+				resp.setStatus(req.getDocStatus());
+				resp.setDocName(doc.getDocumentName());
+			}
+			if (year != null) {
+				resp.setYearofPassing(year.getYearOfPassing());
+			}
+			if (stream != null) {
+				resp.setStream(stream.getStreamName());
+			}
+			resp.setFullName(req.getFirstName() + " " + req.getLastName());
+			resp.setId(req.getId());
+			resp.setFilePath(req.getUploadDocumentPath());
+
+			responseList.add(resp);
+
 		}
-		if(year!=null) {
-		resp.setYearofPassing(year.getYearOfPassing());	
-		}
-		if(stream!=null) {
-		resp.setStream(stream.getStreamName());
-		}
-		resp.setFullName(req.getFirstName() + " " + req.getLastName());
-		resp.setId(req.getId());
-		resp.setFilePath(req.getUploadDocumentPath());
-		
-		responseList.add(resp);
-		
-	}		
 		return responseList;
 	}
+
 	@Override
 	public List<StudentVerificationDocsResponse> setStatusForUniversityDocument(
 			StatusChangeRequest statusChangeRequest) {
-		
+
 		logger.info("*******UniversityVerifierServiceImpl setStatusForUniversityDocument*******");
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
-	    Date date = new Date();  
-	    String currentDate = formatter.format(date); 
-	    
-	    VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
-	    
-	    System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
-	    
-	    entt.setDocStatus(statusChangeRequest.getStatus());
+
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		String currentDate = formatter.format(date);
+
+		VerificationRequest entt = verificationReqRepository.findById(statusChangeRequest.getId());
+
+		System.out.println("------------" + entt.getDocStatus() + entt.getApplicationId());
+
+		entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
-	    if(statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
-		entt.setRemark(entt.getRemark()+" UN_"+currentDate+"-"+statusChangeRequest.getRemark());
-	    }
-		
+		if (statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
+			entt.setRemark(entt.getRemark() + " UN_" + currentDate + "-" + statusChangeRequest.getRemark());
+		}
+
 		verificationReqRepository.save(entt);
-		
+
 		return null;
 	}
-	
 
 }

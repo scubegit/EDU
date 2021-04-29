@@ -53,6 +53,9 @@ public class UniversityStudentDocument {
 	//	@Size(max = 100)
 		@Column(name = "passingYear")
 		private Integer passingYear;
+		
+		@Size(max = 100)
+		private String reason;
 
 
 

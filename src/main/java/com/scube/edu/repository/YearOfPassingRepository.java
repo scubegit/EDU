@@ -10,6 +10,8 @@ import com.scube.edu.model.PassingYearMaster;
 @Repository
 public interface YearOfPassingRepository extends JpaRepository<PassingYearMaster, Long> {
 	
+	PassingYearMaster  findByYearOfPassing(String yrofpass);
+	
 	
 
 }
