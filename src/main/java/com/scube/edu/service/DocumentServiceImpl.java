@@ -131,6 +131,7 @@ public class DocumentServiceImpl implements DocumentService{
 		    
 		    docEntit.setId(documentMaster.getId());
 		    docEntit.setDocumentName(documentMaster.getDocumentName());
+		    docEntit.setUniversityId(documentMaster.getUniversityId());
 		    docEntit.setUpdatedate(new Date());		
 		 documentRespository.save(docEntit);
 		 resp="Success";
