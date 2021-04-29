@@ -252,10 +252,11 @@ public class AuthController {
 		
 		try {
 			String res = authService.logout(userId,UserRole);
-			
+			logger.info("********************data******************"+userId+ "" +UserRole);
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 			response.setRespData(res);
+			logger.info("********************OK******************");
 			return ResponseEntity.ok(response);
 				
 		}catch (Exception e) {
