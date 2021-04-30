@@ -92,7 +92,12 @@ public class DisputeServiceImpl implements DisputeService{
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
 				
-				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+				try {
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				vrr.setDocStatus("SVD_Approved");
 				verificationReqRepository.save(vrr);
@@ -121,7 +126,12 @@ public class DisputeServiceImpl implements DisputeService{
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
 				
-				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+				try {
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				vrr.setDocStatus("SVD_Rejected");
 				verificationReqRepository.save(vrr);

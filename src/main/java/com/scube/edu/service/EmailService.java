@@ -15,6 +15,8 @@ import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -27,6 +29,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -55,6 +59,7 @@ import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.response.UserResponse;
+import com.scube.edu.util.FileStorageService;
 
 @Service
 public class EmailService {
@@ -75,17 +80,23 @@ public class EmailService {
 	
 	@Autowired
 	DocumentService	documentService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 	   
 	   void sendEmail(String emailId, String encodeEmail) throws MessagingException {
 		   
 
 		   String to = emailId;
+		   
+		   logger.info("-------->1");
 
 	        // Sender's email ID needs to be mentioned
-	        String from = "universityscube@gmail.com";
+//	        String from = "universityscube@gmail.com";
+		   String from = "verify@educred.co.in";
 
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "smtp.gmail.com";
+//	        String host = "smtp.gmail.com";
+		   String host = "mail.educred.co.in";
 
 	        Properties properties = System.getProperties();
 		   
@@ -102,12 +113,13 @@ public class EmailService {
 
 	            protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	            	return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 
 	            }
 
 	        });
-
+	        logger.info("------>2");
 	        // Used to debug SMTP issues
 	        session.setDebug(true);
 
@@ -126,9 +138,11 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://192.168.0.225:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
-                                      "<br><br><br> Thanks,<br>Team University";
-
+                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://103.143.39.76:8080/University/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+                "<br><br><br> Thanks,<br>Team University";
+//                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+//                        "<br><br><br> Thanks,<br>Team University";
+                logger.info("------>3");
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");
 
@@ -200,6 +214,8 @@ public class EmailService {
                 String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://103.143.39.76:8080/University/emailVerification?emailId="+encodeEmail+"'><strong>103.143.39.76:8080/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
                                        " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
+
+                
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");
 
@@ -216,7 +232,7 @@ public class EmailService {
 	   }
 	  
 	  
-	  public void sendStatusMail(String emailId, Long id, String status) throws MessagingException, BadElementException, IOException {
+	  public void sendStatusMail(String emailId, Long id, String status) throws Exception {
 		  
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 		  
@@ -231,14 +247,17 @@ public class EmailService {
 		   
 		   Long Id = id;
 
+		   logger.info("email Ids----->"+ to + Id );
 		   
 	        // Sender's email ID needs to be mentioned
 //	        String from = "universityscube@gmail.com";
 	        String from = "verify@educred.co.in";
-
+//	        String from = "resolution@educred.co.in";
 
 	        // Assuming you are sending email from through gmails smtp
 	        String host = "mail.educred.co.in";
+//	        String host = "smtp.gmail.com";
+	        
 
 	        Properties properties = System.getProperties();
 		   
@@ -250,11 +269,14 @@ public class EmailService {
 	        String vmFileContent = "Hello User, Your record has been verified by MU. Please find the PDF with verification result and details attached below.";
 	        
 	        String subject = "Verification Result";
-
+	        logger.info("subject of mail----->"+ subject);
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
 	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+//	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+	                
 	            }
 
 	        });
@@ -273,14 +295,14 @@ public class EmailService {
 	            textBodyPart.setText(vmFileContent);
                
                outputStream = new ByteArrayOutputStream();
-               
+               logger.info("check if approved/rejected----->"+ status);
                if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")) {
-            	   
+            	   logger.info("writeApprovalPdf----->");
                writeApprovalPdf(outputStream, Id);
                
                }
                if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")) {
-            	   
+            	   logger.info("writeRejectionPdf----->");
             	   writeRejectionPdf(outputStream , id);
             	   
                }
@@ -299,6 +321,18 @@ public class EmailService {
                pdfBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
                
                
+             Message message = new MimeMessage(session);
+             BodyPart messageBodyPart = new MimeBodyPart();
+             Multipart multipart = new MimeMultipart();
+             message.setFrom(new InternetAddress(from));
+             message.setRecipients(Message.RecipientType.TO,
+                     InternetAddress.parse(to));
+             messageBodyPart = new MimeBodyPart();
+             messageBodyPart.setDataHandler(new DataHandler(dataSource));
+             messageBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
+             multipart.addBodyPart(textBodyPart);
+             multipart.addBodyPart(messageBodyPart);
+             message.setContent(multipart);
                
                
                //create the sender/recipient addresses
@@ -308,7 +342,7 @@ public class EmailService {
                //construct the mime message
 //               MimeMessage mimeMessage = new MimeMessage(session);
                mimeMessage.setSender(iaSender);
-               mimeMessage.setSubject(subject);
+               message.setSubject(subject);
                mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
                mimeMessage.setContent(mimeMultipart);
 
@@ -317,7 +351,7 @@ public class EmailService {
                
 
 	            System.out.println("sending...");
-	            Transport.send(mimeMessage);
+	            Transport.send(message);
 //	            Transport.send(message);
 	            System.out.println("Sent message successfully....");
 	            
@@ -332,9 +366,10 @@ public class EmailService {
 
 
 
-	private void writeRejectionPdf(ByteArrayOutputStream outputStream, Long id) throws BadElementException, IOException {
+	private void writeRejectionPdf(ByteArrayOutputStream outputStream, Long id) throws Exception {
 		System.out.println("******EmailServiceImpl writeRejectionPdf*******");
 		
+		try {
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
 		
@@ -366,6 +401,7 @@ public class EmailService {
         document.open();
 //	    EduCred_Logo.jpg
 	    Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+//	    Image img = Image.getInstance("EduCred_Logo.jpg");
 	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
@@ -511,6 +547,9 @@ public class EmailService {
 
 		    
 		    document.close();
+		}catch(Exception e) {
+			throw new Exception (e.getMessage());
+		}
 		
 	}
 
@@ -518,11 +557,13 @@ public class EmailService {
 
 
 
-	private void writeApprovalPdf(OutputStream outputStream, Long id) throws BadElementException, IOException {
+	private void writeApprovalPdf(OutputStream outputStream, Long id) throws Exception {
 		
 		System.out.println("******EmailServiceImpl writeApprovalPdf*******");
 		
 		System.out.println("--------------"+java.time.LocalDate.now());   
+		
+		try {
 		
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
@@ -554,11 +595,12 @@ public class EmailService {
 		
 		
 		// left, right, top, bottom
-		
+		logger.info("headerFooter set here--->just before document.open()");
 	    
 	    document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("EduCred_Logo.jpg");
+	    Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+//	    Image img = Image.getInstance("EduCred_Logo.jpg");
 	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
 	    img.setAlignment(20);
@@ -610,6 +652,7 @@ public class EmailService {
 //	    		+ "below mentioned candidate received along with your letter have been duly verified \r"
 //	    		+ "and found correct.");
 //	    document.add(para);
+	    logger.info("greeting set below here--->");
 	    
 	    Paragraph greeting = new Paragraph();
 	    greeting.setFont(headAddrFont11);
@@ -647,7 +690,7 @@ public class EmailService {
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
-	    
+	    logger.info("record values set here--->");
 	    	UserResponse ume = userService.getUserInfoById(vr.getUserId());
 	    	
 	    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -674,7 +717,7 @@ public class EmailService {
 
 	    document.add(detailsTable);
 	    
-	    
+	    logger.info("detail table added--->");
 	    //Add footer of PDF here
 	    
 	    Paragraph footer1 = new Paragraph();
@@ -702,9 +745,12 @@ public class EmailService {
 //        footer.setAlignment(Element.ALIGN_CENTER);
 ////        footer.setBorder(Rectangle.NO_BORDER);
 //        document.setFooter(footer);
-
+	    logger.info("before document.close() here--->");
 	    
 	    document.close();
+	}catch(Exception e) {
+		throw new Exception(e.getMessage());
+	}
 		
 	}
 	
@@ -716,10 +762,12 @@ public class EmailService {
 		   
 
 	        // Sender's email ID needs to be mentioned
-	        String from = "universityscube@gmail.com";
-
+	        String from = "resolution@educred.co.in";
+//		   String from = "universityscube@gmail.com";
+		   
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "smtp.gmail.com";
+	        String host = "mail.educred.co.in";
+//	        String host = "smtp.gmail.com";
 
 	        Properties properties = System.getProperties();
 		   
@@ -736,7 +784,8 @@ public class EmailService {
 
 	            protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+//	            	return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 
 	            }
 
@@ -790,10 +839,11 @@ public class EmailService {
 		   String to = emailId;
 
 	        // Sender's email ID needs to be mentioned
-	        String from = "resolution@educred.co.in";
-
+//	        String from = "resolution@educred.co.in";
+		    String from = "universityscube@gmail.com";
 	        // Assuming you are sending email from through gmails smtp
-	        String host = "mail.educred.co.in";
+//	        String host = "mail.educred.co.in";
+		    String host = "smtp.gmail.com";
 
 	        Properties properties = System.getProperties();
 		   
@@ -810,8 +860,8 @@ public class EmailService {
 
 	            protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
-
+//	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+	            	return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 	            }
 
 	        });
@@ -858,7 +908,7 @@ public class EmailService {
 	    }
 	
 	
-	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId) throws MessagingException, BadElementException, IOException {
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId) throws Exception {
 		  
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 		  	
@@ -875,10 +925,10 @@ public class EmailService {
 		   
 	        // Sender's email ID needs to be mentioned
 	        String from = "resolution@educred.co.in";
-
+//		    String from = "universityscube@gmail.com";
 	        // Assuming you are sending email from through gmails smtp
 	        String host = "mail.educred.co.in";
-
+//	        String host = "smtp.gmail.com";
 	        Properties properties = System.getProperties();
 		   
 		    properties.put("mail.smtp.host", host);
@@ -897,6 +947,7 @@ public class EmailService {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
 
 	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 	            }
 
 	        });
@@ -936,6 +987,19 @@ public class EmailService {
             pdfBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
             
             
+            Message message = new MimeMessage(session);
+            BodyPart messageBodyPart = new MimeBodyPart();
+            Multipart multipart = new MimeMultipart();
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to));
+            messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setDataHandler(new DataHandler(dataSource));
+            messageBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
+            multipart.addBodyPart(textBodyPart);
+            multipart.addBodyPart(messageBodyPart);
+            message.setContent(multipart);
+            message.setSubject(subject);
             
             
             //create the sender/recipient addresses
@@ -954,7 +1018,7 @@ public class EmailService {
             
 
 	            System.out.println("sending...");
-	            Transport.send(mimeMessage);
+	            Transport.send(message);
 //	            Transport.send(message);
 	            System.out.println("Sent message successfully....");
 	            

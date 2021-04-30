@@ -208,7 +208,7 @@ public class VerifierServiceImpl implements VerifierService{
 
 
 	@Override
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException {
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws Exception {
 		
 			System.out.println("******VerifierServiceImpl setStatusForVerifierDocument******" +statusChangeRequest.getRemark());
 			
@@ -222,6 +222,7 @@ public class VerifierServiceImpl implements VerifierService{
 			
 			entt.setDocStatus(statusChangeRequest.getStatus());
 			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
+			entt.setClosedDate(date);
 			entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
 			verificationReqRepository.save(entt);
 			

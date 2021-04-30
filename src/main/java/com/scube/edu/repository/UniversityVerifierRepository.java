@@ -10,7 +10,7 @@ import com.scube.edu.model.VerificationRequest;
 
 @Repository
 public interface UniversityVerifierRepository extends JpaRepository<VerificationRequest, Long>{
-	@Query(value = "SELECT * FROM verification_request where doc_status in ('Rejected', 'Approved','SV_Approved','SV_Rejected')" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status in ('Approved','SV_Approved','SV_Rejected')" , nativeQuery = true)
 	List<VerificationRequest> findByStatus();
 
 }

@@ -35,7 +35,7 @@ public class sendRecordOverdueMail {
 	
 	@Scheduled(cron = "0 0 0 * * *")	
 	//@Scheduled(cron = "*/60 * * * * *")
-	public void removeUnverifiedUser() throws BadElementException, MessagingException, IOException {
+	public void removeUnverifiedUser() throws Exception {
 		
 		logger.info("send mail if 7 days have passed after Verifier status change");
 		
@@ -52,7 +52,7 @@ public class sendRecordOverdueMail {
 			
 			logger.info(difference_In_Time +" "+difference_In_Days);
 			
-			if(difference_In_Days >= 7) {
+			if(difference_In_Days >= 100) {
 				
 				long userId = verReq.getUserId();
 				UserMasterEntity ume = userRepository.findById(userId);
