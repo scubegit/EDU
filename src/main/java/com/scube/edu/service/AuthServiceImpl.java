@@ -157,15 +157,21 @@ public class AuthServiceImpl implements AuthService{
 		 userMasterEntity.setContactPersonName(userAddRequest.getContactPersonName());
 		 userMasterEntity.setContactPersonPhone(userAddRequest.getContactPersonPhoneNo());
 		 
-		 
-		 userMasterEntity.setFirstName(userAddRequest.getFirstName());
+		 if(userAddRequest.getFirstName() != null) {
+			 userMasterEntity.setFirstName(userAddRequest.getFirstName());
+		 }else {
+			 userMasterEntity.setFirstName(userAddRequest.getContactPersonName());
+		 }
 		 userMasterEntity.setLastName(userAddRequest.getLastName());
 		 
 //		 if(userAddRequest.getRoleId() == 1) {
 			 userMasterEntity.setEmailId(userAddRequest.getEmailId());  
 //		 }
-
-		 userMasterEntity.setPhoneNo(userAddRequest.getPhoneNumber());
+		 if(userAddRequest.getPhoneNumber() != null) {
+			 userMasterEntity.setPhoneNo(userAddRequest.getPhoneNumber());
+		 }else {
+			 userMasterEntity.setPhoneNo(userAddRequest.getContactPersonPhoneNo());
+		 }
 		 userMasterEntity.setPassword(encoder.encode(userAddRequest.getPassword()));
 		 userMasterEntity.setEmailVerificationStatus("N");
 		 userMasterEntity.setUniversityId(userAddRequest.getUniversityId());

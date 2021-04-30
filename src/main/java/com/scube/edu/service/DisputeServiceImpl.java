@@ -85,7 +85,8 @@ public class DisputeServiceImpl implements DisputeService{
 		Optional<VerificationRequest> vr = verificationReqRepository.findById(rdd.getVerificationId());
 		VerificationRequest vrr = vr.get();
 		
-		if(vrr.getDocStatus().equalsIgnoreCase("SV_Rejected")) {
+		if(vrr.getDocStatus().equalsIgnoreCase("UN_Rejected") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Rejected")) { 
+				 
 //			|| verr.getDocStatus().equalsIgnoreCase("UN_Rejected")
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				
@@ -119,7 +120,7 @@ public class DisputeServiceImpl implements DisputeService{
 		
 		}
 		
-		if(vrr.getDocStatus().equalsIgnoreCase("SV_Approved") || vrr.getDocStatus().equalsIgnoreCase("Approved")) {
+		if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved") ) {
 //			|| verr.getDocStatus().equalsIgnoreCase("UN_Approved")
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				

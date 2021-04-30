@@ -62,7 +62,11 @@ public class UserServiceImpl implements UserService {
 			user.setCompany_name(entt.getCompanyName());
 			user.setContact_person_phone(entt.getContactPersonPhone());
 			user.setCompany_email(entt.getCompanyEmailId());
-			user.setName(entt.getFirstName() +" " + entt.getLastName());
+			if(entt.getLastName() != null) {
+				user.setName(entt.getFirstName() +" " + entt.getLastName());
+			}else {
+				user.setName(entt.getFirstName());
+			}
 			user.setContact_person_name(entt.getContactPersonName());
 			user.setFirst_name(entt.getFirstName());
 			user.setLast_name(entt.getLastName());

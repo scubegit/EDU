@@ -134,6 +134,8 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		Date date = new Date();
 		String currentDate = formatter.format(date);
 
+		Long roleid = Long.parseLong(statusChangeRequest.getRoleid());
+		
 		VerificationRequest entt = verificationReqRepository.findById(statusChangeRequest.getId());
 
 		System.out.println("------------" + entt.getDocStatus() + entt.getApplicationId());
@@ -150,7 +152,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 				statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
 			
 			UserResponse ume = userService.getUserInfoById(entt.getUserId());
-			CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(statusChangeRequest.getVerifiedby());
+			CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(roleid);
 			if(cutomizationEntity!=null)
 			{
 				if(cutomizationEntity.getEmailFlag().equals("Y")) {
