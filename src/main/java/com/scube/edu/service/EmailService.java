@@ -15,6 +15,8 @@ import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -125,9 +127,10 @@ public class EmailService {
 	            message.setSubject("Password Reset Link!!!");
 
 	            // Now set the actual message
-	                       
-                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://192.168.0.225:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
-                                      "<br><br><br> Thanks,<br>Team University";
+	         
+	          String vmFileContent= "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://192.168.0.225:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+                        "<br><br><br> Thanks,<br>Team University";
+ 	           
 
                 //  Send the complete message parts
                 message.setContent(vmFileContent,"text/html");
@@ -175,12 +178,10 @@ public class EmailService {
 
 	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 	                 protected PasswordAuthentication getPasswordAuthentication() {
-
-
+	                 
 	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 
-	            }
-
+	                 }
 	        });
 	        
 	        // Used to debug SMTP issues
