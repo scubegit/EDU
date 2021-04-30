@@ -295,12 +295,12 @@ public class EmailService {
                
                outputStream = new ByteArrayOutputStream();
                logger.info("check if approved/rejected----->"+ status);
-               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")) {
+               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")||status.equalsIgnoreCase("UN_Approved")) {
             	   logger.info("writeApprovalPdf----->");
                writeApprovalPdf(outputStream, Id);
                
                }
-               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")) {
+               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")||status.equalsIgnoreCase("UN_Rejected")) {
             	   logger.info("writeRejectionPdf----->");
             	   writeRejectionPdf(outputStream , id);
             	   
