@@ -164,7 +164,6 @@ public class FileStorageService {
 	        	}else {
 	        		
 	        		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
-	        		logger.info("doc.vollegename--->"+doc.getCollegeName());
 	        		fileName = doc.getOriginalDOCuploadfilePath();
 	        		
 	        		System.out.println("--------InsideElse----fileName--------------"+fileName);

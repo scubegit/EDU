@@ -7,15 +7,17 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.model.UniversityStudentDocument;
+import com.scube.edu.response.UniversityStudDocResponse;
 
 public interface AssociateManagerService {
 	
 
-	public  HashMap<String,List<UniversityStudentDocument>>  saveStudentInfo( List<UniversityStudentDocument> list) throws IOException;
+	public  HashMap<String,List<UniversityStudDocResponse>>  saveStudentInfo( List<UniversityStudDocResponse> list) throws IOException;
 
-	public List<UniversityStudentDocument> ReviewStudentData(MultipartFile excelfile,MultipartFile datafile) throws IOException;
+	public List<UniversityStudDocResponse> ReviewStudentData(MultipartFile excelfile,MultipartFile datafile) throws IOException;
 
-	public List<UniversityStudentDocument>  getStudentData(UniversityStudentDocument universityStudData);
+	public List<UniversityStudDocResponse>  getStudentData(UniversityStudentDocument universityStudData);
+
 
 
 }

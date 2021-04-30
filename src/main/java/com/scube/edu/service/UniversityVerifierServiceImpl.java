@@ -1,21 +1,27 @@
 package com.scube.edu.service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.BadElementException;
+import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.CustomizationRepository;
 import com.scube.edu.repository.UniversityVerifierRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
@@ -24,6 +30,7 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.UniversityVerifierResponse;
+import com.scube.edu.response.UserResponse;
 import com.scube.edu.response.VerificationResponse;
 
 @Service
@@ -58,6 +65,9 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	CustomizationRepository customizationRepository;
 
 	@Override
 	public List<UniversityVerifierResponse> getUniversityVerifierRequestList() throws Exception {
@@ -116,7 +126,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 
 	@Override
 	public List<StudentVerificationDocsResponse> setStatusForUniversityDocument(
-			StatusChangeRequest statusChangeRequest) {
+			StatusChangeRequest statusChangeRequest) throws Exception {
 
 		logger.info("*******UniversityVerifierServiceImpl setStatusForUniversityDocument*******");
 
@@ -135,6 +145,20 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		}
 
 		verificationReqRepository.save(entt);
+				
+		if(statusChangeRequest.getStatus().equalsIgnoreCase("UN_Approved") || 
+				statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
+			
+			UserResponse ume = userService.getUserInfoById(entt.getUserId());
+			CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(statusChangeRequest.getVerifiedby());
+			if(cutomizationEntity!=null)
+			{
+				if(cutomizationEntity.getEmailFlag().equals("Y")) {
+			emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
+				}
+			}
+			}
+	
 
 		return null;
 	}

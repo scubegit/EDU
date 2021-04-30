@@ -9,8 +9,8 @@ import com.scube.edu.model.StreamMaster;
 public interface StreamRepository  extends JpaRepository<StreamMaster, Long>{
 
 	
-	StreamMaster findById(long id);
-	
+	StreamMaster findById(long pid);
+
 	StreamMaster deleteById(long id);
 	StreamMaster findByStreamName( String Streamname);
 	

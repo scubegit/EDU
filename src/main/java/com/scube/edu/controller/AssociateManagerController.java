@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.service.AssociateManagerService;
 import com.scube.edu.util.StringsUtils;
 
@@ -36,7 +37,7 @@ public class AssociateManagerController {
 	 
 	
 	@PostMapping(value = "/uploadStudentInfoFromFile" )
-	public ResponseEntity<BaseResponse> saveStudentData (@RequestBody List<UniversityStudentDocument> list) {
+	public ResponseEntity<BaseResponse> saveStudentData (@RequestBody List<UniversityStudDocResponse> list) {
 		
 		System.out.println("*******AssociateManagerController saveStudentData********"+ list);
 		
@@ -44,7 +45,7 @@ public class AssociateManagerController {
 		
 	    try {
 	    	
-	    	 HashMap<String,List<UniversityStudentDocument>> List = associateManagerService.saveStudentInfo(list);
+	    	 HashMap<String,List<UniversityStudDocResponse>> List = associateManagerService.saveStudentInfo(list);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -73,7 +74,7 @@ public class AssociateManagerController {
 		
 	    try {
 	    	
-	    	List<UniversityStudentDocument> List = associateManagerService.ReviewStudentData(excelfile, datafile);
+	    	List<UniversityStudDocResponse> List = associateManagerService.ReviewStudentData(excelfile, datafile);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -102,7 +103,7 @@ public class AssociateManagerController {
 		
 	    try {
 	    	
-	    	  List<UniversityStudentDocument> List=associateManagerService.getStudentData(stuentData) ;
+	    	  List<UniversityStudDocResponse> List=associateManagerService.getStudentData(stuentData) ;
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

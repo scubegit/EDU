@@ -32,17 +32,17 @@ public class UniversityStudentDocument {
 		@Column(name = "First_Name")
 		private String firstName;
 		
-		@Size(max = 100)
+		//@Size(max = 100)
 		@Column(name = "Last_Name")
 		private String lastName;
 		
-		@Size(max = 100)
-		@Column(name = "Stream")
-		private String stream;
+		//@Size(max = 100)
+		@Column(name = "StreamId")
+		private Long streamId;
 		
-		@Size(max = 100)
-		@Column(name = "College_Name")
-		private String collegeName;
+		//@Size(max = 100)
+		@Column(name = "CollegeId")
+		private Long collegeId;
 		
 		//@NotBlank
 		@Size(max = 100)
@@ -51,11 +51,9 @@ public class UniversityStudentDocument {
 		
 		//@NotBlank
 	//	@Size(max = 100)
-		@Column(name = "passingYear")
-		private Integer passingYear;
+		@Column(name = "passingYearId")
+		private Long passingYearId;
 		
-		@Size(max = 100)
-		private String reason;
 
 
 

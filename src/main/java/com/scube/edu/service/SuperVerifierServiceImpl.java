@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RaiseDespute;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.CustomizationRepository;
 import com.scube.edu.repository.RaiseDisputeRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
@@ -66,6 +68,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	
 	@Autowired
 	CollegeSevice	collegeServices;
+	
+	@Autowired
+	CustomizationRepository customizationRepository;
 	
 	@Autowired
 	UserService userService;
@@ -153,10 +158,16 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 				statusChangeRequest.getStatus().equalsIgnoreCase("SV_Rejected")) {
 			
 		UserResponse ume = userService.getUserInfoById(veriReq.getUserId());
+		 
+		CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(statusChangeRequest.getVerifiedby());
+		if(cutomizationEntity!=null)
+		{
+			if(cutomizationEntity.getEmailFlag().equals("Y")) {
+		
 		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), statusChangeRequest.getStatus());
-		
+			}
 		}
-		
+		}
 
 		
 		return null;

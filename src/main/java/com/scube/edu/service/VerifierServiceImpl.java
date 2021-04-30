@@ -22,6 +22,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.ExceptionConverter;
 import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RequestTypeMaster;
@@ -29,6 +30,7 @@ import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.CustomizationRepository;
 import com.scube.edu.repository.RequestTypeRepository;
 import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UserRepository;
@@ -68,6 +70,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 
 	 @Autowired
 	 DocumentService	documentService;
+	 
+	 @Autowired
+		CustomizationRepository customizationRepository;
 	 
 	 @Autowired
 	 UserRepository userRepository;
@@ -230,8 +235,13 @@ public class VerifierServiceImpl implements VerifierService{
 					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {
 				
 				UserResponse ume = userService.getUserInfoById(entt.getUserId());
+				CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(statusChangeRequest.getVerifiedby());
+				if(cutomizationEntity!=null)
+				{
+					if(cutomizationEntity.getEmailFlag().equals("Y")) {
 				emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
-				
+					}
+				}
 				}
 		
 		return null;

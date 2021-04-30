@@ -297,11 +297,11 @@ public class EmailService {
                logger.info("check if approved/rejected----->"+ status);
                if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")||status.equalsIgnoreCase("UN_Approved")) {
             	   logger.info("writeApprovalPdf----->");
-               writeApprovalPdf(outputStream, Id);
-               
                }
+       
                if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")||status.equalsIgnoreCase("UN_Rejected")) {
             	   logger.info("writeRejectionPdf----->");
+            	   
             	   writeRejectionPdf(outputStream , id);
             	   
                }
@@ -399,7 +399,7 @@ public class EmailService {
         
         document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+	    Image img = Image.getInstance("TEMP/EduCred_Logo.jpg");
 //	    Image img = Image.getInstance("EduCred_Logo.jpg");
 	    img.scaleToFit(120, 100);
 	    img.scaleAbsolute(107, 107);
