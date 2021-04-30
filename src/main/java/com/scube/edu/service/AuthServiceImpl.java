@@ -161,9 +161,9 @@ public class AuthServiceImpl implements AuthService{
 		 userMasterEntity.setFirstName(userAddRequest.getFirstName());
 		 userMasterEntity.setLastName(userAddRequest.getLastName());
 		 
-		 if(userAddRequest.getRoleId() == 1) {
+//		 if(userAddRequest.getRoleId() == 1) {
 			 userMasterEntity.setEmailId(userAddRequest.getEmailId());  
-		 }
+//		 }
 
 		 userMasterEntity.setPhoneNo(userAddRequest.getPhoneNumber());
 		 userMasterEntity.setPassword(encoder.encode(userAddRequest.getPassword()));

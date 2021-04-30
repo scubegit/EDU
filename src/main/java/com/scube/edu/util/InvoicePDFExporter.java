@@ -150,6 +150,7 @@ public class InvoicePDFExporter {
             logger.info("Entry point for pdf exporter--------->7");
 //            EduCred_Logo.jpg 
                Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+//               Image logo = Image.getInstance("EduCred_Logo.jpg");
                logo.setAbsolutePosition(10, 300);
                
                logger.info("Entry point for pdf exporter--------->8");
@@ -161,6 +162,7 @@ public class InvoicePDFExporter {
                logger.info("Entry point for pdf exporter--------->9");
 			
 			  Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
+//               Image img = Image.getInstance("EduCred_Logo.jpg"); //
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(100, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
@@ -247,7 +249,7 @@ public class InvoicePDFExporter {
  	      PdfPCell studentinfoCell = new PdfPCell();
  	      studentinfoCell.setBorderWidthTop(0);
  	     
-	 	     studentinfoCell.addElement(new Paragraph("Name      :"+userMasterEntity.getFirstName(),font9b));
+	 	     studentinfoCell.addElement(new Paragraph("Name      :"+userMasterEntity.getFirstName()+" "+userMasterEntity.getLastName(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Mobile    :"+userMasterEntity.getPhoneNo(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Email ID :"+userMasterEntity.getEmailId(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Country   :India",font9b));
@@ -283,12 +285,13 @@ public class InvoicePDFExporter {
  	     studentDocTable.addCell(getCellH("Enrollment NO", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Document Name", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Passing Year", Element.ALIGN_CENTER, font9b));
-         studentDocTable.addCell(getCellH("Amount", Element.ALIGN_CENTER, font9b));
- 	     studentDocTable.addCell(getCellH("GST", Element.ALIGN_CENTER, font9b));
+         studentDocTable.addCell(getCellH("Verification Amount", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Handling Charges", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Total", Element.ALIGN_CENTER, font9b));
  
  	    Long totalAmt = (long) 0;
- 	    Long totalGst = (long) 0;
+// 	    Long totalGst = (long) 0;
+ 	    Long GSTVal = (long) 0;
  	     
  	    for(int i=0 ;i<studentDocList.size();i++)
         {
@@ -306,7 +309,7 @@ public class InvoicePDFExporter {
 		     	   PdfPCell srcell=new PdfPCell(new Phrase(srno,ft10));
 		     	   srcell.setHorizontalAlignment(Element.ALIGN_CENTER);
      	   
-				   PdfPCell namevCell =new PdfPCell(new  Paragraph(responseObj.getFirst_name(),ft12));
+				   PdfPCell namevCell =new PdfPCell(new  Paragraph(responseObj.getFirst_name()+" "+responseObj.getLast_name(),ft12));
 				   namevCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
 				   PdfPCell enrollCell=new PdfPCell(new Paragraph(responseObj.getEnroll_no(),ft12)); //-------------------------//
@@ -318,23 +321,25 @@ public class InvoicePDFExporter {
 				   PdfPCell yearcell=new PdfPCell(new Paragraph(responseObj.getYear(),ft12)); //-------------------------//
 				   yearcell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
-				   PdfPCell amtCell=new PdfPCell(new Paragraph(responseObj.getDocAmt().toString(),ft12)); 
+				   PdfPCell amtCell=new PdfPCell(new Paragraph(responseObj.getAmount().toString(),ft12)); 
 				   amtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
 				   
 				   
-				   Long gstval = responseObj.getDocAmtWithGST() - responseObj.getDocAmt();
+//				   Long gstval = responseObj.getDocAmtWithGST() - responseObj.getDocAmt();
 				   
-				   totalGst = totalGst +gstval;
+//				   totalGst = totalGst +gstval;
 				   
-				   PdfPCell gstAmtCell=new PdfPCell(new Paragraph(gstval.toString(),ft12)); 
+				   PdfPCell gstAmtCell=new PdfPCell(new Paragraph(responseObj.getSecurAmt().toString(),ft12)); 
 				   gstAmtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
-				   PdfPCell totalCell=new PdfPCell(new Paragraph(responseObj.getDocAmtWithGST().toString(),ft12)); 
+				   Long totalAmount = responseObj.getAmount() + responseObj.getSecurAmt();
+				   
+				   PdfPCell totalCell=new PdfPCell(new Paragraph(totalAmount.toString(),ft12)); 
 				   totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
-				   totalAmt = totalAmt + responseObj.getDocAmtWithGST();
-				   
+				   totalAmt = totalAmt + totalAmount;
+				   GSTVal = responseObj.getGst();
 				   
      	    studentDocTable.addCell(srcell);
      	    studentDocTable.addCell(namevCell);
@@ -348,8 +353,9 @@ public class InvoicePDFExporter {
      	    studentDocTable.addCell(totalCell); 
            
      }
+        Long GST = (totalAmt * GSTVal) / 100;
         
- 	   logger.info("just outside for loop--------->17");
+ 	   logger.info("just outside for loop--------->17"+ GST);
 		    
 		    PdfPCell totAMTCell =new PdfPCell(new Paragraph("Total Value:",font9b));
 		    totAMTCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -369,7 +375,7 @@ public class InvoicePDFExporter {
 		    
 		    studentDocTable.addCell(GstAMTCell);
 	        
-	        PdfPCell GstAmtVCell = new PdfPCell(new Paragraph(totalGst.toString(),font9b));
+	        PdfPCell GstAmtVCell = new PdfPCell(new Paragraph(GST.toString(),font9b));
 	        GstAmtVCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 	        GstAmtVCell.setPaddingBottom(5);
 	        
@@ -381,7 +387,7 @@ public class InvoicePDFExporter {
 		    
 		    studentDocTable.addCell(grandAMTCell);
 		    
-		    Long grandTotal = totalAmt + totalGst;
+		    Long grandTotal = totalAmt + GST;
 	        
 	        PdfPCell grandAmtVCell = new PdfPCell(new Paragraph(grandTotal.toString(),font9b));
 	        grandAmtVCell.setHorizontalAlignment(Element.ALIGN_RIGHT);

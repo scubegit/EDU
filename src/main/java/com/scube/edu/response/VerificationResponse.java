@@ -45,6 +45,10 @@ public class VerificationResponse {
 	private String originalDocUploadFilePath;
 	
 	private String remark;
+	
+	private Long amount;
+	private Long securAmt;
+	private Long gst;
 
 
 }

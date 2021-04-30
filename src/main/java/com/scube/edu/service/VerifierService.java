@@ -18,7 +18,7 @@ public interface VerifierService {
 
 	public List<StudentVerificationDocsResponse> verifyDocument(Long id);
 
-	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException;
+	public List<StudentVerificationDocsResponse> setStatusForVerifierDocument(StatusChangeRequest statusChangeRequest) throws BadElementException, MessagingException, IOException, Exception;
 
 	public Integer  updateListonLogout (long id) throws Exception;
 

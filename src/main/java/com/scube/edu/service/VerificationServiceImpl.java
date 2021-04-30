@@ -1,6 +1,7 @@
 package com.scube.edu.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.DocumentRepository;
+import com.scube.edu.repository.PriceMasterRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
@@ -45,6 +48,9 @@ public class VerificationServiceImpl implements VerificationService{
 	
 	@Autowired
 	DocumentRepository  docRepo;
+	
+	 @Autowired
+	 PriceMasterRepository priceMasterRepo;
 
 	
 	@Autowired
@@ -107,14 +113,20 @@ public class VerificationServiceImpl implements VerificationService{
 		List<VerificationResponse> studentDocList = new ArrayList<>();
 			
 			System.out.println("-----getdatabyapplicationId---");
-			
+			int year = Calendar.getInstance().get(Calendar.YEAR);
 			
 			for(VerificationRequest verEntities : verlistEntity) {
 				
 				VerificationResponse docResponse = new VerificationResponse();
 				
+				long yearOfPassId = Long.parseLong(verEntities.getYearOfPassingId());
+				PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , yearOfPassId);
+				
 			    id  = verEntities.getUserId();
 				
+			    docResponse.setAmount(diff.getAmount());
+			    docResponse.setSecurAmt(diff.getSecurCharge());
+			    docResponse.setGst(diff.getGst());
 				docResponse.setApplication_id(verEntities.getApplicationId());
 				docResponse.setCollege_name_id(verEntities.getCollegeId());
 //				docResponse.setDoc_name(verEntities.getDocumentId());
