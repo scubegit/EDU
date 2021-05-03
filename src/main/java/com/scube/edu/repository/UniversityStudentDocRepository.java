@@ -17,9 +17,9 @@ import com.scube.edu.model.UserMasterEntity;
 public interface UniversityStudentDocRepository extends JpaRepository<UniversityStudentDocument, Long> {
 
 	@Query(value = "SELECT * FROM university_studentdocument where enrollment_no = ?1 and first_name = ?2 "
-			+ "and last_name = ?3 and stream = ?4 and passing_year = ?5 and college_name = ?6" , nativeQuery = true)
+			+ "and last_name = ?3 and stream_id = ?4 and passing_year_id = ?5 and college_id = ?6" , nativeQuery = true)
 //	@Query(value = "SELECT * FROM university_studentdocument where enrollment_no = ?1 ", nativeQuery = true)
-	UniversityStudentDocument getDocDataBySixFields(String enrollmentNo , String firstName, String lastName, String streamName, String yearOfPassing, String collegeName);
+	UniversityStudentDocument getDocDataBySixFields(String enrollmentNo , String firstName, String lastName, Long streamId, String yearOfPassing, Long collegeId);
 
 	UniversityStudentDocument findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearId(String enrollmentNo,String fnm,String lastnm,Long stream,Long clgnm, Long passyr);
 

@@ -11,5 +11,6 @@ public class StatusChangeRequest {
 	private String status;
 	private long verifiedby;
 	private String remark;
+	private String roleid;
 
 }

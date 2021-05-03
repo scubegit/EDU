@@ -194,8 +194,8 @@ public class VerifierServiceImpl implements VerifierService{
 					 logger.info("VR upload set just above");
 					 
 					 UniversityStudentDocument doc = stuDocService.getDocDataBySixFields(veriReq.getEnrollmentNumber(), 
-							 veriReq.getFirstName(), veriReq.getLastName(), stream.getStreamName(), year.getYearOfPassing()
-							 , college.getCollegeName());
+							 veriReq.getFirstName(), veriReq.getLastName(), veriReq.getStreamId(), veriReq.getYearOfPassingId()
+							 , veriReq.getCollegeId());
 					 
 					 if(doc != null) {
 					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
@@ -224,7 +224,7 @@ public class VerifierServiceImpl implements VerifierService{
 			VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
 //			VerificationRequest entt = ent.get();
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
-			
+			Long roleId = Long.parseLong(statusChangeRequest.getRoleid());
 			entt.setDocStatus(statusChangeRequest.getStatus());
 			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
 			entt.setClosedDate(date);
@@ -235,7 +235,7 @@ public class VerifierServiceImpl implements VerifierService{
 					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {
 				
 				UserResponse ume = userService.getUserInfoById(entt.getUserId());
-				CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(statusChangeRequest.getVerifiedby());
+				CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(roleId);
 				if(cutomizationEntity!=null)
 				{
 					if(cutomizationEntity.getEmailFlag().equals("Y")) {

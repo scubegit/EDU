@@ -149,8 +149,8 @@ public class InvoicePDFExporter {
             
             logger.info("Entry point for pdf exporter--------->7");
 //            EduCred_Logo.jpg 
-               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-//               Image logo = Image.getInstance("EduCred_Logo.jpg");
+//               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+               Image logo = Image.getInstance("EduCred_Logo.jpg");
                logo.setAbsolutePosition(10, 300);
                
                logger.info("Entry point for pdf exporter--------->8");
@@ -161,10 +161,10 @@ public class InvoicePDFExporter {
             
                logger.info("Entry point for pdf exporter--------->9");
 			
-			  Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
-//               Image img = Image.getInstance("EduCred_Logo.jpg"); //
+//			  Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
+               Image img = Image.getInstance("EduCred_Logo.jpg"); //
 			  img.setAlignment(Element.ALIGN_CENTER);
-			  img.scaleToFit(100, 100); // width, height
+			  img.scaleToFit(120, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
 			  
 			  PdfPTable tab1 = new PdfPTable(1); tab1.setWidthPercentage(100);
@@ -248,8 +248,11 @@ public class InvoicePDFExporter {
            
  	      PdfPCell studentinfoCell = new PdfPCell();
  	      studentinfoCell.setBorderWidthTop(0);
- 	     
+ 	      	if(userMasterEntity.getLastName() != null) {
 	 	     studentinfoCell.addElement(new Paragraph("Name      :"+userMasterEntity.getFirstName()+" "+userMasterEntity.getLastName(),font9b));
+ 	      	}else {
+ 	      	 studentinfoCell.addElement(new Paragraph("Name      :"+userMasterEntity.getFirstName(),font9b));
+ 	      	}
 	 	     studentinfoCell.addElement(new Paragraph("Mobile    :"+userMasterEntity.getPhoneNo(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Email ID :"+userMasterEntity.getEmailId(),font9b));
 	 	     studentinfoCell.addElement(new Paragraph("Country   :India",font9b));

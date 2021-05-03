@@ -397,16 +397,14 @@ public class EmailService {
 //        footer.setBorder(Rectangle.NO_BORDER);
         document.setFooter(footer);
         
+//		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+        Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		img.setAlignment(Element.ALIGN_CENTER);
+		img.scaleToFit(120, 100); // width, height
+        
         document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("TEMP/EduCred_Logo.jpg");
-//	    Image img = Image.getInstance("EduCred_Logo.jpg");
-	    img.scaleToFit(120, 100);
-	    img.scaleAbsolute(107, 107);
-	    img.setAlignment(20);
-	    img.setAbsolutePosition(243, 720);
-	    
-	    
+
 	    document.add(img);
 	    
 	    Paragraph head = new Paragraph();
@@ -595,15 +593,15 @@ public class EmailService {
 		
 		// left, right, top, bottom
 		logger.info("headerFooter set here--->just before document.open()");
-	    
-	    document.open();
+		
+//		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+        Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		img.setAlignment(Element.ALIGN_CENTER);
+		img.scaleToFit(120, 100); // width, height
+        
+        document.open();
 //	    EduCred_Logo.jpg
-	    Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-//	    Image img = Image.getInstance("EduCred_Logo.jpg");
-	    img.scaleToFit(120, 100);
-	    img.scaleAbsolute(107, 107);
-	    img.setAlignment(20);
-	    img.setAbsolutePosition(243, 720);
+
 	    
 	    
 	    document.add(img);
@@ -966,10 +964,10 @@ public class EmailService {
             
             outputStream = new ByteArrayOutputStream();
             
-             if(vr.getDocStatus().equalsIgnoreCase("SV_Rejected")) {
+             if(vr.getDocStatus().equalsIgnoreCase("UN_Rejected")) {
             writeApprovalPdf(outputStream, Id);
              }
-             if(vr.getDocStatus().equalsIgnoreCase("SV_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
+             if(vr.getDocStatus().equalsIgnoreCase("UN_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
             	 writeRejectionPdf(outputStream, Id);
              }
             byte[] bytes = outputStream.toByteArray();
