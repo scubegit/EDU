@@ -265,7 +265,10 @@ public class EmailService {
 	        properties.put("mail.smtp.ssl.enable", "true");
 	        properties.put("mail.smtp.auth", "true");
 
-	        String vmFileContent = "Hello User, Your record has been verified by MU. Please find the PDF with verification result and details attached below.";
+	        String vmFileContent = "Dear Candidate/ Requestor,  \r\n"
+	        		+ "    Your request for verification has been completed, attached is your verification report. \r\n"
+	        		+ "    In case of any dispute you may log on to the site and raise a request through the Dispute option available. \r\n"
+	        		+ "Team EduCred";
 	        
 	        String subject = "Verification Result";
 	        logger.info("subject of mail----->"+ subject);
@@ -296,6 +299,7 @@ public class EmailService {
                outputStream = new ByteArrayOutputStream();
                logger.info("check if approved/rejected----->"+ status);
                if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")||status.equalsIgnoreCase("UN_Approved")) {
+            	   writeApprovalPdf(outputStream, Id);
             	   logger.info("writeApprovalPdf----->");
                }
        
@@ -397,8 +401,8 @@ public class EmailService {
 //        footer.setBorder(Rectangle.NO_BORDER);
         document.setFooter(footer);
         
-//		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-        Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+//        Image img = Image.getInstance("EduCred_Logo.jpg"); //
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -594,8 +598,8 @@ public class EmailService {
 		// left, right, top, bottom
 		logger.info("headerFooter set here--->just before document.open()");
 		
-//		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-        Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+//        Image img = Image.getInstance("EduCred_Logo.jpg"); //
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -806,10 +810,10 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-             String vmFileContent = "Hello User, <br><br> "
-             		+ "We have recieved the dispute that you raised. Sorry for the inconvenience caused. We will get back to you in 7-10 working days with a resolution. <br><br> "
+             String vmFileContent = "Dear Candidate/ Requestor, <br><br> "
+             		+ "We have recieved the dispute that you raised. We will get back to you in 15 working days. <br><br> "
              				+ "For reference your dispute reference id is:"+id+". <br><br> "
-             						+ "Thanks, <br><br> Team University";
+             						+ "Thanks, <br><br> Team EduCred";
 
              //  Send the complete message parts
              message.setContent(vmFileContent,"text/html");
@@ -881,10 +885,10 @@ public class EmailService {
 
 	            // Now set the actual message
 	                       
-             String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+id+". "
-             		+ "As mentioned in the above dispute, we cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. \r\n "
-             		+ "Sorry for the inconvenience caused. \r\n "
-             +"\r\n Thanks, \r\n Team University";
+             String vmFileContent = "Dear Candidate/ Requestor, \r\n This is in relation with the dispute ref no.:"+id+". "
+             		+ "As mentioned in the dispute, we have cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. \r\n "
+//             		+ "Sorry for the inconvenience caused. \r\n "
+             +"\r\n Thanks, \r\n Team EduCred";
 
              //  Send the complete message parts
              message.setContent(vmFileContent,"text/html");
@@ -934,9 +938,9 @@ public class EmailService {
 	        properties.put("mail.smtp.auth", "true");
 
 	        String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+disputeId+". "
-	        		+ "As mentioned in the dispute, we cross checked the document and the corrected result can be found in the attached document. \r\n "
+	        		+ "As mentioned in the dispute, we have cross checked the document and the corrected result can be found in the attached document. \r\n "
 	        		+ "Sorry for the inconvenience caused. \r\n "
-	        		+ "Thanks, \r\n Team University";
+	        		+ "Thanks, \r\n Team EduCred";
 	        
 	        String subject = "Verification Result";
 

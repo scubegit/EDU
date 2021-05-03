@@ -149,8 +149,8 @@ public class InvoicePDFExporter {
             
             logger.info("Entry point for pdf exporter--------->7");
 //            EduCred_Logo.jpg 
-//               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-               Image logo = Image.getInstance("EduCred_Logo.jpg");
+               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+//               Image logo = Image.getInstance("EduCred_Logo.jpg");
                logo.setAbsolutePosition(10, 300);
                
                logger.info("Entry point for pdf exporter--------->8");
@@ -161,8 +161,8 @@ public class InvoicePDFExporter {
             
                logger.info("Entry point for pdf exporter--------->9");
 			
-//			  Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
-               Image img = Image.getInstance("EduCred_Logo.jpg"); //
+			  Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
+//               Image img = Image.getInstance("EduCred_Logo.jpg"); //
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(120, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);

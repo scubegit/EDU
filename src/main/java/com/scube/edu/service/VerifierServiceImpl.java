@@ -224,25 +224,25 @@ public class VerifierServiceImpl implements VerifierService{
 			VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
 //			VerificationRequest entt = ent.get();
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
-			Long roleId = Long.parseLong(statusChangeRequest.getRoleid());
+//			Long roleId = Long.parseLong(statusChangeRequest.getRoleid());
 			entt.setDocStatus(statusChangeRequest.getStatus());
 			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
 			entt.setClosedDate(date);
 			entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
 			verificationReqRepository.save(entt);
 			
-			if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
-					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {
-				
-				UserResponse ume = userService.getUserInfoById(entt.getUserId());
-				CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(roleId);
-				if(cutomizationEntity!=null)
-				{
-					if(cutomizationEntity.getEmailFlag().equals("Y")) {
-				emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
-					}
-				}
-				}
+//			if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
+//					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {
+//				
+//				UserResponse ume = userService.getUserInfoById(entt.getUserId());
+//				CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(roleId);
+//				if(cutomizationEntity!=null)
+//				{
+//					if(cutomizationEntity.getEmailFlag().equals("Y")) {
+//				emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
+//					}
+//				}
+//				}
 		
 		return null;
 	}

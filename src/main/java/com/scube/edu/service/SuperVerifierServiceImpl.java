@@ -140,7 +140,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 	    Date date = new Date();  
 	    String currentDate = formatter.format(date);  
-	    Long roleId = Long.parseLong(statusChangeRequest.getRoleid());
+//	    Long roleId = Long.parseLong(statusChangeRequest.getRoleid());
 		VerificationRequest veriReq =  verificationReqRepository.findById(statusChangeRequest.getId());
 //		VerificationRequest veriReq = vr.get();
 		
@@ -159,14 +159,14 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			
 		UserResponse ume = userService.getUserInfoById(veriReq.getUserId());
 		 
-		CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(roleId);
-		if(cutomizationEntity!=null)
-		{
-			if(cutomizationEntity.getEmailFlag().equals("Y")) {
-		
-		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), statusChangeRequest.getStatus());
-			}
-		}
+//		CutomizationEntity cutomizationEntity=customizationRepository.findByRoleId(roleId);
+//		if(cutomizationEntity!=null)
+//		{
+//			if(cutomizationEntity.getEmailFlag().equals("Y")) {
+//		
+//		emailService.sendStatusMail(ume.getEmail(), veriReq.getId(), statusChangeRequest.getStatus());
+//			}
+//		}
 		}
 
 		

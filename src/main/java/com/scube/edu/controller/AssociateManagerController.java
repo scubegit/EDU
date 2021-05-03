@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.model.UniversityStudentDocument;
+import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.service.AssociateManagerService;
@@ -95,7 +96,7 @@ public class AssociateManagerController {
 			}
 	}
 	@PostMapping(value = "/getUniversityStudenData")
-	public ResponseEntity<BaseResponse> getstudentData (@RequestBody UniversityStudentDocument stuentData) {
+	public ResponseEntity<BaseResponse> getstudentData (@RequestBody UniversityStudentRequest stuentData) {
 		
 		System.out.println("*******AssociateManagerController getstudentData********");
 		

@@ -29,7 +29,9 @@ import com.scube.edu.repository.CollegeRepository;
 import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UniversityStudentDocRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
+import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.UniversityStudDocResponse;
+import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.util.FileStorageService;
 
 @Service
@@ -243,97 +245,131 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	}
 
 	@Override
-	public List<UniversityStudDocResponse> getStudentData(UniversityStudentDocument universityStudData ) {
+	public List<UniversityStudDocResponse> getStudentData(UniversityStudentRequest universityStudData ) {
 		
 		logger.info("********AssociateManagerServiceImpl getStudentData********");
 
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
-		 String query="";
-		 query="Select data from UniversityStudentDocument data where ";
 		 
-		 if(universityStudData!=null)
-		 {
-			 
-			 String Name=universityStudData.getFirstName();
-			 String lastName=universityStudData.getLastName();
-			 Long Stream=universityStudData.getStreamId();
-			 Long clgName=universityStudData.getCollegeId();
-			 String enrollNo=universityStudData.getEnrollmentNo();
-			 Long YearOfPassing=universityStudData.getPassingYearId(); 
-			 
-			 if(!Name.isEmpty())
-			 {
-				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
-				 if(!lastName.isEmpty()||Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)
-				 {
-				 query=query+" and";
-				 }
-			 }
-				 
-			 if(!universityStudData.getLastName().isEmpty())
-			 {
-				 query=query+" lastName='"+universityStudData.getLastName()+"'";
-				 if(Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
-					
-				 query=query+" and";
-				 }
-			 }
-			 if(universityStudData.getStreamId()!=null)
-			 {
-				 query=query+"  streamId='"+universityStudData.getStreamId()+"'";
-				 if(clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null) {
-				  query=query+" and";
-				 }
-			 }
-			 if(universityStudData.getCollegeId()!=null)
-			 {
-				 query=query+"  collegeId='"+universityStudData.getCollegeId()+"'";
-				 if(!enrollNo.isEmpty()||YearOfPassing!=null)				 {
-				 query=query+" and";
-				 }
-			 }
-			 if(!universityStudData.getEnrollmentNo().isEmpty())
-			 {
-				 query=query+"  enrollmentNo='"+universityStudData.getEnrollmentNo()+"'";
-				 if(universityStudData.getPassingYearId()!=null)
-				 {
-				 query=query+" and";
-				 }
-			 }
-			 if(universityStudData.getPassingYearId()!=null)
-			 {
-				 query=query+" passingYearId="+universityStudData.getPassingYearId()+"";
-			 }
-		 }
+		List<UniversityStudentDocument> usdr = universityStudentDocRepository.searchByFirstNameLikeAndLastNameLikeAndEnrollmentNoLikeAndCollegeIdLikeAndPassingYearIdLikeAndStreamIdLike(universityStudData.getFirstName(), 
+				universityStudData.getLastName(), universityStudData.getEnrollmentNo(), universityStudData.getCollegeId(), 
+				universityStudData.getPassingYearId(), universityStudData.getStreamId());
+		List<UniversityStudDocResponse> studData=new ArrayList<>();
+		
+		logger.info("********AssociateManagerServiceImpl getStudentData********");
 		 
-		 logger.info(query);
-		 
-		 EntityManager em = emf.createEntityManager();
-		 studentDataList= em.createQuery(query).getResultList();
-		// studentDataList=universityStudentDocRepository.getStudData(query);
-		 List<UniversityStudDocResponse> studData=new ArrayList<>();
-		 for(UniversityStudentDocument setStudentdata:studentDataList)
-		 {
-				Optional<CollegeMaster> college= collegeRespository.findById(setStudentdata.getCollegeId());
-				CollegeMaster collegeEntities=college.get();
-				Optional<StreamMaster> streaminfo =streamRespository.findById(setStudentdata.getStreamId());
-				StreamMaster stream=streaminfo.get();
-				Optional<PassingYearMaster> passingyrinfo=yearOfPassingRespository.findById(setStudentdata.getPassingYearId());
-				PassingYearMaster passingyr=passingyrinfo.get();
-			 UniversityStudDocResponse studDataResponse=new UniversityStudDocResponse();
+		 for(UniversityStudentDocument studentData:usdr) {
 			 
-			 studDataResponse.setId(setStudentdata.getId());
-			 studDataResponse.setFirstName(setStudentdata.getFirstName());
-			 studDataResponse.setLastName(setStudentdata.getLastName());
-			 studDataResponse.setCollegeName(collegeEntities.getCollegeName());
-			 studDataResponse.setEnrollmentNo(setStudentdata.getEnrollmentNo());
-			 studDataResponse.setStream(stream.getStreamName());
-			 studDataResponse.setPassingYear(passingyr.getYearOfPassing());
+			 UniversityStudDocResponse resp = new UniversityStudDocResponse();
+			 
+			 Optional<CollegeMaster> cm = collegeRespository.findById(studentData.getCollegeId());
+			 CollegeMaster college = cm.get();
+			 
+			 Optional<StreamMaster> streaminfo = streamRespository.findById(studentData.getStreamId());
+			 StreamMaster stream = streaminfo.get();
+			 
+			 Optional<PassingYearMaster> passingyrinfo = yearOfPassingRespository.findById(studentData.getPassingYearId());
+			 PassingYearMaster passingyr = passingyrinfo.get();
+			 
+			 resp.setId(studentData.getId());
+			 resp.setFirstName(studentData.getFirstName());
+			 resp.setLastName(studentData.getLastName());
+			 resp.setCollegeName(college.getCollegeName());
+			 resp.setEnrollmentNo(studentData.getEnrollmentNo());
+			 resp.setStream(stream.getStreamName());
+			 resp.setPassingYear(passingyr.getYearOfPassing());
 			 //String Path=
-			 studDataResponse.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+setStudentdata.getId());
-			 studData.add(studDataResponse);
+			 resp.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+studentData.getId());
+			 studData.add(resp);
+			 
 		 }
-		 logger.info("Data"+studData);
+		
+//		 String query="";
+//		 query="Select data from UniversityStudentDocument data where ";
+//		 
+//		 if(universityStudData!=null)
+//		 {
+//			 
+//			 String Name=universityStudData.getFirstName();
+//			 String lastName=universityStudData.getLastName();
+//			 Long Stream=universityStudData.getStreamId();
+//			 Long clgName=universityStudData.getCollegeId();
+//			 String enrollNo=universityStudData.getEnrollmentNo();
+//			 Long YearOfPassing=universityStudData.getPassingYearId(); 
+//			 
+//			 if(!Name.isEmpty())
+//			 {
+//				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
+//				 if(!lastName.isEmpty()||Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)
+//				 {
+//				 query=query+" and";
+//				 }
+//			 }
+//				 
+//			 if(!universityStudData.getLastName().isEmpty())
+//			 {
+//				 query=query+" lastName='"+universityStudData.getLastName()+"'";
+//				 if(Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
+//					
+//				 query=query+" and";
+//				 }
+//			 }
+//			 if(universityStudData.getStreamId()!=null)
+//			 {
+//				 query=query+"  streamId='"+universityStudData.getStreamId()+"'";
+//				 if(clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null) {
+//				  query=query+" and";
+//				 }
+//			 }
+//			 if(universityStudData.getCollegeId()!=null)
+//			 {
+//				 query=query+"  collegeId='"+universityStudData.getCollegeId()+"'";
+//				 if(!enrollNo.isEmpty()||YearOfPassing!=null)				 {
+//				 query=query+" and";
+//				 }
+//			 }
+//			 if(!universityStudData.getEnrollmentNo().isEmpty())
+//			 {
+//				 query=query+"  enrollmentNo='"+universityStudData.getEnrollmentNo()+"'";
+//				 if(universityStudData.getPassingYearId()!=null)
+//				 {
+//				 query=query+" and";
+//				 }
+//			 }
+//			 if(universityStudData.getPassingYearId()!=null)
+//			 {
+//				 query=query+" passingYearId="+universityStudData.getPassingYearId()+"";
+//			 }
+//		 }
+//		 
+//		 logger.info(query);
+//		 
+//		 EntityManager em = emf.createEntityManager();
+//		 studentDataList= em.createQuery(query).getResultList();
+		// studentDataList=universityStudentDocRepository.getStudData(query);
+//		 List<UniversityStudDocResponse> studData=new ArrayList<>();
+//		 for(UniversityStudentDocument setStudentdata:studentDataList)
+//		 {
+//				Optional<CollegeMaster> college= collegeRespository.findById(setStudentdata.getCollegeId());
+//				CollegeMaster collegeEntities=college.get();
+//				Optional<StreamMaster> streaminfo =streamRespository.findById(setStudentdata.getStreamId());
+//				StreamMaster stream=streaminfo.get();
+//				Optional<PassingYearMaster> passingyrinfo=yearOfPassingRespository.findById(setStudentdata.getPassingYearId());
+//				PassingYearMaster passingyr=passingyrinfo.get();
+//			 UniversityStudDocResponse studDataResponse=new UniversityStudDocResponse();
+//			 
+//			 studDataResponse.setId(setStudentdata.getId());
+//			 studDataResponse.setFirstName(setStudentdata.getFirstName());
+//			 studDataResponse.setLastName(setStudentdata.getLastName());
+//			 studDataResponse.setCollegeName(collegeEntities.getCollegeName());
+//			 studDataResponse.setEnrollmentNo(setStudentdata.getEnrollmentNo());
+//			 studDataResponse.setStream(stream.getStreamName());
+//			 studDataResponse.setPassingYear(passingyr.getYearOfPassing());
+//			 //String Path=
+//			 studDataResponse.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+setStudentdata.getId());
+//			 studData.add(studDataResponse);
+//		 }
+//		 logger.info("Data"+studData);
 		return studData;
 	}
 
