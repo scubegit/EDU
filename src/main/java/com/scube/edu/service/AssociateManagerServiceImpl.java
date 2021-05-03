@@ -253,6 +253,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 
 		 if(universityStudData!=null)
 		 {
+			 
 			 String Name=universityStudData.getFirstName();
 			 String lastName=universityStudData.getLastName();
 			 Long Stream=universityStudData.getStreamId();
