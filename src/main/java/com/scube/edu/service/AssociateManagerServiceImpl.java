@@ -263,7 +263,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 
 			 if(!Name.isEmpty())
 			 {
-				 query=query+" first_name='"+universityStudData.getFirstName()+"'";
+				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
 				 if(!lastName.isEmpty()||Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)
 				 {
 				 query=query+" and";
@@ -272,7 +272,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				 
 			 if(!universityStudData.getLastName().isEmpty())
 			 {
-				 query=query+" last_name='"+universityStudData.getLastName()+"'";
+				 query=query+" lastName='"+universityStudData.getLastName()+"'";
 				 if(Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
 					
 				 query=query+" and";
@@ -280,21 +280,21 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 }
 			 if(universityStudData.getStreamId()!=null)
 			 {
-				 query=query+"  stream_id='"+universityStudData.getStreamId()+"'";
+				 query=query+"  streamId='"+universityStudData.getStreamId()+"'";
 				 if(clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null) {
 				  query=query+" and";
 				 }
 			 }
 			 if(universityStudData.getCollegeId()!=null)
 			 {
-				 query=query+"  college_id='"+universityStudData.getCollegeId()+"'";
+				 query=query+"  collegeId='"+universityStudData.getCollegeId()+"'";
 				 if(!enrollNo.isEmpty()||YearOfPassing!=null)				 {
 				 query=query+" and";
 				 }
 			 }
 			 if(!universityStudData.getEnrollmentNo().isEmpty())
 			 {
-				 query=query+"  enrollment_no='"+universityStudData.getEnrollmentNo()+"'";
+				 query=query+"  enrollmentNo='"+universityStudData.getEnrollmentNo()+"'";
 				 if(universityStudData.getPassingYearId()!=null)
 				 {
 				 query=query+" and";
@@ -302,7 +302,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 }
 			 if(universityStudData.getPassingYearId()!=null)
 			 {
-				 query=query+" passing_year_id="+universityStudData.getPassingYearId()+"";
+				 query=query+" passingYearId="+universityStudData.getPassingYearId()+"";
 			 }
 		 }
 		 
