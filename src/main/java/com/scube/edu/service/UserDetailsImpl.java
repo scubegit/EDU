@@ -23,13 +23,16 @@ public class UserDetailsImpl implements UserDetails {
 	private String firstname;
 	
 	private String lastname;
+	
+	private String phoneNo;
+
 
 	@JsonIgnore
 	private String password;
 
 	private Long authorities;
 
-	public UserDetailsImpl(Long id, String username, String email, String password,	Long roleid, String firstname, String lastname) {
+	public UserDetailsImpl(Long id, String username, String email, String password,	Long roleid, String firstname, String lastname,String phoneNo) {
 		this.id = id;
 		
 		this.username = username;
@@ -38,6 +41,8 @@ public class UserDetailsImpl implements UserDetails {
 		this.authorities = roleid;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.phoneNo = phoneNo;
+
 	}
 
 	public static UserDetailsImpl build(UserMasterEntity user) {
@@ -56,7 +61,7 @@ public class UserDetailsImpl implements UserDetails {
 				user.getPassword(), 
 				user.getRoleId(),
 				user.getFirstName(),
-				user.getLastName());
+				user.getLastName(),user.getPhoneNo());
 
 		
 	}
@@ -94,6 +99,7 @@ public class UserDetailsImpl implements UserDetails {
 	public String getLastname() {
 		return lastname;
 	}
+	
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -130,4 +136,10 @@ public class UserDetailsImpl implements UserDetails {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	
 }
