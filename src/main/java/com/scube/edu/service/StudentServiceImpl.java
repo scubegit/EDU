@@ -220,7 +220,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	}
 
 	@Override
-	public HashMap<String, Long> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
+	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
 		logger.info("********StudentServiceImpl calculateTotalAmount********");
 		
@@ -296,11 +296,28 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			list.add(resp);
 			
 		}
-		HashMap<String, Long> map = new HashMap<String, Long>();
+		HashMap<String, List<Long>> map = new HashMap<String, List<Long>>();
 		
-		map.put("total_without_gst", amtWithoutGST);
-		map.put("total_with_gst", amtWithGST);
-		verificationReqRepo.saveAll(list);
+		List<Long> amtwithoutGst = new ArrayList<>();
+		amtwithoutGst.add(amtWithoutGST);
+		
+		List<Long> listamtwithGst = new ArrayList<>();
+		listamtwithGst.add(amtWithGST);
+		
+		map.put("total_without_gst", amtwithoutGst);
+		map.put("total_with_gst", listamtwithGst);
+		List<VerificationRequest>returnDta=verificationReqRepo.saveAll(list);
+		List<Long> idList=new ArrayList<>();
+
+		for(VerificationRequest data: returnDta)
+		{
+			Long id=data.getId();
+			idList.add(id);
+			
+		}
+		map.put("saveDocID", idList);
+		logger.info("id------------"+ idList);
+
 		logger.info("list------------"+ list);
 		
 		return map;

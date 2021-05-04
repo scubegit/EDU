@@ -119,7 +119,7 @@ public class StudentController {
 		response = new BaseResponse();
 		    try {
 		    	
-		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
+		    	HashMap<String, List<Long>> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

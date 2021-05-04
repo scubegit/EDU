@@ -21,7 +21,7 @@ public interface StudentService {
 
 	public List<VerificationResponse> getClosedRequests(long userId);
 
-	public HashMap<String, Long> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
+	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
 
 	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
 			HttpServletRequest request);
