@@ -123,11 +123,10 @@ public class AuthServiceImpl implements AuthService{
 				 userDetails.getEmail(),
 				 userDetails.getRole(), 
 				 userDetails.getFirstname(),
-				 userDetails.getLastname()
-
+				 userDetails.getLastname(),
+				 userDetails.getPhoneNo()
 				 ));
-
-		
+		logger.info("USER INFo"+baseResponse);
 		return baseResponse;
        
 	
