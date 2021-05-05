@@ -19,6 +19,7 @@ public class UniversityStudentRequest {
 	private String passingYearId;
 	private String streamId;
 	private String originalDOCuploadfilePath;
+	private String filePath;
 	
 
 	

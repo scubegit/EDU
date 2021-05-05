@@ -174,6 +174,7 @@ public class VerifierServiceImpl implements VerifierService{
 		try {
 		 List<VerificationRequest> verifierData = verificationReqRepository.getDataByIdToVerify(id);
 				 logger.info("just outside for");
+				 if(!verifierData.isEmpty()) {
 		        for(VerificationRequest veriReq: verifierData) {
 		        	logger.info("just inside for");
 					 StudentVerificationDocsResponse resEntity = new StudentVerificationDocsResponse();
@@ -203,6 +204,17 @@ public class VerifierServiceImpl implements VerifierService{
 					 logger.info("University upload path set just above");
 					 verificationDataList.add(resEntity);
 		        }
+				 }else {
+					 StudentVerificationDocsResponse resEntity = new StudentVerificationDocsResponse();
+					 
+					 UniversityStudentDocument doc = stuDocService.getUniversityDocDataById(id);
+					 
+					 if(doc != null) {
+					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
+					 }
+					 logger.info("University upload path set just above");
+					 verificationDataList.add(resEntity);
+				 }
 		} catch(Exception e) {
             throw new ExceptionConverter(e);
       }

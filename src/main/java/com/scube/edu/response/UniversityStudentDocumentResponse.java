@@ -19,6 +19,9 @@ public class UniversityStudentDocumentResponse {
 			private String stream;
 			private String collegeName;
 			private String OriginalDOCuploadfilePath;
-			private Integer passingYear;
+			private String passingYear;
+			private Long passingYearId;
+			private Long streamId;
+			private Long collegeId;
 
 }

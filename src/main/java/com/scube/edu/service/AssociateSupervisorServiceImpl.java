@@ -8,12 +8,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.controller.MasterController;
+import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
+import com.scube.edu.repository.CollegeRepository;
+import com.scube.edu.repository.StreamRepository;
 import com.scube.edu.repository.UniversityStudentDocRepository;
+import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.UniversityStudentDocumentResponse;
+import com.scube.edu.util.FileStorageService;
 
 @Service
 public class AssociateSupervisorServiceImpl implements AssociateSupervisorService{
@@ -22,6 +31,18 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 	
 	@Autowired
 	UniversityStudentDocRepository 	universityStudentDocRepository ;
+	
+	@Autowired
+	CollegeRepository collegeRespository;
+	 
+	@Autowired
+	StreamRepository  streamRespository;
+	
+	@Autowired
+	YearOfPassingRepository yearOfPassingRespository;
+	
+	@Autowired
+	private FileStorageService fileStorageService;
 
 	@Override
 	public boolean deleteRecordById(long id, HttpServletRequest request) throws Exception {
@@ -62,7 +83,11 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			editRecord.setFirstName(universityStudentRequest.getFirstName());
 			editRecord.setLastName(universityStudentRequest.getLastName());
 			editRecord.setEnrollmentNo(universityStudentRequest.getEnrollmentNo());
-			editRecord.setOriginalDOCuploadfilePath(universityStudentRequest.getOriginalDOCuploadfilePath());
+			if(universityStudentRequest.getFilePath() != "") {
+			editRecord.setOriginalDOCuploadfilePath(universityStudentRequest.getFilePath());
+			}else{
+				editRecord.setOriginalDOCuploadfilePath(ogRecord.getOriginalDOCuploadfilePath());
+			}
 			editRecord.setCollegeId( Long.parseLong(universityStudentRequest.getCollegeId()));
 			editRecord.setPassingYearId( Long.parseLong(universityStudentRequest.getPassingYearId()));
 			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
@@ -75,6 +100,50 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			throw new Exception("Request Body cannot be empty.");
 		}
 		
+		
+	}
+
+	@Override
+	public UniversityStudentDocumentResponse getRecordById(long id, HttpServletRequest request) {
+		
+		logger.info("*******AssociateSupervisorServiceImpl getRecordById*******");
+		
+		Optional<UniversityStudentDocument> usd = universityStudentDocRepository.findById(id);
+		UniversityStudentDocument ogRecord = usd.get();
+		
+		UniversityStudentDocumentResponse resp = new UniversityStudentDocumentResponse();
+		
+		Optional<CollegeMaster> cm = collegeRespository.findById(ogRecord.getCollegeId());
+		CollegeMaster college = cm.get();
+		 
+		Optional<StreamMaster> streaminfo = streamRespository.findById(ogRecord.getStreamId());
+		StreamMaster stream = streaminfo.get();
+		 
+		Optional<PassingYearMaster> passingyrinfo = yearOfPassingRespository.findById(ogRecord.getPassingYearId());
+		PassingYearMaster passingyr = passingyrinfo.get();
+		
+		resp.setId(ogRecord.getId());
+		resp.setCollegeName(college.getCollegeName());
+		resp.setEnrollmentNo(ogRecord.getEnrollmentNo());
+		resp.setFirstName(ogRecord.getFirstName());
+		resp.setLastName(ogRecord.getLastName());
+		resp.setOriginalDOCuploadfilePath(ogRecord.getOriginalDOCuploadfilePath());
+		resp.setPassingYear(passingyr.getYearOfPassing());
+		resp.setStream(stream.getStreamName());
+		resp.setPassingYearId(ogRecord.getPassingYearId());
+		resp.setStreamId(ogRecord.getStreamId());
+		resp.setCollegeId(ogRecord.getCollegeId());
+		
+		return resp;
+	}
+	
+	public String saveDocument (MultipartFile file) {
+		String fileSubPath = "file/";
+		String filePath = fileStorageService.storeFile(file , fileSubPath);
+		
+		
+		
+		return filePath;
 		
 	}
 
