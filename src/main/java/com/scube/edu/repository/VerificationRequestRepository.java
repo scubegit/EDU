@@ -52,6 +52,11 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Transactional
 	@Query(value = "UPDATE verification_request set assigned_to=0 where assigned_to=(?1) and doc_status='Requested'", nativeQuery = true)
 	Integer updateList(long id);
+	
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	@Query(value = "UPDATE verification_request set Payment_flg='Y' where id=(?1) and doc_status='Requested'", nativeQuery = true)
+	Integer updatePaymentFlag(long id);
 
 
 }

@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.mapping.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +36,7 @@ import com.scube.edu.repository.VerificationDocViewRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.PriceMasterResponse;
@@ -220,7 +221,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	}
 
 	@Override
-	public HashMap<String, Long> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
+	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
 		logger.info("********StudentServiceImpl calculateTotalAmount********");
 		
@@ -287,7 +288,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setVerRequestId(ver_req);
 			resp.setRequestType(req.getRequesttype());
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
-			
+			resp.setPaymentId(req.getPaymentId());
 			resp.setDocAmt(total);
 			resp.setDosAmtWithGst(totalWithGST);
 			
@@ -296,11 +297,28 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			list.add(resp);
 			
 		}
-		HashMap<String, Long> map = new HashMap<String, Long>();
+		HashMap<String, List<Long>> map = new HashMap<String, List<Long>>();
 		
-		map.put("total_without_gst", amtWithoutGST);
-		map.put("total_with_gst", amtWithGST);
-		verificationReqRepo.saveAll(list);
+		List<Long> amtwithoutGst = new ArrayList<>();
+		amtwithoutGst.add(amtWithoutGST);
+		
+		List<Long> listamtwithGst = new ArrayList<>();
+		listamtwithGst.add(amtWithGST);
+		
+		map.put("total_without_gst", amtwithoutGst);
+		map.put("total_with_gst", listamtwithGst);
+		List<VerificationRequest>returnDta=verificationReqRepo.saveAll(list);
+		List<Long> idList=new ArrayList<>();
+
+		for(VerificationRequest data: returnDta)
+		{
+			Long id=data.getId();
+			idList.add(id);
+			
+		}
+		map.put("saveDocID", idList);
+		logger.info("id------------"+ idList);
+
 		logger.info("list------------"+ list);
 		
 		return map;
@@ -379,6 +397,74 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		return filePath;
 		
+	}
+
+	@Override
+	public HashMap<String, Long> CalculateDocAmount(List<StudentDocVerificationRequest> studentDocReq){
+		
+	logger.info("********StudentServiceImpl calculateTotalAmount********");
+		
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		long total;
+		long totalWithGST;
+		
+		long amtWithoutGST = 0;
+		long amtWithGST = 0;
+		
+		// assign application_id here
+		Long appId = (long) 0;
+		Long app_id;
+		app_id = verificationReqRepo.getMaxApplicationId();
+		logger.info("---------"+ app_id);
+		
+		if(app_id == null) {
+			appId = (long) 1;
+			System.out.println("here");
+		}else {
+			appId = app_id + 1;
+		}
+		
+		logger.info("---------"+ appId);
+		
+		
+		
+		for(StudentDocVerificationRequest req : studentDocReq) {
+			System.out.println(req);
+			VerificationRequest resp = new VerificationRequest();
+			
+			System.out.println("------In Save and calculate Req FOR LOOP----");
+			
+			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
+						
+			total = diff.getTotalAmt();
+			totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			amtWithoutGST += diff.getTotalAmt();
+			amtWithGST += ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			logger.info(total+ " and  "+ totalWithGST+ "  and  "+ amtWithoutGST + " and   "+ amtWithGST);			
+		}
+		HashMap<String,Long> map = new HashMap<String,Long>();
+	
+		
+		
+		map.put("total_without_gst", amtWithoutGST);
+		map.put("total_with_gst", amtWithGST);
+		
+		return map;		
+	}
+	
+	@Override
+	public String UpdatePaymentFlag(List<paymensReqFlagRequest> id) {
+		
+		logger.info("Array"+id);
+		Integer rowcnt = 0;
+		for (paymensReqFlagRequest list:id ) {
+			 verificationReqRepo.updatePaymentFlag(list.getId());
+			 rowcnt++;
+		}
+		 String row=Integer.toString(rowcnt);
+		return row;
 	}
 
 	

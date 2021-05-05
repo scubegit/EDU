@@ -110,5 +110,11 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "remark")
 	private String remark;
+	
+	@Column(name = "Payment_Flg")
+	private String PaymentFlag;
+	
+	@Column(name = "Payment_ID")
+	private String paymentId;
 
 }

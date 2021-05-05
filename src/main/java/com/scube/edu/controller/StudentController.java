@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.PriceMasterResponse;
@@ -38,6 +39,7 @@ import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.StudentService;
 import com.scube.edu.service.VerificationService;
 import com.scube.edu.util.StringsUtils;
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.scube.edu.util.InvoicePDFExporter;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -119,7 +121,7 @@ public class StudentController {
 		response = new BaseResponse();
 		    try {
 		    	
-		    	HashMap<String, Long> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
+		    	HashMap<String, List<Long>> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -232,6 +234,60 @@ public class StudentController {
 			
    }
 	
+	@PostMapping("/updatePaymentflg")
+	public  ResponseEntity<Object> updatePaymentFlg(@RequestBody List<paymensReqFlagRequest>studentDocReq, HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		    try {
+		    	
+		    	String list = studentService.UpdatePaymentFlag(studentDocReq);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 	
-
+	@PostMapping("/calDocPaymentAmt")
+	public  ResponseEntity<Object> calculateDocAmt(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
+		response = new BaseResponse();
+		    try {
+		    	
+		    	HashMap<String,Long> list = studentService.CalculateDocAmount(studentDocReq);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 }
