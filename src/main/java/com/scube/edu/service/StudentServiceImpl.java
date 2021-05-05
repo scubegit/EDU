@@ -288,7 +288,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setVerRequestId(ver_req);
 			resp.setRequestType(req.getRequesttype());
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
-			
+			resp.setPaymentId(req.getPaymentId());
 			resp.setDocAmt(total);
 			resp.setDosAmtWithGst(totalWithGST);
 			

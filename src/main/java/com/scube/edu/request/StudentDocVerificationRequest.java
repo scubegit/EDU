@@ -25,5 +25,7 @@ public class StudentDocVerificationRequest {
 	private Long verreqid;
 	private String uploaddocpath;
 	private String filepath;
+	private String paymentId;
+
 
 }
