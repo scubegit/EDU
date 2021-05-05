@@ -262,5 +262,32 @@ public class StudentController {
 				}
 			
    }
-
+	
+	@PostMapping("/calDocPaymentAmt")
+	public  ResponseEntity<Object> calculateDocAmt(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
+		response = new BaseResponse();
+		    try {
+		    	
+		    	HashMap<String,Long> list = studentService.CalculateDocAmount(studentDocReq);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 }

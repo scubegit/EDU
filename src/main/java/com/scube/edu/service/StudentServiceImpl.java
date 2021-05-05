@@ -400,6 +400,61 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	}
 
 	@Override
+	public HashMap<String, Long> CalculateDocAmount(List<StudentDocVerificationRequest> studentDocReq){
+		
+	logger.info("********StudentServiceImpl calculateTotalAmount********");
+		
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		long total;
+		long totalWithGST;
+		
+		long amtWithoutGST = 0;
+		long amtWithGST = 0;
+		
+		// assign application_id here
+		Long appId = (long) 0;
+		Long app_id;
+		app_id = verificationReqRepo.getMaxApplicationId();
+		logger.info("---------"+ app_id);
+		
+		if(app_id == null) {
+			appId = (long) 1;
+			System.out.println("here");
+		}else {
+			appId = app_id + 1;
+		}
+		
+		logger.info("---------"+ appId);
+		
+		
+		
+		for(StudentDocVerificationRequest req : studentDocReq) {
+			System.out.println(req);
+			VerificationRequest resp = new VerificationRequest();
+			
+			System.out.println("------In Save and calculate Req FOR LOOP----");
+			
+			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
+						
+			total = diff.getTotalAmt();
+			totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			amtWithoutGST += diff.getTotalAmt();
+			amtWithGST += ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			logger.info(total+ " and  "+ totalWithGST+ "  and  "+ amtWithoutGST + " and   "+ amtWithGST);			
+		}
+		HashMap<String,Long> map = new HashMap<String,Long>();
+	
+		
+		
+		map.put("total_without_gst", amtWithoutGST);
+		map.put("total_with_gst", amtWithGST);
+		
+		return map;		
+	}
+	
+	@Override
 	public String UpdatePaymentFlag(List<paymensReqFlagRequest> id) {
 		
 		logger.info("Array"+id);
