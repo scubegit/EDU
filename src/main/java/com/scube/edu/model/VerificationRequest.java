@@ -115,6 +115,6 @@ public class VerificationRequest extends CreateUpdate {
 	private String PaymentFlag;
 	
 	@Column(name = "Payment_ID")
-	private String PaymentId;
+	private String paymentId;
 
 }
