@@ -9,11 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationListPojoResponse;
 import com.scube.edu.response.VerificationResponse;
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public interface StudentService {
 
@@ -27,6 +29,8 @@ public interface StudentService {
 			HttpServletRequest request);
 
 	public String saveDocument(MultipartFile file);
+	
+	public String UpdatePaymentFlag(List<paymensReqFlagRequest> id);
 
 
 

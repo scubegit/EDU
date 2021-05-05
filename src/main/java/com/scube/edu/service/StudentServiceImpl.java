@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.mapping.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +36,7 @@ import com.scube.edu.repository.VerificationDocViewRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 
 import com.scube.edu.response.PriceMasterResponse;
@@ -396,6 +397,19 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		return filePath;
 		
+	}
+
+	@Override
+	public String UpdatePaymentFlag(List<paymensReqFlagRequest> id) {
+		
+		logger.info("Array"+id);
+		Integer rowcnt = 0;
+		for (paymensReqFlagRequest list:id ) {
+			 verificationReqRepo.updatePaymentFlag(list.getId());
+			 rowcnt++;
+		}
+		 String row=Integer.toString(rowcnt);
+		return row;
 	}
 
 	
