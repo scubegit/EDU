@@ -289,7 +289,7 @@ public class InvoicePDFExporter {
  	     studentDocTable.addCell(getCellH("Document Name", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Passing Year", Element.ALIGN_CENTER, font9b));
          studentDocTable.addCell(getCellH("Verification Amount", Element.ALIGN_CENTER, font9b));
- 	     studentDocTable.addCell(getCellH("Handling Charges", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Service Charges", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Total", Element.ALIGN_CENTER, font9b));
  
  	    Long totalAmt = (long) 0;

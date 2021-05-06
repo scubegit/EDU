@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,9 @@ import com.scube.edu.repository.UniversityStudentDocRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.UniversityStudentDocumentResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.util.FileStorageService;
 
 @Service
@@ -37,6 +40,9 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 	 
 	@Autowired
 	StreamRepository  streamRespository;
+	
+	@Autowired
+	UniversityStudentDocService  stuDocService;
 	
 	@Autowired
 	YearOfPassingRepository yearOfPassingRespository;
@@ -145,6 +151,23 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		
 		return filePath;
 		
+	}
+
+	@Override
+	public VerificationResponse verifyDocument(Long id) {
+		
+		logger.info("*******AssociateSupervisorServiceImpl verifyDocument*******");
+		
+		VerificationResponse resEntity = new VerificationResponse();
+		 
+		 UniversityStudentDocument doc = stuDocService.getUniversityDocDataById(id);
+		 
+		 if(doc != null) {
+		 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
+		 }
+		 logger.info("University upload path set just above");
+		
+		return resEntity;
 	}
 
 }
