@@ -99,6 +99,12 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "doc_amt_with_gst")
 	private Long dosAmtWithGst;
 	
+	@Column(name = "doc_uni_amt")
+	private Long docUniAmt;
+	
+	@Column(name = "doc_secur_charge")
+	private Long docSecurCharge;
+	
 	@Column(name = "request_type")
 	private Long requestType;
 	
