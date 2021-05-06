@@ -136,7 +136,7 @@ public class PriceController {
 	
 	
 	@PostMapping("/priceUpdate")
-	public ResponseEntity<Object> updatePrice(@RequestBody PriceMaster priceMaster ,  HttpServletRequest request) {
+	public ResponseEntity<Object> updatePrice(@RequestBody PriceAddRequest priceMaster ,  HttpServletRequest request) {
 		
 		logger.info("********priceController updatePrice()********");
 		response = new BaseResponse();
