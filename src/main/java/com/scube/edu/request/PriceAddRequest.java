@@ -19,6 +19,7 @@ public class PriceAddRequest {
 	private long amount;
 	private String created_by;
 	private long gst;
+	private long securitycharge;
 	
 
 	

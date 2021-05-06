@@ -19,7 +19,7 @@ public interface PriceService {
 	//Abhishek Added
 		public Boolean addPrice(PriceAddRequest priceRequest) throws Exception;
 		
-		public BaseResponse UpdatePrice(PriceMaster priceMaster) throws Exception;
+		public BaseResponse UpdatePrice(PriceAddRequest priceMaster) throws Exception;
 		//Abhishek Added
 
 		Boolean deletePrice(Long id);

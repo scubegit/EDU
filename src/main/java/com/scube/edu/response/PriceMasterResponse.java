@@ -27,6 +27,8 @@ public class PriceMasterResponse {
 	private String yearrangeEnd;
 	private long amount;
 	private String created_by;
+	private long gst;
+	private long secure_charge;
 	
 
 }

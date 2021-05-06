@@ -54,6 +54,8 @@ public class PriceServiceImpl  implements PriceService {
 			priceResponse.setYearrangeStart(entity.getYearrangeStart());
 			priceResponse.setYearrangeEnd(entity.getYearrangeEnd());
 			priceResponse.setCreated_by(entity.getCreateby());
+			priceResponse.setGst(entity.getGst());
+			priceResponse.setSecure_charge(entity.getSecurCharge());
 			
 			
 			priceList.add(priceResponse);
@@ -77,6 +79,7 @@ public class PriceServiceImpl  implements PriceService {
 			priceMasterEntity.setCreateby(priceRequest.getCreated_by()); // Logged User Id 
 			priceMasterEntity.setIsdeleted("N"); // By Default N	
 			priceMasterEntity.setGst(priceRequest.getGst());
+			priceMasterEntity.setSecurCharge(priceRequest.getSecuritycharge());
 		
 			pricemasterRespository.save(priceMasterEntity);
 		
@@ -92,11 +95,11 @@ public class PriceServiceImpl  implements PriceService {
 		
 		
 		@Override
-		public BaseResponse UpdatePrice(PriceMaster priceMaster) throws Exception {
+		public BaseResponse UpdatePrice(PriceAddRequest priceMaster) throws Exception {
 			
 			baseResponse	= new BaseResponse();	
 
-			Optional<PriceMaster> priceEntities  = pricemasterRespository.findById(priceMaster.getId());
+			PriceMaster priceEntities  = pricemasterRespository.findById(priceMaster.getId());
 			
 			   if(priceEntities == null) {
 				   
@@ -104,15 +107,17 @@ public class PriceServiceImpl  implements PriceService {
 				}
 			
 			
-			   PriceMaster priceEntit = priceEntities.get();
+//			   PriceMaster priceEntit = priceEntities.get();
 			
-			   priceEntit.setServiceName(priceMaster.getServiceName());
-			   priceEntit.setAmount(priceMaster.getAmount());//1
-			   priceEntit.setYearrangeStart(priceMaster.getYearrangeStart());//
-			   priceEntit.setYearrangeEnd(priceMaster.getYearrangeEnd());//
+			   priceEntities.setServiceName(priceMaster.getServiceName());
+			   priceEntities.setAmount(priceMaster.getAmount());//1
+			   priceEntities.setYearrangeStart(priceMaster.getYearrangeStart());//
+			   priceEntities.setYearrangeEnd(priceMaster.getYearrangeEnd());//
+			   priceEntities.setGst(priceMaster.getGst());
+			   priceEntities.setSecurCharge(priceMaster.getSecuritycharge());
 			
 			
-			   pricemasterRespository.save(priceEntit);
+			   pricemasterRespository.save(priceEntities);
 			
 			   
 		
