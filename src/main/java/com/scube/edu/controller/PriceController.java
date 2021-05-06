@@ -105,7 +105,7 @@ public class PriceController {
 
 	}
 	
-	@PostMapping("/priceDelete/{id}")
+	@DeleteMapping("/priceDelete/{id}")
 	public ResponseEntity<Object> deletePrice(@PathVariable Long id, HttpServletRequest request) {
 
 		logger.info("********PriceController deletePrice()********");
