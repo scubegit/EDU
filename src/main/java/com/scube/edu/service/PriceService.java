@@ -22,4 +22,6 @@ public interface PriceService {
 		public BaseResponse UpdatePrice(PriceMaster priceMaster) throws Exception;
 		//Abhishek Added
 
+		Boolean deletePrice(Long id);
+
 }

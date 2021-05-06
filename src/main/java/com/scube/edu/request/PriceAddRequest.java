@@ -18,6 +18,7 @@ public class PriceAddRequest {
 	private String yearrangeEnd;
 	private long amount;
 	private String created_by;
+	private long gst;
 	
 
 	
