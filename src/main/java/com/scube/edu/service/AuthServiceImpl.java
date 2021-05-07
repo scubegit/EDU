@@ -149,35 +149,22 @@ public class AuthServiceImpl implements AuthService{
 				throw new Exception("This email id already exists");
 			}
 		
-		 userMasterEntity.setPanNumber(userAddRequest.getPanNumber());
-		 userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
-		 userMasterEntity.setCompanyEmailId(userAddRequest.getEmailId());
-		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
-		 userMasterEntity.setContactPersonName(userAddRequest.getContactPersonName());
-		 userMasterEntity.setContactPersonPhone(userAddRequest.getContactPersonPhoneNo());
-		 
-		 if(userAddRequest.getFirstName() != null) {
-			 userMasterEntity.setFirstName(userAddRequest.getFirstName());
-		 }else {
-			 userMasterEntity.setFirstName(userAddRequest.getContactPersonName());
-		 }
-		 userMasterEntity.setLastName(userAddRequest.getLastName());
-		 
-//		 if(userAddRequest.getRoleId() == 1) {
-			 userMasterEntity.setEmailId(userAddRequest.getEmailId());  
-//		 }
-		 if(userAddRequest.getPhoneNumber() != null) {
-			 userMasterEntity.setPhoneNo(userAddRequest.getPhoneNumber());
-		 }else {
-			 userMasterEntity.setPhoneNo(userAddRequest.getContactPersonPhoneNo());
-		 }
-		 userMasterEntity.setPassword(encoder.encode(userAddRequest.getPassword()));
-		 userMasterEntity.setEmailVerificationStatus("N");
-		 userMasterEntity.setUniversityId(userAddRequest.getUniversityId());
-		 userMasterEntity.setUsername(userAddRequest.getEmailId());
-	     userMasterEntity.setRoleId(userAddRequest.getRoleId());
-		 userMasterEntity.setGSTNo(userAddRequest.getGstNo());
-		 userMasterEntity.setIsactive("Y");
+			userMasterEntity.setPanNumber(userAddRequest.getPanNumber());
+			userMasterEntity.setCompanyName(userAddRequest.getCompanyName());
+//			userMasterEntity.setCompanyEmailId(userAddRequest.getEmailId());
+			userMasterEntity.setGSTNo(userAddRequest.getGstNo());
+//			userMasterEntity.setContactPersonName(userAddRequest.getContactPersonName());
+//			userMasterEntity.setContactPersonPhone(userAddRequest.getContactPersonPhoneNo());
+			userMasterEntity.setFirstName(userAddRequest.getFirstName());
+			userMasterEntity.setLastName(userAddRequest.getLastName());
+			userMasterEntity.setEmailId(userAddRequest.getEmailId());
+			userMasterEntity.setPhoneNo(userAddRequest.getPhoneNumber());
+			userMasterEntity.setPassword(encoder.encode(userAddRequest.getPassword()));
+			userMasterEntity.setEmailVerificationStatus("N");
+			userMasterEntity.setUniversityId(userAddRequest.getUniversityId());
+			userMasterEntity.setUsername(userAddRequest.getEmailId());
+			userMasterEntity.setRoleId(userAddRequest.getRoleId());
+			userMasterEntity.setIsactive("Y");
 		 
 	
 	     userRepository.save(userMasterEntity);

@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
 			user.setContact_person_name(entt.getContactPersonName());
 			user.setFirst_name(entt.getFirstName());
 			user.setLast_name(entt.getLastName());
+			user.setRole_id(entt.getRoleId());
 			
 			return user;
 		

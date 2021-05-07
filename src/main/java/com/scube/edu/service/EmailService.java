@@ -376,6 +376,8 @@ public class EmailService {
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
 		
+		UserResponse ume = userService.getUserInfoById(vr.getUserId());
+		
 		Document document = new Document(PageSize.A4,40, 40, 50, 7);
 		//Set all required fonts here with appropriate names
 		Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
@@ -401,8 +403,8 @@ public class EmailService {
 //        footer.setBorder(Rectangle.NO_BORDER);
         document.setFooter(footer);
         
-		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-//        Image img = Image.getInstance("EduCred_Logo.jpg"); //
+//		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+        Image img = Image.getInstance("EduCred_Logo.jpg"); //
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -433,12 +435,9 @@ public class EmailService {
 	    Addr.setAlignment(Paragraph.ALIGN_LEFT);
 	    Addr.add(Chunk.NEWLINE);
 	    Addr.add("To, \r"
-	    		+ "Harshal Thorat, \r"
-	    		+ "Verification Analyst - Education, \r"
-	    		+ "SecUR Credentials Ltd, \r"
-	    		+ "MIDC Cross Road A, \r"
-	    		+ "Near Marol Depot, \r"
-	    		+ "Andheri (East), Mumbai- 400 093.");
+	    		+ ume.getFirst_name()+" "+ume.getLast_name()+"\r"
+	    		+ "Email Id: "+ume.getEmail()+", \r"
+	    		+ "Phone No: "+ume.getPhone_no()+", \r");
 	    Addr.add(Chunk.NEWLINE);
 	    Addr.add(Chunk.NEWLINE);
 	    Addr.add(Chunk.NEWLINE);
@@ -482,7 +481,7 @@ public class EmailService {
 	    
 //	    for(VerificationRequest ent: vr) {
 	    
-	    	UserResponse ume = userService.getUserInfoById(vr.getUserId());
+	    	
 	    	
 	    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 	    	 String strDate= formatter.format(vr.getCreatedate());
@@ -569,6 +568,8 @@ public class EmailService {
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
 		
+		UserResponse ume = userService.getUserInfoById(vr.getUserId());
+		
 		Document document = new Document(PageSize.A4,40, 40, 50, 7);
 		//Set all required fonts here with appropriate names
 		Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
@@ -598,8 +599,8 @@ public class EmailService {
 		// left, right, top, bottom
 		logger.info("headerFooter set here--->just before document.open()");
 		
-		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-//        Image img = Image.getInstance("EduCred_Logo.jpg"); //
+//		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
+        Image img = Image.getInstance("EduCred_Logo.jpg"); //
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -632,13 +633,9 @@ public class EmailService {
 	    Addr.setAlignment(Paragraph.ALIGN_LEFT);
 	    Addr.add(Chunk.NEWLINE);
 	    Addr.add("To, \r"
-	    		+ "Nagesh Madhur, \r"
-	    		+ "Verification Analyst - Education, \r"
-	    		+ "SecUR Credentials, \r"
-	    		+ "SecUR House \r"
-	    		+ "MIDC Cross Road A, \r"
-	    		+ "Near Marol Depot, \r"
-	    		+ "Andheri (East), Mumbai- 400 093.");
+	    		+ ume.getFirst_name()+" "+ume.getLast_name()+"\r"
+	    		+ "Email Id: "+ume.getEmail()+", \r"
+	    		+ "Phone No: "+ume.getPhone_no()+", \r");
 	    Addr.add(Chunk.NEWLINE);
 	    Addr.add(Chunk.NEWLINE);
 	    Addr.add(Chunk.NEWLINE);
@@ -692,7 +689,7 @@ public class EmailService {
 	    
 //	    for(VerificationRequest ent: vr) {
 	    logger.info("record values set here--->");
-	    	UserResponse ume = userService.getUserInfoById(vr.getUserId());
+	    	
 	    	
 	    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 	    	 String strDate= formatter.format(vr.getCreatedate());
