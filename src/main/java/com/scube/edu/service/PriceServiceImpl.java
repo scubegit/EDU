@@ -42,7 +42,7 @@ public class PriceServiceImpl  implements PriceService {
 		
 		List<PriceMasterResponse> priceList = new ArrayList<>();
 		
-		List<PriceMaster> priceEntities    = pricemasterRespository.findAll();
+		List<PriceMaster> priceEntities    = pricemasterRespository.findByIsdeleted("N");
 		
 		for(PriceMaster entity : priceEntities) {
 			
@@ -54,6 +54,8 @@ public class PriceServiceImpl  implements PriceService {
 			priceResponse.setYearrangeStart(entity.getYearrangeStart());
 			priceResponse.setYearrangeEnd(entity.getYearrangeEnd());
 			priceResponse.setCreated_by(entity.getCreateby());
+			priceResponse.setGst(entity.getGst());
+			priceResponse.setSecure_charge(entity.getSecurCharge());
 			
 			
 			priceList.add(priceResponse);
@@ -75,7 +77,9 @@ public class PriceServiceImpl  implements PriceService {
 			priceMasterEntity.setYearrangeStart(priceRequest.getYearrangeStart());//
 			priceMasterEntity.setYearrangeEnd(priceRequest.getYearrangeEnd());//
 			priceMasterEntity.setCreateby(priceRequest.getCreated_by()); // Logged User Id 
-			//docMasterEntity.setIsdeleted(documentRequest.getIs_deleted()); // By Default N	
+			priceMasterEntity.setIsdeleted("N"); // By Default N	
+			priceMasterEntity.setGst(priceRequest.getGst());
+			priceMasterEntity.setSecurCharge(priceRequest.getSecuritycharge());
 		
 			pricemasterRespository.save(priceMasterEntity);
 		
@@ -84,16 +88,18 @@ public class PriceServiceImpl  implements PriceService {
 			return true;
 			
 		}
+		
+		
 
 		
 		
 		
 		@Override
-		public BaseResponse UpdatePrice(PriceMaster priceMaster) throws Exception {
+		public BaseResponse UpdatePrice(PriceAddRequest priceMaster) throws Exception {
 			
 			baseResponse	= new BaseResponse();	
 
-			Optional<PriceMaster> priceEntities  = pricemasterRespository.findById(priceMaster.getId());
+			PriceMaster priceEntities  = pricemasterRespository.findById(priceMaster.getId());
 			
 			   if(priceEntities == null) {
 				   
@@ -101,15 +107,17 @@ public class PriceServiceImpl  implements PriceService {
 				}
 			
 			
-			   PriceMaster priceEntit = priceEntities.get();
+//			   PriceMaster priceEntit = priceEntities.get();
 			
-			   priceEntit.setServiceName(priceMaster.getServiceName());
-			   priceEntit.setAmount(priceMaster.getAmount());//1
-			   priceEntit.setYearrangeStart(priceMaster.getYearrangeStart());//
-			   priceEntit.setYearrangeEnd(priceMaster.getYearrangeEnd());//
+			   priceEntities.setServiceName(priceMaster.getServiceName());
+			   priceEntities.setAmount(priceMaster.getAmount());//1
+			   priceEntities.setYearrangeStart(priceMaster.getYearrangeStart());//
+			   priceEntities.setYearrangeEnd(priceMaster.getYearrangeEnd());//
+			   priceEntities.setGst(priceMaster.getGst());
+			   priceEntities.setSecurCharge(priceMaster.getSecuritycharge());
 			
 			
-			   pricemasterRespository.save(priceEntit);
+			   pricemasterRespository.save(priceEntities);
 			
 			   
 		
@@ -118,6 +126,22 @@ public class PriceServiceImpl  implements PriceService {
 			baseResponse.setRespData("success");
 			 
 			return baseResponse;
+		}
+
+
+
+		@Override
+		public Boolean deletePrice(Long id) {
+			
+			logger.info("*******PriceServiceImpl deletePrice*******");
+			
+			Optional<PriceMaster> pmm = pricemasterRespository.findById(id);
+			PriceMaster pm = pmm.get();
+			
+			pm.setIsdeleted("Y");
+			
+			pricemasterRespository.save(pm);
+			return true;
 		}
 		
 		

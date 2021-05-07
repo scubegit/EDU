@@ -124,9 +124,12 @@ public class VerificationServiceImpl implements VerificationService{
 				
 			    id  = verEntities.getUserId();
 				
-			    docResponse.setAmount(diff.getAmount());
-			    docResponse.setSecurAmt(diff.getSecurCharge());
+//			    docResponse.setAmount(diff.getAmount());
+//			    docResponse.setSecurAmt(diff.getSecurCharge());
 			    docResponse.setGst(diff.getGst());
+			    docResponse.setAmount(verEntities.getDocUniAmt());
+			    docResponse.setSecurAmt(verEntities.getDocSecurCharge());
+//			    docResponse.setGst(verEntities.get);
 				docResponse.setApplication_id(verEntities.getApplicationId());
 				docResponse.setCollege_name_id(verEntities.getCollegeId());
 //				docResponse.setDoc_name(verEntities.getDocumentId());

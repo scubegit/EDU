@@ -1,5 +1,7 @@
 package com.scube.edu.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,9 @@ public interface PriceMasterRepository extends JpaRepository<PriceMaster, Long>{
 
 	
 	PriceMaster findById(long id);
+
+
+	List<PriceMaster> findByIsdeleted(String string);
 
 	
 

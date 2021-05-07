@@ -223,7 +223,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	@Override
 	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
-		logger.info("********StudentServiceImpl calculateTotalAmount********");
+		logger.info("********StudentServiceImpl saveVerificationDocAndCalculateAmount********");
 		
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		long total;
@@ -271,7 +271,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			logger.info(total+ "   "+ totalWithGST+ "   "+ amtWithoutGST + "   "+ amtWithGST);
 			
 			// Make a verificationRequestRepo function which will save total and totalWithoutGST against each application id
-			
+			resp.setDocUniAmt(diff.getAmount());
+			resp.setDocSecurCharge(diff.getSecurCharge());
 			resp.setApplicationId(appId);
 			resp.setAssignedTo(assign_to);
 			resp.setCollegeId(req.getCollegenameid());
