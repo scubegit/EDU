@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,16 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
-import com.scube.edu.response.StreamResponse;
 import com.scube.edu.service.BranchMasterService;
 import com.scube.edu.util.StringsUtils;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/branch")
-public class BranchMasterController {
-	
-
+public class SemesterController {
 	private static final Logger logger = LoggerFactory.getLogger(StreamController.class);
 
 	BaseResponse response = null;
@@ -34,7 +30,7 @@ public class BranchMasterController {
 	@Autowired 
 	BranchMasterService branchMasterService;
 	
-	@GetMapping("/getBranchList/{id}")
+	@PostMapping("/getBranchList/{id}")
 	public ResponseEntity<Object> getStreamList(@PathVariable Long id,HttpServletRequest request) {
 		
 		response = new BaseResponse();
@@ -66,3 +62,4 @@ public class BranchMasterController {
 		
 	}
 }
+
