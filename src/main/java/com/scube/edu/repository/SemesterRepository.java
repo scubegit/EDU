@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.scube.edu.model.BranchMasterEntity;
+import com.scube.edu.model.SemesterEntity;
 
 @Repository
-public interface BranchMasterRepository extends JpaRepository<BranchMasterEntity, Long> {
-
+public interface SemesterRepository extends JpaRepository<SemesterEntity, Long> {
+	
 	@Query(value ="SELECT * from semester_Master where stream_id =?1", nativeQuery = true)
-	List<BranchMasterEntity> getbrachbyStreamId(Long id);
+	List<SemesterEntity> getSembyStreamId(Long id);
 }

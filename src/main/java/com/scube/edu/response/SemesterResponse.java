@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter 
 @Setter
 @ToString
-public class StreamResponse {
-	private long id;
-    private String StreamName;   
-    private long universityId;
-
+public class SemesterResponse {
+	private Long id;
+	private Long universityId;
+	private String semester;
+	private Long StreamId;
 }
