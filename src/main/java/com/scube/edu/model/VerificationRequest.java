@@ -122,5 +122,11 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "Payment_ID")
 	private String paymentId;
+	
+	@Column(name = "branch_ID")
+	private Long branchId;
+	
+	@Column(name = "sem_ID")
+	private Long semId;
 
 }
