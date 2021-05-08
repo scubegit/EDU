@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.repository.BranchMasterRepository;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
@@ -46,5 +47,15 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 				branchList.add(response);
 			}
 			return branchList;
+	}
+
+	@Override
+	public BranchMasterEntity getbranchById(Long id) {
+		System.out.println(id);
+		Optional<BranchMasterEntity> branchEntity    = branchMasterRepository.findById(id);
+		BranchMasterEntity semEnt = branchEntity.get();
+		System.out.println("yearEnt---"+ semEnt);
+		
+				return semEnt;
 	}
 }

@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
@@ -44,6 +46,11 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	@Autowired
 	DocumentService	documentService;
 	
+	@Autowired
+	SemesterService semesterService;
+	
+	@Autowired
+	BranchMasterService branchMasterService;
 	@Override
 	public List<VerificationResponse> getOneMonthVerificationDocsDataByUserid(long userId, String fromDate, String toDate ) throws Exception {
 		
@@ -63,8 +70,12 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
 			
 			DocumentMaster doc = documentService.getNameById(req.getDocumentId());
-			
+		
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
+			
+			SemesterEntity sem=semesterService.getSemById(req.getSemId());
+			
+			BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
@@ -82,7 +93,8 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setEnroll_no(req.getEnrollmentNumber());
 			resp.setFirst_name(req.getFirstName());
 			resp.setLast_name(req.getLastName());
-			
+			resp.setBranch_nm(branch.getBranchName());
+			resp.setSemester(sem.getSemester());
 ////			resp.setRequest_type_id(req.get);
 //			resp.setStream_id(req.getStreamId());
 //			resp.setUni_id(req.getUniversityId());
@@ -92,7 +104,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setUpload_doc_path(req.getUploadDocumentPath());
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
-			
+
 			responseList.add(resp);
 			
 		}

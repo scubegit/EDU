@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.BranchMasterEntity;
+import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.repository.BranchMasterRepository;
 import com.scube.edu.repository.SemesterRepository;
@@ -46,4 +48,14 @@ public class SemesterServiceImpl implements SemesterService{
 			}
 			return branchList;
 	}
+
+	@Override
+	public SemesterEntity getSemById(Long id) {
+		System.out.println(id);
+		Optional<SemesterEntity> semEntity    = semesterRepository.findById(id);
+		SemesterEntity branchEnt = semEntity.get();
+		System.out.println("yearEnt---"+ branchEnt);
+		
+				return branchEnt;
+}
 }
