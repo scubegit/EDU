@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(	name = "Branch_Master")
+@Table(	name = "branch_Master")
 public class BranchMasterEntity extends CreateUpdate{
 
 	@Id
