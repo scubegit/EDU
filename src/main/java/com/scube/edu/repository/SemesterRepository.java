@@ -17,5 +17,5 @@ public interface SemesterRepository extends JpaRepository<SemesterEntity, Long> 
 	List<SemesterEntity> getSembyStreamId(Long id);
 	Optional<SemesterEntity> findById(Long id);
 	
-	//Optional<SemesterEntity> findBySemester(String sem);
+	SemesterEntity findBySemester(String sem);
 }

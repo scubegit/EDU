@@ -61,10 +61,9 @@ public class SemesterServiceImpl implements SemesterService{
 	@Override
 	public SemesterEntity getSemIdByNm(String sem ) {
 		System.out.println(sem);
-		Optional<SemesterEntity> semEntity=null;//  = semesterRepository.findBySemester(sem);
-		SemesterEntity semesterEntity=semEntity.get();
+		SemesterEntity semEntity = semesterRepository.findBySemester(sem);
 		System.out.println("yearEnt---"+ semEntity);
 		
-				return semesterEntity;
+				return semEntity;
 }
 }

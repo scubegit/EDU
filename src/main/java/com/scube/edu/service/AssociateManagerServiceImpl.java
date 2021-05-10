@@ -144,6 +144,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        SavestudentData.setPassingYear(Data.getPassingYear());	
 		        SavestudentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
 		        SavestudentData.setReason(reason);
+		        SavestudentData.setBranch_nm(branch.getBranchName());
+		        SavestudentData.setSemester(sem.getSemester());
 		        savedStudDataList.add(SavestudentData);	
 		        
 				
@@ -152,10 +154,18 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 					 else
 					 {	
 						 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
-						 if(collegeEntities==null && stream==null && passingyr==null) {
+						 if(collegeEntities==null && stream==null && passingyr==null&& sem==null&&branch==null) {
 						 reason="Invalid College Name, Stream and Year of Passing";
 						 }
-						 else if(collegeEntities==null && stream==null)
+						 else if(collegeEntities==null && stream==null&&passingyr==null)
+						 {
+							 reason="Invalid College Name and Stream";
+						 }
+						 else if(collegeEntities==null && stream==null&&sem==null)
+						 {
+							 reason="Invalid College Name and Stream";
+						 }
+						 else if(collegeEntities==null && stream==null&&branch==null)
 						 {
 							 reason="Invalid College Name and Stream";
 						 }
@@ -163,7 +173,34 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 {
 							 reason="Invalid College Name and Year of Passing";
 						 }
+						 else if(collegeEntities==null && sem==null)
+						 {
+							 reason="Invalid College Name and Year of Passing";
+						 } else if(collegeEntities==null && branch==null)
+						 {
+							 reason="Invalid College Name and Year of Passing";
+						 }
+						 
+						 else if(passingyr==null && sem==null)
+						 {
+							 reason="Invalid College Name and Year of Passing";
+						 } else if(passingyr==null && branch==null)
+						 {
+							 reason="Invalid College Name and Year of Passing";
+						 }
 						 else if(stream==null && passingyr==null)
+						 {
+							 reason="Invalid Year of Passing and Stream";
+						 }
+						 else if(stream==null && sem==null)
+						 {
+							 reason="Invalid Year of Passing and Stream";
+						 }
+						 else if(stream==null && branch==null)
+						 {
+							 reason="Invalid Year of Passing and Stream";
+						 }
+						 else if(sem==null && branch==null)
 						 {
 							 reason="Invalid Year of Passing and Stream";
 						 }
@@ -181,9 +218,19 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 {
 							 reason="Invalid Year of Passing";
 						 }
+						 else if(sem==null)
+						 {
+							 reason="Invalid Year of Passing";
+						 }
+						 else if(branch==null)
+						 {
+							 reason="Invalid Year of Passing";
+						 }
 					    studentData.setFirstName(Data.getFirstName());
 				        studentData.setLastName(Data.getLastName());
-				        studentData.setCollegeName(Data.getCollegeName());	
+				        studentData.setCollegeName(Data.getCollegeName());
+				        studentData.setBranch_nm(branch.getBranchName());
+				        studentData.setSemester(sem.getSemester());
 				        studentData.setStream(Data.getStream());	
 				        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 				        studentData.setPassingYear(Data.getPassingYear());	
@@ -199,6 +246,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setLastName(Data.getLastName());
 		        studentData.setCollegeName(Data.getCollegeName());	
 		        studentData.setStream(Data.getStream());	
+		        studentData.setBranch_nm(branch.getBranchName());
+		        studentData.setSemester(sem.getSemester());
 		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        studentData.setPassingYear(Data.getPassingYear());	
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
