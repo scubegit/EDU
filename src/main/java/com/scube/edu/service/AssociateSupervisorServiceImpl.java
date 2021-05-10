@@ -163,7 +163,8 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 	
 	public String saveDocument (MultipartFile file) {
 		String fileSubPath = "file/";
-		String filePath = fileStorageService.storeFile(file , fileSubPath);
+		String flag = "2";
+		String filePath = fileStorageService.storeFile(file , fileSubPath, flag);
 		
 		
 		
