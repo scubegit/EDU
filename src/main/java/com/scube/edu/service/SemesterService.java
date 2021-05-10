@@ -12,7 +12,7 @@ import com.scube.edu.response.SemesterResponse;
 public interface SemesterService {
 	public List<SemesterResponse> getSemList(Long id,HttpServletRequest request);
 	public SemesterEntity getSemById(Long id);
-	public SemesterEntity getSemIdByNm(String sem );
+	public SemesterEntity getSemIdByNm(String sem,Long StreamId );
 
 
 }

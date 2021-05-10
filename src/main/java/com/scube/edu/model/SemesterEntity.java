@@ -32,6 +32,6 @@ public class SemesterEntity extends CreateUpdate{
 	private String semester;
 	
 	@Column(name = "stream_id")
-	private Long StreamId;
+	private Long streamId;
 }
 

@@ -11,6 +11,6 @@ public interface BranchMasterService {
 	
 	public List<BranchResponse> getBranchList(Long id,HttpServletRequest request);
 	public BranchMasterEntity getbranchById(Long id);
-	public BranchMasterEntity getbranchIdByname(String brnchnm);
+	public BranchMasterEntity getbranchIdByname(String brnchnm,Long strmId);
 
 }

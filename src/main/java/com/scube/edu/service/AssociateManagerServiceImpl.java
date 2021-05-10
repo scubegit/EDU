@@ -79,24 +79,26 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		
 		 for(UniversityStudDocResponse Data:list) {
 			 
-			 CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(Data.getCollegeName());
-				StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
-				PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Data.getPassingYear());
-				 SemesterEntity sem=semesterService.getSemIdByNm(Data.getSemester());					
-				  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm());
-				Long clgnm = null;
+			 Long clgnm = null;
 				Long passyr = null;
 				Long strm = null;
 				Long semId = null;
 				Long branchId = null;
+			 CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(Data.getCollegeName());
+				StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
+				if(stream!=null) {
+		 			 strm=stream.getId();
+		 			logger.info("strm"+strm);
+		 			}
+				PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Data.getPassingYear());
+				 SemesterEntity sem=semesterService.getSemIdByNm(Data.getSemester(),strm);					
+				  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm(),strm);
+				
 
 			 			String enrollNo=Data.getEnrollmentNo();
 			 			String fnm=Data.getFirstName();
 			 			String lnm=Data.getLastName();
-			 			if(stream!=null) {
-			 			 strm=stream.getId();
-			 			logger.info("strm"+strm);
-			 			}
+			 			
 			 			if(collegeEntities!=null) {
 			 			 clgnm=collegeEntities.getId();
 			 			logger.info("clgnm"+clgnm);
@@ -134,6 +136,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        studentData.setPassingYearId(passingyr.getId());	
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		        studentData.setSemId(sem.getId());
+		        studentData.setBranchId(branch.getId());
 		        studentDataList.add(studentData);    
 		        
 		        SavestudentData.setFirstName(Data.getFirstName());
@@ -144,8 +148,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        SavestudentData.setPassingYear(Data.getPassingYear());	
 		        SavestudentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
 		        SavestudentData.setReason(reason);
-		        SavestudentData.setBranch_nm(branch.getBranchName());
-		        SavestudentData.setSemester(sem.getSemester());
+		        SavestudentData.setBranch_nm(Data.getBranch_nm());
+		        SavestudentData.setSemester(Data.getSemester());
 		        savedStudDataList.add(SavestudentData);	
 		        
 				
