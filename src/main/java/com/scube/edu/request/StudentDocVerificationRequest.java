@@ -26,6 +26,8 @@ public class StudentDocVerificationRequest {
 	private String uploaddocpath;
 	private String filepath;
 	private String paymentId;
+	private Long branchId;
+	private Long semId;
 
 
 }

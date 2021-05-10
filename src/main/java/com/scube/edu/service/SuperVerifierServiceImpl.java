@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RaiseDespute;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
@@ -75,6 +77,12 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	SemesterService semesterService;
+	
+	@Autowired
+	BranchMasterService branchMasterService;
+	
 	@Override
 	public List<VerificationResponse> getVerificationDocList(String fromDate, String toDate) {
 		
@@ -94,6 +102,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
+			
 			Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
 			UserMasterEntity userr = user.get();
 			
@@ -101,6 +110,11 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
 			resp.setRequest_type_id(request.getRequestType());
 			}
+			
+			 SemesterEntity sem=semesterService.getSemById(req.getSemId());
+				
+			 BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
+				
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 			String strDate= formatter.format(req.getCreatedate());
@@ -124,6 +138,8 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
 			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
+			resp.setBranch_nm(branch.getBranchName());
+			resp.setSemester(sem.getSemester());
 			
 			responseList.add(resp);
 			

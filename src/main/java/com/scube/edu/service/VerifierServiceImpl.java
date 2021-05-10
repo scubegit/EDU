@@ -21,11 +21,13 @@ import org.springframework.stereotype.Service;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.ExceptionConverter;
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RequestTypeMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.UserMasterEntity;
@@ -94,6 +96,12 @@ public class VerifierServiceImpl implements VerifierService{
 		
 		@Autowired
 		UserService userService;
+		
+		@Autowired
+		SemesterService semesterService;
+		
+		@Autowired
+		BranchMasterService branchMasterService;
 	 
 	 @Override
 	 public List<VerificationResponse> getVerifierRequestList( long id) throws Exception {
@@ -127,6 +135,11 @@ public class VerifierServiceImpl implements VerifierService{
 			  logger.info("------>6"+ str.getStreamName());
 			  RequestTypeResponse reqMaster = reqTypeService.getNameById(veriReq.getRequestType());
 			  logger.info("------>7"+ reqMaster.getRequestType());
+			  
+			  SemesterEntity sem=semesterService.getSemById(veriReq.getSemId());
+				
+				BranchMasterEntity branch=branchMasterService.getbranchById(veriReq.getBranchId());
+				
 			  resp.setId(veriReq.getId());
 			  resp.setApplication_id(veriReq.getApplicationId());
 			  resp.setCollege_name_id(veriReq.getCollegeId());
@@ -142,7 +155,8 @@ public class VerifierServiceImpl implements VerifierService{
 			  resp.setYear(year.getYearOfPassing());
 			  resp.setCompany_name(userr.getCompanyName());
 			  resp.setRequest_type_id(reqMaster.getRequestType());
-			 
+			  resp.setBranch_nm(branch.getBranchName());
+			  resp.setSemester(sem.getSemester());
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
 			// Long a = (long) 1;
