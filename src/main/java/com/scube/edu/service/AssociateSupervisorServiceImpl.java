@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.controller.MasterController;
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.repository.CollegeRepository;
@@ -50,6 +52,14 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 	@Autowired
 	private FileStorageService fileStorageService;
 
+	 
+	 @Autowired
+	SemesterService semesterService;
+		
+	@Autowired
+	BranchMasterService branchMasterService;
+		
+	
 	@Override
 	public boolean deleteRecordById(long id, HttpServletRequest request) throws Exception {
 		
@@ -128,6 +138,10 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		Optional<PassingYearMaster> passingyrinfo = yearOfPassingRespository.findById(ogRecord.getPassingYearId());
 		PassingYearMaster passingyr = passingyrinfo.get();
 		
+		 SemesterEntity sem=semesterService.getSemById(ogRecord.getSemId());
+			
+		 BranchMasterEntity branch=branchMasterService.getbranchById(ogRecord.getBranchId());
+		 
 		resp.setId(ogRecord.getId());
 		resp.setCollegeName(college.getCollegeName());
 		resp.setEnrollmentNo(ogRecord.getEnrollmentNo());
@@ -139,7 +153,10 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		resp.setPassingYearId(ogRecord.getPassingYearId());
 		resp.setStreamId(ogRecord.getStreamId());
 		resp.setCollegeId(ogRecord.getCollegeId());
-		
+		resp.setBranchNm(branch.getBranchName());
+		resp.setBranchId(ogRecord.getBranchId());
+		resp.setSemester(sem.getSemester());
+		resp.setSemesterId(ogRecord.getSemId());
 		return resp;
 	}
 	

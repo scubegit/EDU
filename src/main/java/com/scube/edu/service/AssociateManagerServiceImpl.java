@@ -63,6 +63,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		
 		@Autowired
 		BranchMasterService branchMasterService;
+		
 	
 	private XSSFWorkbook workbook;
 	
@@ -363,9 +364,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 
-		List<UniversityStudentDocument> usdr = universityStudentDocRepository.searchByFirstNameLikeAndLastNameLikeAndEnrollmentNoLikeAndCollegeIdLikeAndPassingYearIdLikeAndStreamIdLike(universityStudData.getFirstName(), 
+		List<UniversityStudentDocument> usdr = universityStudentDocRepository.searchByFirstNameLikeAndLastNameLikeAndEnrollmentNoLikeAndCollegeIdLikeAndPassingYearIdLikeAndStreamIdLikeAndSemIdLikeAndBranchIdLike(universityStudData.getFirstName(), 
 				universityStudData.getLastName(), universityStudData.getEnrollmentNo(), universityStudData.getCollegeId(), 
-				universityStudData.getPassingYearId(), universityStudData.getStreamId());
+				universityStudData.getPassingYearId(), universityStudData.getStreamId(),universityStudData.getSemId(),universityStudData.getBranchId());
 		List<UniversityStudDocResponse> studData=new ArrayList<>();
 		
 		logger.info("********AssociateManagerServiceImpl getStudentData********");
@@ -383,6 +384,11 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 Optional<PassingYearMaster> passingyrinfo = yearOfPassingRespository.findById(studentData.getPassingYearId());
 			 PassingYearMaster passingyr = passingyrinfo.get();
 			 
+			 SemesterEntity sem=semesterService.getSemById(studentData.getSemId());
+				
+			 BranchMasterEntity branch=branchMasterService.getbranchById(studentData.getBranchId());
+				
+			 
 			 resp.setId(studentData.getId());
 			 resp.setFirstName(studentData.getFirstName());
 			 resp.setLastName(studentData.getLastName());
@@ -390,6 +396,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 resp.setEnrollmentNo(studentData.getEnrollmentNo());
 			 resp.setStream(stream.getStreamName());
 			 resp.setPassingYear(passingyr.getYearOfPassing());
+			 resp.setBranch_nm(branch.getBranchName());
+			 resp.setSemester(sem.getSemester());
 			 //String Path=
 			 resp.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+studentData.getId());
 			 studData.add(resp);
