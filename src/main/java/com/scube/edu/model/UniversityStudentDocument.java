@@ -54,7 +54,11 @@ public class UniversityStudentDocument {
 		@Column(name = "passingYearId")
 		private Long passingYearId;
 		
-
+		@Column(name = "branch_Id")
+		private Long branchId;
+		
+		@Column(name = "semester_Id")
+		private Long semId;
 
 
 

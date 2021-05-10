@@ -58,4 +58,12 @@ public class SemesterServiceImpl implements SemesterService{
 		
 				return branchEnt;
 }
+	@Override
+	public SemesterEntity getSemIdByNm(String sem ) {
+		System.out.println(sem);
+		SemesterEntity semEntity    = semesterRepository.findBySemester(sem);
+		System.out.println("yearEnt---"+ semEntity);
+		
+				return semEntity;
+}
 }

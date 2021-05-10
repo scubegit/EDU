@@ -21,8 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.controller.MasterController;
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.repository.CollegeRepository;
@@ -55,6 +57,12 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		StreamRepository  streamRespository;
 	 @Autowired
 		YearOfPassingRepository yearOfPassingRespository;
+	 
+	 @Autowired
+		SemesterService semesterService;
+		
+		@Autowired
+		BranchMasterService branchMasterService;
 	
 	private XSSFWorkbook workbook;
 	
@@ -74,9 +82,14 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(Data.getCollegeName());
 				StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
 				PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Data.getPassingYear());
+				 SemesterEntity sem=semesterService.getSemIdByNm(Data.getSemester());					
+				  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm());
 				Long clgnm = null;
 				Long passyr = null;
 				Long strm = null;
+				Long semId = null;
+				Long branchId = null;
+
 			 			String enrollNo=Data.getEnrollmentNo();
 			 			String fnm=Data.getFirstName();
 			 			String lnm=Data.getLastName();
@@ -93,9 +106,18 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 			 passyr=passingyr.getId();
 			 			logger.info("passyr"+passyr);
 			 			}
+			 			if(sem!=null) {
 
+				 			 semId=sem.getId();
+				 			logger.info("passyr"+semId);
+				 			}
+			 			if(branch!=null) {
+
+			 				branchId=branch.getId();
+				 			logger.info("passyr"+branchId);
+				 			}
 			 			
-			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearId(enrollNo,fnm,lnm,strm,clgnm,passyr);
+			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearIdAndSemIdAndBranchId(enrollNo,fnm,lnm,strm,clgnm,passyr,semId,branchId);
 			String reason = null;
 			 if(docEntity==null) {	
 				
@@ -215,26 +237,29 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setLastName(row.getCell(1).getStringCellValue());
 		        studentData.setCollegeName(row.getCell(2).getStringCellValue());	
 		        studentData.setStream(row.getCell(3).getStringCellValue());	
-		        int cellType=row.getCell(4).getCellType();
+		        studentData.setBranch_nm(row.getCell(4).getStringCellValue());	
+		        studentData.setSemester(row.getCell(5).getStringCellValue());	
+
+		        int cellType=row.getCell(6).getCellType();
 		        
 		 logger.info("celltype "+cellType);
 		 if(cellType==1)
 		 {
-		        studentData.setEnrollmentNo(row.getCell(4).getStringCellValue());
+		        studentData.setEnrollmentNo(row.getCell(6).getStringCellValue());
 		 }
 		 else
 		 {
-		        Integer enrollNo=(int) row.getCell(4).getNumericCellValue();		        
+		        Integer enrollNo=(int) row.getCell(6).getNumericCellValue();		        
 		        studentData.setEnrollmentNo(enrollNo.toString());			 
 		 }
-	        int yearcellType=row.getCell(5).getCellType();
+	        int yearcellType=row.getCell(7).getCellType();
 
 		 if(yearcellType==1)
 		 {
-		        studentData.setPassingYear(row.getCell(5).getStringCellValue());
+		        studentData.setPassingYear(row.getCell(7).getStringCellValue());
 		 }
 		 else {
-		        Integer yearofPassing=(int) row.getCell(5).getNumericCellValue();
+		        Integer yearofPassing=(int) row.getCell(7).getNumericCellValue();
 		        studentData.setPassingYear(yearofPassing.toString());		        
 		 }
 		        studentData.setOriginalDOCuploadfilePath(filePath);

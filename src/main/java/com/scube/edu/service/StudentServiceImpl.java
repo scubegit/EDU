@@ -202,6 +202,10 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
+			SemesterEntity sem=semesterService.getSemById(req.getSemId());
+			
+			BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
+			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 			String strDate= formatter.format(req.getCreatedate());
 			
@@ -226,8 +230,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			closedDocResp.setYear(year.getYearOfPassing());	
 			closedDocResp.setStream_name(stream.getStreamName());
 			closedDocResp.setReq_date(strDate);
-			
-			
+			closedDocResp.setSemester(sem.getSemester());
+			closedDocResp.setBranch_nm(branch.getBranchName());
 			List.add(closedDocResp);
 			
 		}

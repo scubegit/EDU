@@ -245,6 +245,10 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		Optional<UserMasterEntity> user = userRepository.findById(vr.getVerifiedBy());
 		UserMasterEntity userr = user.get();
 		
+		 SemesterEntity sem=semesterService.getSemById(vr.getSemId());
+			
+		 BranchMasterEntity branch=branchMasterService.getbranchById(vr.getBranchId());
+		
 		if(vr.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(vr.getRequestType());
 			resp.setRequest_type_id(request.getRequestType());
@@ -262,7 +266,8 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setEnroll_no(vr.getEnrollmentNumber());
 			resp.setFirst_name(vr.getFirstName());
 			resp.setLast_name(vr.getLastName());
-			
+			resp.setSemester(sem.getSemester());
+			resp.setBranch_nm(branch.getBranchName());
 ////			resp.setRequest_type_id(vr.get);
 //			resp.setStream_id(vr.getStreamId());
 //			resp.setUni_id(vr.getUniversityId());

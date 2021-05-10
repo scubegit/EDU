@@ -27,8 +27,7 @@ public class SemesterEntity {
 	@Column(name = "universityId")
 	private Long universityId;
 	
-	@NotBlank
-	@Size(max = 100)
+
 	@Column(name = "Semester")
 	private String Semester;
 	
