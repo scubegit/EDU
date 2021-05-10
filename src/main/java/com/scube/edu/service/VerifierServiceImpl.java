@@ -138,7 +138,7 @@ public class VerifierServiceImpl implements VerifierService{
 			  
 			  SemesterEntity sem=semesterService.getSemById(veriReq.getSemId());
 				
-				BranchMasterEntity branch=branchMasterService.getbranchById(veriReq.getBranchId());
+			  BranchMasterEntity branch=branchMasterService.getbranchById(veriReq.getBranchId());
 				
 			  resp.setId(veriReq.getId());
 			  resp.setApplication_id(veriReq.getApplicationId());

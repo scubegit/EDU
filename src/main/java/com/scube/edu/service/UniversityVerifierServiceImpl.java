@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.BadElementException;
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
@@ -68,6 +70,12 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 	
 	@Autowired
 	CustomizationRepository customizationRepository;
+	
+	@Autowired
+	SemesterService semesterService;
+	
+	@Autowired
+	BranchMasterService branchMasterService;
 
 	@Override
 	public List<UniversityVerifierResponse> getUniversityVerifierRequestList() throws Exception {
@@ -86,6 +94,11 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			DocumentMaster doc = documentService.getNameById(req.getDocumentId());
 
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
+			
+			 SemesterEntity sem=semesterService.getSemById(req.getSemId());
+				
+			  BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
+				
 
 			// Date date=new Date();
 			Date closedDate;
@@ -100,6 +113,10 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 				long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
 				days = (int) (100 - difference_In_Days);
 			}
+			
+			resp.setBranch_nm(branch.getBranchName());
+			  resp.setSemester(sem.getSemester());
+			  
 			if (days != null) {
 				resp.setNoOfDays(days);
 			}
