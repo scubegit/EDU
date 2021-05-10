@@ -159,15 +159,27 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 }
 						 else if(collegeEntities==null && stream==null&&passingyr==null)
 						 {
-							 reason="Invalid College Name and Stream";
+							 reason="Invalid College Name and Stream and Year of Passing";
 						 }
 						 else if(collegeEntities==null && stream==null&&sem==null)
 						 {
-							 reason="Invalid College Name and Stream";
+							 reason="Invalid College Name and Stream and Semester";
 						 }
 						 else if(collegeEntities==null && stream==null&&branch==null)
 						 {
-							 reason="Invalid College Name and Stream";
+							 reason="Invalid College Name and Stream and Branch";
+						 }
+						 else if(collegeEntities==null && passingyr==null&&branch==null)
+						 {
+							 reason="Invalid College Name and Year of Passing and Branch";
+						 }
+						 else if(collegeEntities==null && passingyr==null&&sem==null)
+						 {
+							 reason="Invalid College Name and Year of Passing  and Semester";
+						 }
+						 else if(collegeEntities==null && sem==null&&branch==null)
+						 {
+							 reason="Invalid College Name and Semester and Branch";
 						 }
 						 else if(collegeEntities==null && passingyr==null)
 						 {
@@ -175,18 +187,27 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 }
 						 else if(collegeEntities==null && sem==null)
 						 {
-							 reason="Invalid College Name and Year of Passing";
-						 } else if(collegeEntities==null && branch==null)
+							 reason="Invalid College Name and Semester";
+						 } 
+						 else if(collegeEntities==null && branch==null)
 						 {
-							 reason="Invalid College Name and Year of Passing";
+							 reason="Invalid College Name and Branch";
 						 }
-						 
+						 else if(collegeEntities==null && stream==null)
+						 {
+							 reason="Invalid College Name and Stream";
+						 }
 						 else if(passingyr==null && sem==null)
 						 {
-							 reason="Invalid College Name and Year of Passing";
-						 } else if(passingyr==null && branch==null)
+							 reason="Invalid Semester and Year of Passing";
+						 }
+						 else if(passingyr==null && stream==null)
 						 {
-							 reason="Invalid College Name and Year of Passing";
+							 reason="Invalid Stream and Year of Passing";
+						 }
+						 else if(passingyr==null && branch==null)
+						 {
+							 reason="Invalid Branch and Year of Passing";
 						 }
 						 else if(stream==null && passingyr==null)
 						 {
@@ -194,15 +215,15 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 }
 						 else if(stream==null && sem==null)
 						 {
-							 reason="Invalid Year of Passing and Stream";
+							 reason="Invalid Semester and Stream";
 						 }
 						 else if(stream==null && branch==null)
 						 {
-							 reason="Invalid Year of Passing and Stream";
+							 reason="Invalid Branch and Stream";
 						 }
 						 else if(sem==null && branch==null)
 						 {
-							 reason="Invalid Year of Passing and Stream";
+							 reason="Invalid Semester and branch";
 						 }
 						 else if(collegeEntities==null)
 						 {
@@ -220,11 +241,11 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 }
 						 else if(sem==null)
 						 {
-							 reason="Invalid Year of Passing";
+							 reason="Invalid Year of Semester";
 						 }
 						 else if(branch==null)
 						 {
-							 reason="Invalid Year of Passing";
+							 reason="Invalid Year of Branch";
 						 }
 					    studentData.setFirstName(Data.getFirstName());
 				        studentData.setLastName(Data.getLastName());
