@@ -18,7 +18,10 @@ public class UniversityStudDocResponse {
 	private String PassingYear;
 	private String reason;
 	private String OriginalDOCuploadfilePath;
-	
+	private String branch_nm;
+	private String semester;
+
+
 	
 
 }

@@ -22,12 +22,12 @@ public interface UniversityStudentDocRepository extends JpaRepository<University
 //	@Query(value = "SELECT * FROM university_studentdocument where enrollment_no = ?1 ", nativeQuery = true)
 	UniversityStudentDocument getDocDataBySixFields(String enrollmentNo , String firstName, String lastName, Long streamId, String yearOfPassing, Long collegeId);
 
-	UniversityStudentDocument findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearId(String enrollmentNo,String fnm,String lastnm,Long stream,Long clgnm, Long passyr);
+	UniversityStudentDocument findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearIdAndSemIdAndBranchId(String enrollmentNo,String fnm,String lastnm,Long stream,Long clgnm, Long passyr,Long semId,Long branchId);
 
 	
-	@Query(value = "SELECT * FROM university_studentdocument where first_name LIKE %?1% and last_name LIKE %?2% and enrollment_no LIKE %?3% and college_id LIKE %?4% and passing_year_id LIKE %?5% and stream_id LIKE %?6%" , nativeQuery = true)
-	List<UniversityStudentDocument> searchByFirstNameLikeAndLastNameLikeAndEnrollmentNoLikeAndCollegeIdLikeAndPassingYearIdLikeAndStreamIdLike( String firstname, 
-			String lastname, String enrollmentno, String collegeid, String yearofpassid, String streamid);
+	@Query(value = "SELECT * FROM university_studentdocument where first_name LIKE %?1% and last_name LIKE %?2% and enrollment_no LIKE %?3% and college_id LIKE %?4% and passing_year_id LIKE %?5% and stream_id LIKE %?6% and semester_id LIKE %?7% and branch_id LIKE %?8% " , nativeQuery = true)
+	List<UniversityStudentDocument> searchByFirstNameLikeAndLastNameLikeAndEnrollmentNoLikeAndCollegeIdLikeAndPassingYearIdLikeAndStreamIdLikeAndSemIdLikeAndBranchIdLike( String firstname, 
+			String lastname, String enrollmentno, String collegeid, String yearofpassid, String streamid,String semId,String branchId);
 
 
 

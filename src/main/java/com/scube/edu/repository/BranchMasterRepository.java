@@ -15,4 +15,5 @@ public interface BranchMasterRepository extends JpaRepository<BranchMasterEntity
 	@Query(value ="SELECT * from branch_Master where stream_id =?1", nativeQuery = true)
 	List<BranchMasterEntity> getbrachbyStreamId(Long id);
 	Optional<BranchMasterEntity> findById(Long id);
+	BranchMasterEntity findByBranchNameAndStreamId (String branchnm,Long StreamId);
 }

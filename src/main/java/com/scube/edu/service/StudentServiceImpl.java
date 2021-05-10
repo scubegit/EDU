@@ -24,10 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.RequestTypeMaster;
+import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.VerificationDocView;
 import com.scube.edu.model.VerificationRequest;
@@ -93,6 +95,12 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 @Autowired 
 	 RequestTypeService reqTypeService;
 	 
+	 @Autowired
+		SemesterService semesterService;
+		
+		@Autowired
+		BranchMasterService branchMasterService;
+	 
 	 @Override
 
 		public List<VerificationResponse> getVerificationDocsDataByUserid(long userId) throws Exception {
@@ -119,6 +127,11 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				RequestTypeResponse reqMaster = reqTypeService.getNameById(req.getRequestType());
 				
 				StreamMaster stream = streamService.getNameById(req.getStreamId());
+				
+				SemesterEntity sem=semesterService.getSemById(req.getSemId());
+				
+				BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
+				
 				
 				if(req.getRequestType() != null) {
 				RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
@@ -147,6 +160,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setStream_name(stream.getStreamName());
 				studentVerificationList.setReq_date(strDate);
 				studentVerificationList.setRequest_type_id(reqMaster.getRequestType());
+				studentVerificationList.setBranch_nm(branch.getBranchName());
+				studentVerificationList.setSemester(sem.getSemester());
 				
 				List.add(studentVerificationList);
 			}
@@ -187,6 +202,10 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
+			SemesterEntity sem=semesterService.getSemById(req.getSemId());
+			
+			BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
+			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 			String strDate= formatter.format(req.getCreatedate());
 			
@@ -211,8 +230,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			closedDocResp.setYear(year.getYearOfPassing());	
 			closedDocResp.setStream_name(stream.getStreamName());
 			closedDocResp.setReq_date(strDate);
-			
-			
+			closedDocResp.setSemester(sem.getSemester());
+			closedDocResp.setBranch_nm(branch.getBranchName());
 			List.add(closedDocResp);
 			
 		}
@@ -292,7 +311,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setPaymentId(req.getPaymentId());
 			resp.setDocAmt(total);
 			resp.setDosAmtWithGst(totalWithGST);
-			
+			resp.setBranchId(req.getBranchId());
+			resp.setSemId(req.getSemId());
 			ver_req += 1;
 			
 			list.add(resp);

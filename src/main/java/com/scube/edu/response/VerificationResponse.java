@@ -51,6 +51,7 @@ public class VerificationResponse {
 	private Long amount;
 	private Long securAmt;
 	private Long gst;
+	
 
 
 }

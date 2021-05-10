@@ -32,5 +32,5 @@ public class BranchMasterEntity extends CreateUpdate{
 	private String branchName;
 	
 	@Column(name = "stream_id")
-	private Long StreamId;
+	private Long streamId;
 }

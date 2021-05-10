@@ -20,6 +20,10 @@ public class UniversityStudentDocumentResponse {
 			private String collegeName;
 			private String OriginalDOCuploadfilePath;
 			private String passingYear;
+			private String branchNm;
+			private String semester;
+			private Long branchId;
+			private Long semesterId;
 			private Long passingYearId;
 			private Long streamId;
 			private Long collegeId;

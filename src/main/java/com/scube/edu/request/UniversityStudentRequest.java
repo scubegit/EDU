@@ -17,6 +17,8 @@ public class UniversityStudentRequest {
 	private String firstName;
 	private String lastName;
 	private String passingYearId;
+	private String semId;
+	private String branchId;
 	private String streamId;
 	private String originalDOCuploadfilePath;
 	private String filePath;

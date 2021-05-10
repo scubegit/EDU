@@ -18,6 +18,8 @@ public class UniversityVerifierResponse {
 		private long id;
 		private String filePath;
 
+		private String branch_nm;
+		private String semester;
 
 
 

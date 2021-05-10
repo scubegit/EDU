@@ -58,4 +58,12 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 				return semEnt;
 	}
+	@Override
+	public BranchMasterEntity getbranchIdByname(String brnchnm,Long strmId) {
+		System.out.println(brnchnm);
+		BranchMasterEntity branchEntity    = branchMasterRepository.findByBranchNameAndStreamId(brnchnm,strmId);
+		System.out.println("yearEnt---"+ branchEntity);
+		
+				return branchEntity;
+	}
 }
