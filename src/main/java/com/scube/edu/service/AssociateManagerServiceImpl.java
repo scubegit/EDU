@@ -204,7 +204,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 List<UniversityStudDocResponse> studentDataReviewList = new ArrayList<UniversityStudDocResponse>();
 		
 		 String fileSubPath = "file/";
-		 String filePath = fileStorageService.storeFile(datafile , fileSubPath);
+		 String flag = "2";
+		 String filePath = fileStorageService.storeFile(datafile , fileSubPath, flag);
 		 for(int i=1;i<worksheet.getPhysicalNumberOfRows() ;i++) {
 			 
 			 XSSFRow row = worksheet.getRow(i);		 

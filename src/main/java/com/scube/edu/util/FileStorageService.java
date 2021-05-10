@@ -76,6 +76,8 @@ public class FileStorageService {
 	private Path fileStorageLocation;
 	
 	private final String fileBaseLocation;
+	
+	private final String fileAssociateBaseLocation;
 
 	private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 	 
@@ -90,12 +92,13 @@ public class FileStorageService {
 	  public FileStorageService(FileStorageProperties fileStorageProperties) {
 	  
 	  this.fileBaseLocation = fileStorageProperties.getUploadDir();
+	  this.fileAssociateBaseLocation = fileStorageProperties.getUploadassociateDir();
 	  
 	  }
 	 
 	
 	
-	public String storeFile(MultipartFile file, String fileSubPath) {
+	public String storeFile(MultipartFile file, String fileSubPath, String flag) {
 		
 		System.out.println("****fileStorageService storeFile*****"+file);
 		
@@ -115,8 +118,13 @@ public class FileStorageService {
 			if(fileNewName.contains("..")) {
 				throw new FileStorageException("Sorry! File Name contains invalid path sequence!");
 			}
+			String newPath;
 			
-			String newPath = this.fileBaseLocation +"/" + fileSubPath; 
+			if(flag.equalsIgnoreCase("2")) {
+				newPath = this.fileAssociateBaseLocation + "/" + fileSubPath;
+			}else {
+				newPath = this.fileBaseLocation +"/" + fileSubPath; 
+			}
 			
 			this.fileStorageLocation = Paths.get(newPath).toAbsolutePath().normalize();
 			
@@ -148,10 +156,11 @@ public class FileStorageService {
 		 	String fileName =" ";
 		 	try {
 	        	
-	        	String newPAth = this.fileBaseLocation;
+	        	String newPAth ;
 	        	
 	        	if(userFor.equalsIgnoreCase("VR")) {
 	        		
+	        		newPAth = this.fileBaseLocation;
 	        		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
 	        		VerificationRequest data = verifierData.get();
 	        		logger.info("doc.vollegename--->"+data.getEnrollmentNumber());
@@ -162,7 +171,7 @@ public class FileStorageService {
 	        		logger.info("VR------fileName----->"+ fileName);
 	        		
 	        	}else {
-	        		
+	        		newPAth = this.fileAssociateBaseLocation;
 	        		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
 	        		fileName = doc.getOriginalDOCuploadfilePath();
 	        		
