@@ -111,7 +111,7 @@ public class VerifierServiceImpl implements VerifierService{
 		 
 		 List<VerificationResponse> List = new ArrayList<>();
 		 try {
-		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords();
+		 List<VerificationRequest> verReq = verificationReqRepository.getVerifierRecords(id);
 		 
 		 logger.info("------>1"+verReq.toString());
 		 
