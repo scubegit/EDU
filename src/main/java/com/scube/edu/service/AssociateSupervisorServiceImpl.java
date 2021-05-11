@@ -107,7 +107,8 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			editRecord.setCollegeId( Long.parseLong(universityStudentRequest.getCollegeId()));
 			editRecord.setPassingYearId( Long.parseLong(universityStudentRequest.getPassingYearId()));
 			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
-			
+			editRecord.setBranchId(Long.parseLong(universityStudentRequest.getBranchId()));
+			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
 			universityStudentDocRepository.save(editRecord);
 			
 			return true;
