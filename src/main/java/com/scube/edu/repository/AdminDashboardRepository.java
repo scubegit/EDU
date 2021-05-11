@@ -17,4 +17,5 @@ public interface AdminDashboardRepository extends JpaRepository<VerificationRequ
 	@Query(value ="SELECT * from verification_request where month(created_date) = ?1", nativeQuery = true)
 	List<VerificationRequest> getstatByMonth(int month);
 	
+	
 }

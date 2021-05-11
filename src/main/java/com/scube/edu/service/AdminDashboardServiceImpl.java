@@ -1,5 +1,7 @@
 package com.scube.edu.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +38,11 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		int month=d.getMonth();
 		month=month+1;
 		int year=d.getYear(); 
-		year=1900+year;		
-		logger.info( "Date:-"  +d+ "year:-"  +year+ " month:-"+month+ "Day:-"+day);
+		year=1900+year;
+        String dayWeekText = new SimpleDateFormat("EEEE").format(d);
+
+
+		logger.info( "Date:-"  +d+ "year:-"  +year+ " month:-"+month+ "Day:-"+day+ " Day Name:-"+dayWeekText);
 		
 		int yearlynewrquest=0;
 		int yearlyclosedRqest=0;
@@ -128,6 +133,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		monthstatCountMap.put("Closed",monthlyclosedRqest);		
 		monthstatCountMap.put("Dispute",monthlyDisputeRqest);				
 		}
+		
 		logger.info("count"+monthlynewrquest );
 		AllstatCountMap.put("Current Year", YearstatCountMap);
 		AllstatCountMap.put("Current Month", monthstatCountMap);

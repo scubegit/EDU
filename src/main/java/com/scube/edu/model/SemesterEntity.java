@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(	name = "semester_Master")
+@Table(	name = "semesterMaster")
 public class SemesterEntity extends CreateUpdate{
 
 	@Id
@@ -31,7 +31,7 @@ public class SemesterEntity extends CreateUpdate{
 	@Column(name = "Semester")
 	private String semester;
 	
-	@Column(name = "stream_id")
+	@Column(name = "streamId")
 	private Long streamId;
 }
 
