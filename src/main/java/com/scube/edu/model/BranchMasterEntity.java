@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(	name = "branch_Master")
+@Table(	name = "branchMaster")
 public class BranchMasterEntity extends CreateUpdate{
 
 	@Id
@@ -28,9 +28,9 @@ public class BranchMasterEntity extends CreateUpdate{
 	
 	@NotBlank
 	@Size(max = 100)
-	@Column(name = "Branch_Name")
+	@Column(name = "branchName")
 	private String branchName;
 	
-	@Column(name = "stream_id")
+	@Column(name = "streamId")
 	private Long streamId;
 }
