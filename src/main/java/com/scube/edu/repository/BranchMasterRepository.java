@@ -12,7 +12,7 @@ import com.scube.edu.model.BranchMasterEntity;
 @Repository
 public interface BranchMasterRepository extends JpaRepository<BranchMasterEntity, Long> {
 
-	@Query(value ="SELECT * from branch_Master where stream_id =?1", nativeQuery = true)
+	@Query(value ="SELECT * from branch_master where stream_id =?1", nativeQuery = true)
 	List<BranchMasterEntity> getbrachbyStreamId(Long id);
 	Optional<BranchMasterEntity> findById(Long id);
 	BranchMasterEntity findByBranchNameAndStreamId (String branchnm,Long StreamId);

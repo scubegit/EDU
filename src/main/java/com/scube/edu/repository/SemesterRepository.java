@@ -13,7 +13,7 @@ import com.scube.edu.model.SemesterEntity;
 @Repository
 public interface SemesterRepository extends JpaRepository<SemesterEntity, Long> {
 	
-	@Query(value ="SELECT * from semester_Master where stream_id =?1", nativeQuery = true)
+	@Query(value ="SELECT * from semester_master where stream_id =?1", nativeQuery = true)
 	List<SemesterEntity> getSembyStreamId(Long id);
 	Optional<SemesterEntity> findById(Long id);
 	
