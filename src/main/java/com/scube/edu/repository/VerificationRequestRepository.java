@@ -22,7 +22,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM verification_request vr left join passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1 order by created_date desc", nativeQuery = true)
 	List<VerificationRequest> findByUserId(long userId);
 
-	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and assigned_to = 0 OR assigned_to = ?1 order by created_date asc limit 5", nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and (assigned_to = 0 OR assigned_to = ?1) order by created_date asc limit 5", nativeQuery = true)
 	List<VerificationRequest> getVerifierRecords(Long userId);
 
 	@Query(value = "SELECT * FROM verification_request where doc_status != 'Requested' and user_id = ?1" , nativeQuery = true)
@@ -57,6 +57,9 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Transactional
 	@Query(value = "UPDATE verification_request set Payment_flg='Y' where id=(?1) and doc_status='Requested'", nativeQuery = true)
 	Integer updatePaymentFlag(long id);
+
+	@Query(value="SELECT * FROM verification_request where convert(created_date , Date) <= (?1)", nativeQuery = true)
+	List<VerificationRequest> findRecordsByPreviousYearCreatedDate(String prevDate);
 
 
 }
