@@ -117,6 +117,7 @@ public class SemesterServiceImpl implements SemesterService{
 		Optional<SemesterEntity> semEnt = semesterRepository.findById(semReq.getId());
 		SemesterEntity sem = semEnt.get();
 		
+		sem.setId(semReq.getId());
 		sem.setSemester(semReq.getSemestername());
 		sem.setStreamId(semReq.getStreamid());
 		sem.setUniversityId(semReq.getUniversityid());

@@ -123,6 +123,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(branchReq.getId());
 		BranchMasterEntity bm = bme.get();
 		
+		bm.setId(branchReq.getId());
 		bm.setBranchName(branchReq.getBranchname());
 		bm.setStreamId(branchReq.getStreamid());
 		bm.setUniversityId(branchReq.getUniversityid());
