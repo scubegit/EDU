@@ -120,12 +120,26 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		logger.info("*******BranchMasterServiceImpl updateBranch*******"+ branchReq.getBranchname());
 		
+		boolean flag;
+		
 		BranchMasterEntity bmEnt = branchMasterRepository.findByBranchNameAndStreamId(branchReq.getBranchname(), branchReq.getStreamid());
 		
+		
 		if(bmEnt != null) {
-			throw new Exception("Record with this name and streamid already exists.");
+			logger.info(String.valueOf(branchReq.getId()) + String.valueOf(bmEnt.getId()));
+			if(branchReq.getId() == bmEnt.getId()) {
+				flag = true;
+				throw new Exception("This combination of branch name and streamId already exists.");
+			}
+			else {
+				flag = false;
+			}
+//			throw new Exception("Record with this name and streamid already exists.");
+		}else {
+			flag = false;
 		}
-		else {
+		
+		if(flag == false) {
 		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(branchReq.getId());
 		BranchMasterEntity bm = bme.get();
 		

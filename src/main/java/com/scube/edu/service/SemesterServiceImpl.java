@@ -114,12 +114,24 @@ public class SemesterServiceImpl implements SemesterService{
 		
 		logger.info("*******SemesterServiceImpl deleteSemester*******");
 		
+		boolean flag;
+		
 		SemesterEntity se = semesterRepository.findBySemesterAndStreamId(semReq.getSemestername(), semReq.getStreamid());
 		
 		if(se != null) {
-			throw new Exception("This Semester name and streamId combo already exist");
+			logger.info("ids"+se.getId()+""+semReq.getId());
+			if(se.getId() == semReq.getId()) {
+				flag = true;
+				throw new Exception("This Semester name and streamID combo already exists.");
+			}else {
+				flag = false;
+			}
+//			throw new Exception("This Semester name and streamId combo already exist");
+		}else {
+			flag = false;
 		}
 		
+		if(flag == false) {
 		Optional<SemesterEntity> semEnt = semesterRepository.findById(semReq.getId());
 		SemesterEntity sem = semEnt.get();
 		
@@ -129,7 +141,7 @@ public class SemesterServiceImpl implements SemesterService{
 		sem.setUniversityId(semReq.getUniversityid());
 		
 		semesterRepository.save(sem);
-		
+		}
 		return true;
 	}
 
