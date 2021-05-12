@@ -107,4 +107,46 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		return true;
 	}
+
+	@Override
+	public boolean updateBranch(BranchRequest branchReq, HttpServletRequest request) {
+		
+		logger.info("*******BranchMasterServiceImpl updateBranch*******"+ branchReq.getBranchname());
+		
+		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(branchReq.getId());
+		BranchMasterEntity bm = bme.get();
+		
+		bm.setBranchName(branchReq.getBranchname());
+		bm.setStreamId(branchReq.getStreamid());
+		bm.setUniversityId(branchReq.getUniversityid());
+		
+		branchMasterRepository.save(bm);
+		
+		return true;
+	}
+
+	@Override
+	public List<BranchResponse> getAllBranchList(HttpServletRequest request) {
+		
+		logger.info("*******BranchMasterServiceImpl getAllBranchList*******");
+		
+		List<BranchMasterEntity> list = branchMasterRepository.findByIsdeleted("N");
+		
+		List<BranchResponse> resp = new ArrayList<>();
+		
+		for(BranchMasterEntity bme: list) {
+			
+			BranchResponse br = new BranchResponse();
+			
+			br.setBranchName(bme.getBranchName());
+			br.setId(bme.getId());
+			br.setStreamId(bme.getStreamId());
+			br.setUniversityId(bme.getUniversityId());
+			
+			resp.add(br);
+			
+		}
+		
+		return resp;
+	}
 }

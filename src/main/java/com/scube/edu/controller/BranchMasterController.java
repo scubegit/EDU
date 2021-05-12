@@ -69,6 +69,39 @@ public class BranchMasterController {
 	}
 	
 	
+	@GetMapping("/getAllBranchList")
+	public ResponseEntity<Object> getAllBranchList(HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+			
+			
+            List<BranchResponse> responseData = branchMasterService.getAllBranchList(request);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(responseData);
+			
+			return ResponseEntity.ok(response);
+			
+			
+				  
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+	}
+	
+	
 	@PostMapping("/saveBranch")
 	public ResponseEntity<Object> saveBranch(@RequestBody BranchRequest branchReq, HttpServletRequest request) {
 		
@@ -110,6 +143,39 @@ public class BranchMasterController {
 			
 			
             boolean responseData = branchMasterService.deleteBranch(id, request);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(responseData);
+			
+			return ResponseEntity.ok(response);
+			
+			
+				  
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+	}
+	
+	
+	@PostMapping("/updateBranch")
+	public ResponseEntity<Object> updateBranch(@RequestBody BranchRequest branchReq, HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+			
+			
+            boolean responseData = branchMasterService.updateBranch(branchReq, request);
 			
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

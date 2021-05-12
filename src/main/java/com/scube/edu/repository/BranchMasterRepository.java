@@ -16,4 +16,5 @@ public interface BranchMasterRepository extends JpaRepository<BranchMasterEntity
 	List<BranchMasterEntity> getbrachbyStreamIdAndIsdeleted(Long id, String isdeleted);
 	Optional<BranchMasterEntity> findById(Long id);
 	BranchMasterEntity findByBranchNameAndStreamId (String branchnm,Long StreamId);
+	List<BranchMasterEntity> findByIsdeleted(String isdeleted);
 }
