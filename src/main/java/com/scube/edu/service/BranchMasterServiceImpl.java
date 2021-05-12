@@ -14,10 +14,14 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.repository.BranchMasterRepository;
+import com.scube.edu.request.BranchRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.CollegeResponse;
+import com.scube.edu.response.StreamResponse;
+import com.scube.edu.util.StringsUtils;
 
 @Service
 public class BranchMasterServiceImpl implements BranchMasterService {
@@ -28,6 +32,9 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 
     @Autowired
 	BranchMasterRepository branchMasterRepository;
+    
+    @Autowired
+    StreamService streamService;
 	
 	@Override
 	public List<BranchResponse> getBranchList(Long id,HttpServletRequest request) {
@@ -65,5 +72,112 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		System.out.println("yearEnt---"+ branchEntity);
 		
 				return branchEntity;
+	}
+
+	@Override
+	public String saveBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception {
+		
+		String flag;		
+		logger.info("*******BranchMasterServiceImpl saveBranch*******"+ branchReq.getBranchname());
+		
+		BranchMasterEntity bme = branchMasterRepository.findByBranchNameAndStreamId(branchReq.getBranchname(), branchReq.getStreamid());
+		
+		if(bme != null) {
+			flag = "The Branch and streamId combo already exist";
+			throw new Exception("The Branch and streamId combo already exist.");
+			
+		}else {
+			logger.info("add new branch");
+			
+			BranchMasterEntity bmEnt = new BranchMasterEntity();
+			
+			bmEnt.setBranchName(branchReq.getBranchname());
+			bmEnt.setIsdeleted("N");
+			bmEnt.setStreamId(branchReq.getStreamid());
+			bmEnt.setUniversityId(branchReq.getUniversityid());
+			
+			branchMasterRepository.save(bmEnt);
+			
+			flag = "Success";
+			
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteBranch(Long id, HttpServletRequest request) {
+		
+		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(id);
+		BranchMasterEntity bm = bme.get();
+
+		branchMasterRepository.delete(bm);
+		
+		return true;
+	}
+
+	@Override
+	public boolean updateBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******BranchMasterServiceImpl updateBranch*******"+ branchReq.getBranchname());
+		
+		boolean flag;
+		
+		BranchMasterEntity bmEnt = branchMasterRepository.findByBranchNameAndStreamId(branchReq.getBranchname(), branchReq.getStreamid());
+		
+		
+		if(bmEnt != null) {
+			logger.info(String.valueOf(branchReq.getId()) + String.valueOf(bmEnt.getId()));
+			if(branchReq.getId() != bmEnt.getId()) {
+				flag = true;
+				throw new Exception("This combination of branch name and streamId already exists.");
+			}
+			else {
+				flag = false;
+			}
+//			throw new Exception("Record with this name and streamid already exists.");
+		}else {
+			flag = false;
+		}
+		
+		if(flag == false) {
+		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(branchReq.getId());
+		BranchMasterEntity bm = bme.get();
+		
+		bm.setId(branchReq.getId());
+		bm.setBranchName(branchReq.getBranchname());
+		bm.setStreamId(branchReq.getStreamid());
+		bm.setUniversityId(branchReq.getUniversityid());
+		
+		branchMasterRepository.save(bm);
+		}
+		return true;
+	}
+
+	@Override
+	public List<BranchResponse> getAllBranchList(HttpServletRequest request) {
+		
+		logger.info("*******BranchMasterServiceImpl getAllBranchList*******");
+		
+		List<BranchMasterEntity> list = branchMasterRepository.findByIsdeleted("N");
+		
+		List<BranchResponse> resp = new ArrayList<>();
+		
+		for(BranchMasterEntity bme: list) {
+			
+			BranchResponse br = new BranchResponse();
+			
+			StreamMaster stream = streamService.getNameById(bme.getStreamId());
+			
+			br.setBranchName(bme.getBranchName());
+			br.setId(bme.getId());
+			br.setStreamId(bme.getStreamId());
+			br.setUniversityId(bme.getUniversityId());
+			br.setStreamName(stream.getStreamName());
+			
+			resp.add(br);
+			
+		}
+		
+		return resp;
 	}
 }

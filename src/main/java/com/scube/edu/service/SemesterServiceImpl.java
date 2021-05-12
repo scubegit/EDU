@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.repository.BranchMasterRepository;
 import com.scube.edu.repository.SemesterRepository;
+import com.scube.edu.request.SemesterRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.SemesterResponse;
@@ -28,6 +30,9 @@ public class SemesterServiceImpl implements SemesterService{
 
     @Autowired
     SemesterRepository semesterRepository;
+    
+    @Autowired
+    StreamService streamService;
 	
 	@Override
 	public List<SemesterResponse> getSemList(Long id, HttpServletRequest request) {
@@ -66,4 +71,105 @@ public class SemesterServiceImpl implements SemesterService{
 		
 				return semEntity;
 }
+
+	@Override
+	public boolean saveSem(SemesterRequest semReq, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******SemesterServiceImpl addSem*******");
+		
+		SemesterEntity sEnt = semesterRepository.findBySemesterAndStreamId(semReq.getSemestername(), semReq.getStreamid());
+		
+		if(sEnt != null) {
+			throw new Exception("This sem name and Stream Id combo already exist.");
+		}else {
+			SemesterEntity semEnt = new SemesterEntity();
+			
+			semEnt.setIsdeleted("N");
+			semEnt.setSemester(semReq.getSemestername());
+			semEnt.setStreamId(semReq.getStreamid());
+			semEnt.setUniversityId(semReq.getUniversityid());
+			
+			semesterRepository.save(semEnt);
+			return true;
+		}
+		
+		
+	}
+
+	@Override
+	public boolean deleteSemester(Long id, HttpServletRequest request) {
+		
+		logger.info("*******SemesterServiceImpl deleteSemester*******"+id);
+		
+		Optional<SemesterEntity> sme = semesterRepository.findById(id);
+		SemesterEntity sEnt = sme.get();
+		
+		semesterRepository.delete(sEnt);
+		
+		return true;
+	}
+
+	@Override
+	public boolean updateSem(SemesterRequest semReq, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******SemesterServiceImpl deleteSemester*******");
+		
+		boolean flag;
+		
+		SemesterEntity se = semesterRepository.findBySemesterAndStreamId(semReq.getSemestername(), semReq.getStreamid());
+		
+		if(se != null) {
+			logger.info("ids"+se.getId()+""+semReq.getId());
+			if(se.getId() != semReq.getId()) {
+				flag = true;
+				throw new Exception("This Semester name and streamID combo already exists.");
+			}else {
+				flag = false;
+			}
+//			throw new Exception("This Semester name and streamId combo already exist");
+		}else {
+			flag = false;
+		}
+		
+		if(flag == false) {
+		Optional<SemesterEntity> semEnt = semesterRepository.findById(semReq.getId());
+		SemesterEntity sem = semEnt.get();
+		
+		sem.setId(semReq.getId());
+		sem.setSemester(semReq.getSemestername());
+		sem.setStreamId(semReq.getStreamid());
+		sem.setUniversityId(semReq.getUniversityid());
+		
+		semesterRepository.save(sem);
+		}
+		return true;
+	}
+
+	@Override
+	public List<SemesterResponse> getAllSemList(HttpServletRequest request) {
+		
+		logger.info("*******SemesterServiceImpl getAllSemList*******");
+		
+		List<SemesterEntity> list = semesterRepository.findAll();
+		
+		List<SemesterResponse> respList = new ArrayList<>();
+		
+		for(SemesterEntity semEnt: list) {
+			
+			SemesterResponse sem = new SemesterResponse();
+			
+			StreamMaster stream = streamService.getNameById(semEnt.getStreamId());
+			
+			sem.setId(semEnt.getId());
+			sem.setSemester(semEnt.getSemester());
+			sem.setStreamId(semEnt.getStreamId());
+			sem.setUniversityId(semEnt.getUniversityId());
+			sem.setStreamName(stream.getStreamName());
+			
+			respList.add(sem);
+			
+		}
+		
+		return respList;
+	}
 }

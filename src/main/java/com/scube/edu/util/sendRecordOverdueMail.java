@@ -9,6 +9,7 @@ import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,9 @@ public class sendRecordOverdueMail {
 	
 	@Autowired
 	EmailService emailService;
+	
+	@Value("${file.imagepath-dir}")
+    private String imageLocation;
 	
 	@Scheduled(cron = "0 0 0 * * *")	
 	//@Scheduled(cron = "*/60 * * * * *")
@@ -63,7 +67,7 @@ public class sendRecordOverdueMail {
 					verReq.setDocStatus("Uni_Auto_Approved");
 					verificationReqRepo.save(verReq);
 					
-					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus());
+					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
 					
 				}
 				if(verReq.getDocStatus().equalsIgnoreCase("Rejected") || verReq.getDocStatus().equalsIgnoreCase("SV_Rejected") ){
@@ -71,7 +75,7 @@ public class sendRecordOverdueMail {
 					verReq.setDocStatus("Uni_Auto_Rejected");
 					verificationReqRepo.save(verReq);
 					
-					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus());
+					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
 
 					
 					
