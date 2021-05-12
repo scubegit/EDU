@@ -92,7 +92,7 @@ public class EmailService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 	   
-	   void sendEmail(String emailId, String encodeEmail) throws MessagingException {
+	   void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException {
 		   
 
 		   String to = emailId;
@@ -147,8 +147,8 @@ public class EmailService {
 
 	            // Now set the actual message
 
-	                       
-                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://103.143.39.76:8080/University/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+	                       logger.info("URL---------->"+ url);
+                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='"+url+"/University/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
                 "<br><br><br> Thanks,<br>Team University";
 //                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
 //                        "<br><br><br> Thanks,<br>Team University";
@@ -175,12 +175,12 @@ public class EmailService {
 	   
 	   
 	   
-	  void sendVerificationEmail(String emailId) throws MessagingException {
+	  void sendVerificationEmail(String emailId, String url) throws MessagingException {
 		  
 		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 
 		   String to = emailId;
-
+		   logger.info("URL---------->"+url);
 	        // Sender's email ID needs to be mentioned
 
 	        String from = "verify@educred.co.in";
@@ -219,7 +219,7 @@ public class EmailService {
 
 	            // Now set the actual messageHello User,
 	         
-                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://103.143.39.76:8080/University/emailVerification?emailId="+encodeEmail+"'><strong>103.143.39.76:8080/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
+                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://"+url+"/University/emailVerification?emailId="+encodeEmail+"'><strong>"+url+"/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
                                        " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
 
