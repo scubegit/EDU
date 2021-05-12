@@ -403,8 +403,8 @@ public class EmailService {
 //        footer.setBorder(Rectangle.NO_BORDER);
         document.setFooter(footer);
         
-		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-      //  Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		Image img = Image.getInstance("webapps/University/assets/images/logo.png");
+        //Image img = Image.getInstance("logo.png"); //
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -599,8 +599,8 @@ public class EmailService {
 		// left, right, top, bottom
 		logger.info("headerFooter set here--->just before document.open()");
 		
-		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-        //Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		Image img = Image.getInstance("webapps/University/assets/images/logo.png");
+        //Image img = Image.getInstance("logo.png"); //
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         

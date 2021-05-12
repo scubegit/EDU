@@ -152,7 +152,7 @@ public class InvoicePDFExporter {
 //               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
             	 Image logo = Image.getInstance("webapps/University/assets/images/logo.png");
 //               Image logo = Image.getInstance("EduCred_Logo.jpg");
-//            	 Image logo = Image.getInstance("logo.png");
+            	// Image logo = Image.getInstance("logo.png");
                logo.setAbsolutePosition(10, 300);
                
                logger.info("Entry point for pdf exporter--------->8");
@@ -166,7 +166,7 @@ public class InvoicePDFExporter {
 //			  	 Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
                	 Image img = Image.getInstance("webapps/University/assets/images/logo.png");
 //               Image img = Image.getInstance("EduCred_Logo.jpg"); //
-//               Image img = Image.getInstance("logo.png");
+              //Image img = Image.getInstance("logo.png");
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(120, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
@@ -274,7 +274,7 @@ public class InvoicePDFExporter {
 //	 	    verifierCell.addElement(new Paragraph("Institue    :St.Joseph",font9b));
 	 	    verifierCell.addElement(new Paragraph("Name       :Secur Credentials",font9b));
 	 	    verifierCell.addElement(new Paragraph("Email ID  :support@educred.co.in",font9b));
-	 	    verifierCell.addElement(new Paragraph("GSTIN     :gst58652585824586",font9b));
+	 	    verifierCell.addElement(new Paragraph("GSTIN     :27AADCA3292Q2Z5",font9b));
 	 	 
 		 	
  	       studentinfotable.addCell(studentinfoCell);
