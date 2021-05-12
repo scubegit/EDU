@@ -15,6 +15,7 @@ import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.repository.BranchMasterRepository;
+import com.scube.edu.request.BranchRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.CollegeResponse;
@@ -34,7 +35,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		logger.info("ID"+id);
 		 List<BranchResponse> branchList = new ArrayList<>();
 			
-			List<BranchMasterEntity> branchEntities    = branchMasterRepository.getbrachbyStreamId(id);
+			List<BranchMasterEntity> branchEntities    = branchMasterRepository.getbrachbyStreamIdAndIsdeleted(id, "N");
 			for(BranchMasterEntity entity : branchEntities) {
 				
 				BranchResponse response = new BranchResponse();
@@ -65,5 +66,45 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		System.out.println("yearEnt---"+ branchEntity);
 		
 				return branchEntity;
+	}
+
+	@Override
+	public boolean saveBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******BranchMasterServiceImpl saveBranch*******"+ branchReq.getBranchname());
+		
+		BranchMasterEntity bme = branchMasterRepository.findByBranchNameAndStreamId(branchReq.getBranchname(), branchReq.getStreamid());
+		
+		if(bme != null) {
+			
+			throw new Exception("The Branch and streamId combo already exist.");
+			
+		}else {
+			logger.info("add new branch");
+			
+			BranchMasterEntity bmEnt = new BranchMasterEntity();
+			
+			bmEnt.setBranchName(branchReq.getBranchname());
+			bmEnt.setIsdeleted("N");
+			bmEnt.setStreamId(branchReq.getStreamid());
+			bmEnt.setUniversityId(branchReq.getUniversityid());
+			
+			branchMasterRepository.save(bmEnt);
+			return true;
+			
+		}
+	}
+
+	@Override
+	public boolean deleteBranch(Long id, HttpServletRequest request) {
+		
+		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(id);
+		BranchMasterEntity bm = bme.get();
+		
+		bm.setIsdeleted("Y");
+		
+		branchMasterRepository.save(bm);
+		
+		return true;
 	}
 }

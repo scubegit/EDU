@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.model.FileStorageProperties;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
@@ -175,12 +177,16 @@ public class StudentController {
 	}
 	
 	
+	@Autowired
+	InvoicePDFExporter	invoicePDFExporter; 
 	
-	
-	  
+	 @Value("${file.imagepath-dir}")
+     private String imageLocation;
+     
     @GetMapping("/exportinvoicepdf/{applicationId}")
     public void exportToPDF(@PathVariable String applicationId, HttpServletResponse response ,HttpServletRequest request) throws Exception {
-    	
+
+		logger.info("-----imageLocation---------------"+imageLocation);
     	
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -192,11 +198,11 @@ public class StudentController {
         response.setHeader(headerKey, headerValue);
         try {
         HashMap<Object, Object>   pdfData  = verificationService.getdatabyapplicationId( applicationId) ;
-         
-        logger.info("before export");
-        InvoicePDFExporter exporter = new InvoicePDFExporter(pdfData,applicationId);
         
-        exporter.export(response);
+        logger.info("before export");
+     //   InvoicePDFExporter exporter = new InvoicePDFExporter(pdfData,applicationId, imageLocation);
+        
+        invoicePDFExporter.export(response,pdfData,applicationId, imageLocation);
         logger.info("after export"+ response.toString());
         }catch(Exception e) {
         	throw new Exception(e.getMessage());

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.BadElementException;
@@ -72,6 +72,9 @@ public class DisputeServiceImpl implements DisputeService{
 		return false;
 		
 	}
+	
+	 @Value("${file.imagepath-dir}")
+     private String imageLocation;
 
 	@Override
 	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws MessagingException, BadElementException, IOException {
@@ -94,7 +97,7 @@ public class DisputeServiceImpl implements DisputeService{
 				disputeRepo.save(rdd);
 				
 				try {
-					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -128,7 +131,7 @@ public class DisputeServiceImpl implements DisputeService{
 				disputeRepo.save(rdd);
 				
 				try {
-					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
