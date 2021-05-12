@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.BadElementException;
@@ -141,6 +142,9 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		return responseList;
 	}
 
+	@Value("${file.imagepath-dir}")
+    private String imageLocation;
+	
 	@Override
 	public List<StudentVerificationDocsResponse> setStatusForUniversityDocument(
 			StatusChangeRequest statusChangeRequest) throws Exception {
@@ -173,7 +177,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			if(cutomizationEntity!=null)
 			{
 				if(cutomizationEntity.getEmailFlag().equals("Y")) {
-			emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus());
+			emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus(), imageLocation);
 				}
 			}
 			}

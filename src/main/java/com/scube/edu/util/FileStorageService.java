@@ -78,6 +78,8 @@ public class FileStorageService {
 	private final String fileBaseLocation;
 	
 	private final String fileAssociateBaseLocation;
+	
+	private final String imagePathDir;
 
 	private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 	 
@@ -93,7 +95,7 @@ public class FileStorageService {
 	  
 	  this.fileBaseLocation = fileStorageProperties.getUploadDir();
 	  this.fileAssociateBaseLocation = fileStorageProperties.getUploadassociateDir();
-	  
+	  this.imagePathDir = fileStorageProperties.getImagepathDir();
 	  }
 	 
 	
@@ -154,6 +156,7 @@ public class FileStorageService {
 		public Resource loadFileAsResource(String userFor, Long id) throws Exception {
 			
 		 	String fileName =" ";
+		 	logger.info(this.imagePathDir);
 		 	try {
 	        	
 	        	String newPAth ;
