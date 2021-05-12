@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.repository.BranchMasterRepository;
 import com.scube.edu.request.BranchRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.CollegeResponse;
+import com.scube.edu.response.StreamResponse;
 
 @Service
 public class BranchMasterServiceImpl implements BranchMasterService {
@@ -29,6 +31,9 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 
     @Autowired
 	BranchMasterRepository branchMasterRepository;
+    
+    @Autowired
+    StreamService streamService;
 	
 	@Override
 	public List<BranchResponse> getBranchList(Long id,HttpServletRequest request) {
@@ -103,7 +108,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		bm.setIsdeleted("Y");
 		
-		branchMasterRepository.save(bm);
+		branchMasterRepository.delete(bm);
 		
 		return true;
 	}
@@ -138,10 +143,13 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 			
 			BranchResponse br = new BranchResponse();
 			
+			StreamMaster stream = streamService.getNameById(bme.getStreamId());
+			
 			br.setBranchName(bme.getBranchName());
 			br.setId(bme.getId());
 			br.setStreamId(bme.getStreamId());
 			br.setUniversityId(bme.getUniversityId());
+			br.setStreamName(stream.getStreamName());
 			
 			resp.add(br);
 			

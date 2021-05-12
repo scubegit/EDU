@@ -16,6 +16,7 @@ import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.repository.BranchMasterRepository;
 import com.scube.edu.repository.SemesterRepository;
+import com.scube.edu.request.SemesterRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.SemesterResponse;
@@ -66,4 +67,28 @@ public class SemesterServiceImpl implements SemesterService{
 		
 				return semEntity;
 }
+
+	@Override
+	public boolean saveSem(SemesterRequest semReq, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******SemesterServiceImpl addSem*******");
+		
+		SemesterEntity sEnt = semesterRepository.findBySemesterAndStreamId(semReq.getSemestername(), semReq.getStreamid());
+		
+		if(sEnt != null) {
+			throw new Exception("This sem name and Stream Id combo already exist.");
+		}else {
+			SemesterEntity semEnt = new SemesterEntity();
+			
+			semEnt.setIsdeleted("N");
+			semEnt.setSemester(semReq.getSemestername());
+			semEnt.setStreamId(semReq.getStreamid());
+			semEnt.setUniversityId(semReq.getUniversityid());
+			
+			semesterRepository.save(semEnt);
+			return true;
+		}
+		
+		
+	}
 }
