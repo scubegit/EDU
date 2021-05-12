@@ -26,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.RefreshToken;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.request.LoginRequest;
@@ -60,6 +61,9 @@ public class AuthServiceImpl implements AuthService{
 	
 	@Autowired
 	EmailService emailService;
+	
+	@Autowired
+	RefreshTokenService refreshTokenService;
 	
 	BaseResponse  baseResponse = null;
     Base64.Decoder decoder = Base64.getDecoder();  
@@ -114,10 +118,12 @@ public class AuthServiceImpl implements AuthService{
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();	
 	
+		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+		
 	
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-		baseResponse.setRespData(new JwtResponse(jwt, 
+		baseResponse.setRespData(new JwtResponse(jwt,refreshToken.getToken(), 
 				 userDetails.getId(), 
 				 userDetails.getUsername(), 
 				 userDetails.getEmail(),
