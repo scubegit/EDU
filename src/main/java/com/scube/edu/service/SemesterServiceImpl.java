@@ -110,9 +110,15 @@ public class SemesterServiceImpl implements SemesterService{
 	}
 
 	@Override
-	public boolean updateSem(SemesterRequest semReq, HttpServletRequest request) {
+	public boolean updateSem(SemesterRequest semReq, HttpServletRequest request) throws Exception {
 		
 		logger.info("*******SemesterServiceImpl deleteSemester*******");
+		
+		SemesterEntity se = semesterRepository.findBySemesterAndStreamId(semReq.getSemestername(), semReq.getStreamid());
+		
+		if(se != null) {
+			throw new Exception("This Semester name and streamId combo already exist");
+		}
 		
 		Optional<SemesterEntity> semEnt = semesterRepository.findById(semReq.getId());
 		SemesterEntity sem = semEnt.get();

@@ -16,7 +16,7 @@ public interface BranchMasterService {
 	public BranchMasterEntity getbranchIdByname(String brnchnm,Long strmId);
 	public String saveBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception;
 	public boolean deleteBranch(Long id, HttpServletRequest request);
-	public boolean updateBranch(BranchRequest branchReq, HttpServletRequest request);
+	public boolean updateBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception;
 	public List<BranchResponse> getAllBranchList(HttpServletRequest request);
 
 }

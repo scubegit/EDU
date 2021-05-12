@@ -116,10 +116,16 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	}
 
 	@Override
-	public boolean updateBranch(BranchRequest branchReq, HttpServletRequest request) {
+	public boolean updateBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception {
 		
 		logger.info("*******BranchMasterServiceImpl updateBranch*******"+ branchReq.getBranchname());
 		
+		BranchMasterEntity bmEnt = branchMasterRepository.findByBranchNameAndStreamId(branchReq.getBranchname(), branchReq.getStreamid());
+		
+		if(bmEnt != null) {
+			throw new Exception("Record with this name and streamid already exists.");
+		}
+		else {
 		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(branchReq.getId());
 		BranchMasterEntity bm = bme.get();
 		
@@ -129,7 +135,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		bm.setUniversityId(branchReq.getUniversityid());
 		
 		branchMasterRepository.save(bm);
-		
+		}
 		return true;
 	}
 
