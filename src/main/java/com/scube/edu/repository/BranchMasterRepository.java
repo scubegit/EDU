@@ -12,8 +12,8 @@ import com.scube.edu.model.BranchMasterEntity;
 @Repository
 public interface BranchMasterRepository extends JpaRepository<BranchMasterEntity, Long> {
 
-	@Query(value ="SELECT * from branch_master where stream_id =?1", nativeQuery = true)
-	List<BranchMasterEntity> getbrachbyStreamId(Long id);
+	@Query(value ="SELECT * from branch_master where stream_id =?1 and is_deleted = '?2'", nativeQuery = true)
+	List<BranchMasterEntity> getbrachbyStreamIdAndIsdeleted(Long id, String isdeleted);
 	Optional<BranchMasterEntity> findById(Long id);
 	BranchMasterEntity findByBranchNameAndStreamId (String branchnm,Long StreamId);
 }
