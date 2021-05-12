@@ -1,0 +1,69 @@
+2021-04-16 15:15:38 [restartedMain] INFO  com.scube.edu.EduApplication - Starting EduApplication using Java 1.8.0_251 on keshav with PID 15080 (D:\Git_Hub\University_new\EDU\target\classes started by keshavP in D:\Git_Hub\University_new\EDU)
+2021-04-16 15:15:38 [restartedMain] INFO  com.scube.edu.EduApplication - No active profile set, falling back to default profiles: default
+2021-04-16 15:15:38 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-04-16 15:15:45 [restartedMain] INFO  com.scube.edu.EduApplication - Starting EduApplication using Java 1.8.0_251 on keshav with PID 6512 (D:\Git_Hub\University_new\EDU\target\classes started by keshavP in D:\Git_Hub\University_new\EDU)
+2021-04-16 15:15:45 [restartedMain] INFO  com.scube.edu.EduApplication - No active profile set, falling back to default profiles: default
+2021-04-16 15:15:45 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-04-16 15:15:45 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-04-16 15:15:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-04-16 15:15:47 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 142 ms. Found 11 JPA repository interfaces.
+2021-04-16 15:15:47 [restartedMain] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@514d73f1' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-04-16 15:15:47 [restartedMain] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-04-16 15:15:47 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2021-04-16 15:15:47 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2021-04-16 15:15:47 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-04-16 15:15:47 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/EDU] - Initializing Spring embedded WebApplicationContext
+2021-04-16 15:15:47 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2043 ms
+2021-04-16 15:15:47 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-04-16 15:15:48 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-04-16 15:15:48 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.27.Final
+2021-04-16 15:15:48 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-16 15:15:48 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2021-04-16 15:15:49 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2021-04-16 15:15:49 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2021-04-16 15:15:50 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-16 15:15:50 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-04-16 15:15:51 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2021-04-16 15:15:51 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@b751915, org.springframework.security.web.context.SecurityContextPersistenceFilter@4587d1c6, org.springframework.security.web.header.HeaderWriterFilter@1ea51317, org.springframework.web.filter.CorsFilter@8863820, org.springframework.security.web.authentication.logout.LogoutFilter@1f4ddbfd, com.scube.edu.security.AuthTokenFilter@63d627db, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@62306c62, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6efb854d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@46b2f28, org.springframework.security.web.session.SessionManagementFilter@21b49fb3, org.springframework.security.web.access.ExceptionTranslationFilter@49bc0830, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@40712302]
+2021-04-16 15:15:51 [restartedMain] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2021-04-16 15:15:52 [restartedMain] INFO  o.s.s.c.ThreadPoolTaskScheduler - Initializing ExecutorService 'taskScheduler'
+2021-04-16 15:15:52 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path '/EDU'
+2021-04-16 15:15:52 [restartedMain] INFO  com.scube.edu.EduApplication - Started EduApplication in 7.152 seconds (JVM running for 8.193)
+2021-04-16 15:15:57 [http-nio-8081-exec-2] INFO  o.a.c.c.C.[.[localhost].[/EDU] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-04-16 15:15:57 [http-nio-8081-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2021-04-16 15:15:57 [http-nio-8081-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2021-04-16 15:15:57 [http-nio-8081-exec-2] INFO  c.s.edu.controller.AuthController - ********************AuthController authenticateUser******************
+2021-04-16 15:15:57 [http-nio-8081-exec-2] ERROR c.s.edu.controller.AuthController - Message logged at ERROR level
+2021-04-16 15:15:57 [http-nio-8081-exec-2] WARN  c.s.edu.controller.AuthController - Message logged at WARN level
+2021-04-16 15:15:57 [http-nio-8081-exec-2] INFO  c.s.edu.controller.AuthController - Message logged at INFO level
+2021-04-16 15:15:57 [http-nio-8081-exec-2] INFO  c.scube.edu.service.AuthServiceImpl - loginRequest.email keshav@gmail.com
+2021-04-16 15:16:34 [RMI TCP Connection(3)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2021-04-16 15:16:34 [RMI TCP Connection(3)-127.0.0.1] INFO  o.s.s.c.ThreadPoolTaskScheduler - Shutting down ExecutorService 'taskScheduler'
+2021-04-16 15:16:34 [RMI TCP Connection(3)-127.0.0.1] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+2021-04-16 15:16:34 [RMI TCP Connection(3)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-04-16 15:16:34 [RMI TCP Connection(3)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2021-04-16 15:16:34 [RMI TCP Connection(3)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2021-04-16 16:20:28 [main] INFO  com.scube.edu.EduApplicationTests - Starting EduApplicationTests using Java 1.8.0_251 on keshav with PID 11236 (started by keshavP in D:\Git_Hub\University_new\EDU)
+2021-04-16 16:20:28 [main] INFO  com.scube.edu.EduApplicationTests - No active profile set, falling back to default profiles: default
+2021-04-16 16:20:40 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-04-16 16:20:41 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 911 ms. Found 11 JPA repository interfaces.
+2021-04-16 16:20:45 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@4492eede' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-04-16 16:20:45 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-04-16 16:20:47 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-04-16 16:20:47 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.27.Final
+2021-04-16 16:20:48 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-16 16:20:50 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2021-04-16 16:20:53 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2021-04-16 16:20:53 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2021-04-16 16:20:58 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-16 16:20:58 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-04-16 16:21:01 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-04-16 16:21:05 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@178ba69f, org.springframework.security.web.context.SecurityContextPersistenceFilter@3835b281, org.springframework.security.web.header.HeaderWriterFilter@1f521c69, org.springframework.web.filter.CorsFilter@1e4c4fda, org.springframework.security.web.authentication.logout.LogoutFilter@511d568f, com.scube.edu.security.AuthTokenFilter@1fcc3461, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@552cb0d5, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6fdaef04, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2f58f492, org.springframework.security.web.session.SessionManagementFilter@6c13019c, org.springframework.security.web.access.ExceptionTranslationFilter@36f05595, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@33c9f1ac]
+2021-04-16 16:21:06 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2021-04-16 16:21:08 [main] INFO  o.s.s.c.ThreadPoolTaskScheduler - Initializing ExecutorService 'taskScheduler'
+2021-04-16 16:21:08 [main] INFO  com.scube.edu.EduApplicationTests - Started EduApplicationTests in 42.591 seconds (JVM running for 54.87)
+2021-04-16 16:21:09 [SpringContextShutdownHook] INFO  o.s.s.c.ThreadPoolTaskScheduler - Shutting down ExecutorService 'taskScheduler'
+2021-04-16 16:21:09 [SpringContextShutdownHook] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+2021-04-16 16:21:09 [SpringContextShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-04-16 16:21:09 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2021-04-16 16:21:09 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
