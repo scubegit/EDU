@@ -21,6 +21,7 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.StreamResponse;
+import com.scube.edu.util.StringsUtils;
 
 @Service
 public class BranchMasterServiceImpl implements BranchMasterService {
@@ -40,7 +41,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		logger.info("ID"+id);
 		 List<BranchResponse> branchList = new ArrayList<>();
 			
-			List<BranchMasterEntity> branchEntities    = branchMasterRepository.getbrachbyStreamIdAndIsdeleted(id, "N");
+			List<BranchMasterEntity> branchEntities    = branchMasterRepository.getbrachbyStreamId(id);
 			for(BranchMasterEntity entity : branchEntities) {
 				
 				BranchResponse response = new BranchResponse();
@@ -74,14 +75,15 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	}
 
 	@Override
-	public boolean saveBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception {
+	public String saveBranch(BranchRequest branchReq, HttpServletRequest request) throws Exception {
 		
+		String flag;		
 		logger.info("*******BranchMasterServiceImpl saveBranch*******"+ branchReq.getBranchname());
 		
 		BranchMasterEntity bme = branchMasterRepository.findByBranchNameAndStreamId(branchReq.getBranchname(), branchReq.getStreamid());
 		
 		if(bme != null) {
-			
+			flag = "The Branch and streamId combo already exist";
 			throw new Exception("The Branch and streamId combo already exist.");
 			
 		}else {
@@ -95,9 +97,11 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 			bmEnt.setUniversityId(branchReq.getUniversityid());
 			
 			branchMasterRepository.save(bmEnt);
-			return true;
+			
+			flag = "Success";
 			
 		}
+		return flag;
 	}
 
 	@Override
@@ -105,9 +109,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(id);
 		BranchMasterEntity bm = bme.get();
-		
-		bm.setIsdeleted("Y");
-		
+
 		branchMasterRepository.delete(bm);
 		
 		return true;

@@ -63,7 +63,8 @@ public class BranchMasterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -96,7 +97,8 @@ public class BranchMasterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -111,14 +113,24 @@ public class BranchMasterController {
 		try {
 			
 			
-            boolean responseData = branchMasterService.saveBranch(branchReq, request);
-			
-			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
-			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-			response.setRespData(responseData);
+            String flag = branchMasterService.saveBranch(branchReq, request);
+            if(!flag.equals("Success"))
+			{
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+
+			}
+			else
+			{
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+
+			}
+			response.setRespData(flag);
 			
 			return ResponseEntity.ok(response);
-			
 			
 				  
 		}catch (Exception e) {
@@ -129,7 +141,9 @@ public class BranchMasterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+			
 			
 		}
 		
@@ -161,7 +175,8 @@ public class BranchMasterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -194,7 +209,8 @@ public class BranchMasterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		

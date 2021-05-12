@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.repository.BranchMasterRepository;
 import com.scube.edu.repository.SemesterRepository;
 import com.scube.edu.request.SemesterRequest;
@@ -29,6 +30,9 @@ public class SemesterServiceImpl implements SemesterService{
 
     @Autowired
     SemesterRepository semesterRepository;
+    
+    @Autowired
+    StreamService streamService;
 	
 	@Override
 	public List<SemesterResponse> getSemList(Long id, HttpServletRequest request) {
@@ -90,5 +94,63 @@ public class SemesterServiceImpl implements SemesterService{
 		}
 		
 		
+	}
+
+	@Override
+	public boolean deleteSemester(Long id, HttpServletRequest request) {
+		
+		logger.info("*******SemesterServiceImpl deleteSemester*******"+id);
+		
+		Optional<SemesterEntity> sme = semesterRepository.findById(id);
+		SemesterEntity sEnt = sme.get();
+		
+		semesterRepository.delete(sEnt);
+		
+		return true;
+	}
+
+	@Override
+	public boolean updateSem(SemesterRequest semReq, HttpServletRequest request) {
+		
+		logger.info("*******SemesterServiceImpl deleteSemester*******");
+		
+		Optional<SemesterEntity> semEnt = semesterRepository.findById(semReq.getId());
+		SemesterEntity sem = semEnt.get();
+		
+		sem.setSemester(semReq.getSemestername());
+		sem.setStreamId(semReq.getStreamid());
+		sem.setUniversityId(semReq.getUniversityid());
+		
+		semesterRepository.save(sem);
+		
+		return true;
+	}
+
+	@Override
+	public List<SemesterResponse> getAllSemList(HttpServletRequest request) {
+		
+		logger.info("*******SemesterServiceImpl getAllSemList*******");
+		
+		List<SemesterEntity> list = semesterRepository.findAll();
+		
+		List<SemesterResponse> respList = new ArrayList<>();
+		
+		for(SemesterEntity semEnt: list) {
+			
+			SemesterResponse sem = new SemesterResponse();
+			
+			StreamMaster stream = streamService.getNameById(semEnt.getStreamId());
+			
+			sem.setId(semEnt.getId());
+			sem.setSemester(semEnt.getSemester());
+			sem.setStreamId(semEnt.getStreamId());
+			sem.setUniversityId(semEnt.getUniversityId());
+			sem.setStreamName(stream.getStreamName());
+			
+			respList.add(sem);
+			
+		}
+		
+		return respList;
 	}
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +62,8 @@ public class SemesterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
@@ -93,7 +95,108 @@ public class SemesterController {
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
 			
-			return ResponseEntity.badRequest().body(response);
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+			
+		}
+		
+	}
+	
+	@DeleteMapping("/deleteSemester/{id}")
+	public ResponseEntity<Object> deleteBranch(@PathVariable Long id, HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+			
+			
+            boolean responseData = semesterService.deleteSemester(id, request);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(responseData);
+			
+			return ResponseEntity.ok(response);
+			
+			
+				  
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+			
+		}
+		
+	}
+	
+	@PostMapping("/updateSem")
+	public ResponseEntity<Object> updateSem(@RequestBody SemesterRequest semReq, HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+			
+			
+            boolean responseData = semesterService.updateSem(semReq, request);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(responseData);
+			
+			return ResponseEntity.ok(response);
+			
+			
+				  
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+			
+		}
+		
+	}
+	
+	
+	@GetMapping("/getAllSemList")
+	public ResponseEntity<Object> getAllSemList(HttpServletRequest request) {
+		
+		response = new BaseResponse();
+		
+		try {
+			
+			
+            List<SemesterResponse> responseData = semesterService.getAllSemList(request);
+			
+			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+			response.setRespData(responseData);
+			
+			return ResponseEntity.ok(response);
+			
+			
+				  
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage()); //BAD creds message comes from here
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+//			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
 			
 		}
 		
