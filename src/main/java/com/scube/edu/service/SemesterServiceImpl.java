@@ -120,7 +120,7 @@ public class SemesterServiceImpl implements SemesterService{
 		
 		if(se != null) {
 			logger.info("ids"+se.getId()+""+semReq.getId());
-			if(se.getId() == semReq.getId()) {
+			if(se.getId() != semReq.getId()) {
 				flag = true;
 				throw new Exception("This Semester name and streamID combo already exists.");
 			}else {

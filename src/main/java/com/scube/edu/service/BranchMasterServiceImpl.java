@@ -127,7 +127,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		if(bmEnt != null) {
 			logger.info(String.valueOf(branchReq.getId()) + String.valueOf(bmEnt.getId()));
-			if(branchReq.getId() == bmEnt.getId()) {
+			if(branchReq.getId() != bmEnt.getId()) {
 				flag = true;
 				throw new Exception("This combination of branch name and streamId already exists.");
 			}
