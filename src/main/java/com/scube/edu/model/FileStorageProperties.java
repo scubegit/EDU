@@ -9,7 +9,16 @@ public class FileStorageProperties {
 	
 	private String uploadDir;
 	private String uploadassociateDir;
+	private String imagepathDir;
 	
+	public String getImagepathDir() {
+		return imagepathDir;
+	}
+
+	public void setImagepathDir(String imagepathDir) {
+		this.imagepathDir = imagepathDir;
+	}
+
 	public String getUploadassociateDir() {
 		return uploadassociateDir;
 	}

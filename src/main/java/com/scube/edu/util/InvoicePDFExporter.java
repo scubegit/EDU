@@ -15,6 +15,7 @@ import javax.swing.text.TabStop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.Cell;
@@ -37,6 +38,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
+import com.scube.edu.model.FileStorageProperties;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.UserMasterEntity;
@@ -46,34 +48,44 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
 
-
+@Service
 public class InvoicePDFExporter {
 	
+    
+	
        private static final Logger logger = LoggerFactory.getLogger(InvoicePDFExporter.class);
+       
+       
        
   	 @Autowired
   	 PriceMasterRepository priceMasterRepo;
     
-	    private   HashMap<Object, Object> studentVerificationPdfData ;
+//	    private  HashMap<Object, Object> studentVerificationPdfData ;
 	
 	    
-	    String applicationId = "";
-	    
-	
+//	    private String applicationId;
+//	    private String imageLocation;
 
-	    public InvoicePDFExporter(HashMap<Object, Object> pdfData, String applicationId )
-	    {
-                     this.studentVerificationPdfData = pdfData;
-                    this.applicationId =applicationId;
 	   
-	    }
-
 		
 	   
 
-	public void export(HttpServletResponse response) throws Exception {
+	/*
+	 * public InvoicePDFExporter(HashMap<Object, Object> pdfData, String
+	 * applicationId1, String imageLocation2) { this.studentVerificationPdfData =
+	 * pdfData; this.applicationId =applicationId1; this.imageLocation =
+	 * imageLocation2; }
+	 */
+
+
+
+	public void export(HttpServletResponse response, HashMap<Object, Object> studentVerificationPdfData, String applicationId, String imageLocation) throws Exception {
 		    
 	    	try {
+	    		
+	    		
+	    		logger.info("-----imageLocation---------------"+imageLocation);
+	    		
 	    		
 	    	List<VerificationResponse> studentDocList =	(List<VerificationResponse>) studentVerificationPdfData.get("doclist");
 	    	UserMasterEntity userMasterEntity  =  (UserMasterEntity) studentVerificationPdfData.get("userEntity");
@@ -149,10 +161,11 @@ public class InvoicePDFExporter {
             
             logger.info("Entry point for pdf exporter--------->7");
 //            EduCred_Logo.jpg 
-//               Image logo = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-            	 Image logo = Image.getInstance("webapps/University/assets/images/logo.png");
-//               Image logo = Image.getInstance("EduCred_Logo.jpg");
-//            	 Image logo = Image.getInstance("logo.png");
+
+            
+//            Image img = Image.getInstance(imageLocation+"/logo.png");
+            	 Image logo = Image.getInstance("logo.png");
+
                logo.setAbsolutePosition(10, 300);
                
                logger.info("Entry point for pdf exporter--------->8");
@@ -161,12 +174,11 @@ public class InvoicePDFExporter {
                HeaderFooter header =new HeaderFooter(phrase1,false);
                document.setHeader(header);
             
-               logger.info("Entry point for pdf exporter--------->9");
-			
-//			  	 Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg"); //
-               	 Image img = Image.getInstance("webapps/University/assets/images/logo.png");
-//               Image img = Image.getInstance("EduCred_Logo.jpg"); //
-//               Image img = Image.getInstance("logo.png");
+               logger.info("Entry point for pdf exporter--------->9-->"+imageLocation+"/logo.png");
+
+//               Image img = Image.getInstance(imageLocation+"/logo.png");
+               Image img = Image.getInstance("logo.png");
+
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(120, 100); // width, height
 			  PdfPCell ImageCell1 = new PdfPCell(); ImageCell1.addElement(img);
@@ -274,7 +286,7 @@ public class InvoicePDFExporter {
 //	 	    verifierCell.addElement(new Paragraph("Institue    :St.Joseph",font9b));
 	 	    verifierCell.addElement(new Paragraph("Name       :Secur Credentials",font9b));
 	 	    verifierCell.addElement(new Paragraph("Email ID  :support@educred.co.in",font9b));
-	 	    verifierCell.addElement(new Paragraph("GSTIN     :gst58652585824586",font9b));
+	 	    verifierCell.addElement(new Paragraph("GSTIN     :27AADCA3292Q2Z5",font9b));
 	 	 
 		 	
  	       studentinfotable.addCell(studentinfoCell);

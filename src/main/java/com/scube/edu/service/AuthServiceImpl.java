@@ -22,10 +22,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.RefreshToken;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.request.LoginRequest;
@@ -61,8 +63,15 @@ public class AuthServiceImpl implements AuthService{
 	@Autowired
 	EmailService emailService;
 	
+	@Autowired
+	RefreshTokenService refreshTokenService;
+	
 	BaseResponse  baseResponse = null;
     Base64.Decoder decoder = Base64.getDecoder();  
+    
+	 @Value("${file.url-dir}")
+     private String url;
+	 
 
 	@Override
 	public BaseResponse authenticateUser(LoginRequest loginRequest, HttpServletRequest request) throws Exception {
@@ -114,10 +123,12 @@ public class AuthServiceImpl implements AuthService{
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();	
 	
+		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+		
 	
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-		baseResponse.setRespData(new JwtResponse(jwt, 
+		baseResponse.setRespData(new JwtResponse(jwt,refreshToken.getToken(), 
 				 userDetails.getId(), 
 				 userDetails.getUsername(), 
 				 userDetails.getEmail(),
@@ -169,11 +180,13 @@ public class AuthServiceImpl implements AuthService{
 	
 	     userRepository.save(userMasterEntity);
 	
-		 emailService.sendVerificationEmail(userAddRequest.getEmailId());
+		 emailService.sendVerificationEmail(userAddRequest.getEmailId(), url);
 			
 		return true;
 		
 	}
+	
+
 
 
 	@Override
@@ -200,7 +213,7 @@ public class AuthServiceImpl implements AuthService{
 			 logger.info("---------encodeEmail-------"+encodeEmail);
 			
 			//Send Email 
-			emailService.sendEmail(email,encodeEmail);
+			emailService.sendEmail(email,encodeEmail, url);
 			
 			baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

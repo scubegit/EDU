@@ -12,4 +12,5 @@ public class SemesterResponse {
 	private Long universityId;
 	private String semester;
 	private Long StreamId;
+	private String streamName;
 }

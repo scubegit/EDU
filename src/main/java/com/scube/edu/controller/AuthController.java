@@ -1,5 +1,7 @@
 
 package com.scube.edu.controller;
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -16,11 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.model.RefreshToken;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.request.LoginRequest;
+import com.scube.edu.request.TokenRefreshRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.TokenRefreshResponse;
+import com.scube.edu.security.JwtUtils;
 import com.scube.edu.service.AuthService;
+import com.scube.edu.service.RefreshTokenService;
 import com.scube.edu.util.StringsUtils;
 
 
@@ -37,12 +44,17 @@ public class AuthController {
 	@Autowired
 	AuthService	authService;
 	
+	@Autowired
+	RefreshTokenService	refreshTokenService;
 	
 	
 	@PostMapping("/studentSignUp")
 	public ResponseEntity<Object> addUser(@RequestBody UserAddRequest userRequest ,  HttpServletRequest request) {
 		
 		logger.info("********UsersControllers addUser()********");
+		
+		
+		
 		response = new BaseResponse();
 		
 		try {
@@ -86,6 +98,11 @@ public class AuthController {
 		logger.info("Message logged at INFO level");
 		
 		logger.info("********************AuthController authenticateUser4******************");
+		logger.debug("Message logged at DEBUG level");
+		
+		logger.error("Message logged at ERROR level");
+		logger.warn("Message logged at WARN level");
+		logger.info("Message logged at INFO level");
 		logger.debug("Message logged at DEBUG level");
 		
 		response = new BaseResponse();
@@ -285,6 +302,38 @@ public class AuthController {
 		}
 		
 	}
+	
+	@Autowired
+	JwtUtils jwtUtils;
+	
+	@PostMapping("/refreshtoken")
+	  public ResponseEntity<?> refreshtoken( @RequestBody TokenRefreshRequest request) {
+	    String requestRefreshToken = request.getRefreshToken();
+
+	     RefreshToken refreshToken = refreshTokenService.findByToken(requestRefreshToken); 
+	    
+	     refreshTokenService.verifyExpiration(refreshToken);
+	    
+	     UserMasterEntity	userMasterEntity = new UserMasterEntity();
+	     
+	     userMasterEntity.setEmailId(refreshToken.getUser().getEmailId());
+	    
+	    
+	    
+	    String token = jwtUtils.generateTokenFromUsername(userMasterEntity.getEmailId());
+        return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+	    
+	    
+		/*
+		 * return refreshTokenService.findByToken(requestRefreshToken)
+		 * .map(refreshTokenService::verifyExpiration) .map(RefreshToken::getUser)
+		 * .map(userMasterEntity -> { String token =
+		 * jwtUtils.generateTokenFromUsername(userMasterEntity.getUsername()); return
+		 * ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken)); })
+		 * .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+		 * "Refresh token is not in database!"));
+		 */
+	  }
 
 }
 

@@ -53,8 +53,11 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
+import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
@@ -72,6 +75,12 @@ public class EmailService {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	BranchMasterService branchService;
+	
+	@Autowired
+	SemesterService semService;
+	
 	@Autowired 
 	StreamService streamService;
 	
@@ -83,7 +92,7 @@ public class EmailService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 	   
-	   void sendEmail(String emailId, String encodeEmail) throws MessagingException {
+	   void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException {
 		   
 
 		   String to = emailId;
@@ -138,8 +147,8 @@ public class EmailService {
 
 	            // Now set the actual message
 
-	                       
-                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://103.143.39.76:8080/University/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+	                       logger.info("URL---------->"+ url);
+                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='"+url+"/University/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
                 "<br><br><br> Thanks,<br>Team University";
 //                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
 //                        "<br><br><br> Thanks,<br>Team University";
@@ -166,12 +175,12 @@ public class EmailService {
 	   
 	   
 	   
-	  void sendVerificationEmail(String emailId) throws MessagingException {
+	  void sendVerificationEmail(String emailId, String url) throws MessagingException {
 		  
 		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 
 		   String to = emailId;
-
+		   logger.info("URL---------->"+url);
 	        // Sender's email ID needs to be mentioned
 
 	        String from = "verify@educred.co.in";
@@ -210,7 +219,7 @@ public class EmailService {
 
 	            // Now set the actual messageHello User,
 	         
-                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://103.143.39.76:8080/University/emailVerification?emailId="+encodeEmail+"'><strong>103.143.39.76:8080/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
+                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://"+url+"/University/emailVerification?emailId="+encodeEmail+"'><strong>"+url+"/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
                                        " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
 
@@ -231,10 +240,10 @@ public class EmailService {
 	   }
 	  
 	  
-	  public void sendStatusMail(String emailId, Long id, String status) throws Exception {
+	  public void sendStatusMail(String emailId, Long id, String status, String imageLocation) throws Exception {
 		  
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
-		  
+		  	logger.info("imageLocation---->"+imageLocation);
 		  	Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 			VerificationRequest vr = vrr.get();
 			
@@ -299,14 +308,14 @@ public class EmailService {
                outputStream = new ByteArrayOutputStream();
                logger.info("check if approved/rejected----->"+ status);
                if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")||status.equalsIgnoreCase("UN_Approved")) {
-            	   writeApprovalPdf(outputStream, Id);
+            	   writeApprovalPdf(outputStream, Id, imageLocation);
             	   logger.info("writeApprovalPdf----->");
                }
        
                if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")||status.equalsIgnoreCase("UN_Rejected")) {
             	   logger.info("writeRejectionPdf----->");
             	   
-            	   writeRejectionPdf(outputStream , id);
+            	   writeRejectionPdf(outputStream , id, imageLocation);
             	   
                }
                
@@ -369,7 +378,7 @@ public class EmailService {
 
 
 
-	private void writeRejectionPdf(ByteArrayOutputStream outputStream, Long id) throws Exception {
+	private void writeRejectionPdf(ByteArrayOutputStream outputStream, Long id, String imageLocation) throws Exception {
 		System.out.println("******EmailServiceImpl writeRejectionPdf*******");
 		
 		try {
@@ -403,8 +412,9 @@ public class EmailService {
 //        footer.setBorder(Rectangle.NO_BORDER);
         document.setFooter(footer);
         
-		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-      //  Image img = Image.getInstance("EduCred_Logo.jpg"); //
+		
+        Image img = Image.getInstance(imageLocation+"/logo.png");
+//        Image img = Image.getInstance("logo.png");
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -459,9 +469,9 @@ public class EmailService {
 	    document.add(para);
 	    
 	    
-	    PdfPTable detailsTable = new PdfPTable(5);
+	    PdfPTable detailsTable = new PdfPTable(8);
 	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {20,20,20,20,20});
+	    detailsTable.setWidths(new int[] {12,12,12,12,12,12,12,12});
 	    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
@@ -469,6 +479,9 @@ public class EmailService {
 	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
+	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
+	    PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
+	    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
 	    
 	    
 	    
@@ -477,7 +490,9 @@ public class EmailService {
 	    detailsTable.addCell(cell3);
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
-	    
+	    detailsTable.addCell(cell6);
+	    detailsTable.addCell(cell7);
+	    detailsTable.addCell(cell8);
 	    
 //	    for(VerificationRequest ent: vr) {
 	    
@@ -490,17 +505,30 @@ public class EmailService {
 	    	
 	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
 	    	
+	    	BranchMasterEntity branch = branchService.getbranchById(vr.getBranchId());
+	    	
+	    	SemesterEntity sem = semService.getSemById(vr.getSemId());
+	    	
+	    	StreamMaster stream = streamService.getNameById(vr.getStreamId());
+	    	
 	    	PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
-	    	PdfPCell nameCell = new PdfPCell(new Paragraph(ume.getName()));
+	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName()+" "+vr.getLastName()));
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
+	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
+	    	PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
+	    	PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
 	    	
 	    	detailsTable.addCell(dateCell);
 	    	detailsTable.addCell(nameCell);
 	    	detailsTable.addCell(docCell);
 	    	detailsTable.addCell(yearCell);
 	    	detailsTable.addCell(enrollCell);
+	    	detailsTable.addCell(branchCell);
+	    	detailsTable.addCell(streamCell);
+	    	detailsTable.addCell(semCell);
+	    	
 	    
 	    
 	    	document.add(detailsTable);
@@ -557,13 +585,15 @@ public class EmailService {
 
 
 
-	private void writeApprovalPdf(OutputStream outputStream, Long id) throws Exception {
+	private void writeApprovalPdf(OutputStream outputStream, Long id, String imageLocation) throws Exception {
 		
 		System.out.println("******EmailServiceImpl writeApprovalPdf*******");
 		
 		System.out.println("--------------"+java.time.LocalDate.now());   
 		
 		try {
+			
+			logger.info("imageLocation----->"+imageLocation);
 		
 		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
 		VerificationRequest vr = vrr.get();
@@ -598,9 +628,11 @@ public class EmailService {
 		
 		// left, right, top, bottom
 		logger.info("headerFooter set here--->just before document.open()");
+
 		
-		Image img = Image.getInstance("webapps/University/assets/images/EduCred_Logo.jpg");
-        //Image img = Image.getInstance("EduCred_Logo.jpg"); //
+//		Image img = Image.getInstance(imageLocation+"/logo.png");
+		Image img = Image.getInstance("logo.png");
+
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
         
@@ -667,9 +699,9 @@ public class EmailService {
 	    document.add(greeting);
 	    document.add(para);
 	    
-	    PdfPTable detailsTable = new PdfPTable(5);
+	    PdfPTable detailsTable = new PdfPTable(8);
 	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {20,20,20,20,20});
+	    detailsTable.setWidths(new int[] {12,12,12,12,12,12,12,12});
 	    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
@@ -677,6 +709,9 @@ public class EmailService {
 	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
+	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
+	    PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
+	    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
 	    
 	    
 	    
@@ -685,6 +720,10 @@ public class EmailService {
 	    detailsTable.addCell(cell3);
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
+	    detailsTable.addCell(cell6);
+	    detailsTable.addCell(cell7);
+	    detailsTable.addCell(cell8);
+
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
@@ -698,17 +737,29 @@ public class EmailService {
 	    	
 	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
 	    	
+	    	BranchMasterEntity branch = branchService.getbranchById(vr.getBranchId());
+	    	
+	    	SemesterEntity sem = semService.getSemById(vr.getSemId());
+	    	
+	    	StreamMaster stream = streamService.getNameById(vr.getStreamId());
+	    	
 	    	PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
 	    	PdfPCell nameCell = new PdfPCell(new Paragraph(ume.getName()));
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
+	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
+	    	PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
+	    	PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
 	    	
 	    	detailsTable.addCell(dateCell);
 	    	detailsTable.addCell(nameCell);
 	    	detailsTable.addCell(docCell);
 	    	detailsTable.addCell(yearCell);
 	    	detailsTable.addCell(enrollCell);
+	    	detailsTable.addCell(branchCell);
+	    	detailsTable.addCell(streamCell);
+	    	detailsTable.addCell(semCell);
 	    	
 	    	
 	    	
@@ -906,10 +957,10 @@ public class EmailService {
 	    }
 	
 	
-	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId) throws Exception {
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation) throws Exception {
 		  
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
-		  	
+		  	logger.info("imageLocation----> "+ imageLocation);
 		  	Optional<VerificationRequest> vrr = verificationReqRepository.findById(verificationId);
 			VerificationRequest vr = vrr.get();
 			
@@ -966,10 +1017,10 @@ public class EmailService {
             outputStream = new ByteArrayOutputStream();
             
              if(vr.getDocStatus().equalsIgnoreCase("UN_Rejected")) {
-            writeApprovalPdf(outputStream, Id);
+            writeApprovalPdf(outputStream, Id, imageLocation);
              }
              if(vr.getDocStatus().equalsIgnoreCase("UN_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
-            	 writeRejectionPdf(outputStream, Id);
+            	 writeRejectionPdf(outputStream, Id, imageLocation);
              }
             byte[] bytes = outputStream.toByteArray();
             

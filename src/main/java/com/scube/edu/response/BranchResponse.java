@@ -20,5 +20,6 @@ public class BranchResponse {
 	private Long universityId;
 	private String branchName;
 	private Long StreamId;
+	private String streamName;
 
 }
