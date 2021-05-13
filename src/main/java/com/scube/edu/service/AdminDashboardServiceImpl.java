@@ -105,8 +105,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		}
 		
 		AllstatCountMap.put("Year", YearstatCountMap);
-		AllstatCountMap.put("Current Month", monthstatCountMap);
-		AllstatCountMap.put("Current Week", weekstatCountMap);
+		AllstatCountMap.put("CurrentMonth", monthstatCountMap);
+		AllstatCountMap.put("CurrentWeek", weekstatCountMap);
 
 		
 		return AllstatCountMap;
