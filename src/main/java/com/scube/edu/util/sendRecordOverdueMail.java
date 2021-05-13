@@ -61,6 +61,7 @@ public class sendRecordOverdueMail {
 				if(verReq.getDocStatus().equalsIgnoreCase("Approved") || verReq.getDocStatus().equalsIgnoreCase("SV_Approved")) {
 					
 					verReq.setDocStatus("Uni_Auto_Approved");
+					verReq.setClosedDate(date);
 					verificationReqRepo.save(verReq);
 					
 					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus());
@@ -69,6 +70,7 @@ public class sendRecordOverdueMail {
 				if(verReq.getDocStatus().equalsIgnoreCase("Rejected") || verReq.getDocStatus().equalsIgnoreCase("SV_Rejected") ){
 					
 					verReq.setDocStatus("Uni_Auto_Rejected");
+					verReq.setClosedDate(date);
 					verificationReqRepo.save(verReq);
 					
 					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus());

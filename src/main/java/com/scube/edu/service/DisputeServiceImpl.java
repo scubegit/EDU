@@ -1,6 +1,7 @@
 package com.scube.edu.service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -101,6 +102,7 @@ public class DisputeServiceImpl implements DisputeService{
 				}
 				
 				vrr.setDocStatus("SVD_Approved");
+				//vrr.setClosedDate(new Date());
 				verificationReqRepository.save(vrr);
 				return true;
 				// send mail saying that after checking dispute status has been changed + PDF 
@@ -114,6 +116,7 @@ public class DisputeServiceImpl implements DisputeService{
 				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
 				
 				vrr.setDocStatus("SVD_Rejected");
+				//vrr.setClosedDate(new Date());
 				verificationReqRepository.save(vrr);
 				return true;
 			}

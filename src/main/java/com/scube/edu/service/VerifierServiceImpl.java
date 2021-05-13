@@ -253,7 +253,7 @@ public class VerifierServiceImpl implements VerifierService{
 //			Long roleId = Long.parseLong(statusChangeRequest.getRoleid());
 			entt.setDocStatus(statusChangeRequest.getStatus());
 			entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
-			entt.setClosedDate(date);
+			//entt.setClosedDate(date);
 			entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
 			verificationReqRepository.save(entt);
 			
