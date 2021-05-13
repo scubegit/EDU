@@ -120,12 +120,13 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				 			logger.info("branchId"+branchId);
 				 			}
 			 			
+			 			
 			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearIdAndSemIdAndBranchId(enrollNo,fnm,lnm,strm,clgnm,passyr,semId,branchId);
 			String reason = null;
 			 if(docEntity==null) {	
 				
 				
-				if(collegeEntities!=null && stream!=null && passingyr!=null&&sem!=null &&branch!=null) {
+				if(collegeEntities!=null && stream!=null && passingyr!=null&&sem!=null &&branch!=null &&!Data.getFirstName().equals("")&&!Data.getLastName().equals("")&&!Data.getEnrollmentNo().equals("")) {
 					
 				UniversityStudentDocument studentData=new UniversityStudentDocument();
 				UniversityStudDocResponse SavestudentData=new UniversityStudDocResponse();
@@ -159,111 +160,81 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 					 else
 					 {	
 						 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
-						 if(collegeEntities==null && stream==null && passingyr==null&& sem==null&&branch==null) {
-						 reason="Invalid College Name, Stream, Year of Passing, Semester and Branch";
+						 if(collegeEntities==null || stream==null || passingyr==null|| sem==null || branch==null) {
+						 reason="Invalid";
 						 }
-						 else if(collegeEntities==null && stream==null && passingyr==null&& sem==null) {
-							 reason="Invalid College Name, Stream, Year of Passing and Semester";
-							 }
-						 else if(collegeEntities==null && stream==null && passingyr==null&&branch==null) {
-							 reason="Invalid College Name, Stream, Year of Passing and Branch";
-							 }
-						 else  if(collegeEntities==null && stream==null && sem==null&&branch==null) {
-							 reason="Invalid College Name, Stream, Semetser and Branch";
-							 }
-						 else if(collegeEntities==null&&passingyr==null&& sem==null&&branch==null) {
-							 reason="Invalid College Name, Year of Passing,Semester and Branch";
-							 }
-						 else if(collegeEntities==null && stream==null&&passingyr==null)
+						 if(collegeEntities==null)
 						 {
-							 reason="Invalid College Name, Stream and Year of Passing";
+							 reason=reason+" College Name";
+							 if(stream==null||passingyr==null||sem==null||branch==null)
+							 {
+								 reason=reason+",";
+
+							 }
+						 }
+						  if(stream==null)
+				   		 {
+							 reason=reason+" Stream";
+							 if(passingyr==null||sem==null||branch==null)
+							 {
+								 reason=reason+",";
+
+							 }
+						 }
+						  if(passingyr==null)
+						 {
+							 reason=reason+" Year of Passing";
+							 if(sem==null||branch==null)
+							 {
+								 reason=reason+",";
+
+							 }
+
+						 }
+						  if(sem==null)
+						 {
+							 reason=reason+" Semester";
+							 if(branch==null)
+							 {
+								 reason=reason+",";
+
+							 }
+
+						 }
+						  if(branch==null)
+						 {
+							 reason=reason+" Branch";
 						 }
 						
-						 else if(collegeEntities==null && stream==null&&sem==null)
+						 if(Data.getFirstName()==null || Data.getFirstName().equals("")||(Data.getLastName()==null || Data.getLastName().equals(""))||(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") ))
 						 {
-							 reason="Invalid College Name, Stream and Semester";
-						 }
-						 else if(collegeEntities==null && stream==null&&branch==null)
-						 {
-							 reason="Invalid College Name, Stream and Branch";
-						 }
-						 else if(collegeEntities==null && passingyr==null&&branch==null)
-						 {
-							 reason="Invalid College Name, Year of Passing and Branch";
-						 }
-						 else if(collegeEntities==null && passingyr==null&&sem==null)
-						 {
-							 reason="Invalid College Name, Year of Passing  and Semester";
-						 }
-						 else if(collegeEntities==null && sem==null&&branch==null)
-						 {
-							 reason="Invalid College Name, Semester and Branch";
-						 }
-						 else if(collegeEntities==null && passingyr==null)
-						 {
-							 reason="Invalid College Name, Year of Passing";
-						 }
-						 else if(collegeEntities==null && sem==null)
-						 {
-							 reason="Invalid College Name and Semester";
-						 } 
-						 else if(collegeEntities==null && branch==null)
-						 {
-							 reason="Invalid College Name and Branch";
-						 }
-						 else if(collegeEntities==null && stream==null)
-						 {
-							 reason="Invalid College Name and Stream";
-						 }
-						 else if(passingyr==null && sem==null)
-						 {
-							 reason="Invalid Semester and Year of Passing";
-						 }
-						 else if(passingyr==null && stream==null)
-						 {
-							 reason="Invalid Stream and Year of Passing";
-						 }
-						 else if(passingyr==null && branch==null)
-						 {
-							 reason="Invalid Branch and Year of Passing";
-						 }
-						 else if(stream==null && passingyr==null)
-						 {
-							 reason="Invalid Year of Passing and Stream";
-						 }
-						 else if(stream==null && sem==null)
-						 {
-							 reason="Invalid Semester and Stream";
-						 }
-						 else if(stream==null && branch==null)
-						 {
-							 reason="Invalid Branch and Stream";
-						 }
-						 else if(sem==null && branch==null)
-						 {
-							 reason="Invalid Semester and branch";
-						 }
-						 else if(collegeEntities==null)
-						 {
-							 reason="Invalid College Name";
+							 if(reason!=null) {
+								 reason=reason+", Blank";
 
+							 }
+							 else {
+							 reason="Blank";
+							 }
 						 }
-						 else if(stream==null)
-				   		 {
-							 reason="Invalid Stream";
-
-						 }
-						 else if(passingyr==null)
+						 if(Data.getFirstName()==null || Data.getFirstName().equals(""))
+								 {
+							 reason=reason+" First name";
+						if (Data.getLastName() == null || Data.getLastName().equals("") || Data.getLastName() == null
+								|| Data.getLastName().equals("") || Data.getEnrollmentNo() == null
+								|| Data.getEnrollmentNo().equals("")) {
+								 reason=reason+",";
+							 }
+								 }
+						 if(Data.getLastName()==null || Data.getLastName().equals("")||Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")  )
 						 {
-							 reason="Invalid Year of Passing";
+							 reason=reason+" Last name";
+							 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")) {
+								 reason=reason+",";
+								 }
 						 }
-						 else if(sem==null)
+						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
 						 {
-							 reason="Invalid Semester";
-						 }
-						 else if(branch==null)
-						 {
-							 reason="Invalid Branch";
+							 reason=reason+" SeatNo";
 						 }
 					    studentData.setFirstName(Data.getFirstName());
 				        studentData.setLastName(Data.getLastName());
@@ -322,13 +293,52 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 
 			 UniversityStudDocResponse studentData = new UniversityStudDocResponse();	            
 		        
+			 if(row.getCell(0)!=null)
+			 {
 		        studentData.setFirstName(row.getCell(0).getStringCellValue());
-		        studentData.setLastName(row.getCell(1).getStringCellValue());
-		        studentData.setCollegeName(row.getCell(2).getStringCellValue());	
-		        studentData.setStream(row.getCell(3).getStringCellValue());	
-		        studentData.setBranch_nm(row.getCell(4).getStringCellValue());	
-		        studentData.setSemester(row.getCell(5).getStringCellValue());	
+			 }
+			 else
+			 {
+			        studentData.setFirstName("");
 
+			 }
+			 if(row.getCell(1)!=null){
+		        studentData.setLastName(row.getCell(1).getStringCellValue());
+			 }
+			 else
+			 {
+			        studentData.setLastName("");
+
+			 }
+			 if(row.getCell(2)!=null){
+		        studentData.setCollegeName(row.getCell(2).getStringCellValue());	
+			 }
+			 else
+			 {
+				 studentData.setCollegeName("");
+			 }
+			 if(row.getCell(3)!=null){
+		    	   studentData.setStream(row.getCell(3).getStringCellValue());	
+		       }
+		       else {
+		    	   studentData.setStream("");
+		       }
+			 if(row.getCell(4)!=null){
+
+		        studentData.setBranch_nm(row.getCell(4).getStringCellValue());
+			 }
+			 else {
+				 studentData.setBranch_nm("");
+			 }
+			 if(row.getCell(5)!=null){
+
+		        studentData.setSemester(row.getCell(5).getStringCellValue());	
+			 }
+			 else {
+				 studentData.setSemester(""); 
+			 }
+
+			 if(row.getCell(6)!=null){
 		        int cellType=row.getCell(6).getCellType();
 		        
 		 logger.info("celltype "+cellType);
@@ -341,6 +351,12 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        Integer enrollNo=(int) row.getCell(6).getNumericCellValue();		        
 		        studentData.setEnrollmentNo(enrollNo.toString());			 
 		 }
+			 }
+			 else {
+				 studentData.setEnrollmentNo("");
+			 }
+			 
+		 if(row.getCell(7)!=null){
 	        int yearcellType=row.getCell(7).getCellType();
 
 		 if(yearcellType==1)
@@ -351,6 +367,10 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        Integer yearofPassing=(int) row.getCell(7).getNumericCellValue();
 		        studentData.setPassingYear(yearofPassing.toString());		        
 		 }
+			 }
+			 else {
+				 studentData.setPassingYear("");
+			 }
 		        studentData.setOriginalDOCuploadfilePath(filePath);
 		        studentDataReviewList.add(studentData);    
 			 }
