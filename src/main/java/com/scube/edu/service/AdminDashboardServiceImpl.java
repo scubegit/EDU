@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +27,7 @@ import com.scube.edu.repository.UserRepository;
 import com.scube.edu.response.FinancialStatResponse;
 import com.scube.edu.response.TopFiverYearRevenueResponse;
 import com.scube.edu.response.TopTenEmployResponse;
+import com.scube.edu.response.VerifierPerformanceResponse;
 
 @Service
 public class AdminDashboardServiceImpl implements AdminDashboardService {
@@ -242,6 +244,46 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 
 		return response;	
 		
+	}
+
+	@Override
+	public List<VerifierPerformanceResponse> getMonthlyPerformanceOfVerfier(int month,int year) {
+		
+		logger.info("****AdminDashboardServiceImpl   getMonthlyPerformanceOfVerfier******");
+		
+		List<Object[]> financialStat=adminDashboardRepository.getVerPerformanceMonthly(month,year);
+		List<VerifierPerformanceResponse> response=new ArrayList<>();
+
+		for(Object[] list:financialStat ) {
+			
+			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
+			resp.setCount(((BigInteger) list[0]).intValue());
+			resp.setVerId(((BigInteger)  list[1]).longValue());
+			response.add(resp);
+		}
+
+		
+
+		return response;
+	}
+
+	@Override
+	public List<VerifierPerformanceResponse> getDailyPerformanceOfVerfier(String str) throws ParseException {
+		logger.info("****AdminDashboardServiceImpl   getDailyPerformanceOfVerfier******");
+		
+		//Date newdate=Date.valueOf(str);
+		
+		Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(str);
+		List<Object[]> financialStat=adminDashboardRepository.getVerPerformanceDaily(date1);
+		List<VerifierPerformanceResponse> response=new ArrayList<>();
+
+		for(Object[] list:financialStat ) {
+			
+			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
+			resp.setCount(((BigInteger) list[0]).intValue());
+			resp.setVerId(((BigInteger)  list[1]).longValue());
+			response.add(resp);
+		}		return null;
 	}
 
 

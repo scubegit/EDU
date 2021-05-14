@@ -22,6 +22,7 @@ public class UniversityStudentRequest {
 	private String streamId;
 	private String originalDOCuploadfilePath;
 	private String filePath;
+	private String userId;
 	
 
 	

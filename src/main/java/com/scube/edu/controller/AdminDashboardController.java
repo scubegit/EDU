@@ -21,6 +21,7 @@ import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.FinancialStatResponse;
 import com.scube.edu.response.TopFiverYearRevenueResponse;
 import com.scube.edu.response.TopTenEmployResponse;
+import com.scube.edu.response.VerifierPerformanceResponse;
 import com.scube.edu.service.AdminDashboardService;
 import com.scube.edu.util.StringsUtils;
 
@@ -197,6 +198,66 @@ public class AdminDashboardController {
 	    	
 	    	List<FinancialStatResponse> List = adminDashboardService.getFinancialStat(fistofMont, currenDateOfmonth);
 				
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespData(List);
+				
+				return ResponseEntity.ok(response);
+					
+			}catch (Exception e) {
+				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response);
+				
+			}
+	}
+	
+
+	@GetMapping(value = "/getPerformanceGraphMonthly/{month}/{year}" )
+	public ResponseEntity<BaseResponse> getMonthlyPerformanceGraph (@PathVariable int month,@PathVariable int year) {
+		
+		System.out.println("*******AdminDashboardController getPerformanceGraph********");
+		
+		response = new BaseResponse();
+		
+	    try {
+	    	
+	    	List<VerifierPerformanceResponse> List = adminDashboardService.getMonthlyPerformanceOfVerfier(month,year);
+				
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespData(List);
+				
+				return ResponseEntity.ok(response);
+					
+			}catch (Exception e) {
+				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response);
+				
+			}
+	}
+	
+	@GetMapping(value = "/getPerformanceGraphDaily/{date}" )
+	public ResponseEntity<BaseResponse> getDailyPerformanceGraph (@PathVariable String date) {
+		
+		System.out.println("*******AdminDashboardController getDailyPerformanceGraph********");
+		
+		response = new BaseResponse();
+		
+	    try {
+	    	
+	    	List<VerifierPerformanceResponse> List = adminDashboardService.getDailyPerformanceOfVerfier(date);
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 				response.setRespData(List);

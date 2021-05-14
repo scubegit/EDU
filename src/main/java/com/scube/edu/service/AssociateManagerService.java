@@ -13,7 +13,7 @@ import com.scube.edu.response.UniversityStudDocResponse;
 public interface AssociateManagerService {
 	
 
-	public  HashMap<String,List<UniversityStudDocResponse>>  saveStudentInfo( List<UniversityStudDocResponse> list) throws IOException;
+	public  HashMap<String,List<UniversityStudDocResponse>>  saveStudentInfo( List<UniversityStudDocResponse> list,Long userid) throws IOException;
 
 	public List<UniversityStudDocResponse> ReviewStudentData(MultipartFile excelfile,MultipartFile datafile) throws IOException;
 

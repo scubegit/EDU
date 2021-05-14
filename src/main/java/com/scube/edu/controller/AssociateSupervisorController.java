@@ -74,7 +74,7 @@ public class AssociateSupervisorController {
 	}
 	
 	@PostMapping("/updateRecordById")
-	public ResponseEntity<Object> updateRecordById(@RequestBody UniversityStudentRequest universityStudentRequest,  HttpServletRequest request) {
+	public ResponseEntity<Object> updateRecordById(@RequestBody UniversityStudentRequest universityStudentRequest, HttpServletRequest request) {
 		logger.info("*******AssociateSupervisorController updateRecordById*******");
 		response = new BaseResponse();
 		

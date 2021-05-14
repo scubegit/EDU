@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +110,8 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
 			editRecord.setBranchId(Long.parseLong(universityStudentRequest.getBranchId()));
 			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
+			editRecord.setUpdatedate(new Date());
+			editRecord.setUpdateby(universityStudentRequest.getUserId());
 			universityStudentDocRepository.save(editRecord);
 			
 			return true;
