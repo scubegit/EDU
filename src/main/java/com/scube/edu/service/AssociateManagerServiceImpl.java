@@ -288,11 +288,11 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 workbook = new XSSFWorkbook(excelfile.getInputStream());
 		 XSSFSheet worksheet = workbook.getSheetAt(0);
 		 List<UniversityStudDocResponse> studentDataReviewList = new ArrayList<UniversityStudDocResponse>();
-		
+		int rowcnt=worksheet.getLastRowNum();
 		 String fileSubPath = "file/";
 		 String flag = "2";
 		 String filePath = fileStorageService.storeFile(datafile , fileSubPath, flag);
-		 for(int i=1;i<worksheet.getPhysicalNumberOfRows() ;i++) {
+		 for(int i=1;i<=rowcnt;i++) {
 			 
 			 XSSFRow row = worksheet.getRow(i);		 
 			 
