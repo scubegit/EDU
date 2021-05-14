@@ -165,6 +165,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		veriReq.setDocStatus(statusChangeRequest.getStatus());
 		//veriReq.setClosedDate(date);
 		veriReq.setRemark(veriReq.getRemark()+" SVR_"+currentDate+"-"+statusChangeRequest.getRemark());
+		veriReq.setSvVerId(veriReq.getVerifiedBy());
+		veriReq.setSvActionDate(new Date());
+		veriReq.setSuperVerStatus(statusChangeRequest.getStatus());
 		
 		verificationReqRepository.save(veriReq);
 		

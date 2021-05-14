@@ -128,5 +128,32 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "sem_ID")
 	private Long semId;
-
+	
+	@Column(name = "ver_Status")
+	private String verifierStatus;
+	
+	@Column(name = "Ver_action_date")
+	private Date verActionDate;
+			
+	@Column(name = "ver_id")
+	private Long verId;
+	
+	@Column(name = "unv_status")
+	private String uniVerStatus;
+	
+	@Column(name = "unv_action_date")
+	private Date unActionDate;
+	
+	@Column(name = "unv_id")
+	private Long unVerId;
+	
+	@Column(name = "sv_status")
+	private String superVerStatus;
+	
+	@Column(name = "sv_action_date")
+	private Date svActionDate;
+	
+	@Column(name = "sv_id")
+	private Long svVerId;
+	
 }
