@@ -11,4 +11,5 @@ public class VerifierPerformanceResponse {
 
 	private int count;
 	private Long verId;
+	private String fullNm;
 }

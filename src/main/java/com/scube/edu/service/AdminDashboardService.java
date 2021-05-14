@@ -28,8 +28,9 @@ public interface AdminDashboardService {
 	
 	public List<VerifierPerformanceResponse> getMonthlyPerformanceOfVerfier(int month,int year);
 	
-	public List<VerifierPerformanceResponse> getDailyPerformanceOfVerfier(String date)throws ParseException ;
+	public List<VerifierPerformanceResponse> getDailyPerformanceOfVerfier(String date) ;
 
+	public List<VerifierPerformanceResponse> getPerformanceOfVerfier(String frmdate,String todate);
 
 	
 }

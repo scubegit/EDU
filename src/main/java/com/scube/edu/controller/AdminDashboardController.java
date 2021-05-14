@@ -276,6 +276,35 @@ public class AdminDashboardController {
 				
 			}
 	}
+	
+	@GetMapping(value = "/getPerformanceGraphCustomRange/{fromdate}/{todate}" )
+	public ResponseEntity<BaseResponse> getPerformanceGraphCustomRange (@PathVariable String fromdate,@PathVariable String todate) {
+		
+		System.out.println("*******AdminDashboardController getPerformanceGraphCustomRange********");
+		
+		response = new BaseResponse();
+		
+	    try {
+	    	
+	    	List<VerifierPerformanceResponse> List = adminDashboardService.getPerformanceOfVerfier(fromdate, todate);
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespData(List);
+				
+				return ResponseEntity.ok(response);
+					
+			}catch (Exception e) {
+				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response);
+				
+			}
+	}
 }
 
 

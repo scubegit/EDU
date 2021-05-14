@@ -268,13 +268,11 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public List<VerifierPerformanceResponse> getDailyPerformanceOfVerfier(String str) throws ParseException {
+	public List<VerifierPerformanceResponse> getDailyPerformanceOfVerfier(String str){
 		logger.info("****AdminDashboardServiceImpl   getDailyPerformanceOfVerfier******");
 		
-		//Date newdate=Date.valueOf(str);
 		
-		Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(str);
-		List<Object[]> financialStat=adminDashboardRepository.getVerPerformanceDaily(date1);
+		List<Object[]> financialStat=adminDashboardRepository.getVerPerformanceDaily(str);
 		List<VerifierPerformanceResponse> response=new ArrayList<>();
 
 		for(Object[] list:financialStat ) {
@@ -283,8 +281,30 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			resp.setCount(((BigInteger) list[0]).intValue());
 			resp.setVerId(((BigInteger)  list[1]).longValue());
 			response.add(resp);
-		}		return null;
+		}		
+		
+		return response;
 	}
+
+	@Override
+	public List<VerifierPerformanceResponse> getPerformanceOfVerfier(String frmdate, String todate) {
+logger.info("****AdminDashboardServiceImpl   getDailyPerformanceOfVerfier******");
+		
+		
+		List<Object[]> financialStat=adminDashboardRepository.getVerPerformance(frmdate, todate);
+		List<VerifierPerformanceResponse> response=new ArrayList<>();
+
+		for(Object[] list:financialStat ) {
+			
+			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
+			resp.setCount(((BigInteger) list[0]).intValue());
+			resp.setVerId(((BigInteger)  list[1]).longValue());
+			String fullnm=list[2].toString()+" "+list[3].toString();
+			resp.setFullNm(fullnm);
+			response.add(resp);
+		}		
+		
+		return response;	}
 
 
 }

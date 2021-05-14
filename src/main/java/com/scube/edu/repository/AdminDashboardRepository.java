@@ -23,7 +23,7 @@ public interface AdminDashboardRepository extends JpaRepository<VerificationRequ
 	@Query(value ="SELECT count(*) from verification_request where month(created_date) = ?1", nativeQuery = true)
 	int getstatnewReqByMonth(int month);
 	
-	@Query(value ="SELECT count(*) from verification_request where year(closed_date) = ?1", nativeQuery = true)
+	@Query(value ="SELECT count(*) from verification_request where month(closed_date) = ?1", nativeQuery = true)
 	int getstatclosreqByMonth(int month);
 	
 	int countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
@@ -42,13 +42,15 @@ public interface AdminDashboardRepository extends JpaRepository<VerificationRequ
 	@Query(value="select sum(vr.doc_amt_with_gst) as docamtwithgst ,year(created_date) as topyear from verification_request vr group by topyear order by docamtwithgst desc limit 5",nativeQuery = true)
 	List<Object[]> findVerificaTopFiveYearRevenu();
 	
-	@Query(value="SELECT sum(vr.doc_uni_amt) ,sum(vr.doc_secur_charge) ,um.company_name as companyname,vr.user_id as userid,um.role_id from edu_db.verification_request vr left join edu_db.user_master um on vr.user_id=um.id where vr.created_date >= ?1 and vr.created_date <= ?2 group by vr.user_id ",nativeQuery = true)
+	@Query(value="SELECT sum(vr.doc_uni_amt) ,sum(vr.doc_secur_charge) ,um.company_name as companyname,vr.user_id as userid,um.role_id from edu_db.verification_request vr left join edu_db.user_master um on vr.user_id=um.id where date(vr.created_date )>= ?1 and date(vr.created_date) <= ?2 group by vr.user_id ",nativeQuery = true)
 	List<Object[]> getFinanvialStat(String fistofMont,String currenDateOfmonth);
 	
-	@Query(value="SELECT count(verified_by),verified_by FROM verification_request where month(created_date) = ?1 and  year(created_date) = ?2 and verified_by is not null   group by verified_by",nativeQuery = true)
+	@Query(value="SELECT count(*),ver_id FROM verification_request where month(ver_action_date) = ?1 and  year(ver_action_date) = ?2 and ver_id is not null   group by ver_id",nativeQuery = true)
 	List<Object[]> getVerPerformanceMonthly(int month,int year);
 
-	@Query(value="SELECT count(*),verified_by FROM verification_request where created_date = ?1  and verified_by is not null   group by verified_by",nativeQuery = true)
-	List<Object[]> getVerPerformanceDaily(Date date);
+	@Query(value="SELECT count(*),ver_id FROM verification_request where date(ver_action_date)= ?1  and ver_id is not null   group by ver_id",nativeQuery = true)
+	List<Object[]> getVerPerformanceDaily(String date);
 	
+	@Query(value="SELECT count(vr.ver_id),vr.ver_id,um.first_name,um.last_name FROM verification_request vr left join user_master um on um.id=vr.ver_id where date(ver_action_date)>=?1 and date(ver_action_date)<=?2 and vr.ver_id is not null   group by vr.ver_id",nativeQuery = true)
+	List<Object[]> getVerPerformance(String fromdate,String todate);
 }
