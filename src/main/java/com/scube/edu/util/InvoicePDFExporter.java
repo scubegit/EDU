@@ -383,10 +383,12 @@ public class InvoicePDFExporter {
           
             
 //     	    studentDocTable.addCell(amtCell); 
-     	    studentDocTable.addCell(gstAmtCell); 
-     	    studentDocTable.addCell(streamCell); 
+     	    studentDocTable.addCell(streamCell);
+     	     
+     	     
      	    studentDocTable.addCell(branchCell);
      	    studentDocTable.addCell(semCell);
+     	   studentDocTable.addCell(gstAmtCell);
      	    studentDocTable.addCell(totalCell); 
            
      }
