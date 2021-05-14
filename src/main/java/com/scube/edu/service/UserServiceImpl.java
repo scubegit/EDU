@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.scube.edu.controller.UserController;
 import com.scube.edu.model.RoleMaster;
+import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.request.UserAddRequest;
@@ -131,6 +132,51 @@ public class UserServiceImpl implements UserService {
 			
 			userRepository.save(userMasterEntity);
 			
+		
+		return true;
+	}
+
+	@Override
+	public boolean deleteUserById(long id, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******UserServiceImpl deleteUserById*******");
+		
+		UserMasterEntity usd = userRepository.findById(id);
+		
+		if(usd == null) {
+			   
+			throw new Exception(" Invalid ID");
+			
+		}else {
+			
+			userRepository.deleteById(id);
+			return true;
+			
+		}
+	}
+
+	@Override
+	public boolean updateUserById(UserAddRequest userRequest, HttpServletRequest request) throws Exception {
+		
+		logger.info("*******UserServiceImpl updateUserById*******");
+		
+		UserMasterEntity ume = userRepository.findById(userRequest.getId());
+		
+		if(ume != null) {
+			
+//			UserMasterEntity edit = new UserMasterEntity();
+			
+			ume.setEmailId(userRequest.getEmailId());
+			ume.setFirstName(userRequest.getFirstName());
+			ume.setLastName(userRequest.getLastName());
+			ume.setRoleId(userRequest.getRoleId());
+			ume.setPhoneNo(userRequest.getPhoneNumber());
+			
+			userRepository.save(ume);
+			
+		}else {
+			throw new Exception("Invalid user ID");
+		}
 		
 		return true;
 	}

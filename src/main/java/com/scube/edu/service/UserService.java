@@ -17,4 +17,8 @@ public interface UserService {
 
 	public Boolean addNewUser(UserAddRequest userRequest) throws Exception;
 
+	public boolean deleteUserById(long id, HttpServletRequest request) throws Exception;
+
+	public boolean updateUserById(UserAddRequest userRequest, HttpServletRequest request) throws Exception;
+
 }
