@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,8 +38,8 @@ public class AssociateManagerController {
 	 AssociateManagerService associateManagerService;
 	 
 	
-	@PostMapping(value = "/uploadStudentInfoFromFile" )
-	public ResponseEntity<BaseResponse> saveStudentData (@RequestBody List<UniversityStudDocResponse> list) {
+	@PostMapping(value = "/uploadStudentInfoFromFile/{userid}" )
+	public ResponseEntity<BaseResponse> saveStudentData (@RequestBody List<UniversityStudDocResponse> list,@PathVariable Long userid) {
 		
 		System.out.println("*******AssociateManagerController saveStudentData********"+ list);
 		
@@ -46,7 +47,7 @@ public class AssociateManagerController {
 		
 	    try {
 	    	
-	    	 HashMap<String,List<UniversityStudDocResponse>> List = associateManagerService.saveStudentInfo(list);
+	    	 HashMap<String,List<UniversityStudDocResponse>> List = associateManagerService.saveStudentInfo(list,userid);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.controller.MasterController;
@@ -69,7 +71,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	
 	
 	@Override
-	public  HashMap<String,List<UniversityStudDocResponse>> saveStudentInfo(List<UniversityStudDocResponse> list) throws IOException {
+	public  HashMap<String,List<UniversityStudDocResponse>> saveStudentInfo(List<UniversityStudDocResponse> list, Long userid) throws IOException {
 		
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 List<UniversityStudDocResponse> savedStudDataList = new ArrayList<UniversityStudDocResponse>();
@@ -140,6 +142,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
 		        studentData.setSemId(sem.getId());
 		        studentData.setBranchId(branch.getId());
+		        studentData.setCreatedate(new Date());
+		        studentData.setCreateby(userid.toString());
 		        studentDataList.add(studentData);    
 		        
 		        SavestudentData.setFirstName(Data.getFirstName());
@@ -152,6 +156,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        SavestudentData.setReason(reason);
 		        SavestudentData.setBranch_nm(Data.getBranch_nm());
 		        SavestudentData.setSemester(Data.getSemester());
+		   
 		        savedStudDataList.add(SavestudentData);	
 		        
 				
@@ -209,7 +214,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 if(Data.getFirstName()==null || Data.getFirstName().equals("")||(Data.getLastName()==null || Data.getLastName().equals(""))||(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") ))
 						 {
 							 if(reason!=null) {
-								 reason=reason+", Blank";
+								 reason=reason+" & Blank";
 
 							 }
 							 else {
@@ -292,7 +297,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 XSSFRow row = worksheet.getRow(i);		 
 			 
 			 UniversityStudDocResponse studentData = new UniversityStudDocResponse();	            
-		        
+		     if(row!=null) {
 			 if(row.getCell(0)!=null)
 			 {
 		        studentData.setFirstName(row.getCell(0).getStringCellValue());
@@ -374,6 +379,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setOriginalDOCuploadfilePath(filePath);
 		        studentDataReviewList.add(studentData);    
 			 }
+		 }
 	
 		 return studentDataReviewList;
 	}
