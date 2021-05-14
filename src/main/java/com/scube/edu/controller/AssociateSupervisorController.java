@@ -73,15 +73,15 @@ public class AssociateSupervisorController {
 		
 	}
 	
-	@PostMapping("/updateRecordById/{id}")
-	public ResponseEntity<Object> updateRecordById(@RequestBody UniversityStudentRequest universityStudentRequest,Long id,  HttpServletRequest request) {
+	@PostMapping("/updateRecordById")
+	public ResponseEntity<Object> updateRecordById(@RequestBody UniversityStudentRequest universityStudentRequest, HttpServletRequest request) {
 		logger.info("*******AssociateSupervisorController updateRecordById*******");
 		response = new BaseResponse();
 		
 		try {
 
 			
-		  boolean resp =associateSupervisorService.updateRecordById(universityStudentRequest,id, request); 
+		  boolean resp =associateSupervisorService.updateRecordById(universityStudentRequest, request); 
 			
 		
 		  response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

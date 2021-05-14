@@ -84,7 +84,7 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 	}
 
 	@Override
-	public boolean updateRecordById(UniversityStudentRequest universityStudentRequest,Long id, HttpServletRequest request) throws Exception {
+	public boolean updateRecordById(UniversityStudentRequest universityStudentRequest, HttpServletRequest request) throws Exception {
 		
 		logger.info("*******AssociateSupervisorServiceImpl updateRecordById*******");
 		
@@ -111,7 +111,7 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			editRecord.setBranchId(Long.parseLong(universityStudentRequest.getBranchId()));
 			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
 			editRecord.setUpdatedate(new Date());
-			editRecord.setUpdateby(id.toString());
+			editRecord.setUpdateby(universityStudentRequest.getUserId());
 			universityStudentDocRepository.save(editRecord);
 			
 			return true;
