@@ -23,4 +23,5 @@ public class UserResponse {
     private String enroll_no;
     private String first_name;
     private String last_name;
+    private String role_name;
 }

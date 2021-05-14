@@ -15,4 +15,6 @@ public interface UserService {
 
 	public UserResponse getUserInfoById(Long userId);
 
+	public Boolean addNewUser(UserAddRequest userRequest) throws Exception;
+
 }
