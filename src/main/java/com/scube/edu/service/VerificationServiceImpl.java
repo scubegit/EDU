@@ -19,6 +19,7 @@ import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.DocumentRepository;
@@ -59,6 +60,9 @@ public class VerificationServiceImpl implements VerificationService{
 	 
 	 @Autowired
 	 SemesterService semService;
+	 
+	 @Autowired
+	 StreamService streamService;
 
 	
 	@Autowired
@@ -134,6 +138,8 @@ public class VerificationServiceImpl implements VerificationService{
 				
 				SemesterEntity se = semService.getSemById(verEntities.getSemId());
 				
+				StreamMaster sm = streamService.getNameById(verEntities.getStreamId());
+				
 			    id  = verEntities.getUserId();
 				
 //			    docResponse.setAmount(diff.getAmount());
@@ -152,6 +158,7 @@ public class VerificationServiceImpl implements VerificationService{
 				docResponse.setLast_name(verEntities.getLastName());
 				docResponse.setBranch_nm(bm.getBranchName());
 				docResponse.setSemester(se.getSemester());
+				docResponse.setStream_name(sm.getStreamName());
 				
 				docResponse.setId(verEntities.getId());
 				
