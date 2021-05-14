@@ -14,9 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.PriceMaster;
+import com.scube.edu.model.SemesterEntity;
+import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.DocumentRepository;
@@ -51,6 +54,15 @@ public class VerificationServiceImpl implements VerificationService{
 	
 	 @Autowired
 	 PriceMasterRepository priceMasterRepo;
+	 
+	 @Autowired
+	 BranchMasterService branchService;
+	 
+	 @Autowired
+	 SemesterService semService;
+	 
+	 @Autowired
+	 StreamService streamService;
 
 	
 	@Autowired
@@ -122,6 +134,12 @@ public class VerificationServiceImpl implements VerificationService{
 				long yearOfPassId = Long.parseLong(verEntities.getYearOfPassingId());
 				PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , yearOfPassId);
 				
+				BranchMasterEntity bm = branchService.getbranchById(verEntities.getBranchId());
+				
+				SemesterEntity se = semService.getSemById(verEntities.getSemId());
+				
+				StreamMaster sm = streamService.getNameById(verEntities.getStreamId());
+				
 			    id  = verEntities.getUserId();
 				
 //			    docResponse.setAmount(diff.getAmount());
@@ -138,6 +156,9 @@ public class VerificationServiceImpl implements VerificationService{
 				docResponse.setEnroll_no(verEntities.getEnrollmentNumber());
 				docResponse.setFirst_name(verEntities.getFirstName());
 				docResponse.setLast_name(verEntities.getLastName());
+				docResponse.setBranch_nm(bm.getBranchName());
+				docResponse.setSemester(se.getSemester());
+				docResponse.setStream_name(sm.getStreamName());
 				
 				docResponse.setId(verEntities.getId());
 				

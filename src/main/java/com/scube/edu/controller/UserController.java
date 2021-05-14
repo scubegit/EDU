@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.UserResponse;
@@ -184,6 +185,73 @@ public class UserController {
 		}
 		
    }
+	
+	@DeleteMapping("/deleteUser/{id}")
+	public ResponseEntity<Object> deleteRecordById(@PathVariable long id,  HttpServletRequest request) {
+		logger.info("*******AssociateSupervisorController deleteRecordById*******");
+		response = new BaseResponse();
+		
+		try {
+
+			
+		  boolean resp =userService.deleteUserById(id, request); 
+			
+		
+		  response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		  response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		  response.setRespData(resp);
+		 
+			
+			return ResponseEntity.ok(response);
+			
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+		
+	}
+	
+	
+	@PostMapping("/updateUserById")
+	public ResponseEntity<Object> updateRecordById(@RequestBody UserAddRequest userRequest,  HttpServletRequest request) {
+		logger.info("*******AssociateSupervisorController updateRecordById*******");
+		response = new BaseResponse();
+		
+		try {
+
+			
+		  boolean resp =userService.updateUserById(userRequest, request); 
+			
+		
+		  response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+		  response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+		  response.setRespData(resp);
+		 
+			
+			return ResponseEntity.ok(response);
+			
+		}catch (Exception e) {
+			
+			logger.error(e.getMessage());
+			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+			
+		}
+		
+		
+	}
 	
 	
 }
