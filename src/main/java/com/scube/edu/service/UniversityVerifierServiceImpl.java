@@ -102,18 +102,24 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 				
 
 			// Date date=new Date();
-			Date closedDate;
+			Date closedDate = null;
 
 			Integer days = null;
 			Date date = new Date();
 			
 			if (req.getSvActionDate() != null || req.getVerActionDate()!=null) {
+			
+				if(req.getSvActionDate()!=null) {
 				if(req.getSvActionDate().compareTo(req.getVerActionDate())>0) {
 				closedDate = req.getSvActionDate();
 				}
 				else
 				{
 				 closedDate=req.getVerActionDate();
+				}
+				}	else{
+					 closedDate=req.getVerActionDate();
+
 				}
 				logger.info("date" + closedDate);
 				long difference_In_Time = date.getTime() - closedDate.getTime();
