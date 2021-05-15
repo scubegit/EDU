@@ -313,6 +313,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setDosAmtWithGst(totalWithGST);
 			resp.setBranchId(req.getBranchId());
 			resp.setSemId(req.getSemId());
+			resp.setCreateby(req.getCreateby());
 			ver_req += 1;
 			
 			list.add(resp);
