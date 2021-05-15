@@ -28,6 +28,7 @@ public class StudentDocVerificationRequest {
 	private String paymentId;
 	private Long branchId;
 	private Long semId;
+	private String createby;
 
 
 }

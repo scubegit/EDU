@@ -96,7 +96,7 @@ public class VerificationServiceImpl implements VerificationService{
 				verReq.setUploadDocumentPath(stuReq.getUploaddocpath());
 				verReq.setVerRequestId(stuReq.getVerreqid());
 				verReq.setAssignedTo(assign_to);
-				
+				verReq.setCreateby(stuReq.getCreateby());
 				verificationRequests.add(verReq);
 			}
 

@@ -156,4 +156,9 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "sv_id")
 	private Long svVerId;
 	
+	@Column(name = "uniauto_ver_status")
+	private String uniAutoVerStatus;
+	
+	@Column(name = "uniauto_ver_action_date")
+	private Date uniAutoVerActionDate;
 }

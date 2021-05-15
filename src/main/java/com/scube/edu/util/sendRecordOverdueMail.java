@@ -66,6 +66,8 @@ public class sendRecordOverdueMail {
 					
 					verReq.setDocStatus("Uni_Auto_Approved");
 					verReq.setClosedDate(date);
+					verReq.setUniAutoVerActionDate(date);
+					verReq.setUniAutoVerStatus("Uni_Auto_Approved");
 					verificationReqRepo.save(verReq);
 					
 					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
@@ -75,6 +77,8 @@ public class sendRecordOverdueMail {
 					
 					verReq.setDocStatus("Uni_Auto_Rejected");
 					verReq.setClosedDate(date);
+					verReq.setUniAutoVerActionDate(date);
+					verReq.setUniAutoVerStatus("Uni_Auto_Rejected");
 					verificationReqRepo.save(verReq);
 					
 					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
