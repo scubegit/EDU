@@ -86,7 +86,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		
 		int newreuestMonthCount=adminDashboardRepository.getstatnewReqByMonth(month);
 		int closreuestMonthCount=adminDashboardRepository.getstatclosreqByMonth(month);
-		int disputereqMonthCount=raiseDisputeRepository.getstatdisputByYear(month);
+		int disputereqMonthCount=raiseDisputeRepository.getstatdisputByMonth(month);
 
 				
 		monthstatCountMap.put("New",newreuestMonthCount);

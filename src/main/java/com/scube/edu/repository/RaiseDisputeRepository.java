@@ -28,6 +28,12 @@ public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long
 	@Query(value ="SELECT count(*) from raise_despute where month(created_date) = ?1", nativeQuery = true)
 	int getstatdisputByMonth(int month);
 	
+	/*
+	 * @Query(value
+	 * ="SELECT count(*) from raise_despute where date(created_date) >= ?1 and date(created_date) <= ?1"
+	 * , nativeQuery = true) int getstatdisputByWeek(String fromdt,String todt);
+	 */
+	
 	int countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
 
 }
