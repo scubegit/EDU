@@ -12,5 +12,6 @@ public class StatusChangeRequest {
 	private long verifiedby;
 	private String remark;
 	private String roleid;
+	//private Long userId;
 
 }
