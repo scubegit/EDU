@@ -163,8 +163,8 @@ public class InvoicePDFExporter {
 //            EduCred_Logo.jpg 
 
             
-//            Image img = Image.getInstance(imageLocation+"/logo.png");
-            	 Image logo = Image.getInstance("logo.png");
+           Image logo = Image.getInstance(imageLocation+"/logo.png");
+            	// Image logo = Image.getInstance("logo.png");
 
                logo.setAbsolutePosition(10, 300);
                
@@ -176,8 +176,8 @@ public class InvoicePDFExporter {
             
                logger.info("Entry point for pdf exporter--------->9-->"+imageLocation+"/logo.png");
 
-//               Image img = Image.getInstance(imageLocation+"/logo.png");
-               Image img = Image.getInstance("logo.png");
+               Image img = Image.getInstance(imageLocation+"/logo.png");
+              // Image img = Image.getInstance("logo.png");
 
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(120, 100); // width, height

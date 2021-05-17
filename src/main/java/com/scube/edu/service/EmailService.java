@@ -630,8 +630,8 @@ public class EmailService {
 		logger.info("headerFooter set here--->just before document.open()");
 
 		
-//		Image img = Image.getInstance(imageLocation+"/logo.png");
-		Image img = Image.getInstance("logo.png");
+		Image img = Image.getInstance(imageLocation+"/logo.png");
+		//Image img = Image.getInstance("logo.png");
 
 		img.setAlignment(Element.ALIGN_CENTER);
 		img.scaleToFit(120, 100); // width, height
