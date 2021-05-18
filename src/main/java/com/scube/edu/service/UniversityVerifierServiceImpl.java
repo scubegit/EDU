@@ -118,7 +118,9 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 				 closedDate=req.getVerActionDate();
 				}
 				}	else{
+					if(req.getVerActionDate()!=null) {
 					 closedDate=req.getVerActionDate();
+					}
 
 				}
 				logger.info("date" + closedDate);

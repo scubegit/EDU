@@ -259,6 +259,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
 			resp.setCount(((BigInteger) list[0]).intValue());
 			resp.setVerId(((BigInteger)  list[1]).longValue());
+			String fullnm=list[2].toString()+" "+list[3].toString();
+			resp.setFullNm(fullnm);
 			response.add(resp);
 		}
 
@@ -280,6 +282,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
 			resp.setCount(((BigInteger) list[0]).intValue());
 			resp.setVerId(((BigInteger)  list[1]).longValue());
+			String fullnm=list[2].toString()+" "+list[3].toString();
+			resp.setFullNm(fullnm);
 			response.add(resp);
 		}		
 		
