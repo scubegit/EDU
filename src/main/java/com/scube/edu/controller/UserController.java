@@ -211,8 +211,8 @@ public class UserController {
 			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData(e.getMessage());
-			
-			return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.ok(response);
+			//return ResponseEntity.badRequest().body(response);
 			
 		}
 		
