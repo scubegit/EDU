@@ -744,7 +744,7 @@ public class EmailService {
 	    	StreamMaster stream = streamService.getNameById(vr.getStreamId());
 	    	
 	    	PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
-	    	PdfPCell nameCell = new PdfPCell(new Paragraph(ume.getName()));
+	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName() + " " + vr.getLastName()));
 	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
