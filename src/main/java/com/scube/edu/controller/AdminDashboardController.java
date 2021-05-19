@@ -105,7 +105,7 @@ public class AdminDashboardController {
 		
 	    try {
 	    	
-	    	Map<String,String>  List = adminDashboardService.getPostiveNegReqRation(year);
+	    	Map<String,Integer>  List = adminDashboardService.getPostiveNegReqRation(year);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -165,7 +165,7 @@ public class AdminDashboardController {
 		
 	    try {
 	    	
-	    	Map<String,String>  List = adminDashboardService.getDisputeRatio(year);
+	    	Map<String, Integer>  List = adminDashboardService.getDisputeRatio(year);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

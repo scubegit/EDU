@@ -192,9 +192,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public Map<String, String> getPostiveNegReqRation(int year) {
+	public Map<String, Integer> getPostiveNegReqRation(int year) {
 		logger.info("****AdminDashboardServiceImpl   getPostiveNegReqRation******");
-		Map<String,String> rationcount=new HashMap<>();
+		Map<String,Integer> rationcount=new HashMap<>();
 		
 		Date d=new Date ();
 		int curryear=d.getYear(); 
@@ -217,10 +217,10 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		 negativeReqCount=adminDashboardRepository.getcountOfNegReq(year);
 		}
 		if(positiveReqCount!=null) {
-		rationcount.put("Positive", positiveReqCount);
+		rationcount.put("Positive", Integer.parseInt(positiveReqCount));
 		}
 		if(negativeReqCount!=null) {
-		rationcount.put("Negative", negativeReqCount);
+		rationcount.put("Negative", Integer.parseInt(negativeReqCount));
 		}
 
 		return rationcount;
@@ -260,9 +260,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public Map<String, String> getDisputeRatio(int year) {
+	public Map<String, Integer> getDisputeRatio(int year) {
 		logger.info("****AdminDashboardServiceImpl   getDisputeRatio******");
-		Map<String,String> rationcount=new HashMap<>();
+		Map<String,Integer> rationcount=new HashMap<>();
 		
 		Date d=new Date ();
 		int curryear=d.getYear(); 
@@ -287,11 +287,11 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		}
 		if(raisedDisputCount!=null)
 		{
-		rationcount.put("Disputes", raisedDisputCount);
+		rationcount.put("Disputes",  Integer. parseInt(raisedDisputCount));
 		}
 		if(raisedDisputCount!=null)
 		{
-		rationcount.put("Clear", clearDisputCount);
+		rationcount.put("Clear",  Integer. parseInt(clearDisputCount));
 		}
 
 		return rationcount;		

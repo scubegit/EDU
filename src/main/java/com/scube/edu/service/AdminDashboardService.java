@@ -18,11 +18,11 @@ public interface AdminDashboardService {
 	
 	public List<TopTenEmployResponse>  gettopTenEmployer(int year);
 	
-	public Map<String,String> getPostiveNegReqRation(int year);
+	public Map<String,Integer> getPostiveNegReqRation(int year);
 
 	public List<TopFiverYearRevenueResponse> getTopFiveYearRevenue();
 
-	public Map<String,String> getDisputeRatio(int year);
+	public Map<String,Integer> getDisputeRatio(int year);
 
 	public List<FinancialStatResponse>  getFinancialStat(String fistofMont,String currenDateOfmonth)throws ParseException ;
 	
