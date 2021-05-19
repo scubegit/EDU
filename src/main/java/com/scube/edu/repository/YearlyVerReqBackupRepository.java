@@ -16,25 +16,27 @@ public interface YearlyVerReqBackupRepository extends JpaRepository<YearlyVerReq
 	List<YearlyVerReqBackup> findprevYearData();
 	
 	@Query(value ="SELECT new_request from yearly_ver_req_backup where financial_year = ?1", nativeQuery = true)
-	int getstatNewreqByYear(int year);
+	String getstatNewreqByYear(int year);
+	
+	int findNewReqByFinancialYear(int year);
 	
 	@Query(value ="SELECT closed_request from yearly_ver_req_backup where financial_year = ?1", nativeQuery = true)
-	int getstatclosreqByYear(int year);
+	String getstatclosreqByYear(int year);
 	
 	@Query(value ="SELECT dispute_raised from yearly_ver_req_backup where financial_year = ?1", nativeQuery = true)
-	int getstatdisputByYear(int year);
+	String getstatdisputByYear(int year);
 	
 	
 	
 	@Query(value ="SELECT positive_request from yearly_ver_req_backup where financial_year = ?1", nativeQuery = true)
-	int getcountOfpositiveReq(int year);
+	String getcountOfpositiveReq(int year);
 
 	@Query(value ="SELECT negative_request from yearly_ver_req_backup where financial_year = ?1 ", nativeQuery = true)
-	int getcountOfNegReq(int year);
+	String getcountOfNegReq(int year);
 	
 	@Query(value="select total_amt as docamtwithgst ,financial_year as topyear from yearly_ver_req_backup  group by topyear order by docamtwithgst desc limit 5",nativeQuery = true)
 	List<Object[]> findVerificaTopFiveYearRevenu();
 	
 	@Query(value ="SELECT dispute_clear from yearly_ver_req_backup where financial_year = ?1", nativeQuery = true)
-	int getclosedstatdisputByYear(int year);
+	String getclosedstatdisputByYear(int year);
 }

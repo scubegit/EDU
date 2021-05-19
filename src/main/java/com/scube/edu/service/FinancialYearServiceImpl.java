@@ -11,17 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.FinancialYearEntity;
-import com.scube.edu.model.StreamMaster;
 import com.scube.edu.repository.FinancialYearRepository;
 import com.scube.edu.response.BaseResponse;
-import com.scube.edu.response.FinancialStatResponse;
 import com.scube.edu.response.FinancialYearResponse;
-import com.scube.edu.response.StreamResponse;
 
 @Service
 public class FinancialYearServiceImpl implements FinancialYearService{
 
-private static final Logger logger = LoggerFactory.getLogger(MasterServiceImpl.class);
+private static final Logger logger = LoggerFactory.getLogger(FinancialYearServiceImpl.class);
 	
 	BaseResponse	baseResponse	= null;
 	
@@ -31,6 +28,7 @@ private static final Logger logger = LoggerFactory.getLogger(MasterServiceImpl.c
 	@Override
 	public List<FinancialYearResponse> getFinancialYearList() {
 
+		logger.info("********FinancialYearServiceImpl getFinancialYearList********");
 		
 				List<FinancialYearResponse> List = new ArrayList<>();
 				

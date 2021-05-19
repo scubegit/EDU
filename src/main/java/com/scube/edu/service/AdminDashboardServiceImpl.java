@@ -54,7 +54,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	UserRepository userRepository;
 	
 	@Override
-	public HashMap<String,HashMap<String,Integer>> getRequestStatByStatus(int useryear) {
+	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int useryear) {
 		
 		logger.info("****AdminDashboardServiceImpl   getRequestStatByStatus******");
 		
@@ -87,15 +87,15 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 
 		logger.info( "Date:-"  +d+ "year:-"  +year+ " month:-"+month+ "Day:-"+day+ " Day Name:-"+dayWeekText);
 		
-		HashMap<String,HashMap<String,Integer>> AllstatCountMap=new HashMap<>();
+		HashMap<String,HashMap<String,String>> AllstatCountMap=new HashMap<>();
 
-		HashMap<String,Integer> YearstatCountMap=new HashMap<>();
-		HashMap<String,Integer> monthstatCountMap=new HashMap<>();
-		HashMap<String,Integer> weekstatCountMap=new HashMap<>();
+		HashMap<String,String> YearstatCountMap=null;
+		HashMap<String,String> monthstatCountMap=null;
+		HashMap<String,String> weekstatCountMap=null;
 		
-		int newreuestCount = 0;
-		int closreuestCount = 0;
-		int disputereqCount = 0;
+		String newreuestCount = null;
+		String closreuestCount = null;
+		String disputereqCount = null;
 		
 		if(useryear!=year && useryear!=prevyear) {
 			
@@ -108,16 +108,22 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		 closreuestCount=adminDashboardRepository.getstatclosreqByYear(useryear);
 		 disputereqCount=raiseDisputeRepository.getstatdisputByYear(useryear);
 		}
-	
+	if(newreuestCount!=null) {
 		YearstatCountMap.put("New",newreuestCount);
+	}
+	if(closreuestCount!=null) {
+
 		YearstatCountMap.put("Closed",closreuestCount);		
+	}
+	if(disputereqCount!=null) {
+
 		YearstatCountMap.put("Dispute",disputereqCount);				
-		
+	}		
 		if(useryear==year) {
 		
-		int newreuestMonthCount=adminDashboardRepository.getstatnewReqByMonth(month);
-		int closreuestMonthCount=adminDashboardRepository.getstatclosreqByMonth(month);
-		int disputereqMonthCount=raiseDisputeRepository.getstatdisputByMonth(month);
+		String newreuestMonthCount=adminDashboardRepository.getstatnewReqByMonth(month);
+		String closreuestMonthCount=adminDashboardRepository.getstatclosreqByMonth(month);
+		String disputereqMonthCount=raiseDisputeRepository.getstatdisputByMonth(month);
 
 				
 		monthstatCountMap.put("New",newreuestMonthCount);
@@ -125,9 +131,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		monthstatCountMap.put("Dispute",disputereqMonthCount);				
 		
 		
-		int newreuestWeekcount=adminDashboardRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);	
-		int clsdreuestWeekcount=adminDashboardRepository.countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(datofmonday,d);
-		int disputereqWeekCount=raiseDisputeRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);
+		String newreuestWeekcount=adminDashboardRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);	
+		String clsdreuestWeekcount=adminDashboardRepository.countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(datofmonday,d);
+		String disputereqWeekCount=raiseDisputeRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);
 
 		
 		weekstatCountMap.put("New",newreuestWeekcount);
@@ -137,10 +143,15 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		logger.info("Weekly ocunt = "+newreuestWeekcount);
 		}
 		
+		if(YearstatCountMap!=null) {
 		AllstatCountMap.put("Year", YearstatCountMap);
+		}
+		if(monthstatCountMap!=null) {
 		AllstatCountMap.put("CurrentMonth", monthstatCountMap);
+		}
+		if(weekstatCountMap!=null) {
 		AllstatCountMap.put("CurrentWeek", weekstatCountMap);
-
+		}
 		
 		return AllstatCountMap;
 		
@@ -181,9 +192,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public Map<String, Integer> getPostiveNegReqRation(int year) {
+	public Map<String, String> getPostiveNegReqRation(int year) {
 		logger.info("****AdminDashboardServiceImpl   getPostiveNegReqRation******");
-		Map<String,Integer> rationcount=new HashMap<>();
+		Map<String,String> rationcount=new HashMap<>();
 		
 		Date d=new Date ();
 		int curryear=d.getYear(); 
@@ -195,8 +206,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		int prevyear=lastYear.getYear();
 		prevyear=1900+prevyear;
 
-		int positiveReqCount=0;
-		int negativeReqCount=0;
+		String positiveReqCount="0";
+		String negativeReqCount="0";
 		if(year!=curryear&&year!=prevyear) {
 			 positiveReqCount=yearlyVerReqBackupRepository.getcountOfpositiveReq(year);
 			 negativeReqCount=yearlyVerReqBackupRepository.getcountOfNegReq(year);
@@ -245,9 +256,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public Map<String, Integer> getDisputeRatio(int year) {
+	public Map<String, String> getDisputeRatio(int year) {
 		logger.info("****AdminDashboardServiceImpl   getDisputeRatio******");
-		Map<String,Integer> rationcount=new HashMap<>();
+		Map<String,String> rationcount=new HashMap<>();
 		
 		Date d=new Date ();
 		int curryear=d.getYear(); 
@@ -259,8 +270,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		int prevyear=lastYear.getYear();
 		prevyear=1900+prevyear;
 
-		int raisedDisputCount=0;
-		int clearDisputCount=0;
+		String raisedDisputCount=null;
+		String clearDisputCount=null;
 		
 		if(year!=curryear&&year!=prevyear) {
 			raisedDisputCount=yearlyVerReqBackupRepository.getstatdisputByYear(year);

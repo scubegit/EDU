@@ -14,15 +14,15 @@ import com.scube.edu.response.VerifierPerformanceResponse;
 
 public interface AdminDashboardService {
 
-	public HashMap<String,HashMap<String,Integer>> getRequestStatByStatus(int year);
+	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int year);
 	
 	public List<TopTenEmployResponse>  gettopTenEmployer(int year);
 	
-	public Map<String,Integer> getPostiveNegReqRation(int year);
+	public Map<String,String> getPostiveNegReqRation(int year);
 
 	public List<TopFiverYearRevenueResponse> getTopFiveYearRevenue();
 
-	public Map<String,Integer> getDisputeRatio(int year);
+	public Map<String,String> getDisputeRatio(int year);
 
 	public List<FinancialStatResponse>  getFinancialStat(String fistofMont,String currenDateOfmonth)throws ParseException ;
 	

@@ -7,7 +7,5 @@ import com.scube.edu.model.FinancialYearEntity;
 
 @Repository
 public interface FinancialYearRepository extends JpaRepository<FinancialYearEntity, Long> {
-
-	
 	
 }
