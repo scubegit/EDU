@@ -1,5 +1,8 @@
 package com.scube.edu.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +23,29 @@ public class DailyVrBackup {
 		
 		System.out.println("-----------Running scheduler of Daily backup Data---------- ");
 		
-		List<DailyVrBackupEntity> datalist=dailyVrBackupRepository.findDailyData();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -2); // to get previous year add -1
 		
+		Date date = cal.getTime();
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String date2=simpleDateFormat.format(date);
+		
+		
+		String date1=dailyVrBackupRepository.getHighestdate();	
+	  System.out.println("date"+date);
+	  System.out.println("date1="+date1);
+	  System.out.println("date2="+date2);
+	  List<DailyVrBackupEntity> datalist=null;
+	  if(date1==date2) {
+		  datalist=dailyVrBackupRepository.findDailyData();
+	  }
+	  else {
+		  if(date1==null){
+			  date1=date2;
+		  }
+		  datalist=dailyVrBackupRepository.getDailyDataSchedulerSkipped(date1);
+	  }
 		if(datalist!=null)
 		for(DailyVrBackupEntity datasave:datalist) {
 			
