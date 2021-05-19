@@ -289,15 +289,29 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 XSSFSheet worksheet = workbook.getSheetAt(0);
 		 List<UniversityStudDocResponse> studentDataReviewList = new ArrayList<UniversityStudDocResponse>();
 		int rowcnt=worksheet.getLastRowNum();
+		
+		int clomncnt=worksheet.getRow(0).getLastCellNum() ;
+		
+		int noOfColumns = worksheet.getRow(0).getPhysicalNumberOfCells();
+
+		logger.info("noOfColumns="+noOfColumns);
+
+		logger.info("clomncnt="+clomncnt);
 		 String fileSubPath = "file/";
 		 String flag = "2";
 		 String filePath = fileStorageService.storeFile(datafile , fileSubPath, flag);
+		 
+		 if(clomncnt==8) {
 		 for(int i=1;i<=rowcnt;i++) {
 			 
 			 XSSFRow row = worksheet.getRow(i);		 
-			 
+			
+
 			 UniversityStudDocResponse studentData = new UniversityStudDocResponse();	            
 		     if(row!=null) {
+		    	 int rowcell= row.getPhysicalNumberOfCells();
+					logger.info("rowcell="+rowcell);
+					
 			 if(row.getCell(0)!=null)
 			 {
 		        studentData.setFirstName(row.getCell(0).getStringCellValue());
@@ -380,7 +394,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentDataReviewList.add(studentData);    
 			 }
 		 }
-	
+		 }
+		 
 		 return studentDataReviewList;
 	}
 
