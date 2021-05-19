@@ -89,9 +89,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		
 		HashMap<String,HashMap<String,String>> AllstatCountMap=new HashMap<>();
 
-		HashMap<String,String> YearstatCountMap=null;
-		HashMap<String,String> monthstatCountMap=null;
-		HashMap<String,String> weekstatCountMap=null;
+		HashMap<String,String> YearstatCountMap=new HashMap<>();
+		HashMap<String,String> monthstatCountMap=new HashMap<>();
+		HashMap<String,String> weekstatCountMap=new HashMap<>();
 		
 		String newreuestCount = null;
 		String closreuestCount = null;
