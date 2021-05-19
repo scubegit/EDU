@@ -24,7 +24,7 @@ public interface AdminDashboardService {
 
 	public Map<String,Integer> getDisputeRatio(int year);
 
-	public List<FinancialStatResponse>  getFinancialStat(String fistofMont,String currenDateOfmonth);
+	public List<FinancialStatResponse>  getFinancialStat(String fistofMont,String currenDateOfmonth)throws ParseException ;
 	
 	public List<VerifierPerformanceResponse> getMonthlyPerformanceOfVerfier(int month,int year);
 	
