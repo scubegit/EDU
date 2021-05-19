@@ -206,8 +206,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		int prevyear=lastYear.getYear();
 		prevyear=1900+prevyear;
 
-		String positiveReqCount="0";
-		String negativeReqCount="0";
+		String positiveReqCount=null;
+		String negativeReqCount=null;
 		if(year!=curryear&&year!=prevyear) {
 			 positiveReqCount=yearlyVerReqBackupRepository.getcountOfpositiveReq(year);
 			 negativeReqCount=yearlyVerReqBackupRepository.getcountOfNegReq(year);
@@ -216,8 +216,12 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		 positiveReqCount=adminDashboardRepository.getcountOfpositiveReq(year);
 		 negativeReqCount=adminDashboardRepository.getcountOfNegReq(year);
 		}
+		if(positiveReqCount!=null) {
 		rationcount.put("Positive", positiveReqCount);
+		}
+		if(negativeReqCount!=null) {
 		rationcount.put("Negative", negativeReqCount);
+		}
 
 		return rationcount;
 	}
@@ -281,8 +285,14 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		 raisedDisputCount=raiseDisputeRepository.getstatdisputByYear(year);
 		 clearDisputCount=raiseDisputeRepository.getclosedstatdisputByYear(year);
 		}
+		if(raisedDisputCount!=null)
+		{
 		rationcount.put("Disputes", raisedDisputCount);
+		}
+		if(raisedDisputCount!=null)
+		{
 		rationcount.put("Clear", clearDisputCount);
+		}
 
 		return rationcount;		
 	}
