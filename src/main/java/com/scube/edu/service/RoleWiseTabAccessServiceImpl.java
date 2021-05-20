@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.RoleWiseTabAcessEntity;
 import com.scube.edu.repository.RoleWiseAccessTabRepository;
-import com.scube.edu.response.BranchResponse;
 import com.scube.edu.response.RoleWiseTabAccessResponse;
 
 @Service
@@ -24,11 +22,11 @@ public class RoleWiseTabAccessServiceImpl implements RoleWiseTabAccessService {
 	RoleWiseAccessTabRepository roleWiseAccessTabRepository;
 	
 	@Override
-	public List<RoleWiseTabAccessResponse> getAllTabs() {
+	public List<RoleWiseTabAccessResponse> getAllTabs(Long roleId) {
 		
 		 List<RoleWiseTabAccessResponse> branchList = new ArrayList<>();
 			
-			List<RoleWiseTabAcessEntity> branchEntities =roleWiseAccessTabRepository.findAll() ;
+			List<RoleWiseTabAcessEntity> branchEntities =roleWiseAccessTabRepository.findByRoleid(roleId) ;
 			
 			for(RoleWiseTabAcessEntity entity : branchEntities) {
 				
@@ -36,7 +34,8 @@ public class RoleWiseTabAccessServiceImpl implements RoleWiseTabAccessService {
 
 				response.setId(entity.getId());
 				response.setTabName(entity.getTabName());
-				response.setRoleId(entity.getRoleId());
+				response.setRoleId(entity.getRoleid());
+				
 				
 				branchList.add(response);
 			}

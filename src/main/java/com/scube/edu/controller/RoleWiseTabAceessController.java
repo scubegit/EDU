@@ -31,8 +31,8 @@ public class RoleWiseTabAceessController {
 	@Autowired
 	RoleWiseTabAccessService roleWiseTabAccessService;
 	
-	@GetMapping(value = "/getAllTabs" )
-	public ResponseEntity<BaseResponse> getDashBoadAccessofRoles () {
+	@GetMapping(value = "/getAllTabs/{roleId}" )
+	public ResponseEntity<BaseResponse> getDashBoadAccessofRoles (@PathVariable Long roleId) {
 		
 		System.out.println("*******AdminDashboardController getRequestStatiticsByYearWeekMonth********");
 		
@@ -40,7 +40,7 @@ public class RoleWiseTabAceessController {
 		
 	    try {
 	    	
-	    	List<RoleWiseTabAccessResponse> List = roleWiseTabAccessService.getAllTabs();
+	    	List<RoleWiseTabAccessResponse> List = roleWiseTabAccessService.getAllTabs(roleId);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

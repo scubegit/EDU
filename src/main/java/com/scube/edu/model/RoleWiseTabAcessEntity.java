@@ -25,7 +25,7 @@ public class RoleWiseTabAcessEntity {
 	@Column(name = "tab_name")
 	private String tabName;
 	
-	@Column(name = "RoleId")
-	private Long roleId;
+	@Column(name = "role_id")
+	private Long roleid;
 	
 }
