@@ -33,19 +33,22 @@ public class DailyVrBackup {
 		
 		
 		String date1=dailyVrBackupRepository.getHighestdate();	
+	 
 	  System.out.println("date"+date);
 	  System.out.println("date1="+date1);
 	  System.out.println("date2="+date2);
 	  List<DailyVrBackupEntity> datalist=null;
-	  if(date1==date2) {
+	 /* if(date1==date2) {
 		  datalist=dailyVrBackupRepository.findDailyData();
 	  }
-	  else {
+	  else {*/
 		  if(date1==null){
-			  date1=date2;
+			  datalist=dailyVrBackupRepository.getDailyData();
 		  }
+		  else {
 		  datalist=dailyVrBackupRepository.getDailyDataSchedulerSkipped(date1);
-	  }
+		  }
+	  //}
 		if(datalist!=null)
 		for(DailyVrBackupEntity datasave:datalist) {
 			
