@@ -25,7 +25,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and (assigned_to = 0 OR assigned_to = ?1) order by created_date asc limit 5", nativeQuery = true)
 	List<VerificationRequest> getVerifierRecords(Long userId);
 
-	@Query(value = "SELECT * FROM verification_request where doc_status != 'Requested' and user_id = ?1" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status in('UN_Approved','Uni_Auto_Approved','UN_Rejected','Uni_Auto_Rejected') and user_id = ?1" , nativeQuery = true)
 	List<VerificationRequest> findByStatusAndUserId(long userId);
 
 

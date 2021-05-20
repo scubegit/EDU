@@ -164,7 +164,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		
 		veriReq.setDocStatus(statusChangeRequest.getStatus());
 		//veriReq.setClosedDate(date);
+		if (statusChangeRequest.getStatus().equalsIgnoreCase("SV_Rejected")) {
 		veriReq.setRemark(veriReq.getRemark()+" SVR_"+currentDate+"-"+statusChangeRequest.getRemark());
+		}
 		veriReq.setSvVerId(statusChangeRequest.getVerifiedby());
 		veriReq.setSvActionDate(new Date());
 		veriReq.setSuperVerStatus(statusChangeRequest.getStatus());
@@ -281,7 +283,14 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
 			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
+			if(vr.getRemark()==null||vr.getRemark().equals(""))
+			{
+				resp.setRemark("");
+
+			}
+			else {
 			resp.setRemark(vr.getRemark());
+			}
 		return resp;
 	}
 	
