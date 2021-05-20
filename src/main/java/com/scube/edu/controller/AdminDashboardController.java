@@ -30,7 +30,7 @@ import com.scube.edu.util.StringsUtils;
 @RequestMapping("/api/AdminDashboard")
 public class AdminDashboardController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminDashboardController.class);
 
 	BaseResponse response = null;
 

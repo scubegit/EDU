@@ -41,7 +41,7 @@ import com.scube.edu.util.FileStorageService;
 @Service
 public class AssociateManagerServiceImpl implements AssociateManagerService{
 
-	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AssociateManagerServiceImpl.class);
 
 	@Autowired
 	 UniversityStudentDocRepository 	 universityStudentDocRepository ;
@@ -239,7 +239,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 }
 						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
 						 {
-							 reason=reason+" SeatNo";
+							 reason=reason+" Enrollment No";
 						 }
 					    studentData.setFirstName(Data.getFirstName());
 				        studentData.setLastName(Data.getLastName());
