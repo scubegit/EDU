@@ -315,10 +315,11 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
 			
-			if(!req.getAltEmail().equalsIgnoreCase("")) {
+			if(req.getAltEmail()!=null) {
+			if(!req.getAltEmail().equalsIgnoreCase("")){
 				resp.setAltEmail(req.getAltEmail());
 			}
-			
+			}
 			ver_req += 1;
 			
 			list.add(resp);
