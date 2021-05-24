@@ -275,7 +275,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			VerificationRequest resp = new VerificationRequest();
 			
 			Long assign_to = (long) 0;
-			System.out.println("------In Save and calculate Req FOR LOOP----");
+			System.out.println("------In Save and calculate Req FOR LOOP----"+ req.getAltEmail());
 			
 			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
 			
@@ -314,6 +314,11 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setBranchId(req.getBranchId());
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
+			
+			if(!req.getAltEmail().equalsIgnoreCase("")) {
+				resp.setAltEmail(req.getAltEmail());
+			}
+			
 			ver_req += 1;
 			
 			list.add(resp);

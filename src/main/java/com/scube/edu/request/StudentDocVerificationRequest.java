@@ -29,6 +29,7 @@ public class StudentDocVerificationRequest {
 	private Long branchId;
 	private Long semId;
 	private String createby;
+	private String altEmail;
 
 
 }

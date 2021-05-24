@@ -127,7 +127,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 				long difference_In_Time = date.getTime() - closedDate.getTime();
 				logger.info("time" + difference_In_Time);
 				long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
-				days = (int) (100 - difference_In_Days);
+				days = (int) (999 - difference_In_Days);
 			}
 			
 			resp.setBranch_nm(branch.getBranchName());
@@ -195,7 +195,11 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			if(cutomizationEntity!=null)
 			{
 				if(cutomizationEntity.getEmailFlag().equals("Y")) {
-			emailService.sendStatusMail(ume.getEmail(), entt.getId() , statusChangeRequest.getStatus(), imageLocation);
+					
+					String altEmail = entt.getAltEmail();
+					emailService.sendStatusMail(altEmail, ume.getEmail(), entt.getId() , statusChangeRequest.getStatus(), imageLocation);
+			
+			
 				}
 			}
 			}
