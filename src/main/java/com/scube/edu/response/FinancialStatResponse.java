@@ -12,7 +12,8 @@ public class FinancialStatResponse {
 	private String compnayNm;
 	private Integer universityamt;
 	private Integer secureAmt;
-	private Long userId;
-	private Long roleId;
+	/*
+	 * private Long userId; private Long roleId;
+	 */
 
 }

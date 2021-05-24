@@ -21,10 +21,10 @@ public class YearlyVerReqBackup {
     private Long id;
 	
 	@Column(name = "financial_year")
-	private String financialYear;
+	private Integer financialYear;
 	
 	@Column(name = "total_amt")
-	private Long docUniAmt;
+	private Long totalAmt;
 		
 	@Column(name = "new_request")
 	private String newReq;
@@ -43,4 +43,15 @@ public class YearlyVerReqBackup {
 	
 	@Column(name = "dispute_clear")
 	private String disputeClear;
+	
+	/*
+	 * @Column(name = "company_name") private String companyNm;
+	 * 
+	 * @Column(name = "gstin_no") private String gstno;
+	 * 
+	 * @Column(name = "secure_amt") private Long secureAmt;
+	 * 
+	 * @Column(name = "university_amt") private Long universityAmt;
+	 */
+
 }

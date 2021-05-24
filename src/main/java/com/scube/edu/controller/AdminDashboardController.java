@@ -30,7 +30,7 @@ import com.scube.edu.util.StringsUtils;
 @RequestMapping("/api/AdminDashboard")
 public class AdminDashboardController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminDashboardController.class);
 
 	BaseResponse response = null;
 
@@ -45,7 +45,7 @@ public class AdminDashboardController {
 		
 	    try {
 	    	
-	    	HashMap<String,HashMap<String,Integer>> List = adminDashboardService.getRequestStatByStatus(year);
+	    	HashMap<String,HashMap<String,String>> List = adminDashboardService.getRequestStatByStatus(year);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -165,7 +165,7 @@ public class AdminDashboardController {
 		
 	    try {
 	    	
-	    	Map<String,Integer>  List = adminDashboardService.getDisputeRatio(year);
+	    	Map<String, Integer>  List = adminDashboardService.getDisputeRatio(year);
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

@@ -22,6 +22,4 @@ public class UniversityStudDocResponse {
 	private String semester;
 
 
-	
-
 }

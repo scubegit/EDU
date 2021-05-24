@@ -30,7 +30,7 @@ import com.scube.edu.util.StringsUtils;
 @RequestMapping("/api/AssociateManager")
 public class AssociateManagerController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AssociateManagerController.class);
 
 	BaseResponse response = null;
 	

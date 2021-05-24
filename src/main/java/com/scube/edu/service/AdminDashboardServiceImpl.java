@@ -18,12 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.scube.edu.controller.MasterController;
+import com.scube.edu.model.DailyVrBackupEntity;
 import com.scube.edu.model.RaiseDespute;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.model.YearlyVerReqBackup;
 import com.scube.edu.repository.AdminDashboardRepository;
+import com.scube.edu.repository.DailyVrBackupRepository;
 import com.scube.edu.repository.RaiseDisputeRepository;
 import com.scube.edu.repository.UserRepository;
+import com.scube.edu.repository.YearlyVerReqBackupRepository;
 import com.scube.edu.response.FinancialStatResponse;
 import com.scube.edu.response.TopFiverYearRevenueResponse;
 import com.scube.edu.response.TopTenEmployResponse;
@@ -32,7 +36,7 @@ import com.scube.edu.response.VerifierPerformanceResponse;
 @Service
 public class AdminDashboardServiceImpl implements AdminDashboardService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminDashboardServiceImpl.class);
 
 	@Autowired
 	AdminDashboardRepository adminDashboardRepository;
@@ -41,10 +45,16 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	RaiseDisputeRepository raiseDisputeRepository;
 	
 	@Autowired
+	YearlyVerReqBackupRepository yearlyVerReqBackupRepository;
+	
+	@Autowired
+	DailyVrBackupRepository dailyVrBackupRepository;
+	
+	@Autowired
 	UserRepository userRepository;
 	
 	@Override
-	public HashMap<String,HashMap<String,Integer>> getRequestStatByStatus(int useryear) {
+	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int useryear) {
 		
 		logger.info("****AdminDashboardServiceImpl   getRequestStatByStatus******");
 		
@@ -60,6 +70,15 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		int today = c.get(Calendar.DAY_OF_WEEK);
 		c.add(Calendar.DAY_OF_WEEK, -today+Calendar.MONDAY);
 		
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year add -1
+		
+		Date lastYear = cal.getTime();
+		int prevyear=lastYear.getYear();
+		prevyear=1900+prevyear;
+		logger.info("-----lastYear=" +prevyear );
+		
 		Date datofmonday=c.getTime();
 		System.out.println("MondayDate:- "+datofmonday);
 		
@@ -68,25 +87,43 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 
 		logger.info( "Date:-"  +d+ "year:-"  +year+ " month:-"+month+ "Day:-"+day+ " Day Name:-"+dayWeekText);
 		
-		HashMap<String,HashMap<String,Integer>> AllstatCountMap=new HashMap<>();
+		HashMap<String,HashMap<String,String>> AllstatCountMap=new HashMap<>();
 
-		HashMap<String,Integer> YearstatCountMap=new HashMap<>();
-		HashMap<String,Integer> monthstatCountMap=new HashMap<>();
-		HashMap<String,Integer> weekstatCountMap=new HashMap<>();
-
-		int newreuestCount=adminDashboardRepository.getstatNewreqByYear(useryear);
-		int closreuestCount=adminDashboardRepository.getstatclosreqByYear(useryear);
-		int disputereqCount=raiseDisputeRepository.getstatdisputByYear(useryear);
-	
-		YearstatCountMap.put("New",newreuestCount);
-		YearstatCountMap.put("Closed",closreuestCount);		
-		YearstatCountMap.put("Dispute",disputereqCount);				
+		HashMap<String,String> YearstatCountMap=new HashMap<>();
+		HashMap<String,String> monthstatCountMap=new HashMap<>();
+		HashMap<String,String> weekstatCountMap=new HashMap<>();
 		
+		String newreuestCount = null;
+		String closreuestCount = null;
+		String disputereqCount = null;
+		
+		if(useryear!=year && useryear!=prevyear) {
+			
+			newreuestCount=yearlyVerReqBackupRepository.getstatNewreqByYear(useryear);
+			 closreuestCount=yearlyVerReqBackupRepository.getstatclosreqByYear(useryear);
+			 disputereqCount=yearlyVerReqBackupRepository.getstatdisputByYear(useryear);
+		}
+		else {
+		 newreuestCount=adminDashboardRepository.getstatNewreqByYear(useryear);
+		 closreuestCount=adminDashboardRepository.getstatclosreqByYear(useryear);
+		 disputereqCount=raiseDisputeRepository.getstatdisputByYear(useryear);
+		}
+	if(newreuestCount!=null) {
+		YearstatCountMap.put("New",newreuestCount);
+	}
+	if(closreuestCount!=null) {
+
+		YearstatCountMap.put("Closed",closreuestCount);		
+	}
+	if(disputereqCount!=null) {
+
+		YearstatCountMap.put("Dispute",disputereqCount);				
+	}		
 		if(useryear==year) {
 		
-		int newreuestMonthCount=adminDashboardRepository.getstatnewReqByMonth(month);
-		int closreuestMonthCount=adminDashboardRepository.getstatclosreqByMonth(month);
-		int disputereqMonthCount=raiseDisputeRepository.getstatdisputByMonth(month);
+		String newreuestMonthCount=adminDashboardRepository.getstatnewReqByMonth(month);
+		String closreuestMonthCount=adminDashboardRepository.getstatclosreqByMonth(month);
+		String disputereqMonthCount=raiseDisputeRepository.getstatdisputByMonth(month);
 
 				
 		monthstatCountMap.put("New",newreuestMonthCount);
@@ -94,9 +131,9 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		monthstatCountMap.put("Dispute",disputereqMonthCount);				
 		
 		
-		int newreuestWeekcount=adminDashboardRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);	
-		int clsdreuestWeekcount=adminDashboardRepository.countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(datofmonday,d);
-		int disputereqWeekCount=raiseDisputeRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);
+		String newreuestWeekcount=adminDashboardRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);	
+		String clsdreuestWeekcount=adminDashboardRepository.countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(datofmonday,d);
+		String disputereqWeekCount=raiseDisputeRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);
 
 		
 		weekstatCountMap.put("New",newreuestWeekcount);
@@ -106,10 +143,15 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		logger.info("Weekly ocunt = "+newreuestWeekcount);
 		}
 		
+		if(YearstatCountMap!=null) {
 		AllstatCountMap.put("Year", YearstatCountMap);
+		}
+		if(monthstatCountMap!=null) {
 		AllstatCountMap.put("CurrentMonth", monthstatCountMap);
+		}
+		if(weekstatCountMap!=null) {
 		AllstatCountMap.put("CurrentWeek", weekstatCountMap);
-
+		}
 		
 		return AllstatCountMap;
 		
@@ -119,8 +161,19 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	public List<TopTenEmployResponse>  gettopTenEmployer(int year) {
 		logger.info("****AdminDashboardServiceImpl   gettopTenEmployer******");
 		
-		List<Object[]> toptemEmp=adminDashboardRepository.findVerificationRequestToptenEmp(year);
+		/*
+		 * Date d=new Date (); int curryear=d.getYear(); curryear=1900+curryear;
+		 * 
+		 * Calendar cal = Calendar.getInstance(); cal.add(Calendar.YEAR, -1); // to get
+		 * previous year add -1 Date lastYear = cal.getTime(); int
+		 * prevyear=lastYear.getYear(); prevyear=1900+prevyear;
+		 */
 		List<TopTenEmployResponse> response=new ArrayList<>();
+		
+		List<Object[]> toptemEmp=null;
+		
+			 toptemEmp=dailyVrBackupRepository.findToptenEmp(year);
+		if(toptemEmp!=null) {
 		for(Object[] list:toptemEmp )
 			{				
 			TopTenEmployResponse resp=new TopTenEmployResponse();
@@ -133,6 +186,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 				resp.setTotalamt(amt);
 				logger.info("amt=" +amt+ " compnayNm="+compnyNm);			
 				response.add(resp);
+			}
 		}
 		return response;
 	}
@@ -141,11 +195,33 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	public Map<String, Integer> getPostiveNegReqRation(int year) {
 		logger.info("****AdminDashboardServiceImpl   getPostiveNegReqRation******");
 		Map<String,Integer> rationcount=new HashMap<>();
-		int positiveReqCount=adminDashboardRepository.getcountOfpositiveReq(year);
-		int negativeReqCount=adminDashboardRepository.getcountOfNegReq(year);
+		
+		Date d=new Date ();
+		int curryear=d.getYear(); 
+		curryear=1900+curryear;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year add -1		
+		Date lastYear = cal.getTime();
+		int prevyear=lastYear.getYear();
+		prevyear=1900+prevyear;
 
-		rationcount.put("Positive", positiveReqCount);
-		rationcount.put("Negative", negativeReqCount);
+		String positiveReqCount=null;
+		String negativeReqCount=null;
+		if(year!=curryear&&year!=prevyear) {
+			 positiveReqCount=yearlyVerReqBackupRepository.getcountOfpositiveReq(year);
+			 negativeReqCount=yearlyVerReqBackupRepository.getcountOfNegReq(year);
+		}
+		else {
+		 positiveReqCount=adminDashboardRepository.getcountOfpositiveReq(year);
+		 negativeReqCount=adminDashboardRepository.getcountOfNegReq(year);
+		}
+		if(positiveReqCount!=null) {
+		rationcount.put("Positive", Integer.parseInt(positiveReqCount));
+		}
+		if(negativeReqCount!=null) {
+		rationcount.put("Negative", Integer.parseInt(negativeReqCount));
+		}
 
 		return rationcount;
 	}
@@ -153,9 +229,17 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	@Override
 	public List<TopFiverYearRevenueResponse> getTopFiveYearRevenue() {
 		logger.info("****AdminDashboardServiceImpl   getTopFiveYearRevenue******");
-		List<Object[]> topFiyear=adminDashboardRepository.findVerificaTopFiveYearRevenu();
+		
+		
+		List<Object[]> topFiyear=null;
+		
+		topFiyear=dailyVrBackupRepository.findVerificaTopFiveYearRevenu();
+		
+	//	topFiyear=adminDashboardRepository.findVerificaTopFiveYearRevenu();
 		List<TopFiverYearRevenueResponse> response=new ArrayList<>();
 
+		if(topFiyear!=null) {
+		
 		for(Object[] list:topFiyear )
 		{	
 			TopFiverYearRevenueResponse resp=new TopFiverYearRevenueResponse();
@@ -171,7 +255,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			response.add(resp);
 		
 		}
-
+		}
 		return response;
 	}
 
@@ -179,24 +263,52 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	public Map<String, Integer> getDisputeRatio(int year) {
 		logger.info("****AdminDashboardServiceImpl   getDisputeRatio******");
 		Map<String,Integer> rationcount=new HashMap<>();
-		int raisedDisputCount=raiseDisputeRepository.getstatdisputByYear(year);
-		int clearDisputCount=raiseDisputeRepository.getclosedstatdisputByYear(year);
+		
+		Date d=new Date ();
+		int curryear=d.getYear(); 
+		curryear=1900+curryear;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year add -1		
+		Date lastYear = cal.getTime();
+		int prevyear=lastYear.getYear();
+		prevyear=1900+prevyear;
 
-		rationcount.put("Disputes", raisedDisputCount);
-		rationcount.put("Clear", clearDisputCount);
+		String raisedDisputCount=null;
+		String clearDisputCount=null;
+		
+		if(year!=curryear&&year!=prevyear) {
+			raisedDisputCount=yearlyVerReqBackupRepository.getstatdisputByYear(year);
+			 clearDisputCount=yearlyVerReqBackupRepository.getclosedstatdisputByYear(year);
+		}
+		else {
+		 raisedDisputCount=raiseDisputeRepository.getstatdisputByYear(year);
+		 clearDisputCount=raiseDisputeRepository.getclosedstatdisputByYear(year);
+		}
+		if(raisedDisputCount!=null)
+		{
+		rationcount.put("Disputes",  Integer. parseInt(raisedDisputCount));
+		}
+		if(raisedDisputCount!=null)
+		{
+		rationcount.put("Clear",  Integer. parseInt(clearDisputCount));
+		}
 
 		return rationcount;		
 	}
 
 	@Override
-	public List<FinancialStatResponse> getFinancialStat(String fistofMont,String currenDateOfmonth) {
+	public List<FinancialStatResponse> getFinancialStat(String fistofMont,String currenDateOfmonth) throws ParseException {
 		logger.info("****AdminDashboardServiceImpl   getFinancialStat******");
 
-		List<Object[]> financialStat=adminDashboardRepository.getFinanvialStat( fistofMont, currenDateOfmonth);
+		List<Object[]> financialStat=dailyVrBackupRepository.getFinanvialStat(fistofMont, currenDateOfmonth);
+		
+		//List<Object[]> financialStat=adminDashboardRepository.getFinanvialStat( fistofMont, currenDateOfmonth);
 		List<FinancialStatResponse> response=new ArrayList<>();
 
 		int stuUniamt=0;
 		int studSecamt=0;
+		if(financialStat!=null) {
 		for(Object[] list:financialStat )
 		{	
 			FinancialStatResponse resp=new FinancialStatResponse();
@@ -209,37 +321,37 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			TotalSecamt=((BigDecimal) list[1]).intValue();
 			}
 			String companyNm= (String) list[2];
-			Long userId= ((BigInteger) list[3]).longValue();
-			Long roleId=((BigInteger) list[4]).longValue();
+			//Long userId= ((BigInteger) list[3]).longValue();
+			//Long roleId=((BigInteger) list[4]).longValue();
 			
-			if(companyNm==null && roleId==1)
+			/*if(companyNm==null && roleId==1)
 			{						
 				stuUniamt=stuUniamt+TotalUniamt;
 				studSecamt=studSecamt+TotalSecamt;
 					
-			}
-			else {
+			}*/
+			//else {
 			  resp.setCompnayNm(companyNm); 
 			  resp.setUniversityamt(TotalUniamt);
 			  resp.setSecureAmt(TotalSecamt);
-			  resp.setUserId(userId);
-			  resp.setRoleId(roleId);
+			 // resp.setUserId(userId);
+			//  resp.setRoleId(roleId);
 
 			  logger.info("companyNm= " +companyNm+ " uniAmt=" +TotalUniamt+ " secAmt="+TotalSecamt);
 			 			
 			response.add(resp);
 			}
-		
 		}
-		FinancialStatResponse resp=new FinancialStatResponse();
 		
-		  resp.setCompnayNm("STUDENT"); 
-		  resp.setUniversityamt(stuUniamt);
-		  resp.setSecureAmt(studSecamt);
-		 // resp.setUserId((long) 1);
-		  resp.setRoleId((long) 1);
-
-		  response.add(resp);
+		//}
+	/*
+	 * FinancialStatResponse resp=new FinancialStatResponse();
+	 * 
+	 * resp.setCompnayNm("STUDENT"); resp.setUniversityamt(stuUniamt);
+	 * resp.setSecureAmt(studSecamt); // resp.setUserId((long) 1);
+	 * resp.setRoleId((long) 1);
+	 */
+		//  response.add(resp);
 
 
 		return response;	
@@ -254,6 +366,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		List<Object[]> financialStat=adminDashboardRepository.getVerPerformanceMonthly(month,year);
 		List<VerifierPerformanceResponse> response=new ArrayList<>();
 
+		if(financialStat!=null) {
 		for(Object[] list:financialStat ) {
 			
 			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
@@ -264,7 +377,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			response.add(resp);
 		}
 
-		
+		}
 
 		return response;
 	}
@@ -277,6 +390,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		List<Object[]> financialStat=adminDashboardRepository.getVerPerformanceDaily(str);
 		List<VerifierPerformanceResponse> response=new ArrayList<>();
 
+		if(financialStat!=null) {
 		for(Object[] list:financialStat ) {
 			
 			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
@@ -286,7 +400,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 			resp.setFullNm(fullnm);
 			response.add(resp);
 		}		
-		
+		}
 		return response;
 	}
 
@@ -298,6 +412,8 @@ logger.info("****AdminDashboardServiceImpl   getDailyPerformanceOfVerfier******"
 		List<Object[]> financialStat=adminDashboardRepository.getVerPerformance(frmdate, todate);
 		List<VerifierPerformanceResponse> response=new ArrayList<>();
 
+		if(financialStat!=null) {
+
 		for(Object[] list:financialStat ) {
 			
 			VerifierPerformanceResponse resp=new VerifierPerformanceResponse();
@@ -306,7 +422,8 @@ logger.info("****AdminDashboardServiceImpl   getDailyPerformanceOfVerfier******"
 			String fullnm=list[2].toString()+" "+list[3].toString();
 			resp.setFullNm(fullnm);
 			response.add(resp);
-		}		
+		}	
+		}
 		
 		return response;	}
 

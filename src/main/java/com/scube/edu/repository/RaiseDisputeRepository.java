@@ -20,13 +20,13 @@ public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long
 	List<RaiseDespute> findByStatus(String string);
 
 	@Query(value ="SELECT count(*) from raise_despute where year(created_date) = ?1", nativeQuery = true)
-	int getstatdisputByYear(int year);
+	String getstatdisputByYear(int year);
 	
 	@Query(value ="SELECT count(*) from raise_despute where year(created_date) = ?1 and status in ('NCL','CL')", nativeQuery = true)
-	int getclosedstatdisputByYear(int year);
+	String getclosedstatdisputByYear(int year);
 	
 	@Query(value ="SELECT count(*) from raise_despute where month(created_date) = ?1", nativeQuery = true)
-	int getstatdisputByMonth(int month);
+	String getstatdisputByMonth(int month);
 	
 	/*
 	 * @Query(value
@@ -34,6 +34,6 @@ public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long
 	 * , nativeQuery = true) int getstatdisputByWeek(String fromdt,String todt);
 	 */
 	
-	int countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
+	String countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
 
 }
