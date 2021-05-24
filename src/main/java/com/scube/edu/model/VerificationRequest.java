@@ -161,4 +161,7 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "uniauto_ver_action_date")
 	private Date uniAutoVerActionDate;
+	
+	@Column(name = "alternate_email")
+	private String altEmail;
 }

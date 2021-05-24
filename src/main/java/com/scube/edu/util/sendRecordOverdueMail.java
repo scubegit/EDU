@@ -56,7 +56,7 @@ public class sendRecordOverdueMail {
 			
 			logger.info(difference_In_Time +" "+difference_In_Days);
 			
-			if(difference_In_Days >= 100) {
+			if(difference_In_Days >= 999) {
 				
 				long userId = verReq.getUserId();
 				UserMasterEntity ume = userRepository.findById(userId);
@@ -70,7 +70,7 @@ public class sendRecordOverdueMail {
 					verReq.setUniAutoVerStatus("Uni_Auto_Approved");
 					verificationReqRepo.save(verReq);
 					
-					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
+					emailService.sendStatusMail(verReq.getAltEmail(), ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
 					
 				}
 				if(verReq.getDocStatus().equalsIgnoreCase("Rejected") || verReq.getDocStatus().equalsIgnoreCase("SV_Rejected") ){
@@ -81,7 +81,7 @@ public class sendRecordOverdueMail {
 					verReq.setUniAutoVerStatus("Uni_Auto_Rejected");
 					verificationReqRepo.save(verReq);
 					
-					emailService.sendStatusMail(ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
+					emailService.sendStatusMail(verReq.getAltEmail(),ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
 
 					
 					

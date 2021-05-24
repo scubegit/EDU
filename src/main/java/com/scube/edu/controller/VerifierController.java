@@ -1,8 +1,11 @@
 package com.scube.edu.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,12 +119,36 @@ public class VerifierController {
 	        
 	       // Resource res =  fileStorageService.loadFileAsResource("file/ha-img.jpg");
 		 
+		 
+		 
 		 Resource res =  fileStorageService.loadFileAsResource(UserFor,id);
-	        
+	     
+		 
+		 
+		 //File file = new File(res.getFile());
+		 
+		 String ext1 = FilenameUtils.getExtension("/path/to/file/foo.txt");
+		 
+		 
+		 String ext2 = FilenameUtils.getExtension(res.getFilename());
+		 
+		 
 	        byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
 
+	        
+	        MediaType mediaType = null;
+	        
+	        if(ext2.equalsIgnoreCase("pdf")|| ext2 == "PDF" ) {
+	        
+	        	mediaType = MediaType.APPLICATION_PDF ;
+	        }
+	        else {
+	        	mediaType = MediaType.IMAGE_JPEG ;
+	        }
+	        	
+	        
 	        return ResponseEntity.ok()
-	                             .contentType(MediaType.IMAGE_JPEG)
+	                             .contentType(mediaType)
 	                             .body(bytes);
 	    }
 	 
