@@ -230,7 +230,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 								 reason=reason+",";
 							 }
 								 }
-						 if(Data.getLastName()==null || Data.getLastName().equals("")||Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")  )
+						 if(Data.getLastName()==null || Data.getLastName().equals("")  )
 						 {
 							 reason=reason+" Last name";
 							 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")) {

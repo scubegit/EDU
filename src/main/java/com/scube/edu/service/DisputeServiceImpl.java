@@ -41,7 +41,7 @@ public class DisputeServiceImpl implements DisputeService{
 	VerificationRequestRepository verificationReqRepository;
 	
 	@Override
-	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) throws MessagingException {
+	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) throws Exception {
 		
 		logger.info("********DisputeServiceImpl saveDispute********");
 		
@@ -78,7 +78,7 @@ public class DisputeServiceImpl implements DisputeService{
      private String imageLocation;
 
 	@Override
-	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws MessagingException, BadElementException, IOException {
+	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws Exception {
 		
 		logger.info("********DisputeServiceImpl updateDispute********"+ updateDisputeReq.getStatus());
 		
