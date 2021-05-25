@@ -736,7 +736,7 @@ public class EmailService {
 	    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
 //	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
 	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
-	    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
+	    PdfPCell cell5 = new PdfPCell(new Paragraph("Seat Number"));
 //	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
 	    PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
 //	    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));

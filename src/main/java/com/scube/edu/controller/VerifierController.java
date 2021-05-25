@@ -3,6 +3,7 @@ package com.scube.edu.controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -121,24 +122,23 @@ public class VerifierController {
 		 
 		 
 		 
-		 Resource res =  fileStorageService.loadFileAsResource(UserFor,id);
+//		 byte[] res =  fileStorageService.loadFileAsResourceFromAws(UserFor,id);
 	     
-		 
+		 HashMap<String, Object> res =  fileStorageService.loadFileAsResourceFromAws(UserFor,id);
 		 
 		 //File file = new File(res.getFile());
 		 
 		 String ext1 = FilenameUtils.getExtension("/path/to/file/foo.txt");
 		 
 		 
-		 String ext2 = FilenameUtils.getExtension(res.getFilename());
-		 
-		 
-	        byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
+//	        byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
 
+	        byte[] ret = (byte[]) res.get("byteArray");
+	        String ext = (String) res.get("extension");
+	        MediaType mediaType;
+		 
 	        
-	        MediaType mediaType = null;
-	        
-	        if(ext2.equalsIgnoreCase("pdf")|| ext2 == "PDF" ) {
+	        if(ext.equalsIgnoreCase("pdf")|| ext == "PDF" ) {
 	        
 	        	mediaType = MediaType.APPLICATION_PDF ;
 	        }
@@ -149,7 +149,7 @@ public class VerifierController {
 	        
 	        return ResponseEntity.ok()
 	                             .contentType(mediaType)
-	                             .body(bytes);
+	                             .body(ret);
 	    }
 	 
 		@PostMapping("/setStatusForVerifierDocument")

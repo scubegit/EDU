@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scube.edu.awsconfig.BucketName;
+import com.scube.edu.awsconfig.FileStore;
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
@@ -53,17 +58,25 @@ import com.scube.edu.security.JwtUtils;
 import com.scube.edu.util.FileStorageService;
 import com.scube.edu.util.StringsUtils;
 
+import lombok.AllArgsConstructor;
+
 
 @Service
 public class StudentServiceImpl implements StudentService{
 
 private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+
+
 	
-	Base64.Encoder baseEncoder = Base64.getEncoder();
 	
 	BaseResponse	baseResponse	= null;  
+	
+//	private final FileStore fileStore;
       
 	 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	 
+	 @Autowired
+	 FileStore fileStore;
 	 
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
@@ -275,7 +288,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			VerificationRequest resp = new VerificationRequest();
 			
 			Long assign_to = (long) 0;
-			System.out.println("------In Save and calculate Req FOR LOOP----"+ req.getAltEmail());
+			System.out.println("------In Save and calculate Req FOR LOOP----");
 			
 			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
 			
@@ -315,10 +328,11 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
 			
+			if(req.getAltEmail() != null) {
 			if(!req.getAltEmail().equalsIgnoreCase("")) {
 				resp.setAltEmail(req.getAltEmail());
 			}
-			
+			}
 			ver_req += 1;
 			
 			list.add(resp);
@@ -419,9 +433,49 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	public String saveDocument (MultipartFile file) {
 		String fileSubPath = "file/";
 		String flag = "1";
-		String filePath = fileStorageService.storeFile(file , fileSubPath, flag);
+//		String filePath = fileStorageService.storeFile(file , fileSubPath, flag);
+		String filePath = fileStorageService.storeFileOnAws(file, fileSubPath, flag);
 		
+		logger.info("---------StudentServiceImpl saveDocument----------------");
 		
+//		if (file.isEmpty()) {
+//            throw new IllegalStateException("Cannot upload empty file");
+//        }
+		
+        //Check if the file is an image
+//      if (!Arrays.asList(IMAGE_PNG.getMimeType(),
+//              IMAGE_BMP.getMimeType(),
+//              IMAGE_GIF.getMimeType(),
+//              IMAGE_JPEG.getMimeType()).contains(file.getContentType())) {
+//          throw new IllegalStateException("FIle uploaded is not an image");
+//      }
+		
+		//get file metadata
+//        Map<String, String> metadata = new HashMap<>();
+//        metadata.put("Content-Type", file.getContentType());
+//        metadata.put("Content-Length", String.valueOf(file.getSize()));
+        
+//        String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), UUID.randomUUID());
+//        String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), "file");
+        
+//        logger.info("---------StudentServiceImpl path----------------"+ path );
+//        
+//        String fileName = String.format("%s", file.getOriginalFilename());
+//        
+//        logger.info("---------TodoServiceImpl fileName----------------"+fileName );
+//        
+//        logger.info("---------TodoServiceImpl start fileStore upload----------------");
+//        
+//        try {
+//        	fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
+//        } catch (IOException e) {
+//            throw new IllegalStateException("Failed to upload file", e);
+//        }
+//        
+//        logger.info("---------TodoServiceImpl End fileStore upload----------------");
+        
+        
+        
 		
 		return filePath;
 		
