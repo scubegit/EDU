@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PriceMaster;
+import com.scube.edu.model.RequestTypeMaster;
+import com.scube.edu.repository.DocumentRepository;
 import com.scube.edu.repository.PriceMasterRepository;
+import com.scube.edu.repository.RequestTypeRepository;
 import com.scube.edu.request.PriceAddRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.DocumentResponse;
@@ -29,6 +32,11 @@ public class PriceServiceImpl  implements PriceService {
 	
 	@Autowired
 	PriceMasterRepository pricemasterRespository;
+	@Autowired
+	RequestTypeRepository requestTypeRepository;
+	
+	@Autowired
+	DocumentRepository documentRepository;
 	BaseResponse  baseResponse = null;
     Base64.Decoder decoder = Base64.getDecoder();  
 	
@@ -48,15 +56,25 @@ public class PriceServiceImpl  implements PriceService {
 			
 			PriceMasterResponse priceResponse = new PriceMasterResponse();
 
+			Optional<RequestTypeMaster> requestTypeMaster=requestTypeRepository.findById(entity.getRequestTypeId());
+			RequestTypeMaster requestTypeMasterdata=requestTypeMaster.get();
+			
+			Optional<DocumentMaster> documentMaster=documentRepository.findById(entity.getDoctypeId());
+			DocumentMaster documentMasterdata=documentMaster.get();
+
 			priceResponse.setId(entity.getId());
-			priceResponse.setServiceName(entity.getServiceName());
+			//priceResponse.setServiceName(entity.getServiceName());			
 			priceResponse.setAmount(entity.getAmount());
 			priceResponse.setYearrangeStart(entity.getYearrangeStart());
 			priceResponse.setYearrangeEnd(entity.getYearrangeEnd());
 			priceResponse.setCreated_by(entity.getCreateby());
 			priceResponse.setGst(entity.getGst());
 			priceResponse.setSecure_charge(entity.getSecurCharge());
-			
+			priceResponse.setRequestType(requestTypeMasterdata.getRequestType());
+			priceResponse.setDocType(documentMasterdata.getDocumentName());
+			priceResponse.setRequestTypeid(entity.getRequestTypeId());
+			priceResponse.setDocTypeid(entity.getDoctypeId());
+
 			
 			priceList.add(priceResponse);
 		}
@@ -72,7 +90,7 @@ public class PriceServiceImpl  implements PriceService {
 			
 			PriceMaster priceMasterEntity  = new  PriceMaster();
 			
-			priceMasterEntity.setServiceName(priceRequest.getServiceName());//1
+			//priceMasterEntity.setServiceName(priceRequest.getServiceName());//1
 			priceMasterEntity.setAmount(priceRequest.getAmount());//1
 			priceMasterEntity.setYearrangeStart(priceRequest.getYearrangeStart());//
 			priceMasterEntity.setYearrangeEnd(priceRequest.getYearrangeEnd());//
@@ -80,7 +98,8 @@ public class PriceServiceImpl  implements PriceService {
 			priceMasterEntity.setIsdeleted("N"); // By Default N	
 			priceMasterEntity.setGst(priceRequest.getGst());
 			priceMasterEntity.setSecurCharge(priceRequest.getSecuritycharge());
-		
+			priceMasterEntity.setRequestTypeId(priceRequest.getRequestTypeId());
+			priceMasterEntity.setDoctypeId(priceRequest.getDoctypeId());
 			pricemasterRespository.save(priceMasterEntity);
 		
 			
@@ -109,14 +128,15 @@ public class PriceServiceImpl  implements PriceService {
 			
 //			   PriceMaster priceEntit = priceEntities.get();
 			
-			   priceEntities.setServiceName(priceMaster.getServiceName());
+			//   priceEntities.setServiceName(priceMaster.getServiceName());
 			   priceEntities.setAmount(priceMaster.getAmount());//1
 			   priceEntities.setYearrangeStart(priceMaster.getYearrangeStart());//
 			   priceEntities.setYearrangeEnd(priceMaster.getYearrangeEnd());//
 			   priceEntities.setGst(priceMaster.getGst());
 			   priceEntities.setSecurCharge(priceMaster.getSecuritycharge());
-			
-			
+			   priceEntities.setRequestTypeId(priceMaster.getRequestTypeId());
+			   priceEntities.setDoctypeId(priceMaster.getDoctypeId());
+			   
 			   pricemasterRespository.save(priceEntities);
 			
 			   

@@ -290,7 +290,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			Long assign_to = (long) 0;
 			System.out.println("------In Save and calculate Req FOR LOOP----");
 			
-			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
+			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid(),req.getRequesttype(),Long.parseLong(req.getDocname()));
 			
 			// diff fetches * from pricemaster where year diff is between year_range_start and year_range_end
 			
@@ -328,8 +328,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
 			
-			if(req.getAltEmail() != null) {
-			if(!req.getAltEmail().equalsIgnoreCase("")) {
+
+			if(req.getAltEmail()!=null) {
+			if(!req.getAltEmail().equalsIgnoreCase("")){
 				resp.setAltEmail(req.getAltEmail());
 			}
 			}
@@ -395,7 +396,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		logger.info("---------"+ appId);
 		
-		PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , studentDocReq.getYearofpassid());
+		PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , studentDocReq.getYearofpassid(),studentDocReq.getRequesttype(),Long.parseLong(studentDocReq.getDocname()));
 		
 		total = diff.getTotalAmt();
 		totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
@@ -516,7 +517,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			System.out.println("------In Save and calculate Req FOR LOOP----");
 			
-			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid());
+			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid(),req.getRequesttype(),Long.parseLong(req.getDocname()));
 						
 			total = diff.getTotalAmt();
 			totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();

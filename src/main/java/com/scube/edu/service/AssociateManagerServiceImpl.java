@@ -230,7 +230,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 								 reason=reason+",";
 							 }
 								 }
-						 if(Data.getLastName()==null || Data.getLastName().equals("")||Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")  )
+						 if(Data.getLastName()==null || Data.getLastName().equals("")  )
 						 {
 							 reason=reason+" Last name";
 							 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")) {
@@ -239,7 +239,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 }
 						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
 						 {
-							 reason=reason+" Enrollment No";
+							 reason=reason+" Seat No";
 						 }
 					    studentData.setFirstName(Data.getFirstName());
 				        studentData.setLastName(Data.getLastName());

@@ -2,16 +2,28 @@
 package com.scube.edu.service;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -29,9 +41,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -66,460 +80,589 @@ import com.scube.edu.util.FileStorageService;
 
 @Service
 public class EmailService {
-	
+
 	Base64.Encoder baseEncoder = Base64.getEncoder();
-	
+
 	@Autowired
 	VerificationRequestRepository verificationReqRepository;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	BranchMasterService branchService;
-	
+
 	@Autowired
 	SemesterService semService;
-	
-	@Autowired 
+
+	@Autowired
 	StreamService streamService;
-	
+
 	@Autowired
 	YearOfPassingService yearOfPassService;
-	
+
 	@Autowired
-	DocumentService	documentService;
-	
+	DocumentService documentService;
+
 	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
-	   
-	   void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException {
-		   
 
-		   String to = emailId;
-		   
-		   logger.info("-------->1");
+	@Value("${file.Email-Files}")
+    private String emailFileLocation;
+	
+	@Value("${file.imagepath-dir}")
+    private String logoimageLocation;
+	
+	void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException, Exception {
 
-	        // Sender's email ID needs to be mentioned
+		String to = emailId;
+
+		logger.info("-------->1");
+
+		// Sender's email ID needs to be mentioned
 //	        String from = "universityscube@gmail.com";
-		   String from = "verify@educred.co.in";
+		String from = "verify@educred.co.in";
 
-	        // Assuming you are sending email from through gmails smtp
+		// Assuming you are sending email from through gmails smtp
 //	        String host = "smtp.gmail.com";
-		   String host = "mail.educred.co.in";
+		String host = "mail.educred.co.in";
 
-	        Properties properties = System.getProperties();
-		   
-		    properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.port", "465");
-	        properties.put("mail.smtp.ssl.enable", "true");
-	        
-	        properties.put("mail.smtp.auth", "true");
+		Properties properties = System.getProperties();
 
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
 
+		properties.put("mail.smtp.auth", "true");
 
-	        // Get the Session object.// and pass username and password
-	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+		// Get the Session object.// and pass username and password
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
-	            protected PasswordAuthentication getPasswordAuthentication() {
+			protected PasswordAuthentication getPasswordAuthentication() {
 
 //	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
-	            	return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 
-	            }
+			}
 
-	        });
-	        logger.info("------>2");
-	        // Used to debug SMTP issues
-	        session.setDebug(true);
+		});
+		logger.info("------>2");
+		// Used to debug SMTP issues
+		session.setDebug(true);
 
-	        try {
-	            // Create a default MimeMessage object.
-	            MimeMessage message = new MimeMessage(session);
+		try {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
 
-	            // Set From: header field of the header.
-	            message.setFrom(new InternetAddress(from));
+			MimeBodyPart textBodyPart = new MimeBodyPart();
 
-	            // Set To: header field of the header.
-	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
 
-	            // Set Subject: header field
-	            message.setSubject("Password Reset Link!!!");
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-	            // Now set the actual message
+			// Set Subject: header field
+			message.setSubject("Password Reset Link!!!");
 
-	                       logger.info("URL---------->"+ url);
-                String vmFileContent = "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://"+url+"/University/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
-                "<br><br><br> Thanks,<br>Team University";
+			// Now set the actual message
+
+			logger.info("URL---------->" + url);
+			/*
+			 * String vmFileContent =
+			 * "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://"
+			 * +url+"/University/resetPassword?emailId="+
+			 * encodeEmail+"'><strong>Reset Link</strong></a> "+
+			 * "<br><br><br> Thanks,<br>Team University";
+			 */
 //                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
 //                        "<br><br><br> Thanks,<br>Team University";
-                logger.info("------>3");
-                //  Send the complete message parts
-                message.setContent(vmFileContent,"text/html");
+			logger.info("------>3");
 
-	            System.out.println("sending...");
-	            // Send message
-	             Transport.send(message);
-	            
-	           // javaMailSender.send(message);
-	            System.out.println("Sent message successfully....");
-	            
+			//String file=emailFileLocation+"PasswordReset.txt";     //Live
+			String file = "./EmailFiles/PasswordReset.txt";          //test
 
-	        } catch (MessagingException e) {
-	            throw new RuntimeException(e);
-	        }
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String vmFileContent = reader.readLine();
+			vmFileContent = vmFileContent.replaceFirst("#url", url);
+			vmFileContent = vmFileContent.replaceFirst("#encodeEmail", encodeEmail);
 
-	     
-	    }
-	   
+			MimeBodyPart imagePart = new MimeBodyPart();
 
-	   
-	   
-	   
-	  void sendVerificationEmail(String emailId, String url) throws MessagingException {
-		  
-		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
+			// imagePart.attachFile(imageLocation+"logo.png"); //For live
 
-		   String to = emailId;
-		   logger.info("URL---------->"+url);
-	        // Sender's email ID needs to be mentioned
+			imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.setDisposition(MimeBodyPart.INLINE);
+			Map<String, String> inlineImages = new HashMap<String, String>();
 
-	        String from = "verify@educred.co.in";
+			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
 
+			inlineImages.put("image", "./logo.png"); // For local Testing
 
-	        // Assuming you are sending email from through gmails smtp
-	        String host = "mail.educred.co.in";
+			if (inlineImages != null && inlineImages.size() > 0) {
+				Set<String> setImageID = inlineImages.keySet();
 
-	        Properties properties = System.getProperties();
-		   
-		    properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.port", "465");
-	        properties.put("mail.smtp.ssl.enable", "true");
-	        properties.put("mail.smtp.auth", "true");
+				for (String contentId : setImageID) {
+					// MimeBodyPart imagePart = new MimeBodyPart();
+					imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
 
+					String imageFilePath = inlineImages.get(contentId);
+					try {
+						imagePart.attachFile(imageFilePath);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			textBodyPart.setText(vmFileContent, "utf-8", "html");
 
-	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-	                 protected PasswordAuthentication getPasswordAuthentication() {
-	                 
-	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+			logger.info("fileContent=" + vmFileContent);
+			// Send the complete message parts
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(imagePart);
+			multipart.addBodyPart(textBodyPart);
+			//message.setContent(vmFileContent, "text/html");
+			message.setContent(multipart);
 
-	                 }
-	        });
-	        
-	        // Used to debug SMTP issues
-	        session.setDebug(true);
-	        try {
-	          
-	            MimeMessage message = new MimeMessage(session);
+			System.out.println("sending...");
+			// Send message
+			Transport.send(message);
 
-	            message.setFrom(new InternetAddress(from));
+			// javaMailSender.send(message);
+			System.out.println("Sent message successfully....");
 
-	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
 
-	            message.setSubject("Email Verification Link!!!");
+	}
 
-	            // Now set the actual messageHello User,
-	         
-                String vmFileContent = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://"+url+"/University/emailVerification?emailId="+encodeEmail+"'><strong>"+url+"/EDU/api/auth/verifyEmail/"+encodeEmail+"</strong></a> "+
-                                       " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
+	void sendVerificationEmail(String emailId, String url) throws MessagingException, Exception {
 
+		String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8));
 
-                
-                //  Send the complete message parts
-                message.setContent(vmFileContent,"text/html");
+		String to = emailId;
+		logger.info("URL---------->" + url);
+		// Sender's email ID needs to be mentioned
 
-	            System.out.println("sending...");
-	         
-	            Transport.send(message);
-	            System.out.println("Sent message successfully....");
-	            
-	        } catch (MessagingException e) {
-	        	
-	        	
-	            throw new RuntimeException(e);
-	        }
-	   }
-	  
-	  
-	  public void sendStatusMail(String altEmail, String emailId, Long id, String status, String imageLocation) throws Exception {
-		  
-//		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
-		  	logger.info("imageLocation---->"+imageLocation);
-		  	Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
-			VerificationRequest vr = vrr.get();
+		String from = "verify@educred.co.in";
+
+		// Assuming you are sending email from through gmails smtp
+		String host = "mail.educred.co.in";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+
+			}
+		});
+
+		// Used to debug SMTP issues
+		session.setDebug(true);
+		try {
+
+			MimeMessage message = new MimeMessage(session);
+
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			message.setFrom(new InternetAddress(from));
+
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			message.setSubject("Email Verification Link!!!");
+
+			// Now set the actual messageHello User,
+
+			String vmFileContent1 = "Hello User, <br><br> We have received your registration request .Please click link below to verify your email account.<br><a href='http://"
+					+ url + "/University/emailVerification?emailId=" + encodeEmail + "'><strong>" + url
+					+ "/EDU/api/auth/verifyEmail/" + encodeEmail + "</strong></a> "
+					+ " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
+
 			
-			PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
-	    	
-	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+			
+			//String file=emailFileLocation+"VerficationLink.txt";     //Live
+		
+			String file = "./EmailFiles/VerficationLink.txt";
 
-		   String to = emailId;
-		   String altTo = altEmail;
-		   
-		   Long Id = id;
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String vmFileContent = reader.readLine();
+			vmFileContent = vmFileContent.replaceFirst("#url", url);
+			vmFileContent = vmFileContent.replaceFirst("#encodeEmail", encodeEmail);
+			//vmFileContent = vmFileContent.replaceFirst("#url1", url);
+			//vmFileContent = vmFileContent.replaceFirst("#encodeEmail1", encodeEmail);
 
-		   logger.info("email Ids----->"+ to + Id );
-		   
-	        // Sender's email ID needs to be mentioned
+			MimeBodyPart imagePart = new MimeBodyPart();
+
+			// imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+
+			imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.setDisposition(MimeBodyPart.INLINE);
+			Map<String, String> inlineImages = new HashMap<String, String>();
+
+			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+
+			inlineImages.put("image", "./logo.png"); // For local Testing
+
+			if (inlineImages != null && inlineImages.size() > 0) {
+				Set<String> setImageID = inlineImages.keySet();
+
+				for (String contentId : setImageID) {
+					// MimeBodyPart imagePart = new MimeBodyPart();
+					imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+
+					String imageFilePath = inlineImages.get(contentId);
+					try {
+						imagePart.attachFile(imageFilePath);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			textBodyPart.setText(vmFileContent, "utf-8", "html");
+
+
+			logger.info("fileContent=" + vmFileContent);
+			// Send the complete message parts
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(imagePart);
+			multipart.addBodyPart(textBodyPart);
+			// Send the complete message parts
+			message.setContent(multipart);
+		//	message.setContent(vmFileContent, "text/html");
+
+			System.out.println("sending...");
+
+			Transport.send(message);
+			System.out.println("Sent message successfully....");
+
+		} catch (MessagingException e) {
+
+			throw new RuntimeException(e);
+		}
+	}
+
+	  public void sendStatusMail(String altEmail, String emailId, Long id, String status, String imageLocation) throws Exception {
+
+//		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
+		logger.info("imageLocation---->" + imageLocation);
+		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
+		VerificationRequest vr = vrr.get();
+
+		PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+
+		DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+
+		String to = emailId;
+		String altTo = altEmail;
+		Long Id = id;
+
+		logger.info("email Ids----->" + to + Id);
+
+		// Sender's email ID needs to be mentioned
 //	        String from = "universityscube@gmail.com";
-	        String from = "verify@educred.co.in";
+		String from = "verify@educred.co.in";
 //	        String from = "resolution@educred.co.in";
 
-	        // Assuming you are sending email from through gmails smtp
-	        String host = "mail.educred.co.in";
+		// Assuming you are sending email from through gmails smtp
+		String host = "mail.educred.co.in";
 //	        String host = "smtp.gmail.com";
-	        
 
-	        Properties properties = System.getProperties();
-		   
-		    properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.port", "465");
-	        properties.put("mail.smtp.ssl.enable", "true");
-	        properties.put("mail.smtp.auth", "true");
+		Properties properties = System.getProperties();
 
-	        String vmFileContent = "Dear Candidate/ Requestor,  \r\n"
-	        		+ "    Your request for verification has been completed, attached is your verification report. \r\n"
-	        		+ "    In case of any dispute you may log on to the site and raise a request through the Dispute option available. \r\n"
-	        		+ "Team EduCred";
-	        
-	        String subject = "Verification Result";
-	        logger.info("subject of mail----->"+ subject);
-	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-	                 protected PasswordAuthentication getPasswordAuthentication() {
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
 
-	                return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+		/*
+		 * String vmFileContent = "<p>Dear Candidate/ Requestor,  </p>" +
+		 * "<img src=\"https://i.ibb.co/PDDDWrR/bar.jpg\">" +
+		 * "    <p>Your request for verification has been completed, attached is your verification report. </p>"
+		 * +
+		 * "    <p>In case of any dispute you may log on to the site and raise a request through the Dispute option available. </p> <br>  <br>"
+		 * + "<p>Team EduCred</p>";
+		 */
+
+		//String file=emailFileLocation+"StatusMail.txt";     //Live
+
+		String file = "./EmailFiles/StatusMail.txt";
+
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String vmFileContent = reader.readLine();
+
+		logger.info("fileContent=" + vmFileContent);
+
+		String subject = "Verification Result";
+		logger.info("subject of mail----->" + subject);
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 //	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 //	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
-	                
-	            }
 
-	        });
+			}
+
+		});
 //	        Session session = Session.getDefaultInstance(properties, null);
-	        ByteArrayOutputStream outputStream = null;
-	        // Used to debug SMTP issues
-	        session.setDebug(true);
-	        try {
-	          
-	        	
-	        	
-	        	
-	            MimeMessage mimeMessage = new MimeMessage(session);
-	            
-	            MimeBodyPart textBodyPart = new MimeBodyPart();
-	            textBodyPart.setText(vmFileContent);
-               
-               outputStream = new ByteArrayOutputStream();
-               logger.info("check if approved/rejected----->"+ status);
-               if(status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved") || status.equalsIgnoreCase("Uni_Auto_Approved")||status.equalsIgnoreCase("UN_Approved")) {
-            	   writeApprovalPdf(outputStream, Id, imageLocation);
-            	   logger.info("writeApprovalPdf----->");
-               }
-       
-               if(status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected") || status.equalsIgnoreCase("Uni_Auto_Rejected")||status.equalsIgnoreCase("UN_Rejected")) {
-            	   logger.info("writeRejectionPdf----->");
-            	   
-            	   writeRejectionPdf(outputStream , id, imageLocation);
-            	   
-               }
-               
-               byte[] bytes = outputStream.toByteArray();
-               
-               //construct the pdf body part
-               DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
-               MimeBodyPart pdfBodyPart = new MimeBodyPart();
-               pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-               
-             //construct the mime multi part
-               MimeMultipart mimeMultipart = new MimeMultipart();
-               mimeMultipart.addBodyPart(textBodyPart);
-               mimeMultipart.addBodyPart(pdfBodyPart);
-               pdfBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
-//               String emai = "kartikagashe30@gmail.com";
-               
-             Message message = new MimeMessage(session);
-             BodyPart messageBodyPart = new MimeBodyPart();
-             Multipart multipart = new MimeMultipart();
-             message.setFrom(new InternetAddress(from));
-             message.addRecipients(Message.RecipientType.TO,
-                     InternetAddress.parse(to));
-             if(!altTo.equalsIgnoreCase("")) {
+		ByteArrayOutputStream outputStream = null;
+		// Used to debug SMTP issues
+		session.setDebug(true);
+		try {
+
+			MimeMessage mimeMessage = new MimeMessage(session);
+
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			MimeBodyPart imagePart = new MimeBodyPart();
+
+			// imagePart.attachFile(imageLocation+"logo.png"); //For live
+
+			imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.setDisposition(MimeBodyPart.INLINE);
+
+			Map<String, String> inlineImages = new HashMap<String, String>();
+
+			// inlineImages.put("image",imageLocation+"logo.png"); //For live
+
+			inlineImages.put("image", "./logo.png"); // For local Testing
+
+			if (inlineImages != null && inlineImages.size() > 0) {
+				Set<String> setImageID = inlineImages.keySet();
+
+				for (String contentId : setImageID) {
+					// MimeBodyPart imagePart = new MimeBodyPart();
+					imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+
+					String imageFilePath = inlineImages.get(contentId);
+					try {
+						imagePart.attachFile(imageFilePath);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+
+			textBodyPart.setText(vmFileContent, "utf-8", "html");
+			// textBodyPart.setContent(vmFileContent, "text/html");
+			outputStream = new ByteArrayOutputStream();
+			logger.info("check if approved/rejected----->" + status);
+			if (status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")
+					|| status.equalsIgnoreCase("Uni_Auto_Approved") || status.equalsIgnoreCase("UN_Approved")) {
+				writeApprovalPdf(outputStream, Id, imageLocation);
+				logger.info("writeApprovalPdf----->");
+			}
+
+			if (status.equalsIgnoreCase("Rejected") || status.equalsIgnoreCase("SV_Rejected")
+					|| status.equalsIgnoreCase("Uni_Auto_Rejected") || status.equalsIgnoreCase("UN_Rejected")) {
+				logger.info("writeRejectionPdf----->");
+
+				writeRejectionPdf(outputStream, id, imageLocation);
+
+			}
+
+			byte[] bytes = outputStream.toByteArray();
+
+			// construct the pdf body part
+			DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+			MimeBodyPart pdfBodyPart = new MimeBodyPart();
+			pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+
+			// construct the mime multi part
+			MimeMultipart mimeMultipart = new MimeMultipart();
+			mimeMultipart.addBodyPart(textBodyPart);
+			mimeMultipart.addBodyPart(pdfBodyPart);
+			// mimeMultipart.addBodyPart(imagePart);
+			pdfBodyPart.setFileName(doc.getDocumentName() + "_" + year.getYearOfPassing() + ".pdf");
+
+			mimeMessage.saveChanges();
+
+			Message message = new MimeMessage(session);
+			BodyPart messageBodyPart = new MimeBodyPart();
+			Multipart multipart = new MimeMultipart();
+			message.setFrom(new InternetAddress(from));
+            message.addRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to));
+            if(!altTo.equalsIgnoreCase("")) {
 	             message.addRecipients(Message.RecipientType.TO,
 	                     InternetAddress.parse(altTo));
-             }
-//             message.setRecipients(Message.RecipientType.TO,
-//                     InternetAddress.parse(emai));
-             messageBodyPart = new MimeBodyPart();
-             messageBodyPart.setDataHandler(new DataHandler(dataSource));
-             messageBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
-             multipart.addBodyPart(textBodyPart);
-             multipart.addBodyPart(messageBodyPart);
-             message.setContent(multipart);
-               
-               
-               //create the sender/recipient addresses
-               InternetAddress iaSender = new InternetAddress(from);
-               InternetAddress iaRecipient = new InternetAddress(to);
-               
-               //construct the mime message
+            }
+//            message.setRecipients(Message.RecipientType.TO,
+//                    InternetAddress.parse(emai));	
+            messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setDataHandler(new DataHandler(dataSource));
+			messageBodyPart.setFileName(doc.getDocumentName() + "_" + year.getYearOfPassing() + ".pdf");
+			multipart.addBodyPart(textBodyPart);
+			multipart.addBodyPart(messageBodyPart);
+			multipart.addBodyPart(imagePart);
+			message.setContent(multipart);
+
+			// create the sender/recipient addresses
+			InternetAddress iaSender = new InternetAddress(from);
+			InternetAddress iaRecipient = new InternetAddress(to);
+
+			// construct the mime message
 //               MimeMessage mimeMessage = new MimeMessage(session);
-               mimeMessage.setSender(iaSender);
-               message.setSubject(subject);
-               mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
-               mimeMessage.setContent(mimeMultipart);
+			mimeMessage.setSender(iaSender);
+			message.setSubject(subject);
+			mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
+			mimeMessage.setContent(mimeMultipart);
 
-               //send off the email
-               
-               
+			// send off the email
 
-	            System.out.println("sending...");
-	            Transport.send(message);
+			System.out.println("sending...");
+			Transport.send(message);
 //	            Transport.send(message);
-	            System.out.println("Sent message successfully....");
-	            
-	        } catch (MessagingException e) {
-	        	
-	        	
-	            throw new RuntimeException(e);
-	        }
-	   }
+			System.out.println("Sent message successfully....");
 
+		} catch (MessagingException e) {
 
+			throw new RuntimeException(e);
+		}
+	}
 
 
 
 	private void writeRejectionPdf(ByteArrayOutputStream outputStream, Long id, String imageLocation) throws Exception {
 		System.out.println("******EmailServiceImpl writeRejectionPdf*******");
-		
+
 		try {
-		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
-		VerificationRequest vr = vrr.get();
-		
-		UserResponse ume = userService.getUserInfoById(vr.getUserId());
-		
-		Document document = new Document(PageSize.A4,40, 40, 50, 7);
-		//Set all required fonts here with appropriate names
-		Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-		headFont.setSize(15);
-		headFont.setColor(Color.BLACK);
-		
-		Font headAddrFont12 = FontFactory.getFont(FontFactory.HELVETICA);
-		headAddrFont12.setSize(12);
-		headAddrFont12.setColor(Color.BLACK);
-		
-		Font headAddrFont11 = FontFactory.getFont(FontFactory.HELVETICA);
-		headAddrFont11.setSize(11);
-		headAddrFont11.setColor(Color.BLACK);
-		
-		Font footerFont9 = FontFactory.getFont(FontFactory.HELVETICA);
-		footerFont9.setSize(9);
-		footerFont9.setColor(Color.BLACK);
-		
-		PdfWriter.getInstance(document, outputStream);
-		
-		HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), false);
-        footer.setAlignment(Element.ALIGN_CENTER);
+			Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
+			VerificationRequest vr = vrr.get();
+
+			UserResponse ume = userService.getUserInfoById(vr.getUserId());
+
+			Document document = new Document(PageSize.A4, 40, 40, 50, 7);
+			// Set all required fonts here with appropriate names
+			Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+			headFont.setSize(15);
+			headFont.setColor(Color.BLACK);
+
+			Font headAddrFont12 = FontFactory.getFont(FontFactory.HELVETICA);
+			headAddrFont12.setSize(12);
+			headAddrFont12.setColor(Color.BLACK);
+
+			Font headAddrFont11 = FontFactory.getFont(FontFactory.HELVETICA);
+			headAddrFont11.setSize(11);
+			headAddrFont11.setColor(Color.BLACK);
+
+			Font footerFont9 = FontFactory.getFont(FontFactory.HELVETICA);
+			footerFont9.setSize(9);
+			footerFont9.setColor(Color.BLACK);
+
+			PdfWriter.getInstance(document, outputStream);
+
+			HeaderFooter footer = new HeaderFooter(
+					new Phrase("System generated document does not require signature.", footerFont9), false);
+			footer.setAlignment(Element.ALIGN_CENTER);
 //        footer.setBorder(Rectangle.NO_BORDER);
-        document.setFooter(footer);
-        
-		
-//        Image img = Image.getInstance(imageLocation+"/logo.png");
-        Image img = Image.getInstance("logo.png");
-		img.setAlignment(Element.ALIGN_CENTER);
-		img.scaleToFit(120, 100); // width, height
-        
-        document.open();
+	        document.setFooter(footer);
+	        
+			
+
+//	        Image img = Image.getInstance(imageLocation+"/logo.png");
+	        Image img = Image.getInstance("logo.png");
+
+			img.setAlignment(Element.ALIGN_CENTER);
+			img.scaleToFit(120, 100); // width, height
+	        
+	        document.open();
 //	    EduCred_Logo.jpg
 
-	    document.add(img);
-	    
-	    Paragraph head = new Paragraph();
-	    head.setAlignment(Paragraph.ALIGN_RIGHT);
-	    head.setFont(headFont);
-	    head.add("Marks And Certification Unit");
-	    document.add(head);
-	    
-	    Paragraph headAddr = new Paragraph();
-	    headAddr.setFont(headAddrFont12);
-	    headAddr.setAlignment(Paragraph.ALIGN_RIGHT);
-	    headAddr.add(Chunk.NEWLINE);
-	    headAddr.add("Examinations Section, \r"
-	    		+ "M.J. Phule Bhavan, \r"
-	    		+ "Vidyanagari, Santacruz (East), \r"
-	    		+ "Mumbai- 400 098. \r"
-	    		+ "Date: "+java.time.LocalDate.now());
-	    document.add(headAddr);
-	    
-	    Paragraph Addr = new Paragraph();
-	    Addr.setFont(headAddrFont12);
-	    Addr.setAlignment(Paragraph.ALIGN_LEFT);
-	    Addr.add(Chunk.NEWLINE);
-	    Addr.add("To, \r"
-	    		+ ume.getFirst_name()+" "+ume.getLast_name()+"\r"
-	    		+ "Email Id: "+ume.getEmail()+", \r"
-	    		+ "Phone No: "+ume.getPhone_no()+", \r");
-	    Addr.add(Chunk.NEWLINE);
-	    Addr.add(Chunk.NEWLINE);
-	    Addr.add(Chunk.NEWLINE);
-	    document.add(Addr);
-	    
-	    Paragraph greeting = new Paragraph();
-	    greeting.setFont(headAddrFont11);
-	    greeting.setAlignment(Paragraph.ALIGN_LEFT);
-	    greeting.add("Sir/Madam, \r");
-	    
-	    Paragraph para = new Paragraph();
-	    para.setFont(headAddrFont11);
-	    para.setAlignment(Paragraph.ALIGN_LEFT);
-	    para.add("          As per Xerox copy of the Statement of Marks of the candidate received from you for verification. After verifying the office record it has been observed that the statement of marks is not issued by this University and hence the same is FAKE.");
-	    para.add(Chunk.NEWLINE);
-	    para.add(Chunk.NEWLINE);
-	    
-	    document.add(greeting);
-	    document.add(para);
-	    
-	    
-	    PdfPTable detailsTable = new PdfPTable(5);
-	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {20,20,20,20,20});
-	    
-//	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
-	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
-	    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
-//	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
-	    PdfPCell cell5 = new PdfPCell(new Paragraph("Seat Number"));
-//	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
-	    PdfPCell cell7 = new PdfPCell(new Paragraph("Exam"));
-//	    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
-	    
-	    
-	    
-	    detailsTable.addCell(cell1);
-	    detailsTable.addCell(cell2);
-//	    detailsTable.addCell(cell3);
-	    detailsTable.addCell(cell7);
-	    detailsTable.addCell(cell4);
-	    detailsTable.addCell(cell5);
-//	    detailsTable.addCell(cell6);
-	    
-//	    detailsTable.addCell(cell8);
-	    
+			document.add(img);
+
+			Paragraph head = new Paragraph();
+			head.setAlignment(Paragraph.ALIGN_RIGHT);
+			head.setFont(headFont);
+			head.add("Marks And Certification Unit");
+			document.add(head);
+
+			Paragraph headAddr = new Paragraph();
+			headAddr.setFont(headAddrFont12);
+			headAddr.setAlignment(Paragraph.ALIGN_RIGHT);
+			headAddr.add(Chunk.NEWLINE);
+			headAddr.add("Examinations Section, \r" + "M.J. Phule Bhavan, \r" + "Vidyanagari, Santacruz (East), \r"
+					+ "Mumbai- 400 098. \r" + "Date: " + java.time.LocalDate.now());
+			document.add(headAddr);
+
+			Paragraph Addr = new Paragraph();
+			Addr.setFont(headAddrFont12);
+			Addr.setAlignment(Paragraph.ALIGN_LEFT);
+			Addr.add(Chunk.NEWLINE);
+			Addr.add("To, \r" + ume.getFirst_name() + " " + ume.getLast_name() + "\r" + "Email Id: " + ume.getEmail()
+					+ ", \r" + "Phone No: " + ume.getPhone_no() + ", \r");
+			Addr.add(Chunk.NEWLINE);
+			Addr.add(Chunk.NEWLINE);
+			Addr.add(Chunk.NEWLINE);
+			document.add(Addr);
+
+			Paragraph greeting = new Paragraph();
+			greeting.setFont(headAddrFont11);
+			greeting.setAlignment(Paragraph.ALIGN_LEFT);
+			greeting.add("Sir/Madam, \r");
+
+			Paragraph para = new Paragraph();
+			para.setFont(headAddrFont11);
+			para.setAlignment(Paragraph.ALIGN_LEFT);
+			para.add(
+					"          As per Xerox copy of the Statement of Marks of the candidate received from you for verification. After verifying the office record it has been observed that the statement of marks is not issued by this University and hence the same is FAKE.");
+			para.add(Chunk.NEWLINE);
+			para.add(Chunk.NEWLINE);
+
+			document.add(greeting);
+			document.add(para);
+
+		    PdfPTable detailsTable = new PdfPTable(5);
+		    detailsTable.setWidthPercentage(100);
+		    detailsTable.setWidths(new int[] {20,20,20,20,20});
+		    
+//		    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
+		    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
+		    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
+//		    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
+		    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
+		    PdfPCell cell5 = new PdfPCell(new Paragraph("Seat Number"));
+//		    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
+		    PdfPCell cell7 = new PdfPCell(new Paragraph("Exam"));
+//		    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
+
+		    
+		    detailsTable.addCell(cell1);
+		    detailsTable.addCell(cell2);
+//		    detailsTable.addCell(cell3);
+		    detailsTable.addCell(cell7);
+		    detailsTable.addCell(cell4);
+		    detailsTable.addCell(cell5);
+//		    detailsTable.addCell(cell6);
+
 //	    for(VerificationRequest ent: vr) {
-	    
-	    	
-	    	
-	    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-	    	 String strDate= formatter.format(vr.getCreatedate());
-	    	
-	    	PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
-	    	
-	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
-	    	
-	    	BranchMasterEntity branch = branchService.getbranchById(vr.getBranchId());
-	    	
-	    	SemesterEntity sem = semService.getSemById(vr.getSemId());
-	    	
-	    	StreamMaster stream = streamService.getNameById(vr.getStreamId());
-	    	
-	    	PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
+
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = formatter.format(vr.getCreatedate());
+
+			PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+
+			DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+
+			BranchMasterEntity branch = branchService.getbranchById(vr.getBranchId());
+
+			SemesterEntity sem = semService.getSemById(vr.getSemId());
+
+			StreamMaster stream = streamService.getNameById(vr.getStreamId());
+
+			
+			
+			PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
 	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName()+" "+vr.getLastName()));
 //	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
@@ -542,25 +685,27 @@ public class EmailService {
 	    
 	    	document.add(detailsTable);
 	    	
-	    	Paragraph para1 = new Paragraph();
-		    para1.setFont(headAddrFont11);
-		    para1.setAlignment(Paragraph.ALIGN_LEFT);
-		    para1.add("          You are, requested to inform the Sr. Inspector Of Police of your nearby Police Station for investigating in the matter and the same maybe informed to this office accordingly.");
-		    para1.add(Chunk.NEWLINE);
-		    para1.add(Chunk.NEWLINE);
-		    para1.add("Thanking you,");
-		    para1.add(Chunk.NEWLINE);
-		    para1.add(Chunk.NEWLINE);
-		    document.add(para1);
-		    
-		    //Add footer of PDF here
-		    
-		    Paragraph footer1 = new Paragraph();
-		    footer1.setAlignment(Paragraph.ALIGN_RIGHT);
-		    footer1.setFont(headAddrFont12);
-		    footer1.add("Yours faithfully,");
-		    document.add(footer1);
-		    
+
+			Paragraph para1 = new Paragraph();
+			para1.setFont(headAddrFont11);
+			para1.setAlignment(Paragraph.ALIGN_LEFT);
+			para1.add(
+					"          You are, requested to inform the Sr. Inspector Of Police of your nearby Police Station for investigating in the matter and the same maybe informed to this office accordingly.");
+			para1.add(Chunk.NEWLINE);
+			para1.add(Chunk.NEWLINE);
+			para1.add("Thanking you,");
+			para1.add(Chunk.NEWLINE);
+			para1.add(Chunk.NEWLINE);
+			document.add(para1);
+
+			// Add footer of PDF here
+
+			Paragraph footer1 = new Paragraph();
+			footer1.setAlignment(Paragraph.ALIGN_RIGHT);
+			footer1.setFont(headAddrFont12);
+			footer1.add("Yours faithfully,");
+			document.add(footer1);
+
 //		    Image img2 = Image.getInstance("logo.png");
 ////		    img2.scaleAbsolute(107, 107);
 ////		    img2.setAlignment(20);
@@ -568,7 +713,7 @@ public class EmailService {
 //		    img2.setAlignment(Image.ALIGN_RIGHT);
 //		    img2.scaleAbsolute(75, 75);
 //		    document.add(img2);
-		    
+			
 		    Paragraph foot = new Paragraph();
 		    foot.setAlignment(Paragraph.ALIGN_RIGHT);
 		    foot.setFont(headAddrFont12);
@@ -588,119 +733,107 @@ public class EmailService {
 		    foot1.add("Director \r"
 		    		+ "Board Of Examination & Evaluation");
 		    
-		    document.add(foot1);
-		    
-//		    Image signImg = Image.getInstance("signature.png");
+		   
+		    		    
+  		    document.add(foot1);
+
+  		// Image signImg = Image.getInstance("signature.png");
 //		    signImg.setAlignment(Element.ALIGN_RIGHT);
 //		    signImg.scaleToFit(150, 120);
 //		    
 //		    document.add(signImg);
-		    
-//	        HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
+			//HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
 //	        footer.setAlignment(Element.ALIGN_CENTER);
 ////	        footer.setBorder(Rectangle.NO_BORDER);
 //	        document.setFooter(footer);
 
-		    
-		    document.close();
-		}catch(Exception e) {
-			throw new Exception (e.getMessage());
+			document.close();
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
 		}
-		
+
 	}
 
-
-
-
-
 	private void writeApprovalPdf(OutputStream outputStream, Long id, String imageLocation) throws Exception {
-		
+
 		System.out.println("******EmailServiceImpl writeApprovalPdf*******");
-		
-		System.out.println("--------------"+java.time.LocalDate.now());   
-		
+
+		System.out.println("--------------" + java.time.LocalDate.now());
+
 		try {
-			
-			logger.info("imageLocation----->"+imageLocation);
-		
-		Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
-		VerificationRequest vr = vrr.get();
-		
-		UserResponse ume = userService.getUserInfoById(vr.getUserId());
-		
-		Document document = new Document(PageSize.A4,40, 40, 50, 7);
-		//Set all required fonts here with appropriate names
-		Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-		headFont.setSize(15);
-		headFont.setColor(Color.BLACK);
-		
-		Font headAddrFont12 = FontFactory.getFont(FontFactory.HELVETICA);
-		headAddrFont12.setSize(12);
-		headAddrFont12.setColor(Color.BLACK);
-		
-		Font headAddrFont11 = FontFactory.getFont(FontFactory.HELVETICA);
-		headAddrFont11.setSize(11);
-		headAddrFont11.setColor(Color.BLACK);
-		
-		Font footerFont9 = FontFactory.getFont(FontFactory.HELVETICA);
-		footerFont9.setSize(9);
-		footerFont9.setColor(Color.BLACK);
-		
-		PdfWriter.getInstance(document, outputStream);
-		
-		HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), false);
-        footer.setAlignment(Element.ALIGN_CENTER);
+
+			logger.info("imageLocation----->" + imageLocation);
+
+			Optional<VerificationRequest> vrr = verificationReqRepository.findById(id);
+			VerificationRequest vr = vrr.get();
+
+			UserResponse ume = userService.getUserInfoById(vr.getUserId());
+
+			Document document = new Document(PageSize.A4, 40, 40, 50, 7);
+			// Set all required fonts here with appropriate names
+			Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+			headFont.setSize(15);
+			headFont.setColor(Color.BLACK);
+
+			Font headAddrFont12 = FontFactory.getFont(FontFactory.HELVETICA);
+			headAddrFont12.setSize(12);
+			headAddrFont12.setColor(Color.BLACK);
+
+			Font headAddrFont11 = FontFactory.getFont(FontFactory.HELVETICA);
+			headAddrFont11.setSize(11);
+			headAddrFont11.setColor(Color.BLACK);
+
+			Font footerFont9 = FontFactory.getFont(FontFactory.HELVETICA);
+			footerFont9.setSize(9);
+			footerFont9.setColor(Color.BLACK);
+
+			PdfWriter.getInstance(document, outputStream);
+
+			HeaderFooter footer = new HeaderFooter(
+					new Phrase("System generated document does not require signature.", footerFont9), false);
+			footer.setAlignment(Element.ALIGN_CENTER);
 //        footer.setBorder(Rectangle.NO_BORDER);
-        document.setFooter(footer);
-		
-		
-		// left, right, top, bottom
-		logger.info("headerFooter set here--->just before document.open()");
+			document.setFooter(footer);
 
-		
-//		Image img = Image.getInstance(imageLocation+"/logo.png");
-		Image img = Image.getInstance("logo.png");
+			// left, right, top, bottom
+			logger.info("headerFooter set here--->just before document.open()");
 
-		img.setAlignment(Element.ALIGN_CENTER);
-		img.scaleToFit(120, 100); // width, height
-        
-        document.open();
+			// Image img = Image.getInstance(imageLocation+"/logo.png");
+			Image img = Image.getInstance("logo.png");
+
+			img.setAlignment(Element.ALIGN_CENTER);
+			img.scaleToFit(120, 100); // width, height
+
+			document.open();
 //	    EduCred_Logo.jpg
 
-	    
-	    
-	    document.add(img);
-	    
-	    Paragraph head = new Paragraph();
-	    head.setAlignment(Paragraph.ALIGN_RIGHT);
-	    head.setFont(headFont);
-	    head.add("Marks And Certification Unit");
-	    document.add(head);
-	    
-	    Paragraph headAddr = new Paragraph();
-	    headAddr.setFont(headAddrFont12);
-	    headAddr.setAlignment(Paragraph.ALIGN_RIGHT);
-	    headAddr.add(Chunk.NEWLINE);
-	    headAddr.add("Examinations Section, \r"
-	    		+ "M.J. Phule Bhavan, \r"
-	    		+ "Vidyanagari, Santacruz (East), \r"
-	    		+ "Mumbai- 400 098. \r"
-	    		+ "Date: "+java.time.LocalDate.now());
-	    document.add(headAddr);
-	    
-	    Paragraph Addr = new Paragraph();
-	    Addr.setFont(headAddrFont12);
-	    Addr.setAlignment(Paragraph.ALIGN_LEFT);
-	    Addr.add(Chunk.NEWLINE);
-	    Addr.add("To, \r"
-	    		+ ume.getFirst_name()+" "+ume.getLast_name()+"\r"
-	    		+ "Email Id: "+ume.getEmail()+", \r"
-	    		+ "Phone No: "+ume.getPhone_no()+", \r");
-	    Addr.add(Chunk.NEWLINE);
-	    Addr.add(Chunk.NEWLINE);
-	    Addr.add(Chunk.NEWLINE);
-	    document.add(Addr);
-	    
+			document.add(img);
+
+			Paragraph head = new Paragraph();
+			head.setAlignment(Paragraph.ALIGN_RIGHT);
+			head.setFont(headFont);
+			head.add("Marks And Certification Unit");
+			document.add(head);
+
+			Paragraph headAddr = new Paragraph();
+			headAddr.setFont(headAddrFont12);
+			headAddr.setAlignment(Paragraph.ALIGN_RIGHT);
+			headAddr.add(Chunk.NEWLINE);
+			headAddr.add("Examinations Section, \r" + "M.J. Phule Bhavan, \r" + "Vidyanagari, Santacruz (East), \r"
+					+ "Mumbai- 400 098. \r" + "Date: " + java.time.LocalDate.now());
+			document.add(headAddr);
+
+			Paragraph Addr = new Paragraph();
+			Addr.setFont(headAddrFont12);
+			Addr.setAlignment(Paragraph.ALIGN_LEFT);
+			Addr.add(Chunk.NEWLINE);
+			Addr.add("To, \r" + ume.getFirst_name() + " " + ume.getLast_name() + "\r" + "Email Id: " + ume.getEmail()
+					+ ", \r" + "Phone No: " + ume.getPhone_no() + ", \r");
+			Addr.add(Chunk.NEWLINE);
+			Addr.add(Chunk.NEWLINE);
+			Addr.add(Chunk.NEWLINE);
+			document.add(Addr);
+
 //	    Paragraph para = new Paragraph();
 //	    para.setFont(headAddrFont10);
 //	    para.setAlignment(Paragraph.ALIGN_CENTER);
@@ -710,27 +843,28 @@ public class EmailService {
 //	    		+ "below mentioned candidate received along with your letter have been duly verified \r"
 //	    		+ "and found correct.");
 //	    document.add(para);
-	    logger.info("greeting set below here--->");
-	    
-	    Paragraph greeting = new Paragraph();
-	    greeting.setFont(headAddrFont11);
-	    greeting.setAlignment(Paragraph.ALIGN_LEFT);
-	    greeting.add("Sir/Madam, \r");
-	    
-	    Paragraph para = new Paragraph();
-	    para.setFont(headAddrFont11);
-	    para.setAlignment(Paragraph.ALIGN_LEFT);
-	    para.add("          With reference to your application for Verification of the educational document , this is to inform you that the contents of the photocopy of the Statement Of Marks of the below mentioned candidate received along with your letter have been verified and found correct.");
-	    para.add(Chunk.NEWLINE);
-	    para.add(Chunk.NEWLINE);
-	    
-	    document.add(greeting);
-	    document.add(para);
-	    
-	    PdfPTable detailsTable = new PdfPTable(5);
-	    detailsTable.setWidthPercentage(100);
-	    detailsTable.setWidths(new int[] {20,20,20,20,20});
-	    
+			logger.info("greeting set below here--->");
+
+			Paragraph greeting = new Paragraph();
+			greeting.setFont(headAddrFont11);
+			greeting.setAlignment(Paragraph.ALIGN_LEFT);
+			greeting.add("Sir/Madam, \r");
+
+			Paragraph para = new Paragraph();
+			para.setFont(headAddrFont11);
+			para.setAlignment(Paragraph.ALIGN_LEFT);
+			para.add(
+					"          With reference to your application for Verification of the educational document , this is to inform you that the contents of the photocopy of the Statement Of Marks of the below mentioned candidate received along with your letter have been verified and found correct.");
+			para.add(Chunk.NEWLINE);
+			para.add(Chunk.NEWLINE);
+
+			document.add(greeting);
+			document.add(para);
+
+			 PdfPTable detailsTable = new PdfPTable(5);
+			    detailsTable.setWidthPercentage(100);
+			   detailsTable.setWidths(new int[] {20,20,20,20,20});
+			    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
 	    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
@@ -756,23 +890,22 @@ public class EmailService {
 	    
 	    
 //	    for(VerificationRequest ent: vr) {
-	    logger.info("record values set here--->");
-	    	
-	    	
-	    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-	    	 String strDate= formatter.format(vr.getCreatedate());
-	    	
-	    	PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
-	    	
-	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
-	    	
-	    	BranchMasterEntity branch = branchService.getbranchById(vr.getBranchId());
-	    	
-	    	SemesterEntity sem = semService.getSemById(vr.getSemId());
-	    	
-	    	StreamMaster stream = streamService.getNameById(vr.getStreamId());
-	    	
-	    	PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
+			logger.info("record values set here--->");
+
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String strDate = formatter.format(vr.getCreatedate());
+
+			PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+
+			DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+
+			BranchMasterEntity branch = branchService.getbranchById(vr.getBranchId());
+
+			SemesterEntity sem = semService.getSemById(vr.getSemId());
+
+			StreamMaster stream = streamService.getNameById(vr.getStreamId());
+
+			PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
 	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName() + " " + vr.getLastName()));
 //	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
@@ -790,7 +923,6 @@ public class EmailService {
 //	    	detailsTable.addCell(branchCell);
 	    	
 //	    	detailsTable.addCell(semCell);
-	    	
 	    	
 	    	
 
@@ -812,308 +944,414 @@ public class EmailService {
 	    
 	    document.add(signImg);
 	    
-	    Paragraph foot = new Paragraph();
-	    foot.setAlignment(Paragraph.ALIGN_RIGHT);
-	    foot.setFont(headAddrFont12);
-	    foot.add("(Narendra G. Khalane \r"
-	    		+ "Assistant Registrar");
-	    document.add(foot);
-	    
-//	    Image signImg = Image.getInstance("signature.png");
-//	    signImg.setAlignment(Element.ALIGN_RIGHT);
-//	    signImg.scaleToFit(150, 120);
-//	    
-//	    document.add(signImg);
-	    
+			Paragraph foot = new Paragraph();
+			foot.setAlignment(Paragraph.ALIGN_RIGHT);
+			foot.setFont(headAddrFont12);
+			foot.add("(Narendra G. Khalane \r" + "Assistant Registrar");
+			document.add(foot);
+
 //        HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
 //        footer.setAlignment(Element.ALIGN_CENTER);
 ////        footer.setBorder(Rectangle.NO_BORDER);
 //        document.setFooter(footer);
-	    logger.info("before document.close() here--->");
-	    
-	    document.close();
-	}catch(Exception e) {
-		throw new Exception(e.getMessage());
-	}
-		
-	}
-	
-	void sendDisputeSaveMail(String emailId, long appId, long id) throws MessagingException {
-		   
+			logger.info("before document.close() here--->");
 
-		   String to = emailId;
-		   
-		   
+			document.close();
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 
-	        // Sender's email ID needs to be mentioned
-	        String from = "resolution@educred.co.in";
+	}
+
+	void sendDisputeSaveMail(String emailId, long appId, long id) throws MessagingException, Exception {
+
+		String to = emailId;
+
+		// Sender's email ID needs to be mentioned
+		String from = "resolution@educred.co.in";
 //		   String from = "universityscube@gmail.com";
-		   
-	        // Assuming you are sending email from through gmails smtp
-	        String host = "mail.educred.co.in";
+
+		// Assuming you are sending email from through gmails smtp
+		String host = "mail.educred.co.in";
 //	        String host = "smtp.gmail.com";
 
-	        Properties properties = System.getProperties();
-		   
-		    properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.port", "465");
-	        properties.put("mail.smtp.ssl.enable", "true");
-	        
-	        properties.put("mail.smtp.auth", "true");
+		Properties properties = System.getProperties();
 
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
 
+		properties.put("mail.smtp.auth", "true");
 
-	        // Get the Session object.// and pass username and password
-	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+		// Get the Session object.// and pass username and password
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
-	            protected PasswordAuthentication getPasswordAuthentication() {
+			protected PasswordAuthentication getPasswordAuthentication() {
 
-	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 //	            	return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 
-	            }
+			}
 
-	        });
+		});
 
-	        // Used to debug SMTP issues
-	        session.setDebug(true);
+		// Used to debug SMTP issues
+		session.setDebug(true);
 
-	        try {
-	            // Create a default MimeMessage object.
-	            MimeMessage message = new MimeMessage(session);
+		try {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
+			MimeBodyPart textBodyPart = new MimeBodyPart();
 
-	            // Set From: header field of the header.
-	            message.setFrom(new InternetAddress(from));
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
 
-	            // Set To: header field of the header.
-	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-	            // Set Subject: header field
-	            message.setSubject("Dispute Confirmation");
+			// Set Subject: header field
+			message.setSubject("Dispute Confirmation");
 
-	            // Now set the actual message
-	                       
-             String vmFileContent = "Dear Candidate/ Requestor, <br><br> "
-             		+ "We have recieved the dispute that you raised. We will get back to you in 15 working days. <br><br> "
-             				+ "For reference your dispute reference id is:"+id+". <br><br> "
-             						+ "Thanks, <br><br> Team EduCred";
+			// Now set the actual message
 
-             //  Send the complete message parts
-             message.setContent(vmFileContent,"text/html");
+			String vmFileContent1 = "Dear Candidate/ Requestor, <br><br> "
+					+ "We have recieved the dispute that you raised. We will get back to you in 15 working days. <br><br> "
+					+ "For reference your dispute reference id is:" + id + ". <br><br> "
+					+ "Thanks, <br><br> Team EduCred";
 
-	            System.out.println("sending...");
-	            // Send message
-	             Transport.send(message);
-	            
-	           // javaMailSender.send(message);
-	            System.out.println("Sent message successfully....");
-	            
+			//String file=emailFileLocation+"DisputeRaised.txt";     //Live
 
-	        } catch (MessagingException e) {
-	            throw new RuntimeException(e);
-	        }
-
-	     
-	    }
-	
-	
-	void sendNoStatusChangeMail(String emailId, Long id) throws MessagingException {
-		   
-
-		   String to = emailId;
-
-	        // Sender's email ID needs to be mentioned
-//	        String from = "resolution@educred.co.in";
-		    String from = "universityscube@gmail.com";
-	        // Assuming you are sending email from through gmails smtp
-//	        String host = "mail.educred.co.in";
-		    String host = "smtp.gmail.com";
-
-	        Properties properties = System.getProperties();
-		   
-		    properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.port", "465");
-	        properties.put("mail.smtp.ssl.enable", "true");
-	        
-	        properties.put("mail.smtp.auth", "true");
-
-
-
-	        // Get the Session object.// and pass username and password
-	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-
-	            protected PasswordAuthentication getPasswordAuthentication() {
-
-//	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
-	            	return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
-	            }
-
-	        });
-
-	        // Used to debug SMTP issues
-	        session.setDebug(true);
-
-	        try {
-	            // Create a default MimeMessage object.
-	            MimeMessage message = new MimeMessage(session);
-
-	            // Set From: header field of the header.
-	            message.setFrom(new InternetAddress(from));
-
-	            // Set To: header field of the header.
-	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-	            // Set Subject: header field
-	            message.setSubject("Raised Dispute Result");
-
-	            // Now set the actual message
-	                       
-             String vmFileContent = "Dear Candidate/ Requestor, \r\n This is in relation with the dispute ref no.:"+id+". "
-             		+ "As mentioned in the dispute, we have cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. \r\n "
-//             		+ "Sorry for the inconvenience caused. \r\n "
-             +"\r\n Thanks, \r\n Team EduCred";
-
-             //  Send the complete message parts
-             message.setContent(vmFileContent,"text/html");
-
-	            System.out.println("sending...");
-	            // Send message
-	             Transport.send(message);
-	            
-	           // javaMailSender.send(message);
-	            System.out.println("Sent message successfully....");
-	            
-
-	        } catch (MessagingException e) {
-	            throw new RuntimeException(e);
-	        }
-
-	     
-	    }
-	
-	
-	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation) throws Exception {
-		  
-//		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
-		  	logger.info("imageLocation----> "+ imageLocation);
-		  	Optional<VerificationRequest> vrr = verificationReqRepository.findById(verificationId);
-			VerificationRequest vr = vrr.get();
+			String file = "./EmailFiles/DisputeRaised.txt";
 			
-			PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
-	    	
-	    	DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String vmFileContent = reader.readLine();
+			vmFileContent = vmFileContent.replaceFirst("#id", Long.toString(id));
 
-	    	Long Id = verificationId;
-	    	
-		   String to = emailId;
-		   
-	        // Sender's email ID needs to be mentioned
+			MimeBodyPart imagePart = new MimeBodyPart();
+
+			// imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+
+			imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.setDisposition(MimeBodyPart.INLINE);
+			Map<String, String> inlineImages = new HashMap<String, String>();
+
+			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+
+			inlineImages.put("image", "./logo.png"); // For local Testing
+
+			if (inlineImages != null && inlineImages.size() > 0) {
+				Set<String> setImageID = inlineImages.keySet();
+
+				for (String contentId : setImageID) {
+					// MimeBodyPart imagePart = new MimeBodyPart();
+					imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+
+					String imageFilePath = inlineImages.get(contentId);
+					try {
+						imagePart.attachFile(imageFilePath);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			textBodyPart.setText(vmFileContent, "utf-8", "html");
+
+
+			logger.info("fileContent=" + vmFileContent);
+			// Send the complete message parts
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(imagePart);
+			multipart.addBodyPart(textBodyPart);
+			// Send the complete message parts
+			message.setContent(multipart);
+			// Send the complete message parts
+			//message.setContent(vmFileContent, "text/html");
+
+			System.out.println("sending...");
+			// Send message
+			Transport.send(message);
+
+			// javaMailSender.send(message);
+			System.out.println("Sent message successfully....");
+
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	void sendNoStatusChangeMail(String emailId, Long id) throws MessagingException, Exception {
+
+		String to = emailId;
+
+		// Sender's email ID needs to be mentioned
 	        String from = "resolution@educred.co.in";
-//		    String from = "universityscube@gmail.com";
-	        // Assuming you are sending email from through gmails smtp
+//		String from = "universityscube@gmail.com";
+		// Assuming you are sending email from through gmails smtp
 	        String host = "mail.educred.co.in";
+	//	String host = "smtp.gmail.com";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+
+		properties.put("mail.smtp.auth", "true");
+
+		// Get the Session object.// and pass username and password
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+
+               // return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+//				return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+			}
+
+		});
+
+		// Used to debug SMTP issues
+		session.setDebug(true);
+
+		try {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			// Set Subject: header field
+			message.setSubject("Raised Dispute Result");
+
+			// Now set the actual message
+
+			String vmFileContent1 = "Dear Candidate/ Requestor, \r\n This is in relation with the dispute ref no.:" + id
+					+ ". "
+					+ "As mentioned in the dispute, we have cross checked the document and we believe that our earlier assessment does not need any correction. The status of your verification remains the same. \r\n "
+//             		+ "Sorry for the inconvenience caused. \r\n "
+					+ "\r\n Thanks, \r\n Team EduCred";
+
+			//String file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
+
+			String file = "./EmailFiles/DisputeNoChangeStatus.txt";
+
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String vmFileContent = reader.readLine();
+			vmFileContent = vmFileContent.replaceFirst("#id", Long.toString(id));
+
+			MimeBodyPart imagePart = new MimeBodyPart();
+
+			// imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+
+			imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.setDisposition(MimeBodyPart.INLINE);
+			Map<String, String> inlineImages = new HashMap<String, String>();
+
+			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+
+			inlineImages.put("image", "./logo.png"); // For local Testing
+
+			if (inlineImages != null && inlineImages.size() > 0) {
+				Set<String> setImageID = inlineImages.keySet();
+
+				for (String contentId : setImageID) {
+					// MimeBodyPart imagePart = new MimeBodyPart();
+					imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+
+					String imageFilePath = inlineImages.get(contentId);
+					try {
+						imagePart.attachFile(imageFilePath);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			textBodyPart.setText(vmFileContent, "utf-8", "html");
+
+
+			logger.info("fileContent=" + vmFileContent);
+			// Send the complete message parts
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(imagePart);
+			multipart.addBodyPart(textBodyPart);
+			// Send the complete message parts
+			message.setContent(multipart);
+			// Send the complete message parts
+			//message.setContent(vmFileContent, "text/html");
+
+			System.out.println("sending...");
+			// Send message
+			Transport.send(message);
+
+			// javaMailSender.send(message);
+			System.out.println("Sent message successfully....");
+
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation)
+			throws Exception {
+
+//		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
+		logger.info("imageLocation----> " + imageLocation);
+		Optional<VerificationRequest> vrr = verificationReqRepository.findById(verificationId);
+		VerificationRequest vr = vrr.get();
+
+		PassingYearMaster year = yearOfPassService.getYearById(vr.getYearOfPassingId());
+
+		DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
+
+		Long Id = verificationId;
+
+		String to = emailId;
+
+		// Sender's email ID needs to be mentioned
+		String from = "resolution@educred.co.in";
+//		    String from = "universityscube@gmail.com";
+		// Assuming you are sending email from through gmails smtp
+		String host = "mail.educred.co.in";
 //	        String host = "smtp.gmail.com";
-	        Properties properties = System.getProperties();
-		   
-		    properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.port", "465");
-	        properties.put("mail.smtp.ssl.enable", "true");
-	        properties.put("mail.smtp.auth", "true");
+		Properties properties = System.getProperties();
 
-	        String vmFileContent = "Hello User, \r\n This is in relation with the dispute ref no.:"+disputeId+". "
-	        		+ "As mentioned in the dispute, we have cross checked the document and the corrected result can be found in the attached document. \r\n "
-	        		+ "Sorry for the inconvenience caused. \r\n "
-	        		+ "Thanks, \r\n Team EduCred";
-	        
-	        String subject = "Verification Result";
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
 
-	        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-	                 protected PasswordAuthentication getPasswordAuthentication() {
+		String vmFileContent1 = "Hello User, \r\n This is in relation with the dispute ref no.:" + disputeId + ". "
+				+ "As mentioned in the dispute, we have cross checked the document and the corrected result can be found in the attached document. \r\n "
+				+ "Sorry for the inconvenience caused. \r\n " + "Thanks, \r\n Team EduCred";
 
-	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+		String subject = "Verification Result";
+		
+		//String file=emailFileLocation+"DisputeChangeStatus.txt";     //Live
+
+		String file = "./EmailFiles/DisputeChangeStatus.txt";
+
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String vmFileContent = reader.readLine();
+		vmFileContent = vmFileContent.replaceFirst("#id", Long.toString(disputeId));
+
+
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 //	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
-	            }
+			}
 
-	        });
+		});
 //	        Session session = Session.getDefaultInstance(properties, null);
-	        ByteArrayOutputStream outputStream = null;
-	        // Used to debug SMTP issues
-	        session.setDebug(true);
-	        try {
-	          
-	        	
-	        	
-	        	
-	            MimeMessage mimeMessage = new MimeMessage(session);
-	            
-	            MimeBodyPart textBodyPart = new MimeBodyPart();
-	            textBodyPart.setText(vmFileContent);
-            
-            outputStream = new ByteArrayOutputStream();
-            
-             if(vr.getDocStatus().equalsIgnoreCase("UN_Rejected")) {
-            writeApprovalPdf(outputStream, Id, imageLocation);
-             }
-             if(vr.getDocStatus().equalsIgnoreCase("UN_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
-            	 writeRejectionPdf(outputStream, Id, imageLocation);
-             }
-            byte[] bytes = outputStream.toByteArray();
-            
-            //construct the pdf body part
-            DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
-            MimeBodyPart pdfBodyPart = new MimeBodyPart();
-            pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-            
-          //construct the mime multi part
-            MimeMultipart mimeMultipart = new MimeMultipart();
-            mimeMultipart.addBodyPart(textBodyPart);
-            mimeMultipart.addBodyPart(pdfBodyPart);
-            pdfBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
-            
-            
-            Message message = new MimeMessage(session);
-            BodyPart messageBodyPart = new MimeBodyPart();
-            Multipart multipart = new MimeMultipart();
-            message.setFrom(new InternetAddress(from));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(to));
-            messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setDataHandler(new DataHandler(dataSource));
-            messageBodyPart.setFileName(doc.getDocumentName()+"_"+year.getYearOfPassing()+".pdf");
-            multipart.addBodyPart(textBodyPart);
-            multipart.addBodyPart(messageBodyPart);
-            message.setContent(multipart);
-            message.setSubject(subject);
-            
-            
-            //create the sender/recipient addresses
-            InternetAddress iaSender = new InternetAddress(from);
-            InternetAddress iaRecipient = new InternetAddress(to);
-            
-            //construct the mime message
+		ByteArrayOutputStream outputStream = null;
+		// Used to debug SMTP issues
+		session.setDebug(true);
+		try {
+
+			MimeMessage mimeMessage = new MimeMessage(session);
+
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+			
+			MimeBodyPart imagePart = new MimeBodyPart();
+
+			// imagePart.attachFile(imageLocation+"logo.png"); //For live
+
+			imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.setDisposition(MimeBodyPart.INLINE);
+
+			Map<String, String> inlineImages = new HashMap<String, String>();
+
+			//inlineImages.put("image",imageLocation+"logo.png"); //For live
+
+			inlineImages.put("image", "./logo.png"); // For local Testing
+
+			if (inlineImages != null && inlineImages.size() > 0) {
+				Set<String> setImageID = inlineImages.keySet();
+
+				for (String contentId : setImageID) {
+					// MimeBodyPart imagePart = new MimeBodyPart();
+					imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+
+					String imageFilePath = inlineImages.get(contentId);
+					try {
+						imagePart.attachFile(imageFilePath);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+
+			textBodyPart.setText(vmFileContent, "utf-8", "html");
+			//textBodyPart.setText(vmFileContent);
+
+			outputStream = new ByteArrayOutputStream();
+
+			if (vr.getDocStatus().equalsIgnoreCase("UN_Rejected")) {
+				writeApprovalPdf(outputStream, Id, imageLocation);
+			}
+			if (vr.getDocStatus().equalsIgnoreCase("UN_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
+				writeRejectionPdf(outputStream, Id, imageLocation);
+			}
+			byte[] bytes = outputStream.toByteArray();
+
+			// construct the pdf body part
+			DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+			MimeBodyPart pdfBodyPart = new MimeBodyPart();
+			pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+
+			// construct the mime multi part
+			MimeMultipart mimeMultipart = new MimeMultipart();
+			mimeMultipart.addBodyPart(textBodyPart);
+			mimeMultipart.addBodyPart(pdfBodyPart);
+			pdfBodyPart.setFileName(doc.getDocumentName() + "_" + year.getYearOfPassing() + ".pdf");
+
+			Message message = new MimeMessage(session);
+			BodyPart messageBodyPart = new MimeBodyPart();
+			Multipart multipart = new MimeMultipart();
+			message.setFrom(new InternetAddress(from));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+			messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setDataHandler(new DataHandler(dataSource));
+			messageBodyPart.setFileName(doc.getDocumentName() + "_" + year.getYearOfPassing() + ".pdf");
+			multipart.addBodyPart(textBodyPart);
+			multipart.addBodyPart(messageBodyPart);
+			multipart.addBodyPart(imagePart);
+			message.setContent(multipart);
+			message.setSubject(subject);
+
+			// create the sender/recipient addresses
+			InternetAddress iaSender = new InternetAddress(from);
+			InternetAddress iaRecipient = new InternetAddress(to);
+
+			// construct the mime message
 //            MimeMessage mimeMessage = new MimeMessage(session);
-            mimeMessage.setSender(iaSender);
-            mimeMessage.setSubject(subject);
-            mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
-            mimeMessage.setContent(mimeMultipart);
+			mimeMessage.setSender(iaSender);
+			mimeMessage.setSubject(subject);
+			mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
+			mimeMessage.setContent(mimeMultipart);
 
-            //send off the email
-            
-            
+			// send off the email
 
-	            System.out.println("sending...");
-	            Transport.send(message);
+			System.out.println("sending...");
+			Transport.send(message);
 //	            Transport.send(message);
-	            System.out.println("Sent message successfully....");
-	            
-	        } catch (MessagingException e) {
-	        	
-	        	
-	            throw new RuntimeException(e);
-	        }
-	   }
+			System.out.println("Sent message successfully....");
 
-	  
+		} catch (MessagingException e) {
+
+			throw new RuntimeException(e);
+		}
+	}
 
 }
-

@@ -29,6 +29,11 @@ public class PriceMasterResponse {
 	private String created_by;
 	private long gst;
 	private long secure_charge;
+	private String requestType;
+	private String docType;
+	private Long requestTypeid;
+	private Long docTypeid;
+
 	
 
 }

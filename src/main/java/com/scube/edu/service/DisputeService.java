@@ -17,8 +17,8 @@ import com.scube.edu.response.BaseResponse;
 
 public interface DisputeService {
 
-	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) throws MessagingException;
+	public boolean saveDispute(DisputeRequest disputeReq, HttpServletRequest request) throws Exception;
 
-	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws MessagingException, BadElementException, IOException;
+	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws Exception, BadElementException, IOException;
 
 }
