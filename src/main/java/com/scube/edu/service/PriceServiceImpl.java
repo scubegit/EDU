@@ -72,6 +72,9 @@ public class PriceServiceImpl  implements PriceService {
 			priceResponse.setSecure_charge(entity.getSecurCharge());
 			priceResponse.setRequestType(requestTypeMasterdata.getRequestType());
 			priceResponse.setDocType(documentMasterdata.getDocumentName());
+			priceResponse.setRequestTypeid(entity.getRequestTypeId());
+			priceResponse.setDocTypeid(entity.getDoctypeId());
+
 			
 			priceList.add(priceResponse);
 		}

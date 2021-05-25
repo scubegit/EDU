@@ -21,7 +21,6 @@ public class PriceAddRequest {
 	private long gst;
 	private long securitycharge;	
 	private Long requestTypeId;
-
 	private Long doctypeId;
 
 	

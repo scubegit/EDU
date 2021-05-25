@@ -31,6 +31,8 @@ public class PriceMasterResponse {
 	private long secure_charge;
 	private String requestType;
 	private String docType;
+	private Long requestTypeid;
+	private Long docTypeid;
 
 	
 
