@@ -132,7 +132,7 @@ public class VerificationServiceImpl implements VerificationService{
 				VerificationResponse docResponse = new VerificationResponse();
 				
 				long yearOfPassId = Long.parseLong(verEntities.getYearOfPassingId());
-				PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , yearOfPassId);
+				PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , yearOfPassId,verEntities.getRequestType(),Long.parseLong(verEntities.getDocumentId()));
 				
 				BranchMasterEntity bm = branchService.getbranchById(verEntities.getBranchId());
 				

@@ -19,7 +19,11 @@ public class PriceAddRequest {
 	private long amount;
 	private String created_by;
 	private long gst;
-	private long securitycharge;
+	private long securitycharge;	
+	private Long requestTypeId;
+
+	private Long doctypeId;
+
 	
 
 	

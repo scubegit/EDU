@@ -179,7 +179,14 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
 		if (statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
+			if(entt.getRemark()!=null) {
 			entt.setRemark(entt.getRemark() + " UN_" + currentDate + "-" + statusChangeRequest.getRemark());
+		}
+			else
+			{
+				entt.setRemark(" UN_" + currentDate + "-" + statusChangeRequest.getRemark());
+
+			}
 		}
 		entt.setClosedDate(date);
 		entt.setUnVerId(statusChangeRequest.getVerifiedby());

@@ -68,7 +68,10 @@ public class PriceMaster extends CreateUpdate{
 	private Long discount;
 	
 	
-	@Column(name = "service_name")	
-	private String serviceName;
+	@Column(name = "rquest_type_id")	
+	private Long requestTypeId;
+	
+	@Column(name = "doc_type_id")	
+	private Long doctypeId;
 	
 }
