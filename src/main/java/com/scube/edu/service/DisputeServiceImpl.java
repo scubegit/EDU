@@ -100,7 +100,6 @@ public class DisputeServiceImpl implements DisputeService{
 				try {
 					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				

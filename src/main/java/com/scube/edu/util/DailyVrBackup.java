@@ -18,7 +18,7 @@ public class DailyVrBackup {
 	@Autowired
 	DailyVrBackupRepository dailyVrBackupRepository;
 	
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 0 0 * * ?")
 	public int insertDailyDataIntoTable() throws Exception {
 		
 		System.out.println("-----------Running scheduler of Daily backup Data---------- ");

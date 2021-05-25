@@ -350,7 +350,7 @@ public class EmailService {
 		}
 	}
 
-	public void sendStatusMail(String emailId, Long id, String status, String imageLocation) throws Exception {
+	  public void sendStatusMail(String altEmail, String emailId, Long id, String status, String imageLocation) throws Exception {
 
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
 		logger.info("imageLocation---->" + imageLocation);
@@ -362,7 +362,7 @@ public class EmailService {
 		DocumentMaster doc = documentService.getNameById(vr.getDocumentId());
 
 		String to = emailId;
-
+		String altTo = altEmail;
 		Long Id = id;
 
 		logger.info("email Ids----->" + to + Id);
@@ -491,8 +491,15 @@ public class EmailService {
 			BodyPart messageBodyPart = new MimeBodyPart();
 			Multipart multipart = new MimeMultipart();
 			message.setFrom(new InternetAddress(from));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-			messageBodyPart = new MimeBodyPart();
+            message.addRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to));
+            if(!altTo.equalsIgnoreCase("")) {
+	             message.addRecipients(Message.RecipientType.TO,
+	                     InternetAddress.parse(altTo));
+            }
+//            message.setRecipients(Message.RecipientType.TO,
+//                    InternetAddress.parse(emai));	
+            messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setDataHandler(new DataHandler(dataSource));
 			messageBodyPart.setFileName(doc.getDocumentName() + "_" + year.getYearOfPassing() + ".pdf");
 			multipart.addBodyPart(textBodyPart);
@@ -524,10 +531,7 @@ public class EmailService {
 		}
 	}
 
-	private String String(byte[] encoded, Charset encoding) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	private void writeRejectionPdf(ByteArrayOutputStream outputStream, Long id, String imageLocation) throws Exception {
 		System.out.println("******EmailServiceImpl writeRejectionPdf*******");
@@ -562,14 +566,17 @@ public class EmailService {
 					new Phrase("System generated document does not require signature.", footerFont9), false);
 			footer.setAlignment(Element.ALIGN_CENTER);
 //        footer.setBorder(Rectangle.NO_BORDER);
-			document.setFooter(footer);
+	        document.setFooter(footer);
+	        
+			
 
-			// Image img = Image.getInstance(imageLocation+"/logo.png");
-			Image img = Image.getInstance("logo.png");
+//	        Image img = Image.getInstance(imageLocation+"/logo.png");
+	        Image img = Image.getInstance("logo.png");
+
 			img.setAlignment(Element.ALIGN_CENTER);
 			img.scaleToFit(120, 100); // width, height
-
-			document.open();
+	        
+	        document.open();
 //	    EduCred_Logo.jpg
 
 			document.add(img);
@@ -608,35 +615,35 @@ public class EmailService {
 			para.setFont(headAddrFont11);
 			para.setAlignment(Paragraph.ALIGN_LEFT);
 			para.add(
-					"          As per Xerox copy of the Statement of Marks of the candidate received from you for verification. After verifying the office record it has been observed that the statement of marks is not issued by this University and hence the same if FAKE.");
+					"          As per Xerox copy of the Statement of Marks of the candidate received from you for verification. After verifying the office record it has been observed that the statement of marks is not issued by this University and hence the same is FAKE.");
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
 
 			document.add(greeting);
 			document.add(para);
 
-			PdfPTable detailsTable = new PdfPTable(8);
-			detailsTable.setWidthPercentage(100);
-			detailsTable.setWidths(new int[] { 12, 12, 12, 12, 12, 12, 12, 12 });
+		    PdfPTable detailsTable = new PdfPTable(5);
+		    detailsTable.setWidthPercentage(100);
+		    detailsTable.setWidths(new int[] {20,20,20,20,20});
+		    
+//		    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
+		    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
+		    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
+//		    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
+		    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
+		    PdfPCell cell5 = new PdfPCell(new Paragraph("Seat Number"));
+//		    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
+		    PdfPCell cell7 = new PdfPCell(new Paragraph("Exam"));
+//		    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
 
-//	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
-			PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
-			PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
-			PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-			PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
-			PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
-			PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
-			PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
-			PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
-
-			detailsTable.addCell(cell1);
-			detailsTable.addCell(cell2);
-			detailsTable.addCell(cell3);
-			detailsTable.addCell(cell4);
-			detailsTable.addCell(cell5);
-			detailsTable.addCell(cell6);
-			detailsTable.addCell(cell7);
-			detailsTable.addCell(cell8);
+		    
+		    detailsTable.addCell(cell1);
+		    detailsTable.addCell(cell2);
+//		    detailsTable.addCell(cell3);
+		    detailsTable.addCell(cell7);
+		    detailsTable.addCell(cell4);
+		    detailsTable.addCell(cell5);
+//		    detailsTable.addCell(cell6);
 
 //	    for(VerificationRequest ent: vr) {
 
@@ -653,25 +660,31 @@ public class EmailService {
 
 			StreamMaster stream = streamService.getNameById(vr.getStreamId());
 
+			
+			
 			PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
-			PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName() + " " + vr.getLastName()));
-			PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
-			PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
-			PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
-			PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
-			PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
-			PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
-
-			detailsTable.addCell(dateCell);
-			detailsTable.addCell(nameCell);
-			detailsTable.addCell(docCell);
-			detailsTable.addCell(yearCell);
-			detailsTable.addCell(enrollCell);
-			detailsTable.addCell(branchCell);
-			detailsTable.addCell(streamCell);
-			detailsTable.addCell(semCell);
-
-			document.add(detailsTable);
+	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName()+" "+vr.getLastName()));
+//	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
+	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
+	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
+//	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
+	    	PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
+//	    	PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
+	    	
+	    	detailsTable.addCell(dateCell);
+	    	detailsTable.addCell(nameCell);
+//	    	detailsTable.addCell(docCell);
+	    	detailsTable.addCell(streamCell);
+	    	detailsTable.addCell(yearCell);
+	    	detailsTable.addCell(enrollCell);
+//	    	detailsTable.addCell(branchCell);
+	    	
+//	    	detailsTable.addCell(semCell);
+	    	
+	    
+	    
+	    	document.add(detailsTable);
+	    	
 
 			Paragraph para1 = new Paragraph();
 			para1.setFont(headAddrFont11);
@@ -700,14 +713,36 @@ public class EmailService {
 //		    img2.setAlignment(Image.ALIGN_RIGHT);
 //		    img2.scaleAbsolute(75, 75);
 //		    document.add(img2);
+			
+		    Paragraph foot = new Paragraph();
+		    foot.setAlignment(Paragraph.ALIGN_RIGHT);
+		    foot.setFont(headAddrFont12);
+		    foot.add("Dr. Vinod P Patil");
+		    
+		    document.add(foot);
+		    
+		    Image signImg = Image.getInstance("signn.jpg");
+		    signImg.setAlignment(Element.ALIGN_RIGHT);
+		    signImg.scaleToFit(150, 120);
+		    
+		    document.add(signImg);
+		    
+		    Paragraph foot1 = new Paragraph();
+		    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
+		    foot1.setFont(headAddrFont12);
+		    foot1.add("Director \r"
+		    		+ "Board Of Examination & Evaluation");
+		    
+		   
+		    		    
+  		    document.add(foot1);
 
-			Paragraph foot = new Paragraph();
-			foot.setAlignment(Paragraph.ALIGN_RIGHT);
-			foot.setFont(headAddrFont12);
-			foot.add("Dr. Vinod P Patil \r" + "Director \r" + "Board Of Examination & Evaluation");
-			document.add(foot);
-
-//	        HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
+  		// Image signImg = Image.getInstance("signature.png");
+//		    signImg.setAlignment(Element.ALIGN_RIGHT);
+//		    signImg.scaleToFit(150, 120);
+//		    
+//		    document.add(signImg);
+			//HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
 //	        footer.setAlignment(Element.ALIGN_CENTER);
 ////	        footer.setBorder(Rectangle.NO_BORDER);
 //	        document.setFooter(footer);
@@ -826,29 +861,34 @@ public class EmailService {
 			document.add(greeting);
 			document.add(para);
 
-			PdfPTable detailsTable = new PdfPTable(8);
-			detailsTable.setWidthPercentage(100);
-			detailsTable.setWidths(new int[] { 12, 12, 12, 12, 12, 12, 12, 12 });
-
+			 PdfPTable detailsTable = new PdfPTable(5);
+			    detailsTable.setWidthPercentage(100);
+			   detailsTable.setWidths(new int[] {20,20,20,20,20});
+			    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
-			PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
-			PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
-			PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-			PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
-			PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
-			PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
-			PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
-			PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
+			   PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
+			    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
+//			    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
+			    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
+			    PdfPCell cell5 = new PdfPCell(new Paragraph("Enrollment No"));
+//			    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
+			    PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
+//			    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
+			    
+			    
+			    
+			    detailsTable.addCell(cell1);
+			    detailsTable.addCell(cell2);
+//			    detailsTable.addCell(cell3);
+			    detailsTable.addCell(cell7);
+			    detailsTable.addCell(cell4);
+			    detailsTable.addCell(cell5);
+//			    detailsTable.addCell(cell6);
+			    
+//			    detailsTable.addCell(cell8);
 
-			detailsTable.addCell(cell1);
-			detailsTable.addCell(cell2);
-			detailsTable.addCell(cell3);
-			detailsTable.addCell(cell4);
-			detailsTable.addCell(cell5);
-			detailsTable.addCell(cell6);
-			detailsTable.addCell(cell7);
-			detailsTable.addCell(cell8);
-
+	    
+	    
 //	    for(VerificationRequest ent: vr) {
 			logger.info("record values set here--->");
 
@@ -866,42 +906,44 @@ public class EmailService {
 			StreamMaster stream = streamService.getNameById(vr.getStreamId());
 
 			PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
-			PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName() + " " + vr.getLastName()));
-			PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
-			PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
-			PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
-			PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
-			PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
-			PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
+	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName() + " " + vr.getLastName()));
+//	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
+	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
+	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
+//	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
+	    	PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
+//	    	PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
+	    	
+	    	detailsTable.addCell(dateCell);
+	    	detailsTable.addCell(nameCell);
+//	    	detailsTable.addCell(docCell);
+	    	detailsTable.addCell(streamCell);
+	    	detailsTable.addCell(yearCell);
+	    	detailsTable.addCell(enrollCell);
+//	    	detailsTable.addCell(branchCell);
+	    	
+//	    	detailsTable.addCell(semCell);
+	    	
+	    	
 
-			detailsTable.addCell(dateCell);
-			detailsTable.addCell(nameCell);
-			detailsTable.addCell(docCell);
-			detailsTable.addCell(yearCell);
-			detailsTable.addCell(enrollCell);
-			detailsTable.addCell(branchCell);
-			detailsTable.addCell(streamCell);
-			detailsTable.addCell(semCell);
-
-			document.add(detailsTable);
-
-			logger.info("detail table added--->");
-			// Add footer of PDF here
-
-			Paragraph footer1 = new Paragraph();
-			footer1.setAlignment(Paragraph.ALIGN_RIGHT);
-			footer1.setFont(headAddrFont12);
-			footer1.add("Yours faithfully,");
-			document.add(footer1);
-
-//	    Image img2 = Image.getInstance("logo.png");
-////	    img2.scaleAbsolute(107, 107);
-////	    img2.setAlignment(20);
-////	    img2.setAbsolutePosition(243, 720);
-//	    img2.setAlignment(Image.ALIGN_RIGHT);
-//	    img2.scaleAbsolute(75, 75);
-//	    document.add(img2);
-
+	    document.add(detailsTable);
+	    
+	    logger.info("detail table added--->");
+	    //Add footer of PDF here
+	    
+	    Paragraph footer1 = new Paragraph();
+	    footer1.setAlignment(Paragraph.ALIGN_RIGHT);
+	    footer1.setFont(headAddrFont12);
+	    footer1.add("Yours faithfully,");
+	    document.add(footer1);
+	    
+	    Image signImg = Image.getInstance("signn.jpg");
+//	    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
+	    signImg.setAlignment(Element.ALIGN_RIGHT);
+	    signImg.scaleToFit(150, 120);
+	    
+	    document.add(signImg);
+	    
 			Paragraph foot = new Paragraph();
 			foot.setAlignment(Paragraph.ALIGN_RIGHT);
 			foot.setFont(headAddrFont12);
