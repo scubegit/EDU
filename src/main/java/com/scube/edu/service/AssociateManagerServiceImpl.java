@@ -299,7 +299,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		logger.info("clomncnt="+clomncnt);
 		 String fileSubPath = "file/";
 		 String flag = "2";
-		 String filePath = fileStorageService.storeFile(datafile , fileSubPath, flag);
+		 String filePath = fileStorageService.storeFileOnAws(datafile , fileSubPath, flag);
 		 
 		 if(clomncnt==8) {
 		 for(int i=1;i<=rowcnt;i++) {

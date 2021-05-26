@@ -48,8 +48,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.awsconfig.BucketName;
+import com.scube.edu.awsconfig.FileStore;
 import com.scube.edu.controller.VerifierController;
 import com.scube.edu.exception.FileStorageException;
 import com.scube.edu.model.FileStorageProperties;
@@ -85,6 +90,9 @@ public class FileStorageService {
 	 
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
+	 
+	 @Autowired
+	 FileStore fileStore;
 	 
 	 
 	 @Autowired
@@ -149,6 +157,155 @@ public class FileStorageService {
 		
 		
 	}
+	
+	
+	
+public String storeFileOnAws(MultipartFile file, String fileSubPath, String flag) {
+		
+		System.out.println("****fileStorageService storeFile*****"+file);
+		
+		/*
+		 * Date date = new Date(System.currentTimeMillis());
+		 * 
+		 * String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		 * 
+		 * String filename = fileName.split("\\.")[0]; String extension =
+		 * fileName.split("\\.")[1];
+		 * 
+		 * String fileNewName = filename + "_" + date.getTime() + "." + extension;
+		 * 
+		 * System.out.println(fileNewName);
+		 */
+		
+		try {
+			
+			 if (file.isEmpty()) {
+		            throw new IllegalStateException("Cannot upload empty file");
+		        }
+		        
+			 Map<String, String> metadata = new HashMap<>();
+		        metadata.put("Content-Type", file.getContentType());
+		        metadata.put("Content-Length", String.valueOf(file.getSize()));
+		        
+		        
+		        String newPath = fileSubPath ;
+				  
+			
+			  if(flag.equalsIgnoreCase("2")) { 
+				  newPath = newPath+"associate_docs/"+UUID.randomUUID(); 
+			  }else { 
+					  newPath = newPath+"verification_docs/"+UUID.randomUUID(); 
+			  }
+			 
+		        
+			 
+			 String path = String.format("%s/%s",BucketName.TODO_IMAGE.getBucketName(),newPath);
+		        
+	        logger.info("---------TodoServiceImpl path----------------"+ path );
+	        
+	        String fileName = String.format("%s", file.getOriginalFilename());
+	        
+	        logger.info("---------TodoServiceImpl fileName----------------"+fileName );
+	        
+	        logger.info("---------TodoServiceImpl start fileStore upload----------------");
+	        
+            fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
+			
+			
+			
+			  
+			 
+//			  
+			  String returnPath = path +"/"+ fileName;
+//			  
+//			  fileStore.upload(newPath, fileName, Optional.of(metadata),
+//			  file.getInputStream());
+			 
+			  logger.info("---------returnPath----------------"+returnPath);
+			
+			return String.valueOf(returnPath);
+		}catch (IOException ex) {
+			throw new FileStorageException("Could not store file", ex);
+		}
+		
+		
+		
+	}
+
+
+public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id) throws Exception {
+	
+ 	String fileName =" ";
+ 	try {
+ 		
+ 		String newPAth ;
+ 		String extension;
+ 		String randomId;
+ 		String nameOfFile;
+    	
+    	if(userFor.equalsIgnoreCase("VR")) {
+    		
+//    		newPAth = this.fileBaseLocation;
+    		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
+    		VerificationRequest data = verifierData.get();
+    		
+    		String filename = data.getUploadDocumentPath();
+    		
+    		logger.info("doc.vollegename--->"+data.getEnrollmentNumber());
+    		
+//    		 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//    		  
+//    		 String filename = fileName.split("\\.")[0]; String extension =
+//    		 fileName.split("\\.")[1];
+    		
+    		fileName = data.getUploadDocumentPath();
+    		
+    		extension = fileName.split("\\.")[1];
+    		
+    		randomId = fileName.split("\\/")[3];
+    		
+    		newPAth = "educred/file/verification_docs/"+randomId;
+    		
+    		nameOfFile = fileName.split("\\/")[4];
+    		
+    		System.out.println("------------fileName--------------"+ nameOfFile);
+    		logger.info("VR------fileName----->"+ fileName);
+    		
+    	}else {
+    		
+    		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
+    		fileName = doc.getOriginalDOCuploadfilePath();
+    		
+    		extension = fileName.split("\\.")[1];
+    		
+    		randomId = fileName.split("\\/")[3];
+    		
+    		newPAth = "educred/file/associate_docs/"+randomId;
+    		
+    		nameOfFile = fileName.split("\\/")[4];
+    		
+    		System.out.println("--------InsideElse----fileName--------------"+nameOfFile);
+    		logger.info("U------fileName----->"+ fileName);
+    	}
+ 		
+ 		
+ 		byte[] res = fileStore.download(newPAth, nameOfFile);
+ 		
+ 		HashMap<String,Object> map = new HashMap<String,Object>();
+ 		
+ 		map.put("byteArray", res);
+ 		map.put("extension", extension);
+ 		
+         return map ;
+    	
+
+        //return fileStore.download("educred/file/verification_docs/0e233706-971c-4961-b817-4d73ad580dbd", "page.png");
+
+
+    } catch (Exception ex) {
+        throw new Exception("File not found " + fileName, ex);
+    }
+}
 	
 	
 	
