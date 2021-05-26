@@ -15,14 +15,22 @@ public class YearlyVerReqBackupScheduler {
 	
 	
 	@Autowired
-	YearlyVerReqBackupRepository saveYearDataRepository;
+	YearlyVerReqBackupRepository yearlyVerReqBackupRepository;
 	
-//	@Scheduled(cron = "0 0 12 1 * *")
+	@Scheduled(cron = "0 0 12 1 * *")
 	public int insertIntoTable() throws Exception {
 		
 		System.out.println("-----------Running scheduler of Yearly backup Data---------- ");
-		
-		List<YearlyVerReqBackup> datalist=saveYearDataRepository.findprevYearData();
+		List<YearlyVerReqBackup> datalist=null;
+		String date=yearlyVerReqBackupRepository.getHighestdate();
+
+		if(date!=null) {
+			datalist=yearlyVerReqBackupRepository.findprevYearDatabydate(date);
+
+		}
+		else {
+			datalist=yearlyVerReqBackupRepository.findprevYearData();
+		}
 		
 		if(datalist!=null)
 		for(YearlyVerReqBackup datasave:datalist) {
@@ -46,7 +54,7 @@ public class YearlyVerReqBackupScheduler {
 				 * data.setUniversityAmt(datasave.getUniversityAmt());
 				 * data.setSecureAmt(datasave.getSecureAmt());
 				 */
-			saveYearDataRepository.save(data);
+		yearlyVerReqBackupRepository.save(data);
 			
 		}
 		System.out.println("-----Bauckup VR data yearly sucessfully ------");
