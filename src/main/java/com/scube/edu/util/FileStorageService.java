@@ -285,7 +285,7 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
     		
     		extension = fileName.split("\\.")[1]; // req for mediaType
     		
-    		randomId = fileName.split("\\/")[3]; // req for completing path
+    		randomId = fileName.split("\\/")[2]; // req for completing path
     		
 //    		newPAth = "educred/file/associate_docs/"+randomId; // req for defining path
     		
