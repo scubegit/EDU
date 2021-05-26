@@ -302,9 +302,9 @@ public class InvoicePDFExporter {
  	   
  	   
  	     
- 	     studentDocTable.addCell(getCellH("SR NO", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Sr No.", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Name", Element.ALIGN_CENTER, font9b));
- 	     studentDocTable.addCell(getCellH("Enrollment NO", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Seat No.", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Document Name", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Passing Year", Element.ALIGN_CENTER, font9b));
 //         studentDocTable.addCell(getCellH("Verification Amount", Element.ALIGN_CENTER, font9b));
