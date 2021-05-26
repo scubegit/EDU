@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,8 @@ public class FileStore {
 	private static final Logger logger = LoggerFactory.getLogger(FileStore.class);
 	
     private final AmazonS3 amazonS3;
+    
+//    private BucketName bucketname;
 
     public void upload(String path,
                        String fileName,
@@ -60,6 +63,16 @@ public class FileStore {
         } catch (AmazonServiceException | IOException e) {
             throw new IllegalStateException("Failed to download the file", e);
         }
+    }
+    
+    public void deleteFile(final String keyName) {
+    	String bucketName = BucketName.TODO_IMAGE.getBucketName();
+        logger.info("Deleting file with name= " + bucketName);
+        
+//        String keyname = "file/verification_docs/0e233706-971c-4961-b817-4d73ad580dbd/page.png";
+        final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, keyName);
+        amazonS3.deleteObject(deleteObjectRequest);
+        logger.info("File deleted successfully.");
     }
 
 }

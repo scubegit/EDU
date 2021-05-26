@@ -432,10 +432,10 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	
 	
 	public String saveDocument (MultipartFile file) {
-		String fileSubPath = "file/";
+//		String fileSubPath = "file/";
 		String flag = "1";
 //		String filePath = fileStorageService.storeFile(file , fileSubPath, flag);
-		String filePath = fileStorageService.storeFileOnAws(file, fileSubPath, flag);
+		String filePath = fileStorageService.storeFileOnAws(file, flag);
 		
 		logger.info("---------StudentServiceImpl saveDocument----------------");
 		

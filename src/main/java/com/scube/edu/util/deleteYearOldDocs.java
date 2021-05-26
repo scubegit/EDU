@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import com.scube.edu.awsconfig.FileStore;
 import com.scube.edu.model.FileStorageProperties;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
@@ -40,13 +42,14 @@ public class deleteYearOldDocs {
 		
 	}
 	
+	@Autowired
+	FileStore fileStore;
+	
 //	@Scheduled(cron = "0 */1 * * * *")
 	@Scheduled(cron = "0 0 12 1 * *")
-	public void deleteDocs() throws Exception {
-	
-		String fileSubPath = "file/";
+	public void deleteDocs() throws Exception{
 		
-		logger.info("Delete year old data");
+		logger.info("Delete Docs");
 		
 		SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -58,25 +61,63 @@ public class deleteYearOldDocs {
 		logger.info(prevDate);
 		
 		List<VerificationRequest> list = verificationReqRepo.findRecordsByPreviousYearCreatedDate(prevDate);
-		
+//		fileStore.deleteFile("keyName");
 		for(VerificationRequest veriReq: list) {
 			
-			logger.info("delete document for id = "+ veriReq.getId());
+			String fileName = veriReq.getUploadDocumentPath();
 			
-			String filename = veriReq.getUploadDocumentPath().split("\\/")[1];
-			logger.info(filename);
+//    		String randomId = fileName.split("\\/")[3];
+//    		
+//    		String newPAth = "educred/file/verification_docs/"+randomId;
+    		
+    		String keyName = fileName;
+    		
+    		fileStore.deleteFile(keyName);
+    		
+    		logger.info("deleted DOC");
 			
-			String newPath = this.fileBaseLocation +"/" + fileSubPath;
 			
-			this.fileStorageLocation = Paths.get(newPath).toAbsolutePath().normalize();
-			
-			Path targetLocation = this.fileStorageLocation.resolve(filename);
-			logger.info(targetLocation.toString());
-			
-			Files.delete(targetLocation);
 		}
 		
 	}
+	
+	
+//	@Scheduled(cron = "0 0 12 1 * *")
+//	public void deleteDocs() throws Exception {
+//	
+//		String fileSubPath = "file/";
+//		
+//		logger.info("Delete year old data");
+//		
+//		SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd");
+//		
+//		Calendar cal = Calendar.getInstance();
+//		cal.add(Calendar.YEAR, -1); // to get previous year add -1
+//		Date nextYear = cal.getTime();	
+//		String prevDate = newDate.format(nextYear);
+//
+//		logger.info(prevDate);
+//		
+//		List<VerificationRequest> list = verificationReqRepo.findRecordsByPreviousYearCreatedDate(prevDate);
+//		
+//		for(VerificationRequest veriReq: list) {
+//			
+//			logger.info("delete document for id = "+ veriReq.getId());
+//			
+//			String filename = veriReq.getUploadDocumentPath().split("\\/")[1];
+//			logger.info(filename);
+//			
+//			String newPath = this.fileBaseLocation +"/" + fileSubPath;
+//			
+//			this.fileStorageLocation = Paths.get(newPath).toAbsolutePath().normalize();
+//			
+//			Path targetLocation = this.fileStorageLocation.resolve(filename);
+//			logger.info(targetLocation.toString());
+//			
+//			Files.delete(targetLocation);
+//		}
+//		
+//	}
 	
 	//@Scheduled(cron = "*/15 * * * * *")
 	public void deleteOldRecord() throws Exception {

@@ -493,9 +493,11 @@ public class EmailService {
 			message.setFrom(new InternetAddress(from));
             message.addRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(to));
-            if(!altTo.equalsIgnoreCase("")) {
-	             message.addRecipients(Message.RecipientType.TO,
-	                     InternetAddress.parse(altTo));
+            if(altTo != null) {
+	            if(!altTo.equalsIgnoreCase("")) {
+		             message.addRecipients(Message.RecipientType.TO,
+		                     InternetAddress.parse(altTo));
+	            }
             }
 //            message.setRecipients(Message.RecipientType.TO,
 //                    InternetAddress.parse(emai));	
