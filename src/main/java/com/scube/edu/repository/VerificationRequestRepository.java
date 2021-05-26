@@ -60,6 +60,11 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 
 	@Query(value="SELECT * FROM verification_request where convert(created_date , Date) <= (?1)", nativeQuery = true)
 	List<VerificationRequest> findRecordsByPreviousYearCreatedDate(String prevDate);
+	
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	@Query(value="delete  FROM verification_request where year(created_date) <= (?1)", nativeQuery = true)
+	int DeleteRecordsByPreviousYearCreatedDate(String prevDate);
 
 
 }

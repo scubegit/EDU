@@ -11,11 +11,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.scube.edu.model.FileStorageProperties;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.repository.YearlyVerReqBackupRepository;
 
 @Component
 public class deleteYearOldDocs {
@@ -28,6 +30,9 @@ public class deleteYearOldDocs {
 	
 	@Autowired
 	VerificationRequestRepository verificationReqRepo;
+	
+	@Autowired
+	YearlyVerReqBackupRepository yearlyVerReqBackupRepository;
 	
 	public deleteYearOldDocs(FileStorageProperties fileStorageProperties) {
 		
@@ -72,5 +77,19 @@ public class deleteYearOldDocs {
 		}
 		
 	}
+	
+	//@Scheduled(cron = "*/15 * * * * *")
+	public void deleteOldRecord() throws Exception {
+	
+		String date=yearlyVerReqBackupRepository.getHighestdate();
+		
+		if(date!=null) {
+		int cnt =verificationReqRepo.DeleteRecordsByPreviousYearCreatedDate(date);
+		}
+		logger.info("Successfully delete data where date is >=date");
+	
+		}
+		
+	
 
 }
