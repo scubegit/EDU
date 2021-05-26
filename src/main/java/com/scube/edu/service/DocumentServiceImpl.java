@@ -109,24 +109,20 @@ public class DocumentServiceImpl implements DocumentService{
 		DocumentMaster docResponse=documentRespository.findByDocumentName( documentMaster.getDocumentName());
 		if(docResponse!=null)
 		{
-			resp="Document Name Already exist!";
-			flg=true;
-		}
-		
-		else {
+			if(docResponse.getId()!=documentMaster.getId()) {
+				resp="Stream Already existed!";
+				flg=true;
+			   }
+			   else
+			   {
+				   flg=false;
+			   }
+			}
+		else
+		{
 			flg=false;
 		}
-		if(flg==false) {
-		
-			Optional<DocumentMaster> docEntities  = documentRespository.findById(documentMaster.getId());
-		
-		    if(docEntities == null) {
-			   
-				resp="Invalid Id";
-			  }
-		
-		    else
-		    {
+		   if (flg==false) {
 		    DocumentMaster docEntit = new DocumentMaster();
 		    
 		    docEntit.setId(documentMaster.getId());
@@ -137,7 +133,7 @@ public class DocumentServiceImpl implements DocumentService{
 		 resp="Success";
 		    }
 		
-		}
+		
 		return resp;
 	}
 	
