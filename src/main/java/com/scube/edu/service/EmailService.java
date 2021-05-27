@@ -112,6 +112,17 @@ public class EmailService {
 	@Value("${file.imagepath-dir}")
     private String logoimageLocation;
 	
+//	@Value("${file.Email-Files-test}")
+//    private String emailFileLocationTest;
+	
+//	@Value("${file.imagepathtest-dir}")
+//    private String logoimageLocationTest;
+	
+	@Value("${file.awsORtest}")
+    private String awsORtest;
+
+	
+	
 	void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException, Exception {
 
 		String to = emailId;
@@ -178,8 +189,15 @@ public class EmailService {
 //                        "<br><br><br> Thanks,<br>Team University";
 			logger.info("------>3");
 
-			String file=emailFileLocation+"PasswordReset.txt";     //Live
-			//String file = "./EmailFiles/PasswordReset.txt";          //test
+			String file;
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				file=emailFileLocation+"PasswordReset.txt";     //Live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				file = emailFileLocation+ "PasswordReset.txt"; // test
+//				file = "./EmailFiles/PasswordReset.txt"; 
+			}else {
+				file = emailFileLocation+"./EmailFiles/PasswordReset.txt";          //local
+			}
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -188,15 +206,25 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
+			if(awsORtest.equalsIgnoreCase("AWS")) {
 			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
-
-			//imagePart.attachFile("./logo.png"); // For local Testing
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				imagePart.attachFile(logoimageLocation+ "logo.png"); // For test
+//				imagePart.attachFile("./logo.png");
+			}else {
+				imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+			}
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
-
-			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
-
-			//inlineImages.put("image", "./logo.png"); // For local Testing
+			
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For test
+//				inlineImages.put("image", "./logo.png");
+			}else {
+				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+			}
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -287,10 +315,17 @@ public class EmailService {
 					+ " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
 			
-			
-			String file=emailFileLocation+"VerficationLink.txt";     //Live
+			String file;
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				file=emailFileLocation+"VerficationLink.txt";     //Live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				file=emailFileLocation+"Verification.txt";	// test
+//				file = "./EmailFiles/VerficationLink.txt";
+			}else {
+				file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
+
+			}
 		
-			//String file = "./EmailFiles/VerficationLink.txt";
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -300,16 +335,27 @@ public class EmailService {
 			//vmFileContent = vmFileContent.replaceFirst("#encodeEmail1", encodeEmail);
 
 			MimeBodyPart imagePart = new MimeBodyPart();
-
+			if(awsORtest.equalsIgnoreCase("AWS")) {
 			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); // for test
+//				imagePart.attachFile("./logo.png");
+			}else {
 
-			//imagePart.attachFile("./logo.png"); // For local Testing
+			imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+			}
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+//				inlineImages.put("image", "./logo.png");
+			}else {
 
-			//inlineImages.put("image", "./logo.png"); // For local Testing
+				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+			}
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -391,11 +437,16 @@ public class EmailService {
 		 * "    <p>In case of any dispute you may log on to the site and raise a request through the Dispute option available. </p> <br>  <br>"
 		 * + "<p>Team EduCred</p>";
 		 */
-
-		String file=emailFileLocation+"StatusMail.txt";     //Live
-
-		//String file = "./EmailFiles/StatusMail.txt";
-
+		String file;
+		if(awsORtest.equalsIgnoreCase("AWS")) {
+			file=emailFileLocation+"StatusMail.txt"; //Live
+		}if(awsORtest.equalsIgnoreCase("TEST")){
+			file=emailFileLocation+"StatusMail.txt"; //test
+//			file = "./EmailFiles/StatusMail.txt";
+		}else {
+			file = emailFileLocation+"./EmailFiles/StatusMail.txt";
+		}
+		
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String vmFileContent = reader.readLine();
 
@@ -425,14 +476,31 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			 imagePart.attachFile(imageLocation+"logo.png"); //For live
+//			 imagePart.attachFile(imageLocation+"logo.png"); //For live
+			
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				imagePart.attachFile(logoimageLocation+"logo.png");
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				imagePart.attachFile(logoimageLocation+"logo.png");
+//				imagePart.attachFile("logo.png");
+			}else {
+//				imagePart.attachFile(imageLocation+"logo.png");
+				imagePart.attachFile(logoimageLocation+"logo.png");
+			}
 
 			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			 inlineImages.put("image",imageLocation+"logo.png"); //For live
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				inlineImages.put("image",logoimageLocation+"logo.png");
+//				inlineImages.put("image","logo.png");
+			}else {
+				inlineImages.put("image",logoimageLocation+"logo.png");
+			}
 
 			//inlineImages.put("image", "./logo.png"); // For local Testing
 
@@ -570,9 +638,15 @@ public class EmailService {
 //        footer.setBorder(Rectangle.NO_BORDER);
 	        document.setFooter(footer);
 	        
-			
-
-	        Image img = Image.getInstance(imageLocation+"/logo.png");
+	        Image img;
+	        if(awsORtest.equalsIgnoreCase("AWS")) {
+	        	img = Image.getInstance(logoimageLocation+"logo.png"); // live
+	        }if(awsORtest.equalsIgnoreCase("TEST")) {
+	        	img = Image.getInstance(logoimageLocation+"logo.png"); // test
+//	        	img = Image.getInstance("logo.png");
+	        }else {
+	        	img = Image.getInstance(logoimageLocation+"logo.png");
+	        }
 	       // Image img = Image.getInstance("logo.png");
 
 			img.setAlignment(Element.ALIGN_CENTER);
@@ -723,7 +797,18 @@ public class EmailService {
 		    
 		    document.add(foot);
 		    
-		    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
+		    
+		    
+		    Image signImg;
+	        if(awsORtest.equalsIgnoreCase("AWS")) {
+	        	signImg = Image.getInstance(logoimageLocation+"signn.jpg");
+	        }if(awsORtest.equalsIgnoreCase("TEST")){
+	        	signImg = Image.getInstance(logoimageLocation+"signn.jpg");
+//	        	signImg = Image.getInstance("signn.jpg");
+	        }else {
+	        	signImg = Image.getInstance(logoimageLocation+"signn.jpg");
+	        }
+//		    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
 
 		 //   Image signImg = Image.getInstance("signn.jpg");
 		    signImg.setAlignment(Element.ALIGN_RIGHT);
@@ -802,7 +887,17 @@ public class EmailService {
 			// left, right, top, bottom
 			logger.info("headerFooter set here--->just before document.open()");
 
-			 Image img = Image.getInstance(imageLocation+"/logo.png");
+			Image img;
+	        if(awsORtest.equalsIgnoreCase("AWS")) {
+	        	img = Image.getInstance(logoimageLocation+"logo.png"); // live
+	        }if(awsORtest.equalsIgnoreCase("TEST")){
+	        	img = Image.getInstance(logoimageLocation+"logo.png"); // test
+//	        	img = Image.getInstance("logo.png");
+	        }else {
+	        	img = Image.getInstance(logoimageLocation+"logo.png");
+	        }
+			
+//			 Image img = Image.getInstance(imageLocation+"/logo.png");
 			//Image img = Image.getInstance("logo.png");
 
 			img.setAlignment(Element.ALIGN_CENTER);
@@ -942,7 +1037,18 @@ public class EmailService {
 	    document.add(footer1);
 	    
 	 //   Image signImg = Image.getInstance("signn.jpg");
-    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
+//    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
+	    
+	    Image signImg;
+        if(awsORtest.equalsIgnoreCase("AWS")) {
+        	signImg = Image.getInstance(logoimageLocation+"signn.jpg");
+        }if(awsORtest.equalsIgnoreCase("TEST")){
+        	signImg = Image.getInstance(logoimageLocation+"signn.jpg");
+//        	signImg = Image.getInstance("signn.jpg");
+        }else {
+        	signImg = Image.getInstance(logoimageLocation+"signn.jpg");
+        }
+	    
 	    signImg.setAlignment(Element.ALIGN_RIGHT);
 	    signImg.scaleToFit(150, 120);
 	    
@@ -1023,25 +1129,42 @@ public class EmailService {
 					+ "For reference your dispute reference id is:" + id + ". <br><br> "
 					+ "Thanks, <br><br> Team EduCred";
 
-			String file=emailFileLocation+"DisputeRaised.txt";     //Live
+			String file;
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				file=emailFileLocation+"DisputeRaised.txt";     //Live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				file=emailFileLocation+"DisputeRaised.txt";     //Test
+//				file = "./EmailFiles/DisputeRaised.txt";
+			}else {
 
-			//String file = "./EmailFiles/DisputeRaised.txt";
+				file = emailFileLocation+"./EmailFiles/DisputeRaised.txt";
+			}
 			
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
 			vmFileContent = vmFileContent.replaceFirst("#id", Long.toString(id));
 
 			MimeBodyPart imagePart = new MimeBodyPart();
-
-			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
-
-			//imagePart.attachFile("./logo.png"); // For local Testing
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); //For Test
+//				imagePart.attachFile("./logo.png");
+			}else {
+				imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+			}
+			
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
-
-			//inlineImages.put("image", "./logo.png"); // For local Testing
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For Test
+//				inlineImages.put("image", "./logo.png");
+			}else {
+				inlineImages.put("image",logoimageLocation+ "./logo.png"); // For local Testing
+			}
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -1142,9 +1265,16 @@ public class EmailService {
 //             		+ "Sorry for the inconvenience caused. \r\n "
 					+ "\r\n Thanks, \r\n Team EduCred";
 
-			String file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
+			String file;
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
+			}if(awsORtest.equalsIgnoreCase("AWS")) {
+				file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Test
+//				file = "./EmailFiles/DisputeNoChangeStatus.txt";
+			}else {
 
-			//String file = "./EmailFiles/DisputeNoChangeStatus.txt";
+				file = emailFileLocation+"./EmailFiles/DisputeNoChangeStatus.txt";
+			}
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -1152,16 +1282,29 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); //For Test
+//				imagePart.attachFile("./logo.png");
+			}else {
+				imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+			}
 
-			//imagePart.attachFile("./logo.png"); // For local Testing
+			
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For Test
+//				inlineImages.put("image", "./logo.png");
+			}else {
 
-			//inlineImages.put("image", "./logo.png"); // For local Testing
-
+				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+			}
+			
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
 
@@ -1238,11 +1381,18 @@ public class EmailService {
 				+ "Sorry for the inconvenience caused. \r\n " + "Thanks, \r\n Team EduCred";
 
 		String subject = "Verification Result";
+		String file;
 		
-		String file=emailFileLocation+"DisputeChangeStatus.txt";     //Live
+		if(awsORtest.equalsIgnoreCase("AWS")) {
+			file=emailFileLocation+"DisputeChangeStatus.txt";     //Live
+		}if(awsORtest.equalsIgnoreCase("TEST")) {
+			file=emailFileLocation+"DisputeChangeStatus.txt";     //Test
+//			file = "./EmailFiles/DisputeChangeStatus.txt";
+		}else {
 
-		//String file = "./EmailFiles/DisputeChangeStatus.txt";
-
+			file = emailFileLocation+"./EmailFiles/DisputeChangeStatus.txt";
+		}
+		
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String vmFileContent = reader.readLine();
 		vmFileContent = vmFileContent.replaceFirst("#id", Long.toString(disputeId));
@@ -1267,15 +1417,36 @@ public class EmailService {
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 			
 			MimeBodyPart imagePart = new MimeBodyPart();
+			
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				imagePart.attachFile(logoimageLocation+"logo.png"); //For Test
+//				imagePart.attachFile(imageLocation+"logo.png");
+			}else {
+				 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
 
-			 imagePart.attachFile(imageLocation+"logo.png"); //For live
+			}
+			
+			
 
 			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			inlineImages.put("image",imageLocation+"logo.png"); //For live
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
+				inlineImages.put("image",logoimageLocation+"logo.png"); //For Test
+//				inlineImages.put("image", "./logo.png");
+			}else {
+
+				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+			}
+			
+			
+//			inlineImages.put("image",imageLocation+"logo.png"); //For live
 
 			//inlineImages.put("image", "./logo.png"); // For local Testing
 

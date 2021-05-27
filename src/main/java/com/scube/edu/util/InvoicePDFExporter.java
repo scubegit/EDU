@@ -77,7 +77,14 @@ public class InvoicePDFExporter {
 	 * imageLocation2; }
 	 */
 
-
+// 	@Value("${file.imagepathtest-dir}")
+//    private String logoimageLocationTest;
+ 	
+	@Value("${file.imagepath-dir}")
+    private String logoimageLocation;
+	
+	@Value("${file.awsORtest}")
+    private String awsORtest;
 
 	public void export(HttpServletResponse response, HashMap<Object, Object> studentVerificationPdfData, String applicationId, String imageLocation) throws Exception {
 		    
@@ -162,8 +169,16 @@ public class InvoicePDFExporter {
             logger.info("Entry point for pdf exporter--------->7");
 //            EduCred_Logo.jpg 
 
+            Image logo;
+            if(awsORtest.equalsIgnoreCase("AWS")) {
+            	logo = Image.getInstance(imageLocation+"logo.png"); // for live
+            }if(awsORtest.equalsIgnoreCase("TEST")){
+            	logo = Image.getInstance(imageLocation+ "logo.png");
+            }
+            	else{
             
-           Image logo = Image.getInstance(imageLocation+"/logo.png");
+            	logo = Image.getInstance(imageLocation+"logo.png"); // For test
+            }
         //    	 Image logo = Image.getInstance("logo.png");
 
                logo.setAbsolutePosition(10, 300);
@@ -176,7 +191,17 @@ public class InvoicePDFExporter {
             
                logger.info("Entry point for pdf exporter--------->9-->"+imageLocation+"/logo.png");
 
-               Image img = Image.getInstance(imageLocation+"/logo.png");
+               
+               Image img;
+               if(awsORtest.equalsIgnoreCase("AWS")) {
+               	img = Image.getInstance(imageLocation+"logo.png"); // for live
+               }if(awsORtest.equalsIgnoreCase("AWS")) {
+            	   img = Image.getInstance(imageLocation+"logo.png");
+               }else {
+               	img = Image.getInstance(imageLocation+"logo.png"); // For test
+               }
+               
+//               Image img = Image.getInstance(imageLocation+"/logo.png");
 //               Image img = Image.getInstance("logo.png");
 
 			  img.setAlignment(Element.ALIGN_CENTER);

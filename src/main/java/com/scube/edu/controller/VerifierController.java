@@ -10,6 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -111,10 +112,36 @@ public class VerifierController {
 			
    }
 
+	@Value("${file.awsORtest}")
+    private String awsORtest;
 	
 	//This is to get dynamic(Actual) file from the drive location
 	 @GetMapping("/getimage/{UserFor}/{id}")
 	 public ResponseEntity<byte[]> getFileFromStorageSelection(@PathVariable String UserFor, @PathVariable Long id ) throws Exception {
+		 
+		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			 
+			 Resource res =  fileStorageService.loadFileAsResource(UserFor,id);
+			 
+			 byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
+			 
+			 MediaType mediaType;
+			 String ext = FilenameUtils.getExtension(res.getFilename());
+		        
+		        if(ext.equalsIgnoreCase("pdf")|| ext == "PDF" ) {
+		        
+		        	mediaType = MediaType.APPLICATION_PDF ;
+		        }
+		        else {
+		        	mediaType = MediaType.IMAGE_JPEG ;
+		        }
+		        	
+		        
+		        return ResponseEntity.ok()
+		                             .contentType(mediaType)
+		                             .body(bytes);
+			 
+		 }else {
 
 	  //      var imgFile = new ClassPathResource("image/ha-img.jpg");
 	        
@@ -128,7 +155,7 @@ public class VerifierController {
 		 
 		 //File file = new File(res.getFile());
 		 
-		 String ext1 = FilenameUtils.getExtension("/path/to/file/foo.txt");
+		 
 		 
 		 
 //	        byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
@@ -150,6 +177,7 @@ public class VerifierController {
 	        return ResponseEntity.ok()
 	                             .contentType(mediaType)
 	                             .body(ret);
+		 }
 	    }
 	 
 		@PostMapping("/setStatusForVerifierDocument")
