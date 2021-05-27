@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
@@ -280,6 +281,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 
 	}
 
+	@Value("${file.awsORtest}")
+    private String awsORtest;
+	
 	@Override
 	public List<UniversityStudDocResponse> ReviewStudentData(MultipartFile excelfile, MultipartFile datafile) throws IOException {
 		
@@ -298,9 +302,15 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 
 		logger.info("clomncnt="+clomncnt);
 		 String fileSubPath = "file/";
-		 String flag = "2";
-		 String filePath = fileStorageService.storeFileOnAws(datafile , fileSubPath, flag);
+		 String filePath;
 		 
+		 String flag = "2";
+		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			 
+			 filePath = fileStorageService.storeFile(datafile, fileSubPath, flag);
+		 }else {
+			 filePath = fileStorageService.storeFileOnAws(datafile , flag);
+		 }
 		 if(clomncnt==8) {
 		 for(int i=1;i<=rowcnt;i++) {
 			 

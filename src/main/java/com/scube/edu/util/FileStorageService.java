@@ -57,6 +57,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -158,9 +159,13 @@ public class FileStorageService {
 		
 	}
 	
+	 @Value("${file.awsfileVRPath-dir}")
+     private String vrFilePath;
+	 
+	 @Value("${file.awsfileUPath-dir}")
+     private String uFilePath;
 	
-	
-public String storeFileOnAws(MultipartFile file, String fileSubPath, String flag) {
+public String storeFileOnAws(MultipartFile file, String flag) {
 		
 		System.out.println("****fileStorageService storeFile*****"+file);
 		
@@ -188,13 +193,13 @@ public String storeFileOnAws(MultipartFile file, String fileSubPath, String flag
 		        metadata.put("Content-Length", String.valueOf(file.getSize()));
 		        
 		        
-		        String newPath = fileSubPath ;
+		        String newPath ;
 				  
 			
 			  if(flag.equalsIgnoreCase("2")) { 
-				  newPath = newPath+"associate_docs/"+UUID.randomUUID(); 
+				  newPath = uFilePath+UUID.randomUUID(); 
 			  }else { 
-					  newPath = newPath+"verification_docs/"+UUID.randomUUID(); 
+					  newPath = vrFilePath+UUID.randomUUID(); 
 			  }
 			 
 		        
@@ -216,7 +221,7 @@ public String storeFileOnAws(MultipartFile file, String fileSubPath, String flag
 			  
 			 
 //			  
-			  String returnPath = path +"/"+ fileName;
+			  String returnPath = newPath +"/"+ fileName;
 //			  
 //			  fileStore.upload(newPath, fileName, Optional.of(metadata),
 //			  file.getInputStream());
@@ -262,11 +267,13 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
     		
     		extension = fileName.split("\\.")[1];
     		
-    		randomId = fileName.split("\\/")[3];
+    		randomId = fileName.split("\\/")[2];
     		
-    		newPAth = "educred/file/verification_docs/"+randomId;
+//    		newPAth = "educred/file/verification_docs/"+randomId;
     		
-    		nameOfFile = fileName.split("\\/")[4];
+    		newPAth = BucketName.TODO_IMAGE.getBucketName()+ "/" + vrFilePath + randomId ; 
+    		
+    		nameOfFile = fileName.split("\\/")[3];
     		
     		System.out.println("------------fileName--------------"+ nameOfFile);
     		logger.info("VR------fileName----->"+ fileName);
@@ -276,13 +283,15 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
     		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
     		fileName = doc.getOriginalDOCuploadfilePath();
     		
-    		extension = fileName.split("\\.")[1];
+    		extension = fileName.split("\\.")[1]; // req for mediaType
     		
-    		randomId = fileName.split("\\/")[3];
+    		randomId = fileName.split("\\/")[2]; // req for completing path
     		
-    		newPAth = "educred/file/associate_docs/"+randomId;
+//    		newPAth = "educred/file/associate_docs/"+randomId; // req for defining path
     		
-    		nameOfFile = fileName.split("\\/")[4];
+    		newPAth = BucketName.TODO_IMAGE.getBucketName() + "/" + uFilePath + randomId ; 
+    		
+    		nameOfFile = fileName.split("\\/")[3];
     		
     		System.out.println("--------InsideElse----fileName--------------"+nameOfFile);
     		logger.info("U------fileName----->"+ fileName);

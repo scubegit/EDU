@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
@@ -430,50 +431,20 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 //		return null;
 	}
 	
+	@Value("${file.awsORtest}")
+    private String awsORtest;
 	
 	public String saveDocument (MultipartFile file) {
 		String fileSubPath = "file/";
 		String flag = "1";
-//		String filePath = fileStorageService.storeFile(file , fileSubPath, flag);
-		String filePath = fileStorageService.storeFileOnAws(file, fileSubPath, flag);
-		
+		String filePath;
+		if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+		filePath = fileStorageService.storeFile(file , fileSubPath, flag);
+		}else {
+		filePath = fileStorageService.storeFileOnAws(file, flag);
+		}
 		logger.info("---------StudentServiceImpl saveDocument----------------");
 		
-//		if (file.isEmpty()) {
-//            throw new IllegalStateException("Cannot upload empty file");
-//        }
-		
-        //Check if the file is an image
-//      if (!Arrays.asList(IMAGE_PNG.getMimeType(),
-//              IMAGE_BMP.getMimeType(),
-//              IMAGE_GIF.getMimeType(),
-//              IMAGE_JPEG.getMimeType()).contains(file.getContentType())) {
-//          throw new IllegalStateException("FIle uploaded is not an image");
-//      }
-		
-		//get file metadata
-//        Map<String, String> metadata = new HashMap<>();
-//        metadata.put("Content-Type", file.getContentType());
-//        metadata.put("Content-Length", String.valueOf(file.getSize()));
-        
-//        String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), UUID.randomUUID());
-//        String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), "file");
-        
-//        logger.info("---------StudentServiceImpl path----------------"+ path );
-//        
-//        String fileName = String.format("%s", file.getOriginalFilename());
-//        
-//        logger.info("---------TodoServiceImpl fileName----------------"+fileName );
-//        
-//        logger.info("---------TodoServiceImpl start fileStore upload----------------");
-//        
-//        try {
-//        	fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
-//        } catch (IOException e) {
-//            throw new IllegalStateException("Failed to upload file", e);
-//        }
-//        
-//        logger.info("---------TodoServiceImpl End fileStore upload----------------");
         
         
         
