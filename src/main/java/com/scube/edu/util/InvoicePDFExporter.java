@@ -163,8 +163,8 @@ public class InvoicePDFExporter {
 //            EduCred_Logo.jpg 
 
             
-//           Image logo = Image.getInstance(imageLocation+"/logo.png");
-            	 Image logo = Image.getInstance("logo.png");
+           Image logo = Image.getInstance(imageLocation+"/logo.png");
+        //    	 Image logo = Image.getInstance("logo.png");
 
                logo.setAbsolutePosition(10, 300);
                
@@ -176,8 +176,8 @@ public class InvoicePDFExporter {
             
                logger.info("Entry point for pdf exporter--------->9-->"+imageLocation+"/logo.png");
 
-//               Image img = Image.getInstance(imageLocation+"/logo.png");
-               Image img = Image.getInstance("logo.png");
+               Image img = Image.getInstance(imageLocation+"/logo.png");
+//               Image img = Image.getInstance("logo.png");
 
 			  img.setAlignment(Element.ALIGN_CENTER);
 			  img.scaleToFit(120, 100); // width, height
@@ -453,10 +453,20 @@ public class InvoicePDFExporter {
 	       
 	       contentCell.addElement(new Paragraph("   GENERAL FUND - 1 ",ft12));
 	       contentCell.addElement(new Paragraph("Received from SECURE Credential ltd the sum of rupees ",ft12));
+	       
+	       logger.info("just before document.close()--------->18.1");
+	       
+	       logger.info("just before document.close()----totalAmt----->18.1"+totalAmt);
+	       logger.info("just before document.close()----NumberToWordConverter1.convertToWords(totalAmt)----->18.1"+NumberToWordConverter1.convertToWords(totalAmt));
 	       contentCell.addElement(new Paragraph(NumberToWordConverter1.convertToWords(totalAmt)+" only",ft12));
+	       
+	       logger.info("just before document.close()--------->18.2");
+	       
 	       contentCell.addElement(new Paragraph("by Online transfer  being the amount of",ft12));
 	       contentCell.addElement(new Paragraph("FEE  FOR  VER  OF  CERT  AS  PER  LIST",ft12));
-	     
+	       
+	       logger.info("just before document.close()--------->18.3");
+	       
 	       contentCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 	       contentCell.setVerticalAlignment(Element.ALIGN_CENTER);
 	       contentCell.setPaddingLeft(50);
@@ -472,8 +482,9 @@ public class InvoicePDFExporter {
 	       document.close();
 	        
 	    } catch (Exception ex) {
+	    	logger.info("just before document.close()--------->" , ex.getMessage());
+	    	
 	    	ex.printStackTrace();
-	    	throw new Exception(ex.getMessage());
 	    }
 	    
 		}

@@ -178,8 +178,8 @@ public class EmailService {
 //                        "<br><br><br> Thanks,<br>Team University";
 			logger.info("------>3");
 
-			//String file=emailFileLocation+"PasswordReset.txt";     //Live
-			String file = "./EmailFiles/PasswordReset.txt";          //test
+			String file=emailFileLocation+"PasswordReset.txt";     //Live
+			//String file = "./EmailFiles/PasswordReset.txt";          //test
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -188,15 +188,15 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			// imagePart.attachFile(imageLocation+"logo.png"); //For live
+			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
 
-			imagePart.attachFile("./logo.png"); // For local Testing
+			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
 
-			inlineImages.put("image", "./logo.png"); // For local Testing
+			//inlineImages.put("image", "./logo.png"); // For local Testing
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -288,9 +288,9 @@ public class EmailService {
 
 			
 			
-			//String file=emailFileLocation+"VerficationLink.txt";     //Live
+			String file=emailFileLocation+"VerficationLink.txt";     //Live
 		
-			String file = "./EmailFiles/VerficationLink.txt";
+			//String file = "./EmailFiles/VerficationLink.txt";
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -301,15 +301,15 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			// imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
 
-			imagePart.attachFile("./logo.png"); // For local Testing
+			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
 
-			inlineImages.put("image", "./logo.png"); // For local Testing
+			//inlineImages.put("image", "./logo.png"); // For local Testing
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -392,9 +392,9 @@ public class EmailService {
 		 * + "<p>Team EduCred</p>";
 		 */
 
-		//String file=emailFileLocation+"StatusMail.txt";     //Live
+		String file=emailFileLocation+"StatusMail.txt";     //Live
 
-		String file = "./EmailFiles/StatusMail.txt";
+		//String file = "./EmailFiles/StatusMail.txt";
 
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String vmFileContent = reader.readLine();
@@ -425,16 +425,16 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			// imagePart.attachFile(imageLocation+"logo.png"); //For live
+			 imagePart.attachFile(imageLocation+"logo.png"); //For live
 
-			imagePart.attachFile("./logo.png"); // For local Testing
+			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			// inlineImages.put("image",imageLocation+"logo.png"); //For live
+			 inlineImages.put("image",imageLocation+"logo.png"); //For live
 
-			inlineImages.put("image", "./logo.png"); // For local Testing
+			//inlineImages.put("image", "./logo.png"); // For local Testing
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -572,8 +572,8 @@ public class EmailService {
 	        
 			
 
-//	        Image img = Image.getInstance(imageLocation+"/logo.png");
-	        Image img = Image.getInstance("logo.png");
+	        Image img = Image.getInstance(imageLocation+"/logo.png");
+	       // Image img = Image.getInstance("logo.png");
 
 			img.setAlignment(Element.ALIGN_CENTER);
 			img.scaleToFit(120, 100); // width, height
@@ -723,7 +723,9 @@ public class EmailService {
 		    
 		    document.add(foot);
 		    
-		    Image signImg = Image.getInstance("signn.jpg");
+		    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
+
+		 //   Image signImg = Image.getInstance("signn.jpg");
 		    signImg.setAlignment(Element.ALIGN_RIGHT);
 		    signImg.scaleToFit(150, 120);
 		    
@@ -800,8 +802,8 @@ public class EmailService {
 			// left, right, top, bottom
 			logger.info("headerFooter set here--->just before document.open()");
 
-			// Image img = Image.getInstance(imageLocation+"/logo.png");
-			Image img = Image.getInstance("logo.png");
+			 Image img = Image.getInstance(imageLocation+"/logo.png");
+			//Image img = Image.getInstance("logo.png");
 
 			img.setAlignment(Element.ALIGN_CENTER);
 			img.scaleToFit(120, 100); // width, height
@@ -939,8 +941,8 @@ public class EmailService {
 	    footer1.add("Yours faithfully,");
 	    document.add(footer1);
 	    
-	    Image signImg = Image.getInstance("signn.jpg");
-//	    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
+	 //   Image signImg = Image.getInstance("signn.jpg");
+    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
 	    signImg.setAlignment(Element.ALIGN_RIGHT);
 	    signImg.scaleToFit(150, 120);
 	    
@@ -1021,9 +1023,9 @@ public class EmailService {
 					+ "For reference your dispute reference id is:" + id + ". <br><br> "
 					+ "Thanks, <br><br> Team EduCred";
 
-			//String file=emailFileLocation+"DisputeRaised.txt";     //Live
+			String file=emailFileLocation+"DisputeRaised.txt";     //Live
 
-			String file = "./EmailFiles/DisputeRaised.txt";
+			//String file = "./EmailFiles/DisputeRaised.txt";
 			
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -1031,15 +1033,15 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			// imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
 
-			imagePart.attachFile("./logo.png"); // For local Testing
+			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
 
-			inlineImages.put("image", "./logo.png"); // For local Testing
+			//inlineImages.put("image", "./logo.png"); // For local Testing
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -1140,9 +1142,9 @@ public class EmailService {
 //             		+ "Sorry for the inconvenience caused. \r\n "
 					+ "\r\n Thanks, \r\n Team EduCred";
 
-			//String file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
+			String file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
 
-			String file = "./EmailFiles/DisputeNoChangeStatus.txt";
+			//String file = "./EmailFiles/DisputeNoChangeStatus.txt";
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String vmFileContent = reader.readLine();
@@ -1150,15 +1152,15 @@ public class EmailService {
 
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			// imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
 
-			imagePart.attachFile("./logo.png"); // For local Testing
+			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			// inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			 inlineImages.put("image",logoimageLocation+"logo.png"); //For live
 
-			inlineImages.put("image", "./logo.png"); // For local Testing
+			//inlineImages.put("image", "./logo.png"); // For local Testing
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();
@@ -1237,9 +1239,9 @@ public class EmailService {
 
 		String subject = "Verification Result";
 		
-		//String file=emailFileLocation+"DisputeChangeStatus.txt";     //Live
+		String file=emailFileLocation+"DisputeChangeStatus.txt";     //Live
 
-		String file = "./EmailFiles/DisputeChangeStatus.txt";
+		//String file = "./EmailFiles/DisputeChangeStatus.txt";
 
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String vmFileContent = reader.readLine();
@@ -1266,16 +1268,16 @@ public class EmailService {
 			
 			MimeBodyPart imagePart = new MimeBodyPart();
 
-			// imagePart.attachFile(imageLocation+"logo.png"); //For live
+			 imagePart.attachFile(imageLocation+"logo.png"); //For live
 
-			imagePart.attachFile("./logo.png"); // For local Testing
+			//imagePart.attachFile("./logo.png"); // For local Testing
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 
 			Map<String, String> inlineImages = new HashMap<String, String>();
 
-			//inlineImages.put("image",imageLocation+"logo.png"); //For live
+			inlineImages.put("image",imageLocation+"logo.png"); //For live
 
-			inlineImages.put("image", "./logo.png"); // For local Testing
+			//inlineImages.put("image", "./logo.png"); // For local Testing
 
 			if (inlineImages != null && inlineImages.size() > 0) {
 				Set<String> setImageID = inlineImages.keySet();

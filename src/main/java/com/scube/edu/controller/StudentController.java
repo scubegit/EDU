@@ -205,7 +205,8 @@ public class StudentController {
         invoicePDFExporter.export(response,pdfData,applicationId, imageLocation);
         logger.info("after export"+ response.toString());
         }catch(Exception e) {
-        	throw new Exception(e.getMessage());
+        	
+        	logger.info("-----imageLocation---------------"+e.getMessage());
         }
          
     }
