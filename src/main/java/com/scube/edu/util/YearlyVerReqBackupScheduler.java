@@ -1,5 +1,7 @@
 package com.scube.edu.util;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +19,27 @@ public class YearlyVerReqBackupScheduler {
 	@Autowired
 	YearlyVerReqBackupRepository yearlyVerReqBackupRepository;
 	
-	@Scheduled(cron = "0 0 12 1 * *")
+	//@Scheduled(cron = "0 0 12 1 * *")
+	
+	@Scheduled(cron = "${yearlybackup.cronTime}")
 	public int insertIntoTable() throws Exception {
 		
 		System.out.println("-----------Running scheduler of Yearly backup Data---------- ");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -2); // to get previous year add -1
+		
+		Date prevdate = cal.getTime();
+		int prevyear=prevdate.getYear();
+		prevyear=1900+prevyear;
 		List<YearlyVerReqBackup> datalist=null;
 		String date=yearlyVerReqBackupRepository.getHighestdate();
 
 		if(date!=null) {
-			datalist=yearlyVerReqBackupRepository.findprevYearDatabydate(date);
-
+			if(!date.equals(Integer.toString(prevyear)))
+			datalist=yearlyVerReqBackupRepository.findprevYearDatabydate(date,Integer.toString(prevyear));
 		}
 		else {
+			
 			datalist=yearlyVerReqBackupRepository.findprevYearData();
 		}
 		

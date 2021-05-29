@@ -50,7 +50,7 @@ public class deleteYearOldDocs {
     private String awsORtest;
 	
 //	@Scheduled(cron = "0 */1 * * * *")
-	@Scheduled(cron = "0 0 12 1 * *")
+	@Scheduled(cron = "${deleteDocs.cronTime}")
 	public void deleteDocs() throws Exception{
 		
 		logger.info("Delete Docs");
@@ -160,15 +160,15 @@ public class deleteYearOldDocs {
 //		
 //	}
 	
-	//@Scheduled(cron = "*/15 * * * * *")
-	public void deleteOldRecord() throws Exception {
+	@Scheduled(cron = "${deleteoldVrRequest.cronTime}")
+	public void deleteOldVerReqRecord() throws Exception {
 	
 		String date=yearlyVerReqBackupRepository.getHighestdate();
 		
 		if(date!=null) {
 		int cnt =verificationReqRepo.DeleteRecordsByPreviousYearCreatedDate(date);
 		}
-		logger.info("Successfully delete data where date is >=date");
+		logger.info("Successfully delete data where date is >="+date);
 	
 		}
 		
