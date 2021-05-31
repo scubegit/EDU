@@ -75,7 +75,7 @@ public class DailyVrBackup {
 		}
 		data.setReqDate(datasave.getReqDate());
 		data.setTotalAmt(datasave.getTotalAmt());
-		data.setGstno(datasave.getGstno());
+		//data.setGstno(datasave.getGstno());
 		data.setUniversityAmt(datasave.getUniversityAmt());
 		data.setSecureAmt(datasave.getSecureAmt());
 		dailyVrBackupRepository.save(data);
