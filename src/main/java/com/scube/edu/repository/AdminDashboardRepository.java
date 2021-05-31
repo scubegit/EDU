@@ -20,10 +20,10 @@ public interface AdminDashboardRepository extends JpaRepository<VerificationRequ
 	String getstatclosreqByYear(int year);
 	
 	
-	@Query(value ="SELECT count(*) from verification_request where month(created_date) = ?1", nativeQuery = true)
+	@Query(value ="SELECT count(*) from verification_request where month(created_date) = ?1 and year(created_date)=year(sysdate())", nativeQuery = true)
 	String getstatnewReqByMonth(int month);
 	
-	@Query(value ="SELECT count(*) from verification_request where month(closed_date) = ?1", nativeQuery = true)
+	@Query(value ="SELECT count(*) from verification_request where month(closed_date) = ?1 and year(created_date)=year(sysdate())", nativeQuery = true)
 	String getstatclosreqByMonth(int month);
 	
 	String countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
