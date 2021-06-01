@@ -25,8 +25,6 @@ public class DailyVrBackup {
 	@Autowired
 	DailyVrBackupRepository dailyVrBackupRepository;
 	
-	@Value("${dailybackup.cronTime}")
-    private String crontime;
 	
 	//@Scheduled(cron = "0 0 0 * * ?")	
 	@Scheduled(cron = "${dailybackup.cronTime}")
@@ -35,7 +33,7 @@ public class DailyVrBackup {
 		
 		System.out.println("-----------Running scheduler of Daily backup Data---------- ");
 		
-		System.out.println("crontime"+crontime);
+	//	System.out.println("crontime"+crontime);
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -2); // to get previous year add -1
 		
