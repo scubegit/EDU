@@ -29,9 +29,6 @@ public class DailyVrBackupEntity {
 	@Column(name = "company_name")
 	private String companyNm;
 	
-	@Column(name = "gstin_no")
-	private String gstno;
-	
 	@Column(name = "secure_amt")
 	private Long secureAmt;
 	

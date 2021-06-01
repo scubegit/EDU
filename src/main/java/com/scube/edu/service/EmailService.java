@@ -1268,7 +1268,7 @@ public class EmailService {
 			String file;
 			if(awsORtest.equalsIgnoreCase("AWS")) {
 				file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
-			}if(awsORtest.equalsIgnoreCase("AWS")) {
+			}if(awsORtest.equalsIgnoreCase("TEST")) {
 				file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Test
 //				file = "./EmailFiles/DisputeNoChangeStatus.txt";
 			}else {

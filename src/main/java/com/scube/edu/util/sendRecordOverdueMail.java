@@ -37,7 +37,7 @@ public class sendRecordOverdueMail {
 	@Value("${file.imagepath-dir}")
     private String imageLocation;
 	
-	@Scheduled(cron = "0 0 0 * * *")	
+	@Scheduled(cron = "${sendRecordOverdueMail.cronTime}")	
 	//@Scheduled(cron = "*/60 * * * * *")
 	public void removeUnverifiedUser() throws Exception {
 		

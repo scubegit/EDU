@@ -1,6 +1,7 @@
 package com.scube.edu.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.repository.DocumentRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
+import com.scube.edu.request.YearOfPassingRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.YearOfPassingResponse;
 
@@ -58,4 +61,90 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 				
 						return yearEnt;
 		}
+
+		@Override
+		public boolean addYear(YearOfPassingRequest yearOfPassReq) throws Exception {
+			
+			logger.info("*******YearOfPassingServiceImpl addYear*******");
+			
+			PassingYearMaster yr = yearOfPassingRespository.findByYearOfPassing(yearOfPassReq.getYearOfPass());
+			
+			if(yr != null) {
+				throw new Exception("Year already exists.");
+			}
+			
+			PassingYearMaster year = new PassingYearMaster();
+			
+			year.setYearOfPassing(yearOfPassReq.getYearOfPass());
+			
+			yearOfPassingRespository.save(year);
+			
+			return true;
+		}
+
+		@Override
+		public boolean deleteYear(long id) throws Exception {
+			
+			logger.info("*******YearOfPassingServiceImpl deleteYear*******");
+			
+			baseResponse	= new BaseResponse();	
+			
+			PassingYearMaster year = yearOfPassingRespository.findById(id);
+			
+			if(year == null) {
+				throw new Exception("Invalid ID");
+			}else {
+			
+				yearOfPassingRespository.delete(year);
+			}
+			
+			return true;
+		}
+
+		@Override
+		public String updateYearById(YearOfPassingRequest yearOfPassReq, HttpServletRequest request) throws Exception {
+			
+			logger.info("*******YearOfPassingServiceImpl updateYearById*******");
+			
+			String resp = null;
+			boolean flg;
+			PassingYearMaster response = yearOfPassingRespository.findByYearOfPassing(yearOfPassReq.getYearOfPass());
+			
+			if(response!=null){
+				logger.info("ids"+response.getId()+" "+yearOfPassReq.getId());
+				if(response.getId()!=yearOfPassReq.getId())
+				{
+				resp="Year Already exist!";
+				flg=true;
+				}
+				else {
+					flg=false;
+				}
+			}
+			else {
+				flg=false;
+			}
+			
+			if(flg==false) {
+				
+				Optional<PassingYearMaster> yearEntities = yearOfPassingRespository.findById(yearOfPassReq.getId());
+				
+				if(yearEntities == null) {
+					resp="Invalid Id";
+				}
+				else {
+					PassingYearMaster year = new PassingYearMaster();
+					
+					year.setId(yearOfPassReq.getId());
+					year.setYearOfPassing(yearOfPassReq.getYearOfPass());
+					
+					yearOfPassingRespository.save(year);
+					resp = "Success";
+				}
+				
+			}
+			return resp;
+			
+		}
+
 }

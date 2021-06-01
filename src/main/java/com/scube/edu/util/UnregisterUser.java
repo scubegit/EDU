@@ -24,7 +24,7 @@ public class UnregisterUser {
 	
 	
 	
-	@Scheduled(cron = "0 */5 * * * *")	
+	@Scheduled(cron = "${UnregisterUser.cronTime}")	
 	//@Scheduled(cron = "*/60 * * * * *")
 	public void removeUnverifiedUser() {
 		

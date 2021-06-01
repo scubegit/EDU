@@ -5,24 +5,35 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.controller.CollegeController;
 import com.scube.edu.model.DailyVrBackupEntity;
 import com.scube.edu.repository.DailyVrBackupRepository;
+
 
 @Service
 public class DailyVrBackup {
 
+	private static final Logger logger = LoggerFactory.getLogger(CollegeController.class);
+
 	@Autowired
 	DailyVrBackupRepository dailyVrBackupRepository;
 	
-	@Scheduled(cron = "0 0 0 * * ?")
+	
+	//@Scheduled(cron = "0 0 0 * * ?")	
+	@Scheduled(cron = "${dailybackup.cronTime}")
 	public int insertDailyDataIntoTable() throws Exception {
+		
 		
 		System.out.println("-----------Running scheduler of Daily backup Data---------- ");
 		
+	//	System.out.println("crontime"+crontime);
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -2); // to get previous year add -1
 		
@@ -64,7 +75,7 @@ public class DailyVrBackup {
 		}
 		data.setReqDate(datasave.getReqDate());
 		data.setTotalAmt(datasave.getTotalAmt());
-		data.setGstno(datasave.getGstno());
+		//data.setGstno(datasave.getGstno());
 		data.setUniversityAmt(datasave.getUniversityAmt());
 		data.setSecureAmt(datasave.getSecureAmt());
 		dailyVrBackupRepository.save(data);
