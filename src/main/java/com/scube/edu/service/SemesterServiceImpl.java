@@ -97,15 +97,21 @@ public class SemesterServiceImpl implements SemesterService{
 	}
 
 	@Override
-	public boolean deleteSemester(Long id, HttpServletRequest request) {
+	public boolean deleteSemester(Long id, HttpServletRequest request) throws Exception {
 		
 		logger.info("*******SemesterServiceImpl deleteSemester*******"+id);
 		
 		Optional<SemesterEntity> sme = semesterRepository.findById(id);
 		SemesterEntity sEnt = sme.get();
 		
-		semesterRepository.delete(sEnt);
+		if(sEnt == null) {
+			throw new Exception("Invalid Id");
+		}else {
 		
+			sEnt.setIsdeleted("Y");
+			semesterRepository.save(sEnt);
+//		semesterRepository.delete(sEnt);
+		}
 		return true;
 	}
 

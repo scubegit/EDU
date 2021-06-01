@@ -43,7 +43,7 @@ public class DocumentServiceImpl implements DocumentService{
 		
 		List<DocumentResponse> docList = new ArrayList<>();
 		
-		List<DocumentMaster> docEntities    = documentRespository.findAll();
+		List<DocumentMaster> docEntities    = documentRespository.findAllByIsdeleted("N");
 		
 		for(DocumentMaster entity : docEntities) {
 			
@@ -153,7 +153,9 @@ public class DocumentServiceImpl implements DocumentService{
 			}else {
 							
 
-		docEntities  = documentRespository.deleteById(id);
+//		docEntities  = documentRespository.deleteById(id);
+		docEntities.setIsdeleted("Y");
+		documentRespository.save(docEntities);
 		
 		 
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

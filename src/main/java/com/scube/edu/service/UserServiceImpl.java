@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 		
 		List<UserResponse> userList = new ArrayList<>();
 		
-		List<UserMasterEntity> userEntities    = userRepository.findAll();
+		List<UserMasterEntity> userEntities    = userRepository.findAllByIsdeleted("N");
 		
 		for(UserMasterEntity entity : userEntities) {
 			
@@ -127,6 +127,7 @@ public class UserServiceImpl implements UserService {
 			userMasterEntity.setUsername(userReq.getEmailId());
 			userMasterEntity.setRoleId(userReq.getRoleId());
 			userMasterEntity.setIsactive("Y");
+			userMasterEntity.setIsdeleted("N");
 			
 			emailService.sendVerificationEmail(userReq.getEmailId(), url);
 			
@@ -149,7 +150,10 @@ public class UserServiceImpl implements UserService {
 			
 		}else {
 			
-			userRepository.deleteById(id);
+//			userRepository.deleteById(id);
+			usd.setIsdeleted("Y");
+			usd.setIsactive("N");
+			userRepository.save(usd);
 			return true;
 			
 		}

@@ -1,5 +1,7 @@
 package com.scube.edu.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,6 @@ public interface StreamRepository  extends JpaRepository<StreamMaster, Long>{
 
 	StreamMaster deleteById(long id);
 	StreamMaster findByStreamName( String Streamname);
+	List<StreamMaster> findAllByIsdeleted(String isdeleted);
 	
 }

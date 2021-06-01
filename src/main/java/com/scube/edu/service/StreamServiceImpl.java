@@ -38,7 +38,7 @@ public class StreamServiceImpl  implements StreamService{
 
 			List<StreamResponse> List = new ArrayList<>();
 			
-			List<StreamMaster> streamEntities    = streamRespository.findAll();
+			List<StreamMaster> streamEntities    = streamRespository.findAllByIsdeleted("N");
 			
 			for(StreamMaster entity : streamEntities) {
 				
@@ -156,7 +156,9 @@ public class StreamServiceImpl  implements StreamService{
 				}else {
 								
 
-					streamEntities  = streamRespository.deleteById(id);
+//					streamEntities  = streamRespository.deleteById(id);
+					streamEntities.setIsdeleted("Y");
+					streamRespository.save(streamEntities);
 			
 			 
 			baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

@@ -105,14 +105,22 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	}
 
 	@Override
-	public boolean deleteBranch(Long id, HttpServletRequest request) {
+	public boolean deleteBranch(Long id, HttpServletRequest request) throws Exception {
 		
 		Optional<BranchMasterEntity> bme = branchMasterRepository.findById(id);
 		BranchMasterEntity bm = bme.get();
 
-		branchMasterRepository.delete(bm);
+//		branchMasterRepository.delete(bm);
+		if(bm == null) {
+			throw new Exception("Invalid ID");
+		}else {
+			
+			bm.setIsdeleted("Y");
+			branchMasterRepository.save(bm);
+			return true;
+		}
 		
-		return true;
+		
 	}
 
 	@Override

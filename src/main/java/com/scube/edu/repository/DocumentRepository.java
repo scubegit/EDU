@@ -1,5 +1,7 @@
 package com.scube.edu.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,6 @@ public interface DocumentRepository extends JpaRepository<DocumentMaster, Long>{
 	DocumentMaster findByDocumentName(String docName);
 	
 	DocumentMaster deleteById(long id);
+	List<DocumentMaster> findAllByIsdeleted(String isdeleted);
 
 }

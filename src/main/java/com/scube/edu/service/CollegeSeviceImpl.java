@@ -36,7 +36,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		
 		 List<CollegeResponse> collegeList = new ArrayList<>();
 			
-			List<CollegeMaster> collegeEntities    = collegeRespository.findAll();
+			List<CollegeMaster> collegeEntities    = collegeRespository.findByIsdeleted("N");
 			
 			for(CollegeMaster entity : collegeEntities) {
 				
@@ -174,7 +174,9 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 			}else {
 							
 
-		 collegeEntities  = collegeRespository.deleteById(id);
+//		 collegeEntities  = collegeRespository.deleteById(id);
+				collegeEntities.setIsdeleted("Y");
+				collegeRespository.save(collegeEntities);
 		
 		 
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);

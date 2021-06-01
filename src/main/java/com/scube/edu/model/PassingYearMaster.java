@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @Table(	name = "passingYearMaster")
 @Getter @Setter
-public class PassingYearMaster {
+public class PassingYearMaster extends CreateUpdate{
 
 	
 	@Id

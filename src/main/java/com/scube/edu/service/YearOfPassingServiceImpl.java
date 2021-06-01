@@ -35,7 +35,7 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 			
 			  List<YearOfPassingResponse> List = new ArrayList<>();
 				
-				List<PassingYearMaster> yearEntities    = yearOfPassingRespository.findAll();
+				List<PassingYearMaster> yearEntities    = yearOfPassingRespository.findAllByIsdeleted("N");
 				
 				for(PassingYearMaster entity : yearEntities) {
 					
@@ -76,6 +76,7 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 			PassingYearMaster year = new PassingYearMaster();
 			
 			year.setYearOfPassing(yearOfPassReq.getYearOfPass());
+			year.setIsdeleted("N");
 			
 			yearOfPassingRespository.save(year);
 			
@@ -95,7 +96,9 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 				throw new Exception("Invalid ID");
 			}else {
 			
-				yearOfPassingRespository.delete(year);
+				year.setIsdeleted("Y");
+				yearOfPassingRespository.save(year);
+//				yearOfPassingRespository.delete(year);
 			}
 			
 			return true;
