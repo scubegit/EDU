@@ -19,7 +19,7 @@ public class YearlyVerReqBackupScheduler {
 	@Autowired
 	YearlyVerReqBackupRepository yearlyVerReqBackupRepository;
 	
-	//@Scheduled(cron = "0 0 12 1 * *")
+
 	
 	@Scheduled(cron = "${yearlybackup.cronTime}")
 	public int insertIntoTable() throws Exception {
