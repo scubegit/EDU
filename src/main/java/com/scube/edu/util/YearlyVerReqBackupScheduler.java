@@ -19,13 +19,9 @@ public class YearlyVerReqBackupScheduler {
 	@Autowired
 	YearlyVerReqBackupRepository yearlyVerReqBackupRepository;
 	
-<<<<<<< HEAD
-	@Scheduled(cron = "0 0 0 * * ?")
-=======
-	//@Scheduled(cron = "0 0 12 1 * *")
+
 	
 	@Scheduled(cron = "${yearlybackup.cronTime}")
->>>>>>> 842274a5e5c981fc6ebd54092a075c40f3a1d28e
 	public int insertIntoTable() throws Exception {
 		
 		System.out.println("-----------Running scheduler of Yearly backup Data---------- ");
