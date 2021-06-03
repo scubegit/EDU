@@ -173,6 +173,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 
 			}
 		}
+		if (statusChangeRequest.getStatus().equalsIgnoreCase("Requested")) {
+			veriReq.setAssignedTo((long) 0);
+		}
 		veriReq.setSvVerId(statusChangeRequest.getVerifiedby());
 		veriReq.setSvActionDate(new Date());
 		veriReq.setSuperVerStatus(statusChangeRequest.getStatus());
