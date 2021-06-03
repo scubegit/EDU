@@ -32,7 +32,7 @@ public class RequestTypeServiceImpl implements RequestTypeService {
 		
 		List<RequestTypeResponse> reqTypeList = new ArrayList<>();
 		
-		List<RequestTypeMaster> entt = reqTypeRepo.findAll();
+		List<RequestTypeMaster> entt = reqTypeRepo.findByIsdeleted("N");
 		
 		for(RequestTypeMaster entity : entt) {
 			

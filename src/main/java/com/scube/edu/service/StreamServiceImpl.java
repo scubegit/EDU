@@ -71,7 +71,7 @@ public class StreamServiceImpl  implements StreamService{
 			streamMasterEntity.setUniversityId(streamRequest.getUniversityId());//1
 			streamMasterEntity.setStreamName(streamRequest.getStreamName());//Name Document
 			streamMasterEntity.setCreateby(streamRequest.getCreated_by()); // Logged User Id 
-			streamMasterEntity.setIsdeleted(streamRequest.getIs_deleted()); // By Default N	
+			streamMasterEntity.setIsdeleted("N"); // By Default N	
 		
 			streamRespository.save(streamMasterEntity);
 			resp="success";
@@ -113,6 +113,7 @@ public class StreamServiceImpl  implements StreamService{
 				   entity.setId(streamMaster.getId());
 				   entity.setUniversityId(streamMaster.getUniversityId());
 				   entity.setStreamName(streamMaster.getStreamName());
+				   entity.setIsdeleted("N");
 				   entity.setUpdatedate(new Date());
 			       streamRespository.save(entity);
 			       resp = "Success";

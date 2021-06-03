@@ -41,7 +41,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		logger.info("ID"+id);
 		 List<BranchResponse> branchList = new ArrayList<>();
 			
-			List<BranchMasterEntity> branchEntities    = branchMasterRepository.getbrachbyStreamId(id);
+			List<BranchMasterEntity> branchEntities    = branchMasterRepository.findByStreamIdAndIsdeleted(id,"N");
 			for(BranchMasterEntity entity : branchEntities) {
 				
 				BranchResponse response = new BranchResponse();

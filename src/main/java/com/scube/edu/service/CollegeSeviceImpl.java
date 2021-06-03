@@ -76,7 +76,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 			collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());// 1
 			collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());// Name Document
 			collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id
-			collegeMasterEntity.setIsdeleted(collegeRequest.getIs_deleted()); // By Default N
+			collegeMasterEntity.setIsdeleted("N"); // By Default N
 
 			collegeRespository.save(collegeMasterEntity);
 	     
@@ -130,6 +130,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		collegeEntit.setId(collegeMaster.getId());
 		collegeEntit.setCollegeName(collegeMaster.getCollegeName());
 		collegeEntit.setUniversityId(collegeMaster.getUniversityId());
+		collegeEntit.setIsdeleted("N");
 		collegeEntit.setUpdatedate(new Date());
 		
 		

@@ -89,7 +89,7 @@ public class DocumentServiceImpl implements DocumentService{
 		docMasterEntity.setUniversityId(documentRequest.getUniversityId());//1
 		docMasterEntity.setDocumentName(documentRequest.getDocumentName());//Name Document
 		docMasterEntity.setCreateby(documentRequest.getCreated_by()); // Logged User Id 
-		docMasterEntity.setIsdeleted(documentRequest.getIs_deleted()); // By Default N
+		docMasterEntity.setIsdeleted("N"); // By Default N
 	    documentRespository.save(docMasterEntity);
 	
 	    resp="Success";
@@ -128,6 +128,7 @@ public class DocumentServiceImpl implements DocumentService{
 		    docEntit.setId(documentMaster.getId());
 		    docEntit.setDocumentName(documentMaster.getDocumentName());
 		    docEntit.setUniversityId(documentMaster.getUniversityId());
+		    docEntit.setIsdeleted("N");
 		    docEntit.setUpdatedate(new Date());		
 		 documentRespository.save(docEntit);
 		 resp="Success";

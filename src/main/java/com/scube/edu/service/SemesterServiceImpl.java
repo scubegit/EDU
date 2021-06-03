@@ -39,7 +39,7 @@ public class SemesterServiceImpl implements SemesterService{
 		logger.info("ID"+id);
 		 List<SemesterResponse> branchList = new ArrayList<>();
 			
-			List<SemesterEntity> branchEntities    = semesterRepository.getSembyStreamId(id);
+			List<SemesterEntity> branchEntities    = semesterRepository.findByStreamIdAndIsdeleted(id,"N");
 			for(SemesterEntity entity : branchEntities) {
 				
 				SemesterResponse response = new SemesterResponse();
@@ -156,7 +156,7 @@ public class SemesterServiceImpl implements SemesterService{
 		
 		logger.info("*******SemesterServiceImpl getAllSemList*******");
 		
-		List<SemesterEntity> list = semesterRepository.findAll();
+		List<SemesterEntity> list = semesterRepository.findAllByIsdeleted("N");
 		
 		List<SemesterResponse> respList = new ArrayList<>();
 		
