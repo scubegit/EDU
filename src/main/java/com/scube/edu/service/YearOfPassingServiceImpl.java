@@ -130,7 +130,8 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 			
 			if(flg==false) {
 				
-				Optional<PassingYearMaster> yearEntities = yearOfPassingRespository.findById(yearOfPassReq.getId());
+				Optional<PassingYearMaster> yearEntitiess = yearOfPassingRespository.findById(yearOfPassReq.getId());
+				PassingYearMaster yearEntities = yearEntitiess.get();
 				
 				if(yearEntities == null) {
 					resp="Invalid Id";
@@ -140,6 +141,7 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 					
 					year.setId(yearOfPassReq.getId());
 					year.setYearOfPassing(yearOfPassReq.getYearOfPass());
+					year.setIsdeleted("N");
 					
 					yearOfPassingRespository.save(year);
 					resp = "Success";
