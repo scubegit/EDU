@@ -455,94 +455,21 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 studData.add(resp);
 			 
 		 }
-		
-//		 String query="";
-//		 query="Select data from UniversityStudentDocument data where ";
-//		 
-//		 if(universityStudData!=null)
-//		 {
-//			 
-//			 String Name=universityStudData.getFirstName();
-//			 String lastName=universityStudData.getLastName();
-//			 Long Stream=universityStudData.getStreamId();
-//			 Long clgName=universityStudData.getCollegeId();
-//			 String enrollNo=universityStudData.getEnrollmentNo();
-//			 Long YearOfPassing=universityStudData.getPassingYearId(); 
-//			 
-//			 if(!Name.isEmpty())
-//			 {
-//				 query=query+" firstName='"+universityStudData.getFirstName()+"'";
-//				 if(!lastName.isEmpty()||Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)
-//				 {
-//				 query=query+" and";
-//				 }
-//			 }
-//				 
-//			 if(!universityStudData.getLastName().isEmpty())
-//			 {
-//				 query=query+" lastName='"+universityStudData.getLastName()+"'";
-//				 if(Stream!=null||clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null)				 {
-//					
-//				 query=query+" and";
-//				 }
-//			 }
-//			 if(universityStudData.getStreamId()!=null)
-//			 {
-//				 query=query+"  streamId='"+universityStudData.getStreamId()+"'";
-//				 if(clgName!=null||!enrollNo.isEmpty()||YearOfPassing!=null) {
-//				  query=query+" and";
-//				 }
-//			 }
-//			 if(universityStudData.getCollegeId()!=null)
-//			 {
-//				 query=query+"  collegeId='"+universityStudData.getCollegeId()+"'";
-//				 if(!enrollNo.isEmpty()||YearOfPassing!=null)				 {
-//				 query=query+" and";
-//				 }
-//			 }
-//			 if(!universityStudData.getEnrollmentNo().isEmpty())
-//			 {
-//				 query=query+"  enrollmentNo='"+universityStudData.getEnrollmentNo()+"'";
-//				 if(universityStudData.getPassingYearId()!=null)
-//				 {
-//				 query=query+" and";
-//				 }
-//			 }
-//			 if(universityStudData.getPassingYearId()!=null)
-//			 {
-//				 query=query+" passingYearId="+universityStudData.getPassingYearId()+"";
-//			 }
-//		 }
-//		 
-//		 logger.info(query);
-//		 
-//		 EntityManager em = emf.createEntityManager();
-//		 studentDataList= em.createQuery(query).getResultList();
-		// studentDataList=universityStudentDocRepository.getStudData(query);
-//		 List<UniversityStudDocResponse> studData=new ArrayList<>();
-//		 for(UniversityStudentDocument setStudentdata:studentDataList)
-//		 {
-//				Optional<CollegeMaster> college= collegeRespository.findById(setStudentdata.getCollegeId());
-//				CollegeMaster collegeEntities=college.get();
-//				Optional<StreamMaster> streaminfo =streamRespository.findById(setStudentdata.getStreamId());
-//				StreamMaster stream=streaminfo.get();
-//				Optional<PassingYearMaster> passingyrinfo=yearOfPassingRespository.findById(setStudentdata.getPassingYearId());
-//				PassingYearMaster passingyr=passingyrinfo.get();
-//			 UniversityStudDocResponse studDataResponse=new UniversityStudDocResponse();
-//			 
-//			 studDataResponse.setId(setStudentdata.getId());
-//			 studDataResponse.setFirstName(setStudentdata.getFirstName());
-//			 studDataResponse.setLastName(setStudentdata.getLastName());
-//			 studDataResponse.setCollegeName(collegeEntities.getCollegeName());
-//			 studDataResponse.setEnrollmentNo(setStudentdata.getEnrollmentNo());
-//			 studDataResponse.setStream(stream.getStreamName());
-//			 studDataResponse.setPassingYear(passingyr.getYearOfPassing());
-//			 //String Path=
-//			 studDataResponse.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+setStudentdata.getId());
-//			 studData.add(studDataResponse);
-//		 }
-//		 logger.info("Data"+studData);
+
 		return studData;
 	}
-
+	@Override
+	public String saveassociatefilepath(MultipartFile datafile) {
+		 String fileSubPath = "file/";
+		 String filePath;
+		 
+		 String flag = "2";
+		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			 
+			 filePath = fileStorageService.storeFile(datafile, fileSubPath, flag);
+		 }else {
+			 filePath = fileStorageService.storeFileOnAws(datafile , flag);
+		 }				 
+		 return filePath;
+	}
 }
