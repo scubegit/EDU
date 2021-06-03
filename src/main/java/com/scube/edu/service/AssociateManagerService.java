@@ -20,5 +20,6 @@ public interface AssociateManagerService {
 	public List<UniversityStudDocResponse>  getStudentData(UniversityStudentRequest universityStudData);
 
 
+	public String saveassociatefilepath (MultipartFile datafile);
 
 }
