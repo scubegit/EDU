@@ -1,5 +1,6 @@
 package com.scube.edu.service;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
 		
 		UserMasterEntity userMasterEntity  =new  UserMasterEntity();
 		 
-		UserMasterEntity userEntities  = userRepository.findByEmailId(userReq.getEmailId());
+		UserMasterEntity userEntities  = userRepository.findByEmailIdAndIsdeleted(userReq.getEmailId(), "N");
 		
 			if(userEntities != null) {
 				
@@ -151,6 +152,10 @@ public class UserServiceImpl implements UserService {
 		}else {
 			
 //			userRepository.deleteById(id);
+			Date date = new Date(System.currentTimeMillis());
+			
+			usd.setEmailId(usd.getEmailId()+date.getTime());
+			usd.setUsername(usd.getUsername()+date.getTime());
 			usd.setIsdeleted("Y");
 			usd.setIsactive("N");
 			userRepository.save(usd);

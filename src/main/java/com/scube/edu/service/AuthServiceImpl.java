@@ -102,7 +102,7 @@ public class AuthServiceImpl implements AuthService{
 	    
 		// UserMasterEntity masterEntity =  userRepository.findByUsername(loginRequest.getUsername());
 
-		UserMasterEntity masterEntity =  userRepository.findByEmailId(loginRequest.getUsername());
+		UserMasterEntity masterEntity =  userRepository.findByEmailIdAndIsdeleted(loginRequest.getUsername(),"N");
 		
 	//	System.out.println("===masterEntity======="+masterEntity.getEmailVerificationStatus());
 		 
@@ -152,7 +152,7 @@ public class AuthServiceImpl implements AuthService{
 		 
 		 System.out.println("------------"+userMasterEntity.getEmailId());
 		 
-		  UserMasterEntity userEntities  = userRepository.findByEmailId(userAddRequest.getEmailId());
+		  UserMasterEntity userEntities  = userRepository.findByEmailIdAndIsdeleted(userAddRequest.getEmailId(),"N");
 		 
 		
 			if(userEntities != null) {
@@ -176,6 +176,7 @@ public class AuthServiceImpl implements AuthService{
 			userMasterEntity.setUsername(userAddRequest.getEmailId());
 			userMasterEntity.setRoleId(userAddRequest.getRoleId());
 			userMasterEntity.setIsactive("Y");
+			userMasterEntity.setIsdeleted("N");
 		 
 	
 	     userRepository.save(userMasterEntity);
@@ -196,7 +197,7 @@ public class AuthServiceImpl implements AuthService{
 			
 		logger.info("----------resetPasswordBySendingEMail---------");
 		
-		 UserMasterEntity userEntities  = userRepository.findByUsername(email);
+		 UserMasterEntity userEntities  = userRepository.findByUsernameAndIsdeleted(email, "N");
 		 
 			if(userEntities == null) {
 				throw new Exception("User Unauthorised");

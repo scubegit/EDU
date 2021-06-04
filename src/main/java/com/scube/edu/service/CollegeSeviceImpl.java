@@ -73,7 +73,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	
 			CollegeMaster collegeMasterEntity = new CollegeMaster();
 
-			collegeMasterEntity.setUniversityId(collegeRequest.getUniversityId());// 1
+			collegeMasterEntity.setUniversityId((long)1);// 1
 			collegeMasterEntity.setCollegeName(collegeRequest.getCollegeName());// Name Document
 			collegeMasterEntity.setCreateby(collegeRequest.getCreated_by()); // Logged User Id
 			collegeMasterEntity.setIsdeleted("N"); // By Default N

@@ -37,6 +37,10 @@ public interface UserRepository extends JpaRepository<UserMasterEntity, Long>{
 	  UserMasterEntity findByRoleId(long roleId);
 
 	List<UserMasterEntity> findAllByIsdeleted(String isdeleted);
+
+	UserMasterEntity findByEmailIdAndIsdeleted(String emailId, String isdeleted);
+
+	UserMasterEntity findByUsernameAndIsdeleted(String email, String isdeleted);
 	  
 	//List<UserMasterEntity> getAll();
 	//boolean existsByAndIsdeletedAndIsactive(String username, String IsDeleted);
