@@ -42,7 +42,7 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and convert(created_date , Date) >= (?2) and convert(created_date , Date) <= (?3)" , nativeQuery = true)
 	List<VerificationRequest> findByUserIdAndDates(long userId, String fromDate, String toDate);
 
-	@Query(value = "SELECT * FROM verification_request where doc_status in ('Rejected', 'Unable To Verify', 'Offline') and convert(created_date , Date) >= (?1) and convert(created_date , Date) <= (?2)" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status not in ('Requested', 'Approved','Sv_Approved','SV_Rejected') and convert(created_date , Date) >= (?1) and convert(created_date , Date) <= (?2)" , nativeQuery = true)
 	List<VerificationRequest> findByStatus(String fromDate, String toDate);
 
 	@Query(value = "SELECT * FROM verification_request where doc_status in ('Approved','SV_Approved','SV_Rejected')", nativeQuery = true)
