@@ -34,6 +34,7 @@ public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long
 	 * , nativeQuery = true) int getstatdisputByWeek(String fromdt,String todt);
 	 */
 	
-	String countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
+	 @Query(value ="SELECT count(*) from raise_despute where date(created_date) >= ?1 and date(created_date) <= ?1",nativeQuery=true)
+	String countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(String value1, String value2);
 
 }

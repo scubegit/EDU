@@ -54,7 +54,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	UserRepository userRepository;
 	
 	@Override
-	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int useryear) {
+	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int useryear) throws Exception {
 		
 		logger.info("****AdminDashboardServiceImpl   getRequestStatByStatus******");
 		
@@ -80,6 +80,10 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		logger.info("-----lastYear=" +prevyear );
 		
 		Date datofmonday=c.getTime();
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+		
 		System.out.println("MondayDate:- "+datofmonday);
 		
         String dayWeekText = new SimpleDateFormat("EEEE").format(d);
@@ -130,10 +134,17 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		monthstatCountMap.put("Closed",closreuestMonthCount);		
 		monthstatCountMap.put("Dispute",disputereqMonthCount);				
 		
+		String monday = simpleDateFormat.format(datofmonday);
+		System.out.println(monday);
 		
-		String newreuestWeekcount=adminDashboardRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);	
-		String clsdreuestWeekcount=adminDashboardRepository.countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(datofmonday,d);
-		String disputereqWeekCount=raiseDisputeRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(datofmonday,d);
+		String currentdate = simpleDateFormat.format(d);
+		System.out.println(currentdate);
+		
+			
+		
+		String newreuestWeekcount=adminDashboardRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(monday,currentdate);	
+		String clsdreuestWeekcount=adminDashboardRepository.countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(monday,currentdate);
+		String disputereqWeekCount=raiseDisputeRepository.countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(monday,currentdate);
 
 		
 		weekstatCountMap.put("New",newreuestWeekcount);

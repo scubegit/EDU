@@ -26,9 +26,11 @@ public interface AdminDashboardRepository extends JpaRepository<VerificationRequ
 	@Query(value ="SELECT count(*) from verification_request where month(closed_date) = ?1 and year(created_date)=year(sysdate())", nativeQuery = true)
 	String getstatclosreqByMonth(int month);
 	
-	String countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(Date value1, Date value2);
+	@Query(value ="SELECT count(*) from verification_request where date(created_date) >= ?1 and date(created_date) <=?2 ", nativeQuery = true)
+	String countByCreatedateGreaterThanEqualAndCreatedateLessThanEqual(String value1, String value2);
 	
-	String countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(Date value1, Date value2);
+	@Query(value ="SELECT count(*) from verification_request where date(closed_date) >= ?1 and date(closed_date) <=?2 ", nativeQuery = true)
+	String countByClosedDateGreaterThanEqualAndClosedDateLessThanEqual(String value1, String value2);
 
 	@Query(value="select sum(vr.doc_amt_with_gst) as totalAmt ,um.company_name,vr.user_id from verification_request vr left join user_master um on vr.user_id=um.id where um.company_name is not null and um.role_id =2 and year(vr.created_date)= ?1 group by user_id order by totalAmt desc limit 10",nativeQuery = true)
 	List<Object[]> findVerificationRequestToptenEmp(int year);

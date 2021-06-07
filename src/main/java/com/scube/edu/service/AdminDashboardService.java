@@ -14,7 +14,7 @@ import com.scube.edu.response.VerifierPerformanceResponse;
 
 public interface AdminDashboardService {
 
-	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int year);
+	public HashMap<String,HashMap<String,String>> getRequestStatByStatus(int year) throws Exception;
 	
 	public List<TopTenEmployResponse>  gettopTenEmployer(int year);
 	
