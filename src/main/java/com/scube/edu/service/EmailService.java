@@ -189,13 +189,13 @@ public class EmailService {
 //                        "<br><br><br> Thanks,<br>Team University";
 			logger.info("------>3");
 
-			String file;
+			String file = null;
 			if(awsORtest.equalsIgnoreCase("AWS")) {
 				file=emailFileLocation+"PasswordReset.txt";     //Live
 			}if(awsORtest.equalsIgnoreCase("TEST")) {
 				file = emailFileLocation+ "PasswordReset.txt"; // test
 //				file = "./EmailFiles/PasswordReset.txt"; 
-			}else {
+			}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 				file = emailFileLocation+"./EmailFiles/PasswordReset.txt";          //local
 			}
 
@@ -315,13 +315,13 @@ public class EmailService {
 					+ " <br>If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks,<br>Team University";
 
 			
-			String file;
+			String file = null;
 			if(awsORtest.equalsIgnoreCase("AWS")) {
 				file=emailFileLocation+"VerficationLink.txt";     //Live
 			}if(awsORtest.equalsIgnoreCase("TEST")) {
 				file=emailFileLocation+"Verification.txt";	// test
 //				file = "./EmailFiles/VerficationLink.txt";
-			}else {
+			}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 				file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
 
 			}
@@ -437,13 +437,13 @@ public class EmailService {
 		 * "    <p>In case of any dispute you may log on to the site and raise a request through the Dispute option available. </p> <br>  <br>"
 		 * + "<p>Team EduCred</p>";
 		 */
-		String file;
+		String file = null;
 		if(awsORtest.equalsIgnoreCase("AWS")) {
 			file=emailFileLocation+"StatusMail.txt"; //Live
 		}if(awsORtest.equalsIgnoreCase("TEST")){
 			file=emailFileLocation+"StatusMail.txt"; //test
 //			file = "./EmailFiles/StatusMail.txt";
-		}else {
+		}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 			file = emailFileLocation+"./EmailFiles/StatusMail.txt";
 		}
 		
@@ -1129,13 +1129,13 @@ public class EmailService {
 					+ "For reference your dispute reference id is:" + id + ". <br><br> "
 					+ "Thanks, <br><br> Team EduCred";
 
-			String file;
+			String file = null;
 			if(awsORtest.equalsIgnoreCase("AWS")) {
 				file=emailFileLocation+"DisputeRaised.txt";     //Live
 			}if(awsORtest.equalsIgnoreCase("TEST")) {
 				file=emailFileLocation+"DisputeRaised.txt";     //Test
 //				file = "./EmailFiles/DisputeRaised.txt";
-			}else {
+			}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 
 				file = emailFileLocation+"./EmailFiles/DisputeRaised.txt";
 			}
@@ -1265,13 +1265,13 @@ public class EmailService {
 //             		+ "Sorry for the inconvenience caused. \r\n "
 					+ "\r\n Thanks, \r\n Team EduCred";
 
-			String file;
+			String file = null;
 			if(awsORtest.equalsIgnoreCase("AWS")) {
 				file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Live
 			}if(awsORtest.equalsIgnoreCase("TEST")) {
 				file=emailFileLocation+"DisputeNoChangeStatus.txt";     //Test
 //				file = "./EmailFiles/DisputeNoChangeStatus.txt";
-			}else {
+			}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 
 				file = emailFileLocation+"./EmailFiles/DisputeNoChangeStatus.txt";
 			}
@@ -1381,14 +1381,14 @@ public class EmailService {
 				+ "Sorry for the inconvenience caused. \r\n " + "Thanks, \r\n Team EduCred";
 
 		String subject = "Verification Result";
-		String file;
+		String file = null;
 		
 		if(awsORtest.equalsIgnoreCase("AWS")) {
 			file=emailFileLocation+"DisputeChangeStatus.txt";     //Live
 		}if(awsORtest.equalsIgnoreCase("TEST")) {
 			file=emailFileLocation+"DisputeChangeStatus.txt";     //Test
 //			file = "./EmailFiles/DisputeChangeStatus.txt";
-		}else {
+		}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 
 			file = emailFileLocation+"./EmailFiles/DisputeChangeStatus.txt";
 		}
