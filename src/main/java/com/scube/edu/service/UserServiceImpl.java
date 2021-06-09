@@ -37,6 +37,9 @@ public class UserServiceImpl implements UserService {
 	EmailService emailService;
 	
 	@Autowired
+	VerifierService verifierService;
+	
+	@Autowired
 	RoleService roleService;
 	
 	 @Value("${file.url-dir}")
@@ -150,6 +153,12 @@ public class UserServiceImpl implements UserService {
 			throw new Exception(" Invalid ID");
 			
 		}else {
+			
+		
+			if(usd.getRoleId()==3)
+			{
+				int rowcnt=verifierService.updateListonLogout(id);				
+			}
 			
 //			userRepository.deleteById(id);
 			Date date = new Date(System.currentTimeMillis());
