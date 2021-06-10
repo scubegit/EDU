@@ -8,7 +8,7 @@ public interface UniversityStudentDocService {
 	
 	
 	
-	UniversityStudentDocument getDocDataBySixFields(String  enrollNo, String firstName, String lastName, Long streamId, String yearOfPassing, Long collegeId);
+	UniversityStudentDocument getDocDataByFourFields(String  enrollNo, String yearOfPassing, Long semId, Long streamId);
 
 	UniversityStudentDocument getUniversityDocDataById(Long id);
 

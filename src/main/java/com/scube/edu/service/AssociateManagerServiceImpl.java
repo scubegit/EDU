@@ -416,9 +416,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 
-		List<UniversityStudentDocument> usdr = universityStudentDocRepository.searchByFirstNameLikeAndLastNameLikeAndEnrollmentNoLikeAndCollegeIdLikeAndPassingYearIdLikeAndStreamIdLikeAndSemIdLikeAndBranchIdLike(universityStudData.getFirstName(), 
-				universityStudData.getLastName(), universityStudData.getEnrollmentNo(), universityStudData.getCollegeId(), 
-				universityStudData.getPassingYearId(), universityStudData.getStreamId(),universityStudData.getSemId(),universityStudData.getBranchId());
+		List<UniversityStudentDocument> usdr = universityStudentDocRepository.searchByEnrollmentNoLikeAndPassingYearIdLikeAndStreamIdLikeAndSemIdLike( 
+				universityStudData.getEnrollmentNo(), universityStudData.getPassingYearId(), universityStudData.getStreamId(),universityStudData.getSemId());
 		List<UniversityStudDocResponse> studData=new ArrayList<>();
 		
 		logger.info("********AssociateManagerServiceImpl getStudentData********");
