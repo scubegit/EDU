@@ -97,18 +97,18 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			UniversityStudentDocument editRecord = new UniversityStudentDocument();
 			
 			editRecord.setId(universityStudentRequest.getId());
-			editRecord.setFirstName(universityStudentRequest.getFirstName());
-			editRecord.setLastName(universityStudentRequest.getLastName());
+		  //	editRecord.setFirstName(universityStudentRequest.getFirstName());
+			//editRecord.setLastName(universityStudentRequest.getLastName());
 			editRecord.setEnrollmentNo(universityStudentRequest.getEnrollmentNo());
 			if(universityStudentRequest.getFilePath() != "") {
 			editRecord.setOriginalDOCuploadfilePath(universityStudentRequest.getFilePath());
 			}else{
 				editRecord.setOriginalDOCuploadfilePath(ogRecord.getOriginalDOCuploadfilePath());
 			}
-			editRecord.setCollegeId( Long.parseLong(universityStudentRequest.getCollegeId()));
+			//editRecord.setCollegeId( Long.parseLong(universityStudentRequest.getCollegeId()));
 			editRecord.setPassingYearId( Long.parseLong(universityStudentRequest.getPassingYearId()));
 			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
-			editRecord.setBranchId(Long.parseLong(universityStudentRequest.getBranchId()));
+			//editRecord.setBranchId(Long.parseLong(universityStudentRequest.getBranchId()));
 			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
 			editRecord.setUpdatedate(new Date());
 			editRecord.setUpdateby(universityStudentRequest.getUserId());

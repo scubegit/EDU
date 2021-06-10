@@ -83,79 +83,81 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		
 		 for(UniversityStudDocResponse Data:list) {
 			 
-			 Long clgnm = null;
+			    Long clgnm = null;
 				Long passyr = null;
 				Long strm = null;
 				Long semId = null;
 				Long branchId = null;
-			 CollegeMaster collegeEntities  = collegeRespository.findByCollegeName(Data.getCollegeName());
-				StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
-				if(stream!=null) {
-		 			 strm=stream.getId();
-		 			logger.info("strm"+strm);
-		 			}
-				PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Data.getPassingYear());
+			/*
+			 * CollegeMaster collegeEntities =
+			 * collegeRespository.findByCollegeName(Data.getCollegeName()); */
+			 StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
+			  if(stream!=null) 
+			  { 
+				  strm=stream.getId(); 
+			  logger.info("strm"+strm);
+			  }
+			  PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Data.getPassingYear());
+			 
 				 SemesterEntity sem=semesterService.getSemIdByNm(Data.getSemester(),strm);					
-				  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm(),strm);
+				//  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm(),strm);
 				
 
 			 			String enrollNo=Data.getEnrollmentNo();
-			 			String fnm=Data.getFirstName();
-			 			String lnm=Data.getLastName();
+			 			//String fnm=Data.getFirstName();
+			 			//String lnm=Data.getLastName();
 			 			
-			 			if(collegeEntities!=null) {
-			 			 clgnm=collegeEntities.getId();
-			 			logger.info("clgnm"+clgnm);
-			 			}
-			 			if(passingyr!=null) {
-
-			 			 passyr=passingyr.getId();
-			 			logger.info("passyr"+passyr);
-			 			}
+			/*
+			 * if(collegeEntities!=null) { clgnm=collegeEntities.getId();
+			 * logger.info("clgnm"+clgnm); }*/
+			   if(passingyr!=null) {
+			 
+			  passyr=passingyr.getId(); logger.info("passyr"+passyr); }
+			 
 			 			if(sem!=null) {
 
 				 			 semId=sem.getId();
 				 			logger.info("semId"+semId);
 				 			}
-			 			if(branch!=null) {
-
-			 				branchId=branch.getId();
-				 			logger.info("branchId"+branchId);
-				 			}
+			/*
+			 * if(branch!=null) {
+			 * 
+			 * branchId=branch.getId(); logger.info("branchId"+branchId); }
+			 */
 			 			
 			 			
-			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearIdAndSemIdAndBranchId(enrollNo,fnm,lnm,strm,clgnm,passyr,semId,branchId);
+			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndStreamIdAndPassingYearIdAndSemId(enrollNo,strm,passyr,semId);
 			String reason = null;
 			 if(docEntity==null) {	
 				
 				
-				if(collegeEntities!=null && stream!=null && passingyr!=null&&sem!=null &&branch!=null &&!Data.getFirstName().equals("")&&!Data.getLastName().equals("")&&!Data.getEnrollmentNo().equals("")) {
+				if(passingyr!=null&&sem!=null && !Data.getEnrollmentNo().equals("")) {
 					
 				UniversityStudentDocument studentData=new UniversityStudentDocument();
 				UniversityStudDocResponse SavestudentData=new UniversityStudDocResponse();
 
-				studentData.setFirstName(Data.getFirstName());
-		        studentData.setLastName(Data.getLastName());
-		        studentData.setCollegeId(collegeEntities.getId());	
+			//	studentData.setFirstName(Data.getFirstName());
+		      //  studentData.setLastName(Data.getLastName());
+		       // studentData.setCollegeId(collegeEntities.getId());	
 		        studentData.setStreamId(stream.getId());	
 		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        studentData.setPassingYearId(passingyr.getId());	
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
 		        studentData.setSemId(sem.getId());
-		        studentData.setBranchId(branch.getId());
+		       // studentData.setBranchId(branch.getId());
 		        studentData.setCreatedate(new Date());
 		        studentData.setCreateby(userid.toString());
 		        studentDataList.add(studentData);    
 		        
-		        SavestudentData.setFirstName(Data.getFirstName());
-		        SavestudentData.setLastName(Data.getLastName());
-		        SavestudentData.setCollegeName(Data.getCollegeName());	
+		        //SavestudentData.setFirstName(Data.getFirstName());
+		       // SavestudentData.setLastName(Data.getLastName());
+		      //  SavestudentData.setCollegeName(Data.getCollegeName());	
 		        SavestudentData.setStream(Data.getStream());	
 		        SavestudentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        SavestudentData.setPassingYear(Data.getPassingYear());	
 		        SavestudentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
-		        SavestudentData.setReason(reason);
-		        SavestudentData.setBranch_nm(Data.getBranch_nm());
+		      //  SavestudentData.setReason(reason);
+		        //SavestudentData.setBranch_nm(Data.getBranch_nm());
 		        SavestudentData.setSemester(Data.getSemester());
 		   
 		        savedStudDataList.add(SavestudentData);	
@@ -166,31 +168,29 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 					 else
 					 {	
 						 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
-						 if(collegeEntities==null || stream==null || passingyr==null|| sem==null || branch==null) {
+						 if(passingyr==null|| sem==null||stream==null) {
 						 reason="Invalid";
 						 }
-						 if(collegeEntities==null)
-						 {
-							 reason=reason+" College Name";
-							 if(stream==null||passingyr==null||sem==null||branch==null)
-							 {
-								 reason=reason+",";
-
-							 }
-						 }
-						  if(stream==null)
-				   		 {
-							 reason=reason+" Stream";
-							 if(passingyr==null||sem==null||branch==null)
-							 {
-								 reason=reason+",";
-
-							 }
-						 }
+					/*
+					 * if(collegeEntities==null) { reason=reason+" College Name";
+					  if(stream==null||passingyr==null||sem==null||branch==null) {
+					  reason=reason+",";
+					 * 
+					  }
+					  } */
+				       if(stream==null) { 
+				    	   
+				    	   reason=reason+" Stream";
+					      if(passingyr==null||sem==null) { 
+					    	  
+						  reason=reason+",";
+					  
+					  } }
+					 
 						  if(passingyr==null)
 						 {
 							 reason=reason+" Year of Passing";
-							 if(sem==null||branch==null)
+							 if(sem==null)
 							 {
 								 reason=reason+",";
 
@@ -200,19 +200,16 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						  if(sem==null)
 						 {
 							 reason=reason+" Semester";
-							 if(branch==null)
-							 {
-								 reason=reason+",";
-
-							 }
-
-						 }
-						  if(branch==null)
-						 {
-							 reason=reason+" Branch";
+						/*
+						 * if(branch==null) { reason=reason+",";
+						 * 
+						 * }
+						 * 
+						 * } if(branch==null) { reason=reason+" Branch";
+						 */
 						 }
 						
-						 if(Data.getFirstName()==null || Data.getFirstName().equals("")||(Data.getLastName()==null || Data.getLastName().equals(""))||(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") ))
+						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
 						 {
 							 if(reason!=null) {
 								 reason=reason+" & Blank";
@@ -222,32 +219,26 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 							 reason="Blank";
 							 }
 						 }
-						 if(Data.getFirstName()==null || Data.getFirstName().equals(""))
-								 {
-							 reason=reason+" First name";
-						if (Data.getLastName() == null || Data.getLastName().equals("") || Data.getLastName() == null
-								|| Data.getLastName().equals("") || Data.getEnrollmentNo() == null
-								|| Data.getEnrollmentNo().equals("")) {
-								 reason=reason+",";
-							 }
-								 }
-						 if(Data.getLastName()==null || Data.getLastName().equals("")  )
-						 {
-							 reason=reason+" Last name";
-							 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("")) {
-								 reason=reason+",";
-								 }
-						 }
+					/*
+					 * if(Data.getFirstName()==null || Data.getFirstName().equals("")) {
+					 * reason=reason+" First name"; if (Data.getLastName() == null ||
+					 * Data.getLastName().equals("") || Data.getLastName() == null ||
+					 * Data.getLastName().equals("") || Data.getEnrollmentNo() == null ||
+					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
+					 * if(Data.getLastName()==null || Data.getLastName().equals("") ) {
+					 * reason=reason+" Last name"; if(Data.getEnrollmentNo()==null ||
+					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
+					 */
 						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
 						 {
 							 reason=reason+" Seat No";
 						 }
-					    studentData.setFirstName(Data.getFirstName());
-				        studentData.setLastName(Data.getLastName());
-				        studentData.setCollegeName(Data.getCollegeName());
-				        studentData.setBranch_nm(Data.getBranch_nm());
+					   // studentData.setFirstName(Data.getFirstName());
+				       // studentData.setLastName(Data.getLastName());
+				       // studentData.setCollegeName(Data.getCollegeName());
+				       // studentData.setBranch_nm(Data.getBranch_nm());
 				        studentData.setSemester(Data.getSemester());
-				        studentData.setStream(Data.getStream());	
+				       // studentData.setStream(Data.getStream());	
 				        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 				        studentData.setPassingYear(Data.getPassingYear());	
 				        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
@@ -258,11 +249,11 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 else
 			 {	 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
 			 	reason="Duplicate record";
-			     studentData.setFirstName(Data.getFirstName());
-		        studentData.setLastName(Data.getLastName());
-		        studentData.setCollegeName(Data.getCollegeName());	
+			    //studentData.setFirstName(Data.getFirstName());
+		        //studentData.setLastName(Data.getLastName());
+		       // studentData.setCollegeName(Data.getCollegeName());	
 		        studentData.setStream(Data.getStream());	
-		        studentData.setBranch_nm(Data.getBranch_nm());
+		       // studentData.setBranch_nm(Data.getBranch_nm());
 		        studentData.setSemester(Data.getSemester());
 		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        studentData.setPassingYear(Data.getPassingYear());	
@@ -311,7 +302,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 }else {
 			 filePath = fileStorageService.storeFileOnAws(datafile , flag);
 		 }
-		 if(clomncnt==8) {
+		 if(clomncnt==4) {
 		 for(int i=1;i<=rowcnt;i++) {
 			 
 			 XSSFRow row = worksheet.getRow(i);		 
@@ -322,62 +313,49 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		    	 int rowcell= row.getPhysicalNumberOfCells();
 					logger.info("rowcell="+rowcell);
 					
-			 if(row.getCell(0)!=null)
-			 {
-		        studentData.setFirstName(row.getCell(0).getStringCellValue());
-			 }
-			 else
-			 {
-			        studentData.setFirstName("");
-
-			 }
+					/*
+					 * if(row.getCell(0)!=null) {
+					 * studentData.setFirstName(row.getCell(0).getStringCellValue()); } else {
+					 * studentData.setFirstName("");
+					 * 
+					 * } if(row.getCell(1)!=null){
+					 * studentData.setLastName(row.getCell(1).getStringCellValue()); } else {
+					 * studentData.setLastName("");
+					 * 
+					 * } if(row.getCell(2)!=null){
+					 * studentData.setCollegeName(row.getCell(2).getStringCellValue()); } else {
+					 * studentData.setCollegeName(""); } 
+					 if(row.getCell(3)!=null){
+					 studentData.setStream(row.getCell(3).getStringCellValue()); 
+					 } else {
+					 studentData.setStream(""); } */
+		     
+		     if(row.getCell(0)!=null){
+					 
+					 studentData.setStream(row.getCell(0).getStringCellValue()); 
+					 }
+					 else {
+					 studentData.setStream(""); }
+					 
 			 if(row.getCell(1)!=null){
-		        studentData.setLastName(row.getCell(1).getStringCellValue());
-			 }
-			 else
-			 {
-			        studentData.setLastName("");
 
-			 }
-			 if(row.getCell(2)!=null){
-		        studentData.setCollegeName(row.getCell(2).getStringCellValue());	
-			 }
-			 else
-			 {
-				 studentData.setCollegeName("");
-			 }
-			 if(row.getCell(3)!=null){
-		    	   studentData.setStream(row.getCell(3).getStringCellValue());	
-		       }
-		       else {
-		    	   studentData.setStream("");
-		       }
-			 if(row.getCell(4)!=null){
-
-		        studentData.setBranch_nm(row.getCell(4).getStringCellValue());
-			 }
-			 else {
-				 studentData.setBranch_nm("");
-			 }
-			 if(row.getCell(5)!=null){
-
-		        studentData.setSemester(row.getCell(5).getStringCellValue());	
+		        studentData.setSemester(row.getCell(1).getStringCellValue());	
 			 }
 			 else {
 				 studentData.setSemester(""); 
 			 }
 
-			 if(row.getCell(6)!=null){
-		        int cellType=row.getCell(6).getCellType();
+			 if(row.getCell(2)!=null){
+		        int cellType=row.getCell(2).getCellType();
 		        
 		 logger.info("celltype "+cellType);
 		 if(cellType==1)
 		 {
-		        studentData.setEnrollmentNo(row.getCell(6).getStringCellValue());
+		        studentData.setEnrollmentNo(row.getCell(2).getStringCellValue());
 		 }
 		 else
 		 {
-		        Integer enrollNo=(int) row.getCell(6).getNumericCellValue();		        
+		        Integer enrollNo=(int) row.getCell(2).getNumericCellValue();		        
 		        studentData.setEnrollmentNo(enrollNo.toString());			 
 		 }
 			 }
@@ -385,15 +363,15 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				 studentData.setEnrollmentNo("");
 			 }
 			 
-		 if(row.getCell(7)!=null){
-	        int yearcellType=row.getCell(7).getCellType();
+		 if(row.getCell(3)!=null){
+	        int yearcellType=row.getCell(3).getCellType();
 
 		 if(yearcellType==1)
 		 {
-		        studentData.setPassingYear(row.getCell(7).getStringCellValue());
+		        studentData.setPassingYear(row.getCell(3).getStringCellValue());
 		 }
 		 else {
-		        Integer yearofPassing=(int) row.getCell(7).getNumericCellValue();
+		        Integer yearofPassing=(int) row.getCell(3).getNumericCellValue();
 		        studentData.setPassingYear(yearofPassing.toString());		        
 		 }
 			 }
@@ -426,9 +404,11 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 for(UniversityStudentDocument studentData:usdr) {
 			 
 			 UniversityStudDocResponse resp = new UniversityStudDocResponse();
-			 
-			 Optional<CollegeMaster> cm = collegeRespository.findById(studentData.getCollegeId());
-			 CollegeMaster college = cm.get();
+			/*
+			 * Optional<CollegeMaster> cm =
+			 * collegeRespository.findById(studentData.getCollegeId()); CollegeMaster
+			 * college = cm.get();
+			 */
 			 
 			 Optional<StreamMaster> streaminfo = streamRespository.findById(studentData.getStreamId());
 			 StreamMaster stream = streaminfo.get();
@@ -438,17 +418,17 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 
 			 SemesterEntity sem=semesterService.getSemById(studentData.getSemId());
 				
-			 BranchMasterEntity branch=branchMasterService.getbranchById(studentData.getBranchId());
+			// BranchMasterEntity branch=branchMasterService.getbranchById(studentData.getBranchId());
 				
 			 
 			 resp.setId(studentData.getId());
-			 resp.setFirstName(studentData.getFirstName());
-			 resp.setLastName(studentData.getLastName());
-			 resp.setCollegeName(college.getCollegeName());
+			// resp.setFirstName(studentData.getFirstName());
+			// resp.setLastName(studentData.getLastName());
+			// resp.setCollegeName(college.getCollegeName());
 			 resp.setEnrollmentNo(studentData.getEnrollmentNo());
 			 resp.setStream(stream.getStreamName());
 			 resp.setPassingYear(passingyr.getYearOfPassing());
-			 resp.setBranch_nm(branch.getBranchName());
+			// resp.setBranch_nm(branch.getBranchName());
 			 resp.setSemester(sem.getSemester());
 			 //String Path=
 			 resp.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+studentData.getId());
