@@ -22,7 +22,7 @@ public interface UniversityStudentDocRepository extends JpaRepository<University
 //	@Query(value = "SELECT * FROM university_studentdocument where enrollment_no = ?1 ", nativeQuery = true)
 	UniversityStudentDocument getDocDataByFourFields(String enrollmentNo , String yearOfPassing, Long semId, Long streamId);
 
-	UniversityStudentDocument findByEnrollmentNoAndFirstNameAndLastNameAndStreamIdAndCollegeIdAndPassingYearIdAndSemIdAndBranchId(String enrollmentNo,String fnm,String lastnm,Long stream,Long clgnm, Long passyr,Long semId,Long branchId);
+	UniversityStudentDocument findByEnrollmentNoAndStreamIdAndPassingYearIdAndSemId(String enrollmentNo,Long stream,Long passyr,Long semId);
 
 	
 	@Query(value = "SELECT * FROM university_studentdocument where enrollment_no LIKE %?1% and passing_year_id LIKE %?2% and stream_id LIKE %?3% and semester_id LIKE %?4% " , nativeQuery = true)

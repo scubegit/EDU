@@ -99,6 +99,7 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			editRecord.setId(universityStudentRequest.getId());
 			editRecord.setFirstName(ogRecord.getFirstName());
 			editRecord.setLastName(ogRecord.getLastName());
+
 			editRecord.setEnrollmentNo(universityStudentRequest.getEnrollmentNo());
 			if(universityStudentRequest.getFilePath() != "") {
 			editRecord.setOriginalDOCuploadfilePath(universityStudentRequest.getFilePath());
@@ -106,7 +107,7 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 				editRecord.setOriginalDOCuploadfilePath(ogRecord.getOriginalDOCuploadfilePath());
 			}
 			editRecord.setCollegeId( ogRecord.getCollegeId());
-			editRecord.setPassingYearId( ogRecord.getPassingYearId());
+			editRecord.setPassingYearId( Long.parseLong(universityStudentRequest.getPassingYearId()));
 			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
 			editRecord.setBranchId(ogRecord.getBranchId());
 			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
