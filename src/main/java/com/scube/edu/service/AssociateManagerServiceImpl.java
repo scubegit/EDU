@@ -404,9 +404,11 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 for(UniversityStudentDocument studentData:usdr) {
 			 
 			 UniversityStudDocResponse resp = new UniversityStudDocResponse();
-			 
-			 Optional<CollegeMaster> cm = collegeRespository.findById(studentData.getCollegeId());
-			 CollegeMaster college = cm.get();
+			/*
+			 * Optional<CollegeMaster> cm =
+			 * collegeRespository.findById(studentData.getCollegeId()); CollegeMaster
+			 * college = cm.get();
+			 */
 			 
 			 Optional<StreamMaster> streaminfo = streamRespository.findById(studentData.getStreamId());
 			 StreamMaster stream = streaminfo.get();
@@ -416,17 +418,17 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 
 			 SemesterEntity sem=semesterService.getSemById(studentData.getSemId());
 				
-			 BranchMasterEntity branch=branchMasterService.getbranchById(studentData.getBranchId());
+			// BranchMasterEntity branch=branchMasterService.getbranchById(studentData.getBranchId());
 				
 			 
 			 resp.setId(studentData.getId());
-			 resp.setFirstName(studentData.getFirstName());
-			 resp.setLastName(studentData.getLastName());
-			 resp.setCollegeName(college.getCollegeName());
+			// resp.setFirstName(studentData.getFirstName());
+			// resp.setLastName(studentData.getLastName());
+			// resp.setCollegeName(college.getCollegeName());
 			 resp.setEnrollmentNo(studentData.getEnrollmentNo());
 			 resp.setStream(stream.getStreamName());
 			 resp.setPassingYear(passingyr.getYearOfPassing());
-			 resp.setBranch_nm(branch.getBranchName());
+			// resp.setBranch_nm(branch.getBranchName());
 			 resp.setSemester(sem.getSemester());
 			 //String Path=
 			 resp.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+studentData.getId());

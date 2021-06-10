@@ -50,7 +50,6 @@ public class ExcelReadingScheduler {
 		System.out.println(e.getMessage());	
 		}
 	
-
 }
 }
  
