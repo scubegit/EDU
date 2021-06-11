@@ -1,6 +1,7 @@
 
 package com.scube.edu.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -124,7 +126,7 @@ public class FileStorageService {
 	 @Value("${file.awsfileUPath-dir}")
      private String uFilePath;
 	
-public String storeFileOnAws(MultipartFile file, String flag) {
+     public String storeFileOnAws(MultipartFile file, String flag) {
 		
 		System.out.println("****fileStorageService storeFile*****"+file);
 		
@@ -334,5 +336,56 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 	    }
 	
 	
-
+		
+		public String storeschedularFile(File file, String fileSubPath, String flag) {
+			
+			System.out.println("****fileStorageService storeFile*****"+file);
+			
+			Date date = new Date(System.currentTimeMillis());
+			
+			String fileName = StringUtils.cleanPath(file.getName());
+			
+			String filename = fileName.split("\\.")[0];
+			String extension = fileName.split("\\.")[1];
+			
+			String fileNewName = filename + "_" + date.getTime() + "." + extension;
+			
+			System.out.println(fileNewName);
+			
+			try {
+				
+				if(fileNewName.contains("..")) {
+					throw new FileStorageException("Sorry! File Name contains invalid path sequence!");
+				}
+				String newPath;
+				
+				if(flag.equalsIgnoreCase("2")) {
+					newPath = this.fileAssociateBaseLocation + "/" + fileSubPath;
+				}else {
+					newPath = this.fileBaseLocation +"/" + fileSubPath; 
+				}
+				
+				this.fileStorageLocation = Paths.get(newPath).toAbsolutePath().normalize();
+				
+				Files.createDirectories(this.fileStorageLocation);
+				
+				Path targetLocation = this.fileStorageLocation.resolve(fileNewName);
+				
+				Path sourceFilePath =file.toPath();
+				Files.copy(sourceFilePath, targetLocation, StandardCopyOption.REPLACE_EXISTING);
+				
+				System.out.println("fileName" + fileNewName+ " ---filePath" + targetLocation);
+				
+				String returnPath = fileSubPath + fileNewName;
+				
+				
+				return String.valueOf(returnPath);
+			}catch (IOException ex) {
+				throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
+			}
+			
+			
+			
+		}
+		
 }
