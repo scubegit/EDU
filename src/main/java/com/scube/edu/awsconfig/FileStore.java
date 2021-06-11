@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,4 +76,22 @@ public class FileStore {
         logger.info("File deleted successfully.");
     }
 
+ //For EXcel reading Scheduler   
+    public S3Object readExcel() {
+    	String bucketName = BucketName.TODO_IMAGE.getBucketName();
+    	S3Object fullObject;
+		String fileNameInS3 = "studentInfo1.xlsx";
+    	String folderName = "AutoScanExcel";
+		fullObject = amazonS3.getObject(new GetObjectRequest(bucketName, folderName + "/" + fileNameInS3));
+		//System.out.println("--Downloading file done");
+		return fullObject;
+    }
+    public void getimage() {
+    	String bucketName = BucketName.TODO_IMAGE.getBucketName();
+    	S3Object fullObject;
+    	String folderName = "AssociateExcel";
+	//	fullObject = amazonS3.getObject(new GetObjectRequest(bucketName, folderName + "/" + fileNameInS3));
+		//System.out.println("--Downloading file done");
+    }
+    
 }

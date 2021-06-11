@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -121,6 +122,14 @@ public class EmailService {
 	@Value("${file.awsORtest}")
     private String awsORtest;
 
+	@Value("${from.mail.id}")
+    private String fromMailID;
+	
+	@Value("${to.mail.id}")
+    private String toMailId;
+	
+	@Value("${CC.Mail.id}")
+    private String CCMailid;
 	
 	
 	void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException, Exception {
@@ -1528,5 +1537,69 @@ public class EmailService {
 			throw new RuntimeException(e);
 		}
 	}
+	 public void sendRejectedDatamail(File Filepath) throws Exception {
+
+
+		String from =fromMailID;
+//	        String from = "resolution@educred.co.in";
+
+		
+	      //  String host = "smtp.gmail.com";
+			String host = "mail.educred.co.in";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+
+	
+		
+		String vmFileContent = "PFA, Student rejected data";
+
+		String subject = "Rejected Data";
+		
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication(from, "EduCred$2021$");
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+//	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+
+			}
+
+		});
+		// Used to debug SMTP issues
+		session.setDebug(true);
+		try {
+
+			MimeMessage message = new MimeMessage(session);
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+			String to=toMailId;			
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			message.addRecipients(Message.RecipientType.CC, 
+                    InternetAddress.parse(CCMailid));
+			message.setSubject(subject); 
+			MimeBodyPart attachmentPart = new MimeBodyPart();
+			attachmentPart.attachFile(Filepath);
+
+			BodyPart messageBodyPart = new MimeBodyPart(); 
+			messageBodyPart.setText(vmFileContent);
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(messageBodyPart);
+			multipart.addBodyPart(attachmentPart);
+			message.setContent(multipart);
+			Transport.send(message);
+		} catch (MessagingException e) {
+
+			throw new RuntimeException(e);
+		}
+	}
+
 
 }
