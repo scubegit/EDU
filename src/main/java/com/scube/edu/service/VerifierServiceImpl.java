@@ -208,9 +208,8 @@ public class VerifierServiceImpl implements VerifierService{
 					 
 					 logger.info("VR upload set just above");
 					 
-					 UniversityStudentDocument doc = stuDocService.getDocDataBySixFields(veriReq.getEnrollmentNumber(), 
-							 veriReq.getFirstName(), veriReq.getLastName(), veriReq.getStreamId(), veriReq.getYearOfPassingId()
-							 , veriReq.getCollegeId());
+					 UniversityStudentDocument doc = stuDocService.getDocDataByFourFields(veriReq.getEnrollmentNumber(), veriReq.getYearOfPassingId(), veriReq.getSemId(),
+							 veriReq.getStreamId());
 					 
 					 if(doc != null) {
 					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
