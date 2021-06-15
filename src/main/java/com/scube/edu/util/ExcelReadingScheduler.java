@@ -1,7 +1,9 @@
 package com.scube.edu.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.scube.edu.awsconfig.FileStore;
 import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.service.AssociateManagerService;
@@ -60,191 +63,156 @@ public class ExcelReadingScheduler {
 	@Autowired
 	private EmailService emailService;
 
-	@Value("${excel.file.path}")
-    private String excelFileLocation;
-	
-	@Value("${img.path}")
-    private String imgLocation;
-	
-	@Value("${excel.img.moved.dir}")
-    private String excelImgmovedDir;
-	
-	@Value("${rejected.excel.store.dir}")
-    private String rejectedExcelStoreDir;
-	
-	
-	
-	@Scheduled(cron = "${cron.time.excelRead}")
-	public String readExcelData() throws Exception, Exception {
-		logger.info("********ExcelReadingScheduler readExcelData********");
-
-		List<String> ExcelFile = new ArrayList<>();
-		File excelFilePath = new File(excelFileLocation);
-			
-		S3Object fi=fileStore.readExcel();
-		
-		try {
-			/*
-			 * File[] listofExcelFiles = excelFilePath.listFiles(); String filnmPath = "";
-			 * String filnm; if (listofExcelFiles != null) { for (File file :
-			 * listofExcelFiles) { if (file.isFile()) { filnm = file.getName(); if
-			 * (filnm.endsWith(".xlsx")) { filnmPath = file.getAbsolutePath();
-			 * ExcelFile.add(filnmPath); } } } }
-			 */
-			InputStream is = fi.getObjectContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			String line;
-			System.out.println("--File content:");
-			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		
-	//	return readEscelFiles(ExcelFile);
-			return null;
-	}
-
 	@Value("${file.awsORtest}")
 	private String awsORtest;
 
-	public String readEscelFiles(List<String> listOfExcelfiles) throws Exception, IOException {
-		logger.info("********ExcelReadingScheduler readEscelFiles********");
+	 @Value("${csv.file.folder}")
+	   private String csvFileLocation;
+	 
+	/*
+	 * @Value("${csv.filename}") private String csvfilenm;
+	 */
+	 
+	 @Value("${img.folder}")
+	    private String imgLocation;
+	
+	@Scheduled(cron = "${cron.time.excelRead}")
+	public String readExcelFiles() throws Exception, IOException {
+		
+		String result = "";
+		if(awsORtest.equalsIgnoreCase("AWS")) {
+		logger.info("********Enterning ExcelReadingScheduler readExcelFiles********");
 		List<UniversityStudDocResponse> studentDataReviewList = new ArrayList<UniversityStudDocResponse>();
 		String imagefile = null;
+		String imagefilenm=null;
 		String previmagefile = "";
-
-		File imagePath = null;
-		File file = null;
+		
 		File emailexcelstorePath = null;
-		if (listOfExcelfiles != null) {
+		int k;
+		int check = 0;
+		String filePath = null;
+		String fileSubPath = "file/";
+		String line;
+		String chekrow;
 
-			for (int j = 0; j < listOfExcelfiles.size(); j++) {
-				String path = listOfExcelfiles.get(j);
-				file = new File(path);
+		String csvnm;
+         
+		String folder=csvFileLocation;
+		//String flnm=csvfilenm;
+		S3Object fi = fileStore.readExcel(csvFileLocation);
+		if(fi!=null) {
+		InputStream csvstream = fi.getObjectContent();
 
-				XSSFWorkbook workbook = new XSSFWorkbook(file);
-				XSSFSheet worksheet = workbook.getSheetAt(0);
-				int rowcnt = worksheet.getLastRowNum();
-				int clomncnt = worksheet.getRow(0).getLastCellNum();
+		if(csvstream!=null) {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(csvstream));
 
-				int noOfColumns = worksheet.getRow(0).getPhysicalNumberOfCells();
+		System.out.println("--File content:");
+		while ((line = reader.readLine()) != null) {
+			System.out.println(line);
+			if (check == 0) {
+				check++;
+				continue;
+			}
 
-				logger.info("noOfColumns=" + noOfColumns);
+			String[] datalist = line.split(",");
+			logger.info("" + datalist);
+			UniversityStudDocResponse studentData = new UniversityStudDocResponse();
 
-				logger.info("clomncnt=" + clomncnt);
-				String fileSubPath = "file/";
-				String filePath = null;
+			for (k = 0; k < datalist.length; k++) {
 
-				if (clomncnt == 5) {
-					for (int i = 1; i <= rowcnt; i++) {
+				if (k == 0) {
+					studentData.setStream(datalist[0]);
+				} else if (k == 1) {
+					studentData.setSemester(datalist[1]);
 
-						XSSFRow row = worksheet.getRow(i);
+				} else if (k == 2) {
+					studentData.setEnrollmentNo(datalist[2]);
 
-						UniversityStudDocResponse studentData = new UniversityStudDocResponse();
-						if (row != null) {
-							int rowcell = row.getPhysicalNumberOfCells();
-							logger.info("rowcell=" + rowcell);
-							if (row.getCell(0) != null) {
+				} else if (k == 3) {
+					studentData.setPassingYear(datalist[3]);
 
-								studentData.setStream(row.getCell(0).getStringCellValue());
-							} else {
-								studentData.setStream("");
-							}
+				} else if (k == 4) {
+					imagefilenm = datalist[4];
+					imagefile=imgLocation;
+					logger.info("imageFileNAme" + imagefile);
 
-							if (row.getCell(1) != null) {
+					String flag = "2";
 
-								studentData.setSemester(row.getCell(1).getStringCellValue());
-							} else {
-								studentData.setSemester("");
-							}
+					Date date1 = new Date();
+					SimpleDateFormat formatter1 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+					String strdate1 = formatter1.format(date1);
+					strdate1 = strdate1.replace(" ", "_");
+					strdate1 = strdate1.replace(":", "-");
+					if (!previmagefile.equals(imagefilenm)) {
+						S3Object imgdata = fileStore.getimage(imagefile,imagefilenm);
+						if (imgdata != null) {
 
-							if (row.getCell(2) != null) {
-								int cellType = row.getCell(2).getCellType();
+							InputStream imagestream = imgdata.getObjectContent();
 
-								logger.info("celltype " + cellType);
-								if (cellType == 1) {
-									studentData.setEnrollmentNo(row.getCell(2).getStringCellValue());
-								} else {
-									Integer enrollNo = (int) row.getCell(2).getNumericCellValue();
-									studentData.setEnrollmentNo(enrollNo.toString());
-								}
-							} else {
-								studentData.setEnrollmentNo("");
-							}
+							filePath = fileStorageService.schedulerstoreFileOnAws(imagestream, flag, imagefilenm);
 
-							if (row.getCell(3) != null) {
-								int yearcellType = row.getCell(3).getCellType();
+							S3Object mvimgdata = fileStore.getimage(imagefile,imagefilenm);
+							InputStream movedimagestream = mvimgdata.getObjectContent();
 
-								if (yearcellType == 1) {
-									studentData.setPassingYear(row.getCell(3).getStringCellValue());
-								} else {
-									Integer yearofPassing = (int) row.getCell(3).getNumericCellValue();
-									studentData.setPassingYear(yearofPassing.toString());
-								}
-							} else {
-								studentData.setPassingYear("");
-							}
+							String filename = imagefilenm.split("\\.")[0];
+							String extension = imagefilenm.split("\\.")[1];
 
-							if (row.getCell(4) != null) {
+							imagefile = filename+"_" + strdate1 + extension;
+							fileStorageService.MoveCsvAndImgToArchive(movedimagestream, imagefilenm, "1");
+							fileStore.deleteFile(mvimgdata.getKey());
 
-								imagefile = row.getCell(4).getStringCellValue();
-								imagePath = new File(imgLocation + imagefile);
-
-								String flag = "2";
-
-								if (!previmagefile.equals(imagefile)) {
-									boolean val = imagePath.exists();
-									if (val == true) {
-										if (awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
-											filePath = fileStorageService.storeschedularFile(imagePath, fileSubPath,
-													flag);
-										} else {
-											// filePath = fileStorageService.storeFileOnAws(excelFilePath , flag);
-										}
-										
-										Path sourceFilePath = imagePath.toPath();
-										File dest = new File(excelImgmovedDir + imagefile);
-									//	Files.move(sourceFilePath, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-									} else {
-										filePath = "ImageNotAvailable";
-									}
-									
-								}
-								previmagefile = imagefile;
-
-								studentData.setOriginalDOCuploadfilePath(filePath);
-							}
-							studentDataReviewList.add(studentData);
-
+						} else {
+							filePath = "ImageNotAvailable";
 						}
 					}
+					previmagefile = imagefilenm;
+					studentData.setOriginalDOCuploadfilePath(filePath);
+
 				}
 
-				workbook.close();
-
-				
-				File dest1 = new File(excelImgmovedDir + file.getName());
-				//Files.move(file.toPath(), dest1.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
 			}
+			studentDataReviewList.add(studentData);
+
 		}
+		
+		}
+		else
+		{
+			result="File is Empty/Blank";
+		}
+		
+		Date date1 = new Date();
+		SimpleDateFormat formatter1 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		String strdate1 = formatter1.format(date1);
+		strdate1 = strdate1.replace(" ", "_");
+		strdate1 = strdate1.replace(":", "-");
+
+		csvnm = strdate1 + ".csv";
+		S3Object moveddat = fileStore.readExcel(csvFileLocation);
+		if(moveddat!=null) {
+		InputStream mvcsvstream = moveddat.getObjectContent();
+		if(mvcsvstream!=null){
+		fileStorageService.MoveCsvAndImgToArchive(mvcsvstream, csvnm, "1");
+		
+
+		fileStore.deleteFile(fi.getKey());
+		}
+		}
+
+		// reader.close();
 		long id = 0000;
+		
 		HashMap<String, List<UniversityStudDocResponse>> resp = associateManagerService
 				.saveStudentInfo(studentDataReviewList, id);
 
-		if (resp.get("RejectedData") != null) {
+		if (resp.get("RejectedData") != null && !resp.get("RejectedData").isEmpty()) {
 			List<UniversityStudDocResponse> response = resp.get("RejectedData");
 
 			XSSFWorkbook workbook = new XSSFWorkbook();
 
 			// spreadsheet object
 			XSSFSheet sheet = workbook.createSheet(" Student Data ");
-			
-			
+
 			int rownum = 0;
 			// XSSFRow row = null;
 			Row row = sheet.createRow(0);
@@ -266,7 +234,6 @@ public class ExcelReadingScheduler {
 			rownum++;
 			for (UniversityStudDocResponse user : response) {
 				row = sheet.createRow(rownum++);
-
 				createList(user, row);
 			}
 
@@ -276,16 +243,32 @@ public class ExcelReadingScheduler {
 			strdate = strdate.replace(" ", "_");
 			strdate = strdate.replace(":", "-");
 
-			// This data needs to be written (Object[])
-			emailexcelstorePath = new File(rejectedExcelStoreDir+"Rejected_Data_" + strdate + ".xlsx");
+			emailexcelstorePath = new File("./Rejected_Csv/Rejected_Data_" + strdate + ".csv");
 			FileOutputStream out = new FileOutputStream(emailexcelstorePath);
-
 			workbook.write(out);
 			out.close();
+			InputStream targetStream = new FileInputStream(emailexcelstorePath);
+
+			fileStorageService.MoveCsvAndImgToArchive(targetStream, emailexcelstorePath.getName(), "2");
+
+			emailService.sendRejectedDatamail(emailexcelstorePath);
+			result=" added data succefully";
+
+		}
+		else {
+			result=" added data succefully,No data is Rejected from this file";
 		}
 
-		// emailService.sendRejectedDatamail(emailexcelstorePath);
-		return null;
+		}
+		else
+		{
+			result="No such file found to read excel";
+		}
+		logger.info("********result********"+result);
+
+		logger.info("******** Exiting ExcelReadingScheduler readExcelFiles********");
+		}
+		return result;
 
 	}
 

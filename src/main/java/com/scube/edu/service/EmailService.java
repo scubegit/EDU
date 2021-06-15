@@ -131,7 +131,7 @@ public class EmailService {
 	@Value("${CC.Mail.id}")
     private String CCMailid;
 	
-	
+
 	void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException, Exception {
 
 		String to = emailId;
@@ -1540,6 +1540,7 @@ public class EmailService {
 	 public void sendRejectedDatamail(File Filepath) throws Exception {
 
 
+
 		String from =fromMailID;
 //	        String from = "resolution@educred.co.in";
 
@@ -1556,9 +1557,8 @@ public class EmailService {
 
 	
 		
-		String vmFileContent = "PFA, Student rejected data";
-
-		String subject = "Rejected Data";
+		String vmFileContent = "PFA, excel/csv of rejected requests <br><br> This is an Auto generated mail.  <br><br>  Thanks";
+		
 		
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -1573,7 +1573,10 @@ public class EmailService {
 		// Used to debug SMTP issues
 		session.setDebug(true);
 		try {
-
+			java.util.Date date=java.util.Calendar.getInstance().getTime();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy");
+			String strdate = formatter.format(date);
+			String subject = "Rejected records in scan of dated- "+strdate;
 			MimeMessage message = new MimeMessage(session);
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 
@@ -1588,10 +1591,11 @@ public class EmailService {
 			MimeBodyPart attachmentPart = new MimeBodyPart();
 			attachmentPart.attachFile(Filepath);
 
-			BodyPart messageBodyPart = new MimeBodyPart(); 
-			messageBodyPart.setText(vmFileContent);
+		//	BodyPart messageBodyPart = new MimeBodyPart(); 
+			textBodyPart.setText(vmFileContent,"utf-8","html");
+
 			Multipart multipart = new MimeMultipart();
-			multipart.addBodyPart(messageBodyPart);
+			multipart.addBodyPart(textBodyPart);
 			multipart.addBodyPart(attachmentPart);
 			message.setContent(multipart);
 			Transport.send(message);

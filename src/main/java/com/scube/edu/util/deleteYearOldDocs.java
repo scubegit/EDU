@@ -168,7 +168,7 @@ public class deleteYearOldDocs {
 		if(date!=null) {
 		int cnt =verificationReqRepo.DeleteRecordsByPreviousYearCreatedDate(date);
 		}
-		logger.info("Successfully delete data where date is >="+date);
+		logger.info("Successfully delete data where date is <="+date);
 	
 		}
 		
