@@ -134,8 +134,8 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		
 		UniversityStudentDocumentResponse resp = new UniversityStudentDocumentResponse();
 		
-		Optional<CollegeMaster> cm = collegeRespository.findById(ogRecord.getCollegeId());
-		CollegeMaster college = cm.get();
+//		Optional<CollegeMaster> cm = collegeRespository.findById(ogRecord.getCollegeId());
+//		CollegeMaster college = cm.get();
 		 
 		Optional<StreamMaster> streaminfo = streamRespository.findById(ogRecord.getStreamId());
 		StreamMaster stream = streaminfo.get();
@@ -145,10 +145,10 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		
 		 SemesterEntity sem=semesterService.getSemById(ogRecord.getSemId());
 			
-		 BranchMasterEntity branch=branchMasterService.getbranchById(ogRecord.getBranchId());
+//		 BranchMasterEntity branch=branchMasterService.getbranchById(ogRecord.getBranchId());
 		 
 		resp.setId(ogRecord.getId());
-		resp.setCollegeName(college.getCollegeName());
+//		resp.setCollegeName(college.getCollegeName());
 		resp.setEnrollmentNo(ogRecord.getEnrollmentNo());
 		resp.setFirstName(ogRecord.getFirstName());
 		resp.setLastName(ogRecord.getLastName());
@@ -158,7 +158,7 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		resp.setPassingYearId(ogRecord.getPassingYearId());
 		resp.setStreamId(ogRecord.getStreamId());
 		resp.setCollegeId(ogRecord.getCollegeId());
-		resp.setBranchNm(branch.getBranchName());
+//		resp.setBranchNm(branch.getBranchName());
 		resp.setBranchId(ogRecord.getBranchId());
 		resp.setSemester(sem.getSemester());
 		resp.setSemesterId(ogRecord.getSemId());
