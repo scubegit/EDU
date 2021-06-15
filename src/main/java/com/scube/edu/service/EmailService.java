@@ -535,7 +535,7 @@ public class EmailService {
 			outputStream = new ByteArrayOutputStream();
 			logger.info("check if approved/rejected----->" + status);
 			if (status.equalsIgnoreCase("Approved") || status.equalsIgnoreCase("SV_Approved")
-					|| status.equalsIgnoreCase("Uni_Auto_Approved") || status.equalsIgnoreCase("UN_Approved")) {
+					|| status.equalsIgnoreCase("Uni_Auto_Approved") || status.equalsIgnoreCase("UN_Approved_Pass")|| status.equalsIgnoreCase("UN_Approved_Fail")) {
 				writeApprovalPdf(outputStream, Id, imageLocation);
 				logger.info("writeApprovalPdf----->");
 			}

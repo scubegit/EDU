@@ -194,7 +194,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		entt.setUniVerStatus(statusChangeRequest.getStatus());
 		verificationReqRepository.save(entt);
 				
-		if(statusChangeRequest.getStatus().equalsIgnoreCase("UN_Approved") || 
+		if(statusChangeRequest.getStatus().equalsIgnoreCase("UN_Approved_Pass") || statusChangeRequest.getStatus().equalsIgnoreCase("UN_Approved_Fail") || 
 				statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
 			
 			UserResponse ume = userService.getUserInfoById(entt.getUserId());
