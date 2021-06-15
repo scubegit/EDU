@@ -50,6 +50,8 @@ public class FileStorageService {
 	private final String fileAssociateBaseLocation;
 	
 	private final String imagePathDir;
+	
+	private final String rejectedDataDir;
 
 	private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 	 
@@ -69,6 +71,7 @@ public class FileStorageService {
 	  this.fileBaseLocation = fileStorageProperties.getUploadDir();
 	  this.fileAssociateBaseLocation = fileStorageProperties.getUploadassociateDir();
 	  this.imagePathDir = fileStorageProperties.getImagepathDir();
+	  this.rejectedDataDir=fileStorageProperties.getRejecteddataDir();
 	  }
 	 
 	
@@ -518,5 +521,44 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 		}
 
 	}
+   
+	
+	public String storeRejectedDataFile(String filenm) {
+		
+		System.out.println("****fileStorageService storeFile*****"+filenm);
+		
+		Date date = new Date(System.currentTimeMillis());
+		
+		try {
+			
+			if(filenm.contains("..")) {
+				throw new FileStorageException("Sorry! File Name contains invalid path sequence!");
+			}
+			String newPath;
+			
+		     newPath= this.rejectedDataDir;
+			
+			this.fileStorageLocation = Paths.get(newPath).toAbsolutePath().normalize();
+			
+			Files.createDirectories(this.fileStorageLocation);
+			
+			Path targetLocation = this.fileStorageLocation.resolve(filenm);
+			
+			//Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+			
+			System.out.println("--filePath" + targetLocation);
+			
+			String returnPath = targetLocation.toString();
+			
+			
+			return String.valueOf(returnPath);
+		}catch (IOException ex) {
+			throw new FileStorageException("Could not store file " + filenm + ". Please try again!", ex);
+		}
+		
+		
+		
+	}
+	
 
 }

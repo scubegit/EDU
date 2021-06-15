@@ -10,7 +10,7 @@ public class FileStorageProperties {
 	private String uploadDir;
 	private String uploadassociateDir;
 	private String imagepathDir;
-	
+	private String rejecteddataDir;
 	public String getImagepathDir() {
 		return imagepathDir;
 	}
@@ -34,6 +34,15 @@ public class FileStorageProperties {
 	public void setUploadDir(String uploadDir) {
 		this.uploadDir = uploadDir;
 	}
+
+	public String getRejecteddataDir() {
+		return rejecteddataDir;
+	}
+
+	public void setRejecteddataDir(String rejecteddataDir) {
+		this.rejecteddataDir = rejecteddataDir;
+	}
+
 	
 	
 
