@@ -77,21 +77,44 @@ public class FileStore {
     }
 
  //For EXcel reading Scheduler   
-    public S3Object readExcel() {
+    public S3Object readExcel(String folderName ) {
+    	S3Object fullObject = null;
+
+    	try {
     	String bucketName = BucketName.TODO_IMAGE.getBucketName();
-    	S3Object fullObject;
-		String fileNameInS3 = "studentInfo1.xlsx";
-    	String folderName = "AutoScanExcel";
-		fullObject = amazonS3.getObject(new GetObjectRequest(bucketName, folderName + "/" + fileNameInS3));
-		//System.out.println("--Downloading file done");
+	//	String fileNameInS3 = "csvFile.csv";
+    //	String folderName = "AutoScanExcel";
+		/*
+		 * boolean chk=amazonS3.doesObjectExist(bucketName, folderName + "/" +
+		 * fileNameInS3); if(chk==true) {
+		 */
+		fullObject = amazonS3.getObject(new GetObjectRequest(bucketName, folderName));
+    	//}
+    	}
+    	catch(Exception e) { 
+    		//e.getMessage();
+    		//e.printStackTrace();
+    		System.out.println("No such File found in bucket folder");
+    	}
 		return fullObject;
     }
-    public void getimage() {
+    public S3Object getimage(String foldernm,String imgnm) {
     	String bucketName = BucketName.TODO_IMAGE.getBucketName();
-    	S3Object fullObject;
-    	String folderName = "AssociateExcel";
-	//	fullObject = amazonS3.getObject(new GetObjectRequest(bucketName, folderName + "/" + fileNameInS3));
-		//System.out.println("--Downloading file done");
+    	S3Object fullObject = null;
+    	try {
+    	String folderName = foldernm;
+    	/*boolean chk=amazonS3.doesObjectExist(bucketName, folderName+ imgnm);
+    	if(chk==true) {*/
+		fullObject = amazonS3.getObject(new GetObjectRequest(bucketName, folderName+ imgnm));
+		System.out.println("--Downloading file done");
+    	//}
+    	}
+    	catch(Exception e)
+    	{
+    		System.out.println("No such Image found in bucket folder");
+
+    	}
+		return fullObject;
     }
     
 }

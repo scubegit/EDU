@@ -112,7 +112,8 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 * logger.info("clgnm"+clgnm); }*/
 			   if(passingyr!=null) {
 			 
-			  passyr=passingyr.getId(); logger.info("passyr"+passyr); }
+			  passyr=passingyr.getId();
+			  logger.info("passyr"+passyr); }
 			 
 			 			if(sem!=null) {
 
@@ -209,7 +210,15 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 */
 						 }
 						 if( Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
-							 reason=reason+" ImageNotAvailable";
+							
+							 if(reason!=null) {
+								 reason=reason+", ImageNotAvailable";
+
+							 }
+							 else {
+								 reason=" ImageNotAvailable";
+
+							 }
 						 }
 						
 						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )

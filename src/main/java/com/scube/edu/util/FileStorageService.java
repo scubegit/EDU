@@ -3,10 +3,12 @@ package com.scube.edu.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.model.S3Object;
 import com.scube.edu.awsconfig.BucketName;
 import com.scube.edu.awsconfig.FileStore;
 import com.scube.edu.controller.VerifierController;
@@ -387,5 +390,133 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 			
 			
 		}
+
+	public String schedulerstoreFileOnAws(InputStream imagestream, String flag, String imgnm) {
+
+		System.out.println("****fileStorageService schedulerstoreFileOnAws*****");
+
+		/*
+		 * Date date = new Date(System.currentTimeMillis());
+		 * 
+		 * String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		 * 
+		 * String filename = fileName.split("\\.")[0]; String extension =
+		 * fileName.split("\\.")[1];
+		 * 
+		 * String fileNewName = filename + "_" + date.getTime() + "." + extension;
+		 * 
+		 * System.out.println(fileNewName);
+		 */
+
+		try {
+
+			/*
+			 * if (((MultipartFile) imagestream).isEmpty()) { throw new
+			 * IllegalStateException("Cannot upload empty file"); }
+			 */
+
+			Map<String, String> metadata = new HashMap<>();
+			/*
+			 * metadata.put("Content-Type", ((MultipartFile) imagestream).getContentType());
+			 * metadata.put("Content-Length", String.valueOf(((MultipartFile)
+			 * imagestream).getSize()));
+			 */
+
+			String newPath;
+
+			if (flag.equalsIgnoreCase("2")) {
+				newPath = uFilePath + UUID.randomUUID();
+			} else {
+				newPath = vrFilePath + UUID.randomUUID();
+			}
+
+			Date date = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+			String strdate = formatter.format(date);
+			strdate = strdate.replace(" ", "_");
+			strdate = strdate.replace(":", "-");
+			String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), newPath);
+
+			logger.info("---------TodoServiceImpl path----------------" + path);
+
+			String fileName = String.format("%s", imgnm);
+
+			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
+
+			logger.info("---------TodoServiceImpl start fileStore upload----------------");
+
+			// fileStore.upload(path, fileName, );
+			fileStore.upload(path, fileName, Optional.of(metadata), imagestream);
+
+//					  
+			String returnPath = newPath + "/" + fileName;
+//					  
+//					  fileStore.upload(newPath, fileName, Optional.of(metadata),
+//					  file.getInputStream());
+
+			logger.info("---------returnPath----------------" + returnPath);
+
+			return String.valueOf(returnPath);
+		} catch (Exception ex) {
+			throw new FileStorageException("Could not store file", ex);
+		}
+
+	}
+
+	@Value("${excel.img.moved.dir}")
+    private String csvImgmovedDir;
+	
+	@Value("${rejected.excel.store.dir}")
+    private String rejectedCsvStoreDir;
+	public String MoveCsvAndImgToArchive(InputStream imagestream, String imgnm,String flag) {
+
+		System.out.println("****fileStorageService MoveCsvAndImgToArchive*****");
+
+		try {
+
 		
+
+			Map<String, String> metadata = new HashMap<>();
+			
+
+			String newPath = null;
+
+			if(flag.equals("1")) {
+			newPath = csvImgmovedDir;
+			}
+			else {
+				newPath = rejectedCsvStoreDir;
+
+			}
+
+			Date date = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+			String strdate = formatter.format(date);
+			strdate = strdate.replace(" ", "_");
+			strdate = strdate.replace(":", "-");
+			String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), newPath);
+
+			logger.info("---------TodoServiceImpl path----------------" + path);
+
+			String fileName = imgnm;
+
+			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
+
+			logger.info("---------TodoServiceImpl start fileStore upload----------------");
+
+			fileStore.upload(path, fileName, Optional.of(metadata), imagestream);
+
+//					  
+			String returnPath = newPath + "/" + fileName;
+//					
+
+			logger.info("---------returnPath----------------" + returnPath);
+
+			return String.valueOf(returnPath);
+		} catch (Exception ex) {
+			throw new FileStorageException("Could not store file", ex);
+		}
+
+	}
+
 }
