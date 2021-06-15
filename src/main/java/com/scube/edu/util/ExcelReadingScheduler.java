@@ -69,6 +69,9 @@ public class ExcelReadingScheduler {
 	 @Value("${csv.file.folder}")
 	   private String csvFileLocation;
 	 
+	 @Value("${file.RejectedData-Files}")
+	 private String rejcsvfile;
+	 
 	/*
 	 * @Value("${csv.filename}") private String csvfilenm;
 	 */
@@ -243,7 +246,14 @@ public class ExcelReadingScheduler {
 			strdate = strdate.replace(" ", "_");
 			strdate = strdate.replace(":", "-");
 
-			emailexcelstorePath = new File("./Rejected_Csv/Rejected_Data_" + strdate + ".csv");
+			if(awsORtest.equalsIgnoreCase("AWS")) {
+			emailexcelstorePath = new File(rejcsvfile+"Rejected_Data_" + strdate + ".csv");
+			}
+			else {
+				
+				emailexcelstorePath = new File("./Rejected_Csv/Rejected_Data_" + strdate + ".csv");
+
+			}
 			FileOutputStream out = new FileOutputStream(emailexcelstorePath);
 			workbook.write(out);
 			out.close();
