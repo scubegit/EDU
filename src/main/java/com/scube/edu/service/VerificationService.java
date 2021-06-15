@@ -21,5 +21,6 @@ public interface VerificationService {
 
 	public HashMap getdatabyapplicationId(String applicationId);
 
+	public String updateAssignedto();
 
 }

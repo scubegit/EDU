@@ -184,6 +184,18 @@ public class VerificationServiceImpl implements VerificationService{
 		return map;
 		
 	}
+
+
+
+	@Override
+	public String updateAssignedto() {
+		
+		logger.info("********verificationServiceImpl updateAssignedto********");
+
+		Integer cnt=verificationReqRepo.updateAssignedto();
+		
+		return cnt.toString();
+	}
 	
 	
 

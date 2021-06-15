@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.scube.edu.controller.CollegeController;
 import com.scube.edu.model.DailyVrBackupEntity;
 import com.scube.edu.repository.DailyVrBackupRepository;
+import com.scube.edu.service.VerificationService;
 
 
 @Service
@@ -25,6 +26,8 @@ public class DailyVrBackup {
 	@Autowired
 	DailyVrBackupRepository dailyVrBackupRepository;
 	
+	@Autowired
+	VerificationService verificationService;
 	
 	//@Scheduled(cron = "0 0 0 * * ?")	
 	@Scheduled(cron = "${dailybackup.cronTime}")
@@ -82,6 +85,11 @@ public class DailyVrBackup {
 			
 		}
 		System.out.println("-----Bauckup VR data Daily sucessfully ------");
+
+		String updateRecord=verificationService.updateAssignedto();
+		
+		System.out.println("-----Updated assignedTo for No action verifeier list record------" +updateRecord);
+
 	
 		return 1;
 		

@@ -264,6 +264,7 @@ public class ExcelReadingScheduler {
 			fileStorageService.MoveCsvAndImgToArchive(targetStream, emailexcelstorePath.getName(), "2");
 
 			emailService.sendRejectedDatamail(emailexcelstorePath);
+		
 			if(emailexcelstorePath.delete())
 	        {
 	            System.out.println("File deleted successfully From EDU");

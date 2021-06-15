@@ -66,5 +66,8 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value="delete  FROM verification_request where year(created_date) <= (?1)", nativeQuery = true)
 	int DeleteRecordsByPreviousYearCreatedDate(String prevDate);
 
-
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	@Query(value = "UPDATE verification_request set assigned_to=0 where doc_status='Requested' and assigned_to not in(0) ", nativeQuery = true)
+	Integer updateAssignedto();
 }
