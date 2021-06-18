@@ -38,10 +38,10 @@ public class AutoExcelReadingController {
 			response = new BaseResponse();
 		
 			try {
-	    	 excelReadingScheduler.readExcelFiles();
+	    	 String result=excelReadingScheduler.readExcelFiles();
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-				//response.setRespData(List);
+				response.setRespData(result);
 				
 				return ResponseEntity.ok(response);
 					
