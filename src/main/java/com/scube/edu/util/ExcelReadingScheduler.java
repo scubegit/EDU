@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -41,6 +42,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.scube.edu.awsconfig.FileStore;
+import com.scube.edu.model.checkautoReadingActiveEntity;
+import com.scube.edu.repository.ChkAutoReadingStatus;
 import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.service.AssociateManagerService;
 import com.scube.edu.service.AssociateManagerServiceImpl;
@@ -62,6 +65,10 @@ public class ExcelReadingScheduler {
 
 	@Autowired
 	private EmailService emailService;
+	
+
+	@Autowired
+	ChkAutoReadingStatus chkAutoReadingStatus;
 
 	@Value("${file.awsORtest}")
 	private String awsORtest;
@@ -80,11 +87,25 @@ public class ExcelReadingScheduler {
 	 @Value("${img.folder}")
 	    private String imgLocation;
 	
-	@Scheduled(cron = "${cron.time.excelRead}")
-	public String readExcelFiles() throws Exception, IOException {
-		
+	//@Scheduled(cron = "${cron.time.excelRead}")
+	public String readExcelFiles() throws Exception, IOException {		
 		String result = "";
 		if(awsORtest.equalsIgnoreCase("AWS")) {
+
+			Optional<checkautoReadingActiveEntity> chk= chkAutoReadingStatus.findById((long) 1);
+			checkautoReadingActiveEntity ischk=chk.get();
+			String chkflag = null;
+			if(ischk!=null)
+			{
+				if(ischk.getFlag()!=null){
+					chkflag=ischk.getFlag();
+				}
+			}
+			if(chkflag!=null) {
+			if(chkflag.equalsIgnoreCase("InActive")) {
+				String statusflag="Active";
+				chkAutoReadingStatus.updateFlg(statusflag);
+
 		logger.info("********Enterning ExcelReadingScheduler readExcelFiles********");
 		List<UniversityStudDocResponse> studentDataReviewList = new ArrayList<UniversityStudDocResponse>();
 		String imagefile = null;
@@ -161,7 +182,7 @@ public class ExcelReadingScheduler {
 							String filename = imagefilenm.split("\\.")[0];
 							String extension = imagefilenm.split("\\.")[1];
 
-							imagefile = filename+"_" + strdate1 + extension;
+							imagefilenm = filename+"_" + strdate1 +  "." + extension;
 							fileStorageService.MoveCsvAndImgToArchive(movedimagestream, imagefilenm, "1");
 							fileStore.deleteFile(mvimgdata.getKey());
 
@@ -196,10 +217,10 @@ public class ExcelReadingScheduler {
 		if(moveddat!=null) {
 		InputStream mvcsvstream = moveddat.getObjectContent();
 		if(mvcsvstream!=null){
-		fileStorageService.MoveCsvAndImgToArchive(mvcsvstream, csvnm, "1");
+		//fileStorageService.MoveCsvAndImgToArchive(mvcsvstream, csvnm, "1");
 		
 
-		fileStore.deleteFile(fi.getKey());
+		//fileStore.deleteFile(fi.getKey());
 		}
 		}
 
@@ -284,11 +305,27 @@ public class ExcelReadingScheduler {
 		else
 		{
 			result="No such file found to read excel";
+			logger.info("********result********"+result);
+
 		}
 		logger.info("********result********"+result);
 
-		logger.info("******** Exiting ExcelReadingScheduler readExcelFiles********");
+	
+		String statusflag1="InActive";
+		chkAutoReadingStatus.updateFlg(statusflag1);
+			}
+			else
+			{
+				result="Process already active!";
+				logger.info("********result********"+result);
+
+			}
+			
 		}
+		}
+		logger.info("******** Exiting ExcelReadingScheduler readExcelFiles********");
+
+
 		return result;
 
 	}
