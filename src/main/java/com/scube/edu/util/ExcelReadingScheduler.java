@@ -217,10 +217,10 @@ public class ExcelReadingScheduler {
 		if(moveddat!=null) {
 		InputStream mvcsvstream = moveddat.getObjectContent();
 		if(mvcsvstream!=null){
-		//fileStorageService.MoveCsvAndImgToArchive(mvcsvstream, csvnm, "1");
+		fileStorageService.MoveCsvAndImgToArchive(mvcsvstream, csvnm, "1");
 		
 
-		//fileStore.deleteFile(fi.getKey());
+		fileStore.deleteFile(fi.getKey());
 		}
 		}
 
