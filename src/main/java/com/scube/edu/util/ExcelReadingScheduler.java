@@ -294,11 +294,11 @@ public class ExcelReadingScheduler {
 	        {
 	            System.out.println("Failed to delete the file From EDU");
 	        }
-			result=" added data succefully";
+			result=" Added data succefully";
 
 		}
 		else {
-			result=" added data succefully,No data is Rejected from this file";
+			result=" Added data succefully,No data is Rejected from this file";
 		}
 
 		}
