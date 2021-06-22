@@ -182,8 +182,8 @@ public class ExcelReadingScheduler {
 							String filename = imagefilenm.split("\\.")[0];
 							String extension = imagefilenm.split("\\.")[1];
 
-							imagefilenm = filename+"_" + strdate1 +  "." + extension;
-							fileStorageService.MoveCsvAndImgToArchive(movedimagestream, imagefilenm, "1");
+							String newimagefilenm = filename+"_" + strdate1 +  "." + extension;
+							fileStorageService.MoveCsvAndImgToArchive(movedimagestream, newimagefilenm, "1");
 							fileStore.deleteFile(mvimgdata.getKey());
 
 						} else {
