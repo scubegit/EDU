@@ -140,6 +140,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
 			resp.setBranch_nm(branch.getBranchName());
 			resp.setSemester(sem.getSemester());
+			resp.setMonthOfPassing(req.getMonthOfPassing());
 			
 			responseList.add(resp);
 			
@@ -231,6 +232,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setFirst_name(umee.getFirstName());
 			resp.setLast_name(umee.getLastName());
 			
+			
 			responses.add(resp);
 			
 			
@@ -291,6 +293,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setUpload_doc_path(vr.getUploadDocumentPath());
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
+			resp.setMonthOfPassing(vr.getMonthOfPassing());
 			resp.setVerifier_name(userr.getFirstName() + " " + userr.getLastName());
 			if(vr.getRemark()==null||vr.getRemark().equals(""))
 			{

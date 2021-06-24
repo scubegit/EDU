@@ -195,7 +195,7 @@ public class InvoicePDFExporter {
                Image img;
                if(awsORtest.equalsIgnoreCase("AWS")) {
                	img = Image.getInstance(imageLocation+"logo.png"); // for live
-               }if(awsORtest.equalsIgnoreCase("AWS")) {
+               }if(awsORtest.equalsIgnoreCase("TEST")) {
             	   img = Image.getInstance(imageLocation+"logo.png");
                }else {
                	img = Image.getInstance(imageLocation+"logo.png"); // For test
@@ -331,7 +331,7 @@ public class InvoicePDFExporter {
  	     studentDocTable.addCell(getCellH("Name", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Seat No.", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Document Name", Element.ALIGN_CENTER, font9b));
- 	     studentDocTable.addCell(getCellH("Passing Year", Element.ALIGN_CENTER, font9b));
+ 	     studentDocTable.addCell(getCellH("Month and Year Of Passing", Element.ALIGN_CENTER, font9b));
 //         studentDocTable.addCell(getCellH("Verification Amount", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Stream", Element.ALIGN_CENTER, font9b));
  	     studentDocTable.addCell(getCellH("Branch", Element.ALIGN_CENTER, font9b));
@@ -369,7 +369,7 @@ public class InvoicePDFExporter {
 				   PdfPCell docNamecell=new PdfPCell(new Paragraph(responseObj.getDoc_name(),ft12)); //-------------------------//
 				   docNamecell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
-				   PdfPCell yearcell=new PdfPCell(new Paragraph(responseObj.getYear(),ft12)); //-------------------------//
+				   PdfPCell yearcell=new PdfPCell(new Paragraph(responseObj.getMonthOfPassing()+" "+responseObj.getYear(),ft12)); //-------------------------//
 				   yearcell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
 //				   PdfPCell amtCell=new PdfPCell(new Paragraph(responseObj.getAmount().toString(),ft12)); 

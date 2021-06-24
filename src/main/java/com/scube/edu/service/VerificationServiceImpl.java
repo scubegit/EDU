@@ -159,6 +159,7 @@ public class VerificationServiceImpl implements VerificationService{
 				docResponse.setBranch_nm(bm.getBranchName());
 				docResponse.setSemester(se.getSemester());
 				docResponse.setStream_name(sm.getStreamName());
+				docResponse.setMonthOfPassing(verEntities.getMonthOfPassing());
 				
 				docResponse.setId(verEntities.getId());
 				

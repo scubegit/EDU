@@ -715,7 +715,7 @@ public class EmailService {
 		    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
 		    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
 //		    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-		    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
+		    PdfPCell cell4 = new PdfPCell(new Paragraph("Month and Year Of Exam"));
 		    PdfPCell cell5 = new PdfPCell(new Paragraph("Seat Number"));
 //		    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
 		    PdfPCell cell7 = new PdfPCell(new Paragraph("Exam"));
@@ -750,7 +750,7 @@ public class EmailService {
 			PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
 	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName()+" "+vr.getLastName()));
 //	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
-	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
+	    	PdfPCell yearCell = new PdfPCell(new Paragraph(vr.getMonthOfPassing()+" "+year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
 //	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
 	    	PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));
@@ -985,7 +985,7 @@ public class EmailService {
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
 	    PdfPCell cell2 = new PdfPCell(new Paragraph("Name Of Candidate"));
 //	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-	    PdfPCell cell4 = new PdfPCell(new Paragraph("Year Of Exam"));
+	    PdfPCell cell4 = new PdfPCell(new Paragraph("Month and Year Of Exam"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Seat Number"));
 //	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
 	    PdfPCell cell7 = new PdfPCell(new Paragraph("Stream"));
@@ -1024,7 +1024,7 @@ public class EmailService {
 			PdfPCell dateCell = new PdfPCell(new Paragraph(strDate));
 	    	PdfPCell nameCell = new PdfPCell(new Paragraph(vr.getFirstName() + " " + vr.getLastName()));
 //	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
-	    	PdfPCell yearCell = new PdfPCell(new Paragraph(year.getYearOfPassing()));
+	    	PdfPCell yearCell = new PdfPCell(new Paragraph(vr.getMonthOfPassing()+" "+year.getYearOfPassing()));
 	    	PdfPCell enrollCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
 //	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
 	    	PdfPCell streamCell = new PdfPCell(new Paragraph(stream.getStreamName()));

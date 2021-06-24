@@ -31,12 +31,12 @@ public class UniversityStudentDocServiceImpl implements UniversityStudentDocServ
 
 	
 	@Override
-	public UniversityStudentDocument getDocDataByFourFields(String  enrollNo, String yearOfPassing, Long semId, Long streamId) {
+	public UniversityStudentDocument getDocDataByFourFields(String  enrollNo, String yearOfPassing, Long semId, Long streamId, String monthOfPassing) {
 	
 	
 		
 		
-				UniversityStudentDocument docEntity    = studentDocumentRepository.getDocDataByFourFields(enrollNo, yearOfPassing, semId, streamId);
+				UniversityStudentDocument docEntity    = studentDocumentRepository.getDocDataByFourFields(enrollNo, yearOfPassing, semId, streamId, monthOfPassing);
 				
 				UniversityStudentDocument stuEnt = docEntity;
 				

@@ -157,6 +157,7 @@ public class VerifierServiceImpl implements VerifierService{
 			  resp.setRequest_type_id(reqMaster.getRequestType());
 			  resp.setBranch_nm(branch.getBranchName());
 			  resp.setSemester(sem.getSemester());
+			  resp.setMonthOfPassing(veriReq.getMonthOfPassing());
 			 // run query here which will update 'assigned_to' column with userId value
 			 // for now assign any value other than 0 (assign 1)
 			// Long a = (long) 1;
@@ -209,7 +210,7 @@ public class VerifierServiceImpl implements VerifierService{
 					 logger.info("VR upload set just above");
 					 
 					 UniversityStudentDocument doc = stuDocService.getDocDataByFourFields(veriReq.getEnrollmentNumber(), veriReq.getYearOfPassingId(), veriReq.getSemId(),
-							 veriReq.getStreamId());
+							 veriReq.getStreamId(), veriReq.getMonthOfPassing());
 					 
 					 if(doc != null) {
 					 resEntity.setOriginalDocUploadFilePath("/verifier/getimage/U/"+doc.getId());
