@@ -27,5 +27,6 @@ public class UniversityStudentDocumentResponse {
 			private Long passingYearId;
 			private Long streamId;
 			private Long collegeId;
+			private String monthOfPassing;
 
 }

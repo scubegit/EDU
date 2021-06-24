@@ -23,7 +23,8 @@ public class UniversityStudentRequest {
 	private String originalDOCuploadfilePath;
 	private String filePath;
 	private String userId;
-	
+	private String monthOfPassing;
+
 
 	
 

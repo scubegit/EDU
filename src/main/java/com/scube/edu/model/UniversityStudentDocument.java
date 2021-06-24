@@ -59,6 +59,9 @@ public class UniversityStudentDocument extends CreateUpdate {
 		
 		@Column(name = "semester_Id")
 		private Long semId;
+		
+		@Column(name = "month_of_passing")
+		private String monthOfPassing;
 
 
 
