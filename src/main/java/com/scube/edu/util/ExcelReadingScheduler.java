@@ -253,11 +253,14 @@ public class ExcelReadingScheduler {
 
 			cell = row.createCell(2);
 			cell.setCellValue("Seat No.");
-
+			
 			cell = row.createCell(3);
-			cell.setCellValue("YearOfPassing");
+			cell.setCellValue("MonthOfPassing");
 
 			cell = row.createCell(4);
+			cell.setCellValue("YearOfPassing");
+
+			cell = row.createCell(5);
 			cell.setCellValue("Reasons");
 			rownum++;
 			for (UniversityStudDocResponse user : response) {
@@ -345,9 +348,12 @@ public class ExcelReadingScheduler {
 		cell.setCellValue(user.getEnrollmentNo());
 
 		cell = row.createCell(3);
+		cell.setCellValue(user.getMonthOfPassing());
+		
+		cell = row.createCell(4);
 		cell.setCellValue(user.getPassingYear());
 
-		cell = row.createCell(4);
+		cell = row.createCell(5);
 		cell.setCellValue(user.getReason());
 
 	}

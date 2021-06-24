@@ -183,6 +183,47 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 						 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
 						 if(passingyr==null|| sem==null||stream==null||month==null) {
 						 reason="Invalid";
+						  if(stream==null) { 
+					    	   
+					    	   reason=reason+" Stream";
+						      if(passingyr==null||sem==null||month==null) { 
+						    	  
+							  reason=reason+",";
+						  
+						  } }
+						 
+							  if(passingyr==null)
+							 {
+								 reason=reason+" Year of Passing";
+								 if(sem==null||month==null)
+								 {
+									 reason=reason+",";
+
+								 }
+
+							 }
+							  if(sem==null)
+							 {
+								 reason=reason+" Semester";
+							/*
+							 * if(branch==null) { reason=reason+",";
+							 * 
+							 * }
+							 * 
+							 * } if(branch==null) { reason=reason+" Branch";
+							 * 
+							 */
+								 if(month==null)
+								 {
+									 reason=reason+",";
+
+								 }
+							 }
+							  if(month==null) {
+									
+									 reason=reason+" Month Of Passing";
+
+								 }
 						 }
 					/*
 					 * if(collegeEntities==null) { reason=reason+" College Name";
@@ -191,47 +232,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 					 * 
 					  }
 					  } */
-				       if(stream==null) { 
-				    	   
-				    	   reason=reason+" Stream";
-					      if(passingyr==null||sem==null||month==null) { 
-					    	  
-						  reason=reason+",";
-					  
-					  } }
-					 
-						  if(passingyr==null)
-						 {
-							 reason=reason+" Year of Passing";
-							 if(sem==null||month==null)
-							 {
-								 reason=reason+",";
-
-							 }
-
-						 }
-						  if(sem==null)
-						 {
-							 reason=reason+" Semester";
-						/*
-						 * if(branch==null) { reason=reason+",";
-						 * 
-						 * }
-						 * 
-						 * } if(branch==null) { reason=reason+" Branch";
-						 * 
-						 */
-							 if(month==null)
-							 {
-								 reason=reason+",";
-
-							 }
-						 }
-						  if(month==null) {
-								
-								 reason=reason+" Month Of Passing";
-
-							 }
+				     
 						 if( Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
 							
 							 if(reason!=null) {
@@ -297,6 +298,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setSemester(Data.getSemester());
 		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        studentData.setPassingYear(Data.getPassingYear());	
+		        studentData.setMonthOfPassing(Data.getMonthOfPassing());	
 		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
 		        studentData.setReason(reason);
 
