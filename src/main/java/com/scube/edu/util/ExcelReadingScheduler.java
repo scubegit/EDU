@@ -154,10 +154,13 @@ public class ExcelReadingScheduler {
 					studentData.setEnrollmentNo(datalist[2]);
 
 				} else if (k == 3) {
-					studentData.setPassingYear(datalist[3]);
+					studentData.setMonthOfPassing(datalist[3]);
+				}
+				else if (k == 4) {
+					studentData.setPassingYear(datalist[4]);
 
-				} else if (k == 4) {
-					imagefilenm = datalist[4];
+				} else if (k == 5) {
+					imagefilenm = datalist[5];
 					imagefile=imgLocation;
 					logger.info("imageFileNAme" + imagefile);
 

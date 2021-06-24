@@ -8,4 +8,6 @@ import com.scube.edu.model.MonthOfPassing;
 @Repository
 public interface MonthOfPassingRepository extends JpaRepository<MonthOfPassing, Long>{
 	
+	public MonthOfPassing findByMonthOfPassing(String month);
+	
 }
