@@ -104,6 +104,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setUpload_doc_path(req.getUploadDocumentPath());
 			resp.setStream_name(stream.getStreamName());
 			resp.setReq_date(strDate);
+			resp.setMonthOfPassing(req.getMonthOfPassing());
 
 			responseList.add(resp);
 			

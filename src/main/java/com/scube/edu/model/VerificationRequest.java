@@ -77,6 +77,8 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "yearOfPassingId")
 	private String yearOfPassingId;
 	
+	@Column(name = "monthOfPassing")
+	private String monthOfPassing;
 
 	@Size(max = 100)
 	@Column(name = "uploadDocumentPath")

@@ -52,6 +52,8 @@ public class VerificationResponse {
 	private Long securAmt;
 	private Long gst;
 	
+	private String monthOfPassing;
+	
 
 
 }

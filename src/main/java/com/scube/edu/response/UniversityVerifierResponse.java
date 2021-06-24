@@ -20,6 +20,7 @@ public class UniversityVerifierResponse {
 
 		private String branch_nm;
 		private String semester;
+		private String monthOfPassing;
 
 
 

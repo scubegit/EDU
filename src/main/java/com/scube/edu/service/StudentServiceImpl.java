@@ -176,6 +176,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setRequest_type_id(reqMaster.getRequestType());
 				studentVerificationList.setBranch_nm(branch.getBranchName());
 				studentVerificationList.setSemester(sem.getSemester());
+				studentVerificationList.setMonthOfPassing(req.getMonthOfPassing());
 				
 				List.add(studentVerificationList);
 			}
@@ -246,6 +247,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			closedDocResp.setReq_date(strDate);
 			closedDocResp.setSemester(sem.getSemester());
 			closedDocResp.setBranch_nm(branch.getBranchName());
+			closedDocResp.setMonthOfPassing(req.getMonthOfPassing());
 			List.add(closedDocResp);
 			
 		}
@@ -328,6 +330,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setBranchId(req.getBranchId());
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
+			resp.setMonthOfPassing(req.getMonthOfPassing());
+			
 			
 
 			if(req.getAltEmail()!=null) {
