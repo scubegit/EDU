@@ -111,7 +111,7 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
 			editRecord.setBranchId(ogRecord.getBranchId());
 			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
-			editRecord.setMonthOfPassing(ogRecord.getMonthOfPassing());
+			editRecord.setMonthOfPassing(universityStudentRequest.getMonthOfPassing());
 			editRecord.setUpdatedate(new Date());
 			editRecord.setUpdateby(universityStudentRequest.getUserId());
 			universityStudentDocRepository.save(editRecord);
