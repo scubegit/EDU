@@ -62,12 +62,23 @@ public class sendRecordOverdueMail {
 				UserMasterEntity ume = userRepository.findById(userId);
 				logger.info("send mail here  " + ume.getEmailId() + " " + verReq.getDocStatus());
 				
-				if(verReq.getDocStatus().equalsIgnoreCase("Approved") || verReq.getDocStatus().equalsIgnoreCase("SV_Approved")) {
+				if(verReq.getDocStatus().equalsIgnoreCase("Approved_Pass") || verReq.getDocStatus().equalsIgnoreCase("SV_Approved_Pass")) {
 					
-					verReq.setDocStatus("Uni_Auto_Approved");
+					verReq.setDocStatus("Uni_Auto_Approved_Pass");
 					verReq.setClosedDate(date);
 					verReq.setUniAutoVerActionDate(date);
-					verReq.setUniAutoVerStatus("Uni_Auto_Approved");
+					verReq.setUniAutoVerStatus("Uni_Auto_Approved_Pass");
+					verificationReqRepo.save(verReq);
+					
+					emailService.sendStatusMail(verReq.getAltEmail(), ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
+					
+				}
+              if(verReq.getDocStatus().equalsIgnoreCase("Approved_Fail") || verReq.getDocStatus().equalsIgnoreCase("SV_Approved_Fail")) {
+					
+					verReq.setDocStatus("Uni_Auto_Approved_Fail");
+					verReq.setClosedDate(date);
+					verReq.setUniAutoVerActionDate(date);
+					verReq.setUniAutoVerStatus("Uni_Auto_Approved_Fail");
 					verificationReqRepo.save(verReq);
 					
 					emailService.sendStatusMail(verReq.getAltEmail(), ume.getEmailId(), verReq.getId(), verReq.getDocStatus(), imageLocation);
