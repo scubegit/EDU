@@ -126,6 +126,7 @@ public class DisputeServiceImpl implements DisputeService{
 		}
 		
 		if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Pass")||vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Fail") ) {
+
 //			|| verr.getDocStatus().equalsIgnoreCase("UN_Approved")
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				
