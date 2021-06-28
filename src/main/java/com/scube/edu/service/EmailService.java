@@ -1364,7 +1364,7 @@ public class EmailService {
 
 	}
 
-	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation)
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation,String Status)
 			throws Exception {
 
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
@@ -1489,10 +1489,10 @@ public class EmailService {
 
 			outputStream = new ByteArrayOutputStream();
 
-			if (vr.getDocStatus().equalsIgnoreCase("UN_Rejected")) {
+			if (Status.equalsIgnoreCase("SVD_Approved_Pass")||Status.equalsIgnoreCase("SVD_Approved_Fail")) {
 				writeApprovalPdf(outputStream, Id, imageLocation);
 			}
-			if (vr.getDocStatus().equalsIgnoreCase("UN_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
+			if (vr.getDocStatus().equalsIgnoreCase("SVD_Rejected")) {
 				writeRejectionPdf(outputStream, Id, imageLocation);
 			}
 			byte[] bytes = outputStream.toByteArray();
