@@ -961,14 +961,14 @@ public class EmailService {
 			Paragraph para = new Paragraph();
 			para.setFont(headAddrFont11);
 			para.setAlignment(Paragraph.ALIGN_LEFT);
-			if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")) {
+			if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")||vr.getDocStatus().equalsIgnoreCase("SVD_Approved_Pass")) {
 			
 			para.add(
 					"          With reference to your application for Verification of the educational document , this is to inform you that the contents of the photocopy of the Statement Of Marks of the below mentioned candidate received along with your letter have been verified and found correct.");
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
 			}
-			if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail")) {
+			if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail")||vr.getDocStatus().equalsIgnoreCase("SVD_Approved_Fail")) {
 				
 				para.add("          With reference to your application for Verification of the educational document , this is to inform you that the contents of the photocopy of the Statement Of Marks of the below mentioned candidate received along with your letter have been verified and found Fail.");
 				para.add(Chunk.NEWLINE);
@@ -1364,7 +1364,7 @@ public class EmailService {
 
 	}
 
-	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation)
+	public void sendStatusChangeMail(String emailId, Long verificationId, long disputeId, String imageLocation,String Status)
 			throws Exception {
 
 //		   String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8)) ;
@@ -1489,10 +1489,10 @@ public class EmailService {
 
 			outputStream = new ByteArrayOutputStream();
 
-			if (vr.getDocStatus().equalsIgnoreCase("UN_Rejected")) {
+			if (Status.equalsIgnoreCase("SVD_Approved_Pass")||Status.equalsIgnoreCase("SVD_Approved_Fail")) {
 				writeApprovalPdf(outputStream, Id, imageLocation);
 			}
-			if (vr.getDocStatus().equalsIgnoreCase("UN_Approved") || vr.getDocStatus().equalsIgnoreCase("Approved")) {
+			if (vr.getDocStatus().equalsIgnoreCase("SVD_Rejected")) {
 				writeRejectionPdf(outputStream, Id, imageLocation);
 			}
 			byte[] bytes = outputStream.toByteArray();

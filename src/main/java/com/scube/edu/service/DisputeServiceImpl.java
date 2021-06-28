@@ -97,15 +97,17 @@ public class DisputeServiceImpl implements DisputeService{
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
 				
-				try {
-					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 				
 				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
 				//vrr.setClosedDate(new Date());
 				verificationReqRepository.save(vrr);
+				
+				try {
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation,updateDisputeReq.getUpdatedstatus());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 				return true;
 				// send mail saying that after checking dispute status has been changed + PDF 
 				
@@ -131,17 +133,16 @@ public class DisputeServiceImpl implements DisputeService{
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				
 				rdd.setStatus(updateDisputeReq.getStatus());
-				disputeRepo.save(rdd);
-				
+			//	disputeRepo.save(rdd);
+						
+				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
+				//verificationReqRepository.save(vrr);
 				try {
-					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation,updateDisputeReq.getUpdatedstatus());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
-				verificationReqRepository.save(vrr);
 				return true;
 				// send mail saying the previously approved record's status has been changed and also attach PDF
 //				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
