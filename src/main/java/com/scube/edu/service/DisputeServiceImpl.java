@@ -133,10 +133,10 @@ public class DisputeServiceImpl implements DisputeService{
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				
 				rdd.setStatus(updateDisputeReq.getStatus());
-			//	disputeRepo.save(rdd);
+				disputeRepo.save(rdd);
 						
 				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
-				//verificationReqRepository.save(vrr);
+				verificationReqRepository.save(vrr);
 				try {
 					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation,updateDisputeReq.getUpdatedstatus());
 				} catch (Exception e) {
