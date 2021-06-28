@@ -217,6 +217,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			
 			DisputeResponse resp = new DisputeResponse();
 			
+			Optional<VerificationRequest> vr=verificationReqRepository.findById(res.getVerificationId());
+
+			VerificationRequest vr1=vr.get();
 			Long id = Long.parseLong(res.getCreateby());
 			
 			Optional<UserMasterEntity> ume = userRepository.findById(id);
@@ -231,8 +234,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setVerification_id(res.getVerificationId());
 			resp.setFirst_name(umee.getFirstName());
 			resp.setLast_name(umee.getLastName());
-			
-			
+			resp.setVrStatus(vr1.getDocStatus());
 			responses.add(resp);
 			
 			

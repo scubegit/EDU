@@ -18,5 +18,6 @@ public class DisputeResponse {
 	private long verification_id;
 	private String first_name;
 	private String last_name;
+	private String vrStatus;
 
 }

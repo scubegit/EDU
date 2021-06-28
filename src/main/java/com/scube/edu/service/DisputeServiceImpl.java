@@ -103,7 +103,7 @@ public class DisputeServiceImpl implements DisputeService{
 					e.printStackTrace();
 				}
 				
-				vrr.setDocStatus("SVD_Approved");
+				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
 				//vrr.setClosedDate(new Date());
 				verificationReqRepository.save(vrr);
 				return true;
@@ -125,7 +125,7 @@ public class DisputeServiceImpl implements DisputeService{
 		
 		}
 		
-		if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved") ) {
+		if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Pass")||vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Fail") ) {
 //			|| verr.getDocStatus().equalsIgnoreCase("UN_Approved")
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				
@@ -139,7 +139,7 @@ public class DisputeServiceImpl implements DisputeService{
 					e.printStackTrace();
 				}
 				
-				vrr.setDocStatus("SVD_Rejected");
+				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
 				verificationReqRepository.save(vrr);
 				return true;
 				// send mail saying the previously approved record's status has been changed and also attach PDF
@@ -152,7 +152,13 @@ public class DisputeServiceImpl implements DisputeService{
 				
 				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
 				
-				vrr.setDocStatus("SVD_Approved");
+				if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")||vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Pass"))
+				{
+					vrr.setDocStatus("SVD_Approved_Pass");
+				}
+				else {
+					vrr.setDocStatus("SVD_Approved_Fail");
+				}
 				verificationReqRepository.save(vrr);
 				return true;
 			}

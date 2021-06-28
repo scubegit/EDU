@@ -11,6 +11,7 @@ public class UpdateDisputeRequest {
 	
 	private long id;
 	private String status;
+	private String updatedstatus;
 	// status can be 'CandC' OR 'NCandC'
 
 }
