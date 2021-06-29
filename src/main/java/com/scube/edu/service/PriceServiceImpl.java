@@ -135,6 +135,7 @@ public class PriceServiceImpl  implements PriceService {
 			   priceEntities.setGst(priceMaster.getGst());
 			   priceEntities.setSecurCharge(priceMaster.getSecuritycharge());
 			   priceEntities.setRequestTypeId(priceMaster.getRequestTypeId());
+			   priceEntities.setTotalAmt(priceMaster.getAmount()+priceMaster.getSecuritycharge());
 			   priceEntities.setDoctypeId(priceMaster.getDoctypeId());
 			   
 			   pricemasterRespository.save(priceEntities);
