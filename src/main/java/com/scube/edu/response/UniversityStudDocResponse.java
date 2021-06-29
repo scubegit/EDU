@@ -21,6 +21,7 @@ public class UniversityStudDocResponse {
 	private String branch_nm;
 	private String semester;
 	private String monthOfPassing;
+	private String dataType;
 
 
 }

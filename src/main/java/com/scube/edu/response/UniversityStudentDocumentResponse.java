@@ -28,5 +28,6 @@ public class UniversityStudentDocumentResponse {
 			private Long streamId;
 			private Long collegeId;
 			private String monthOfPassing;
+			private String dataType;
 
 }
