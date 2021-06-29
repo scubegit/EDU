@@ -97,15 +97,17 @@ public class DisputeServiceImpl implements DisputeService{
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
 				
+				
+				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
+				//vrr.setClosedDate(new Date());
+				verificationReqRepository.save(vrr);
+				
 				try {
-					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation,updateDisputeReq.getUpdatedstatus());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
-				vrr.setDocStatus("SVD_Approved");
-				//vrr.setClosedDate(new Date());
-				verificationReqRepository.save(vrr);
 				return true;
 				// send mail saying that after checking dispute status has been changed + PDF 
 				
@@ -114,33 +116,33 @@ public class DisputeServiceImpl implements DisputeService{
 				
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
-				
-				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
-				
 				vrr.setDocStatus("SVD_Rejected");
 				//vrr.setClosedDate(new Date());
 				verificationReqRepository.save(vrr);
+				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
+				
+				
 				return true;
 			}
 		
 		}
 		
-		if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail") || vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved") ) {
+		if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Pass")||vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail") || vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Fail") ) {
+
 //			|| verr.getDocStatus().equalsIgnoreCase("UN_Approved")
 			if(updateDisputeReq.getStatus().equalsIgnoreCase("CL")) {
 				
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
-				
+						
+				vrr.setDocStatus(updateDisputeReq.getUpdatedstatus());
+				verificationReqRepository.save(vrr);
 				try {
-					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation);
+					emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId(), imageLocation,updateDisputeReq.getUpdatedstatus());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				vrr.setDocStatus("SVD_Rejected");
-				verificationReqRepository.save(vrr);
 				return true;
 				// send mail saying the previously approved record's status has been changed and also attach PDF
 //				emailService.sendStatusChangeMail(rdd.getContactPersonEmail(), rdd.getVerificationId(), rdd.getId());
@@ -149,11 +151,18 @@ public class DisputeServiceImpl implements DisputeService{
 				
 				rdd.setStatus(updateDisputeReq.getStatus());
 				disputeRepo.save(rdd);
-				
+				if(vrr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")||vrr.getDocStatus().equalsIgnoreCase("Uni_Auto_Approved_Pass"))
+				{
+					vrr.setDocStatus("SVD_Approved_Pass");
+				}
+				else {
+					vrr.setDocStatus("SVD_Approved_Fail");
+				}
+				verificationReqRepository.save(vrr);
+
 				emailService.sendNoStatusChangeMail(rdd.getContactPersonEmail(), rdd.getId());
 				
-				vrr.setDocStatus("SVD_Approved");
-				verificationReqRepository.save(vrr);
+				
 				return true;
 			}
 			
