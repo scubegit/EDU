@@ -136,7 +136,7 @@ public class EmailService {
 
 		String to = emailId;
 
-		logger.info("-------->1");
+		logger.info("-------->1"+emailId);
 
 		// Sender's email ID needs to be mentioned
 //	        String from = "universityscube@gmail.com";
@@ -221,7 +221,7 @@ public class EmailService {
 				imagePart.attachFile(logoimageLocation+ "logo.png"); // For test
 //				imagePart.attachFile("./logo.png");
 			}else {
-				imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+				imagePart.attachFile(logoimageLocation+"logo.png"); // For local Testing
 			}
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
@@ -232,7 +232,7 @@ public class EmailService {
 				inlineImages.put("image",logoimageLocation+"logo.png"); //For test
 //				inlineImages.put("image", "./logo.png");
 			}else {
-				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+				inlineImages.put("image", logoimageLocation+"logo.png"); // For local Testing
 			}
 
 			if (inlineImages != null && inlineImages.size() > 0) {
@@ -252,8 +252,9 @@ public class EmailService {
 				}
 			}
 			textBodyPart.setText(vmFileContent, "utf-8", "html");
+			//mimeMessage.saveChanges();
 
-			logger.info("fileContent=" + vmFileContent);
+			//logger.info("fileContent=" + vmFileContent);
 			// Send the complete message parts
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(imagePart);
@@ -351,7 +352,7 @@ public class EmailService {
 //				imagePart.attachFile("./logo.png");
 			}else {
 
-			imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+			imagePart.attachFile(logoimageLocation+"logo.png"); // For local Testing
 			}
 			imagePart.setDisposition(MimeBodyPart.INLINE);
 			Map<String, String> inlineImages = new HashMap<String, String>();
@@ -363,7 +364,7 @@ public class EmailService {
 //				inlineImages.put("image", "./logo.png");
 			}else {
 
-				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+				inlineImages.put("image", logoimageLocation+"logo.png"); // For local Testing
 			}
 
 			if (inlineImages != null && inlineImages.size() > 0) {
@@ -385,7 +386,7 @@ public class EmailService {
 			textBodyPart.setText(vmFileContent, "utf-8", "html");
 
 
-			logger.info("fileContent=" + vmFileContent);
+			//logger.info("fileContent=" + vmFileContent);
 			// Send the complete message parts
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(imagePart);
@@ -1168,7 +1169,7 @@ public class EmailService {
 				imagePart.attachFile(logoimageLocation+"logo.png"); //For Test
 //				imagePart.attachFile("./logo.png");
 			}else {
-				imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+				imagePart.attachFile(logoimageLocation+"logo.png"); // For local Testing
 			}
 			
 			imagePart.setDisposition(MimeBodyPart.INLINE);
@@ -1180,7 +1181,7 @@ public class EmailService {
 				inlineImages.put("image",logoimageLocation+"logo.png"); //For Test
 //				inlineImages.put("image", "./logo.png");
 			}else {
-				inlineImages.put("image",logoimageLocation+ "./logo.png"); // For local Testing
+				inlineImages.put("image",logoimageLocation+ "logo.png"); // For local Testing
 			}
 
 			if (inlineImages != null && inlineImages.size() > 0) {
@@ -1305,7 +1306,7 @@ public class EmailService {
 				imagePart.attachFile(logoimageLocation+"logo.png"); //For Test
 //				imagePart.attachFile("./logo.png");
 			}else {
-				imagePart.attachFile(logoimageLocation+"./logo.png"); // For local Testing
+				imagePart.attachFile(logoimageLocation+"logo.png"); // For local Testing
 			}
 
 			
@@ -1319,7 +1320,7 @@ public class EmailService {
 //				inlineImages.put("image", "./logo.png");
 			}else {
 
-				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+				inlineImages.put("image", logoimageLocation+"logo.png"); // For local Testing
 			}
 			
 			if (inlineImages != null && inlineImages.size() > 0) {
@@ -1459,7 +1460,7 @@ public class EmailService {
 //				inlineImages.put("image", "./logo.png");
 			}else {
 
-				inlineImages.put("image", logoimageLocation+"./logo.png"); // For local Testing
+				inlineImages.put("image", logoimageLocation+"logo.png"); // For local Testing
 			}
 			
 			
