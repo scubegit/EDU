@@ -98,6 +98,8 @@ public class PriceServiceImpl  implements PriceService {
 			priceMasterEntity.setIsdeleted("N"); // By Default N	
 			priceMasterEntity.setGst(priceRequest.getGst());
 			priceMasterEntity.setSecurCharge(priceRequest.getSecuritycharge());
+			priceMasterEntity.setTotalAmt(priceRequest.getAmount()+priceRequest.getSecuritycharge());
+
 			priceMasterEntity.setRequestTypeId(priceRequest.getRequestTypeId());
 			priceMasterEntity.setDoctypeId(priceRequest.getDoctypeId());
 			pricemasterRespository.save(priceMasterEntity);
