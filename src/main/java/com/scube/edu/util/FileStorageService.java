@@ -288,60 +288,89 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 	
 		public Resource loadFileAsResource(String userFor, Long id) throws Exception {
 			
-		 	String fileName =" ";
+		 	String fileName ="";
 		 	logger.info(this.imagePathDir);
 		 	try {
 	        	
-	        	String newPAth ;
-	        	
-	        	if(userFor.equalsIgnoreCase("VR")) {
-	        		
+	        	String newPAth = "";     
+	        	if(userFor.equalsIgnoreCase("VR")) {	        		
 	        		newPAth = this.fileBaseLocation;
 	        		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
 	        		VerificationRequest data = verifierData.get();
-	        		logger.info("doc.vollegename--->"+data.getEnrollmentNumber());
+	        		logger.info("doc.vollegename--->"+data.getEnrollmentNumber());	        		
+	        		fileName = data.getUploadDocumentPath();	        		
+//	        		System.out.println("------------fileName--------------"+fileName);
+	        		logger.info("VR------fileName----->"+ fileName);	      
 	        		
-	        		fileName = data.getUploadDocumentPath();
+		        	
+	        		Path fileStorageLocation = Paths.get(newPAth).toAbsolutePath().normalize();
+	  	          
+	  	          System.out.println("----this.fileStorageLocation--------userFor---------"+fileStorageLocation+"-------------"+userFor);
+	  	          
+	  	            logger.info("newPath"+ newPAth);
+	  	        	logger.info("fileStorageLocation"+ fileStorageLocation);
+//	  	            System.out.println(this.fileStorageLocation);
+	  	            
+	  	            Path filePath = fileStorageLocation.resolve(fileName).normalize();
+	  	            logger.info("filePath"+ filePath);
+//	  	            System.out.println(filePath);
+//	  	            System.out.println(filePath.toUri());
+//	  	            logger.info(filePath.toUri());
+	  	            
+	  	            
+	  	            Resource resource = new UrlResource(filePath.toUri());
+	  	            if(resource.exists()) {
+	  	            	logger.info("Inside IF(resource.exists)");
+	  	                return resource;
+	  	            } else {
+	  	            	logger.info("Inside else()");
+	  	                throw new Exception("File not found " + fileName);
+	  	            }
 	        		
-	        		System.out.println("------------fileName--------------"+fileName);
-	        		logger.info("VR------fileName----->"+ fileName);
 	        		
 	        	}else {
 	        		newPAth = this.fileAssociateBaseLocation;
 	        		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
-	        		fileName = doc.getOriginalDOCuploadfilePath();
-	        		
-	        		System.out.println("--------InsideElse----fileName--------------"+fileName);
+	        		fileName = doc.getOriginalDOCuploadfilePath();	        		
+//	        		System.out.println("--------InsideElse----fileName--------------"+fileName);
 	        		logger.info("U------fileName----->"+ fileName);
+	        		
+	        		
+	        		Path fileStorageLocation = Paths.get(newPAth).toAbsolutePath().normalize();
+	  	          
+	  	          System.out.println("----this.fileStorageLocation--------userFor---------"+fileStorageLocation+"-------------"+userFor);
+	  	          
+	  	          //  logger.info("newPath"+ newPAth);
+	  	        //	logger.info("fileStorageLocation"+ this.fileStorageLocation);
+//	  	            System.out.println(this.fileStorageLocation);
+	  	            
+	  	            Path filePath = fileStorageLocation.resolve(fileName).normalize();
+	  	            logger.info("filePath"+ filePath);
+//	  	            System.out.println(filePath);
+//	  	            System.out.println(filePath.toUri());
+//	  	            logger.info(filePath.toUri());
+	  	            
+	  	            
+	  	            Resource resource = new UrlResource(filePath.toUri());
+	  	            if(resource.exists()) {
+	  	            	logger.info("Inside IF(resource.exists)");
+	  	                return resource;
+	  	            } else {
+	  	            	logger.info("Inside else()");
+	  	                throw new Exception("File not found " + fileName);
+	  	            }
 	        	}
 	        
 	        	
-	          this.fileStorageLocation = Paths.get(newPAth).toAbsolutePath().normalize();
-	            logger.info("newPath"+ newPAth);
-	        	logger.info("fileStorageLocation"+ this.fileStorageLocation);
-	            System.out.println(this.fileStorageLocation);
-	            
-	            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-	            logger.info("filePath"+ filePath);
-	            System.out.println(filePath);
-	            System.out.println(filePath.toUri());
-//	            logger.info(filePath.toUri());
-	            
-	            
-	            Resource resource = new UrlResource(filePath.toUri());
-	            if(resource.exists()) {
-	            	logger.info("Inside IF(resource.exists)");
-	                return resource;
-	            } else {
-	            	logger.info("Inside else()");
-	                throw new Exception("File not found " + fileName);
-	            }
+	        	
 	        } catch (Exception ex) {
 	            throw new Exception("File not found " + fileName, ex);
 	        }
 	    }
 	
 	
+		
+		
 		
 		public String storeschedularFile(File file, String fileSubPath, String flag) {
 			
