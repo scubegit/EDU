@@ -330,7 +330,7 @@ public class AuthServiceImpl implements AuthService{
 	        
 	       // logger.info("---------decodedEmail-------"+decodedEmail);
 	        
-	       UserMasterEntity userEntities  = userRepository.findByUsername(decodedEmail);
+	       UserMasterEntity userEntities  = userRepository.findByUsernameAndIsdeleted(decodedEmail,"N");
 	       
 	       
 		   if(userEntities == null) {
