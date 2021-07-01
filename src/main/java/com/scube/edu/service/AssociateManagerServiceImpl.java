@@ -487,4 +487,244 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 }				 
 		 return filePath;
 	}
+	
+	
+	@Override
+	public  HashMap<String,List<UniversityStudDocResponse>> AutosaveStudentInfo(List<UniversityStudDocResponse> list, Long userid) throws IOException {
+		
+		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		 List<UniversityStudDocResponse> savedStudDataList = new ArrayList<UniversityStudDocResponse>();
+
+		 UniversityStudentDocument docEntity =null;
+		 List<UniversityStudDocResponse> rejectedData=new ArrayList<UniversityStudDocResponse>();
+		 HashMap<String,List<UniversityStudDocResponse>> datalist=new HashMap<String,List<UniversityStudDocResponse>>();
+		
+		 for(UniversityStudDocResponse Data:list) {
+			 
+			    Long clgnm = null;
+				Long passyr = null;
+				Long strm = null;
+				Long semId = null;
+				Long branchId = null;
+				String monthnm=null;
+			/*
+			 * CollegeMaster collegeEntities =
+			 * collegeRespository.findByCollegeName(Data.getCollegeName()); */
+				MonthOfPassing month=monthOfPassingRepository.findByMonthOfPassing(Data.getMonthOfPassing());
+			 StreamMaster stream =streamRespository.findByStreamName(Data.getStream());
+			
+			 if(month!=null) {
+				 monthnm=month.getMonthOfPassing();
+			 }
+			 if(stream!=null) 
+			  { 
+				  strm=stream.getId(); 
+			  logger.info("strm"+strm);
+			  }
+			  PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassing(Data.getPassingYear());
+			 
+				 SemesterEntity sem=semesterService.getSemIdByNm(Data.getSemester(),strm);					
+				//  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm(),strm);
+				
+
+			 			String enrollNo=Data.getEnrollmentNo();
+			 			//String fnm=Data.getFirstName();
+			 			//String lnm=Data.getLastName();
+			 			
+			/*
+			 * if(collegeEntities!=null) { clgnm=collegeEntities.getId();
+			 * logger.info("clgnm"+clgnm); }*/
+			   if(passingyr!=null) {
+			 
+			  passyr=passingyr.getId();
+			  logger.info("passyr"+passyr); }
+			 
+			 			if(sem!=null) {
+
+				 			 semId=sem.getId();
+				 			logger.info("semId"+semId);
+				 			}
+			/*
+			 * if(branch!=null) {
+			 * 
+			 * branchId=branch.getId(); logger.info("branchId"+branchId); }
+			 */
+			 			
+			 			
+			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndStreamIdAndPassingYearIdAndSemIdAndMonthOfPassing(enrollNo,strm,passyr,semId,monthnm);
+			String reason = null;
+			 if(docEntity==null) {	
+				
+				
+				if(passingyr!=null&&sem!=null && !Data.getEnrollmentNo().equals("")&&month!=null&&!Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
+					//if(Data.getOriginalDOCuploadfilePath().equals("FileNotAvailable")) {
+				UniversityStudentDocument studentData=new UniversityStudentDocument();
+				UniversityStudDocResponse SavestudentData=new UniversityStudDocResponse();
+
+			//	studentData.setFirstName(Data.getFirstName());
+		      //  studentData.setLastName(Data.getLastName());
+		       // studentData.setCollegeId(collegeEntities.getId());	
+		        studentData.setStreamId(stream.getId());	
+		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+		        studentData.setPassingYearId(passingyr.getId());	
+		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		        studentData.setSemId(sem.getId());
+		       // studentData.setBranchId(branch.getId());
+		        studentData.setCreatedate(new Date());
+		        studentData.setCreateby(userid.toString());
+		        studentData.setMonthOfPassing(monthnm);
+		        studentDataList.add(studentData);    
+		        
+		        //SavestudentData.setFirstName(Data.getFirstName());
+		       // SavestudentData.setLastName(Data.getLastName());
+		      //  SavestudentData.setCollegeName(Data.getCollegeName());	
+		        SavestudentData.setStream(Data.getStream());	
+		        SavestudentData.setEnrollmentNo(Data.getEnrollmentNo());
+		        SavestudentData.setPassingYear(Data.getPassingYear());	
+		        SavestudentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		      //  SavestudentData.setReason(reason);
+		        //SavestudentData.setBranch_nm(Data.getBranch_nm());
+		        SavestudentData.setSemester(Data.getSemester());
+		        SavestudentData.setMonthOfPassing(monthnm);
+
+		        savedStudDataList.add(SavestudentData);	
+		        
+				
+				}
+				
+					 else
+					 {	
+						 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
+						 if(passingyr==null|| sem==null||stream==null||month==null) {
+						 reason="Invalid";
+						  if(stream==null) { 
+					    	   
+					    	   reason=reason+" Stream";
+						      if(passingyr==null||sem==null||month==null) { 
+						    	  
+							  reason=reason+",";
+						  
+						  } }
+						 
+							  if(passingyr==null)
+							 {
+								 reason=reason+" Year of Passing";
+								 if(sem==null||month==null)
+								 {
+									 reason=reason+",";
+
+								 }
+
+							 }
+							  if(sem==null)
+							 {
+								 reason=reason+" Semester";
+							/*
+							 * if(branch==null) { reason=reason+",";
+							 * 
+							 * }
+							 * 
+							 * } if(branch==null) { reason=reason+" Branch";
+							 * 
+							 */
+								 if(month==null)
+								 {
+									 reason=reason+",";
+
+								 }
+							 }
+							  if(month==null) {
+									
+									 reason=reason+" Month Of Passing";
+
+								 }
+						 }
+					/*
+					 * if(collegeEntities==null) { reason=reason+" College Name";
+					  if(stream==null||passingyr==null||sem==null||branch==null) {
+					  reason=reason+",";
+					 * 
+					  }
+					  } */
+				     
+						 if( Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
+							
+							 if(reason!=null) {
+								 reason=reason+", ImageNotAvailable";
+
+							 }
+							 else {
+								 reason=" ImageNotAvailable";
+
+							 }
+						 }
+						
+						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
+						 {
+							 if(reason!=null) {
+								 reason=reason+" & Blank";
+
+							 }
+							 else {
+							 reason="Blank";
+							 }
+						 }
+						 
+						 
+					/*
+					 * if(Data.getFirstName()==null || Data.getFirstName().equals("")) {
+					 * reason=reason+" First name"; if (Data.getLastName() == null ||
+					 * Data.getLastName().equals("") || Data.getLastName() == null ||
+					 * Data.getLastName().equals("") || Data.getEnrollmentNo() == null ||
+					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
+					 * if(Data.getLastName()==null || Data.getLastName().equals("") ) {
+					 * reason=reason+" Last name"; if(Data.getEnrollmentNo()==null ||
+					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
+					 */
+						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
+						 {
+							 reason=reason+" Seat No";
+							
+						 }
+						
+					   // studentData.setFirstName(Data.getFirstName());
+				       // studentData.setLastName(Data.getLastName());
+				       // studentData.setCollegeName(Data.getCollegeName());
+				       // studentData.setBranch_nm(Data.getBranch_nm());
+				        studentData.setSemester(Data.getSemester());
+				        studentData.setStream(Data.getStream());	
+				        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+				        studentData.setPassingYear(Data.getPassingYear());	
+				        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+				        studentData.setMonthOfPassing(Data.getMonthOfPassing());
+				        studentData.setReason(reason);
+				        rejectedData.add(studentData);				
+					 }
+			 }
+			 else
+			 {	 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
+			 	reason="Duplicate record";
+			    //studentData.setFirstName(Data.getFirstName());
+		        //studentData.setLastName(Data.getLastName());
+		       // studentData.setCollegeName(Data.getCollegeName());	
+		        studentData.setStream(Data.getStream());	
+		       // studentData.setBranch_nm(Data.getBranch_nm());
+		        studentData.setSemester(Data.getSemester());
+		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+		        studentData.setPassingYear(Data.getPassingYear());	
+		        studentData.setMonthOfPassing(Data.getMonthOfPassing());	
+		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+		        studentData.setReason(reason);
+
+		        rejectedData.add(studentData);				
+			 }
+			
+		 }
+		 logger.info("rejectedData : "+rejectedData);
+		 universityStudentDocRepository.saveAll(studentDataList);
+		 datalist.put("savedStudentData", savedStudDataList);
+		 datalist.put("RejectedData", rejectedData);
+		 return datalist;
+		 
+	}
 }

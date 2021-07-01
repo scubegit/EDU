@@ -22,4 +22,6 @@ public interface AssociateManagerService {
 
 	public String saveassociatefilepath (MultipartFile datafile);
 
+
+public  HashMap<String,List<UniversityStudDocResponse>> AutosaveStudentInfo(List<UniversityStudDocResponse> list, Long userid) throws IOException ;
 }

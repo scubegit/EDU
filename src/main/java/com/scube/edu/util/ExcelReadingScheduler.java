@@ -231,7 +231,7 @@ public class ExcelReadingScheduler {
 		long id = 0000;
 		
 		HashMap<String, List<UniversityStudDocResponse>> resp = associateManagerService
-				.saveStudentInfo(studentDataReviewList, id);
+				.AutosaveStudentInfo(studentDataReviewList, id);
 
 		if (resp.get("RejectedData") != null && !resp.get("RejectedData").isEmpty()) {
 			List<UniversityStudDocResponse> response = resp.get("RejectedData");
