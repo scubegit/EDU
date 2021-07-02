@@ -1398,7 +1398,7 @@ public class EmailService {
 				+ "As mentioned in the dispute, we have cross checked the document and the corrected result can be found in the attached document. \r\n "
 				+ "Sorry for the inconvenience caused. \r\n " + "Thanks, \r\n Team EduCred";
 
-		String subject = "Verification Result";
+		String subject = "Raised Dispute Result";
 		String file = null;
 		
 		if(awsORtest.equalsIgnoreCase("AWS")) {
