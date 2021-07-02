@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -167,12 +168,20 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		return resp;
 	}
 	
+	@Value("${file.awsORtest}")
+    private String awsORtest;
+	
 	public String saveDocument (MultipartFile file) {
 		String fileSubPath = "file/";
 		String flag = "2";
-		String filePath = fileStorageService.storeFile(file , fileSubPath, flag);
+		String filePath;
 		
-		
+		if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			 
+			 filePath = fileStorageService.storeFile(file, fileSubPath, flag);
+		 }else {
+			 filePath = fileStorageService.storeFileOnAws(file , flag);
+		 }
 		
 		return filePath;
 		
