@@ -25,6 +25,9 @@ public interface RaiseDisputeRepository extends JpaRepository<RaiseDespute, Long
 	@Query(value ="SELECT count(*) from raise_despute where year(created_date) = ?1 and status in ('NCL','CL')", nativeQuery = true)
 	String getclosedstatdisputByYear(int year);
 	
+	@Query(value ="SELECT count(*) from raise_despute where year(created_date) = ?1 and status=1", nativeQuery = true)
+	String getstatdpendigisputByYear(int year);
+	
 	@Query(value ="SELECT count(*) from raise_despute where month(created_date) = ?1 and year(created_date)=year(sysdate())", nativeQuery = true)
 	String getstatdisputByMonth(int month);
 	

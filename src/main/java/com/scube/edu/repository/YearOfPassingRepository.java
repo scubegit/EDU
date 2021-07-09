@@ -17,6 +17,7 @@ public interface YearOfPassingRepository extends JpaRepository<PassingYearMaster
 	PassingYearMaster findById(long pid);
 	List<PassingYearMaster> findAllByIsdeleted(String isdeleted);
 
+	PassingYearMaster  findByYearOfPassingAndIsdeleted(String yrofpass,String isdeleted);
 
 
 }
