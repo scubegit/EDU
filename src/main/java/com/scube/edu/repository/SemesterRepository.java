@@ -20,4 +20,6 @@ public interface SemesterRepository extends JpaRepository<SemesterEntity, Long> 
 	SemesterEntity findBySemesterAndStreamId(String sem,Long StrmId);
 	List<SemesterEntity> findAllByIsdeleted(String isdeleted);
 	List<SemesterEntity> findByStreamIdAndIsdeleted(Long id, String isdeleted);
+	SemesterEntity findBySemesterAndStreamIdAndIsdeleted(String sem,Long StrmId,String isdeleted);
+
 }

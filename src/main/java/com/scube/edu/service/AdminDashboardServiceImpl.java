@@ -289,16 +289,16 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		String clearDisputCount=null;
 		
 		if(year!=curryear&&year!=prevyear) {
-			raisedDisputCount=yearlyVerReqBackupRepository.getstatdisputByYear(year);
+			raisedDisputCount=yearlyVerReqBackupRepository.getstatdpendigisputByYear(year);
 			 clearDisputCount=yearlyVerReqBackupRepository.getclosedstatdisputByYear(year);
 		}
 		else {
-		 raisedDisputCount=raiseDisputeRepository.getstatdisputByYear(year);
+		 raisedDisputCount=raiseDisputeRepository.getstatdpendigisputByYear(year);
 		 clearDisputCount=raiseDisputeRepository.getclosedstatdisputByYear(year);
 		}
 		if(raisedDisputCount!=null)
 		{
-		rationcount.put("Disputes",  Integer. parseInt(raisedDisputCount));
+		rationcount.put("Open",  Integer. parseInt(raisedDisputCount));
 		}
 		if(raisedDisputCount!=null)
 		{
