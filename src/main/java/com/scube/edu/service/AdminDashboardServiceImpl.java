@@ -216,14 +216,16 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		Date lastYear = cal.getTime();
 		int prevyear=lastYear.getYear();
 		prevyear=1900+prevyear;
-
+		logger.info("PREVIOUS YEAR--"+prevyear);
 		String positiveReqCount=null;
 		String negativeReqCount=null;
 		if(year!=curryear&&year!=prevyear) {
+			logger.info("current YEAR ---->"+year);
 			 positiveReqCount=yearlyVerReqBackupRepository.getcountOfpositiveReq(year);
 			 negativeReqCount=yearlyVerReqBackupRepository.getcountOfNegReq(year);
 		}
 		else {
+			logger.info("NOT current YEAR ---->"+year);
 		 positiveReqCount=adminDashboardRepository.getcountOfpositiveReq(year);
 		 negativeReqCount=adminDashboardRepository.getcountOfNegReq(year);
 		}
@@ -233,7 +235,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		if(negativeReqCount!=null) {
 		rationcount.put("Negative", Integer.parseInt(negativeReqCount));
 		}
-
+		logger.info("rationcount********REQ RATIO------"+rationcount);
 		return rationcount;
 	}
 
@@ -245,7 +247,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		List<Object[]> topFiyear=null;
 		
 		topFiyear=dailyVrBackupRepository.findVerificaTopFiveYearRevenu();
-		
+		logger.info("YEAR REVENUE----> ");
 	//	topFiyear=adminDashboardRepository.findVerificaTopFiveYearRevenu();
 		List<TopFiverYearRevenueResponse> response=new ArrayList<>();
 
@@ -267,6 +269,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		
 		}
 		}
+		logger.info("YEAR REVENUE----> ",response);
 		return response;
 	}
 
@@ -289,10 +292,12 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		String clearDisputCount=null;
 		
 		if(year!=curryear&&year!=prevyear) {
+			logger.info("NOT CURRENT OR PREV YEAR ------"+curryear+prevyear);
 			raisedDisputCount=yearlyVerReqBackupRepository.getstatdpendigisputByYear(year);
 			 clearDisputCount=yearlyVerReqBackupRepository.getclosedstatdisputByYear(year);
 		}
 		else {
+			logger.info("CURRENT OR PREV YEAR------- "+curryear+prevyear);
 		 raisedDisputCount=raiseDisputeRepository.getstatdpendigisputByYear(year);
 		 clearDisputCount=raiseDisputeRepository.getclosedstatdisputByYear(year);
 		}
@@ -304,7 +309,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		{
 		rationcount.put("Clear",  Integer. parseInt(clearDisputCount));
 		}
-
+		logger.info("rationcount-------DISPUTE RATIO-----"+ rationcount);
 		return rationcount;		
 	}
 
