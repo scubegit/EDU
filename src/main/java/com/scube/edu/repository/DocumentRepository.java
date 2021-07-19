@@ -16,6 +16,9 @@ public interface DocumentRepository extends JpaRepository<DocumentMaster, Long>{
 	DocumentMaster findByDocumentName(String docName);
 	
 	DocumentMaster deleteById(long id);
+	DocumentMaster findByDocumentNameAndIsdeleted(String docName,String isDeleted);
+
 	List<DocumentMaster> findAllByIsdeleted(String isdeleted);
+	
 
 }

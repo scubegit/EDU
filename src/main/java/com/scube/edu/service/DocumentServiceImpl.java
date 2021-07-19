@@ -74,10 +74,10 @@ public class DocumentServiceImpl implements DocumentService{
 	//Abhishek Added
 	
 	@Override
-	public String addDocument(DocumentAddRequest documentRequest) throws Exception {
+public String addDocument(DocumentAddRequest documentRequest) throws Exception {
 		
 		String resp;
-		DocumentMaster docMasterResponse=documentRespository.findByDocumentName( documentRequest.getDocumentName());
+		DocumentMaster docMasterResponse=documentRespository.findByDocumentNameAndIsdeleted( documentRequest.getDocumentName(),"N");
 		if(docMasterResponse!=null)
 		{
 			resp="Document Name Already exist!";
@@ -85,18 +85,31 @@ public class DocumentServiceImpl implements DocumentService{
 		else
 		{
 		DocumentMaster docMasterEntity  = new  DocumentMaster();
-		
+		DocumentMaster isdeleteChk=documentRespository.findByDocumentName( documentRequest.getDocumentName());
+		if(isdeleteChk!=null) {
+			 DocumentMaster docEntit = new DocumentMaster();
+			    
+			 isdeleteChk.setIsdeleted("N");
+			  //  docEntit.setUpdateby(String.valueOf(documentRequest.getId()));
+			 isdeleteChk.setUpdatedate(new Date());	
+			 documentRespository.save(isdeleteChk);
+
+		}
+		else {
 		docMasterEntity.setUniversityId(documentRequest.getUniversityId());//1
 		docMasterEntity.setDocumentName(documentRequest.getDocumentName());//Name Document
 		docMasterEntity.setCreateby(documentRequest.getCreated_by()); // Logged User Id 
 		docMasterEntity.setIsdeleted("N"); // By Default N
 	    documentRespository.save(docMasterEntity);
-	
+
+		}
+
 	    resp="Success";
 		}
 		return resp;
 		
 	}
+	
 	
 	
 	
