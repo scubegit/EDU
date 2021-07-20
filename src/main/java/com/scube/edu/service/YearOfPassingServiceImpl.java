@@ -63,22 +63,33 @@ public class YearOfPassingServiceImpl  implements YearOfPassingService{
 		}
 
 		@Override
-		public boolean addYear(YearOfPassingRequest yearOfPassReq) throws Exception {
+public boolean addYear(YearOfPassingRequest yearOfPassReq) throws Exception {
 			
 			logger.info("*******YearOfPassingServiceImpl addYear*******");
 			
-			PassingYearMaster yr = yearOfPassingRespository.findByYearOfPassing(yearOfPassReq.getYearOfPass());
+			PassingYearMaster yr = yearOfPassingRespository.findByYearOfPassingAndIsdeleted(yearOfPassReq.getYearOfPass(),"N");
 			
 			if(yr != null) {
 				throw new Exception("Year already exists.");
 			}
-			
+			else {
+				
 			PassingYearMaster year = new PassingYearMaster();
+			PassingYearMaster isdeletedchk = yearOfPassingRespository.findByYearOfPassing(yearOfPassReq.getYearOfPass());
+			if (isdeletedchk != null) {
+
 			
+				isdeletedchk.setIsdeleted("N");
+				yearOfPassingRespository.save(isdeletedchk);
+
+			}
+			else {
 			year.setYearOfPassing(yearOfPassReq.getYearOfPass());
 			year.setIsdeleted("N");
-			
 			yearOfPassingRespository.save(year);
+
+			}
+			}
 			
 			return true;
 		}
