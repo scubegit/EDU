@@ -167,9 +167,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setCreateby(userid.toString());
 		        studentData.setMonthOfPassing(monthnm);
 		        
-		        if(studentDataList.contains(studentData)) {
+//		        if(studentDataList.contains(studentData)) {
 		        studentDataList.add(studentData);   
-		        }
+//		        }
 		        
 		        //SavestudentData.setFirstName(Data.getFirstName());
 		       // SavestudentData.setLastName(Data.getLastName());
@@ -448,7 +448,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 Long strmid=null;
 		 Long semid=null;
 		 String monthofPass=null;
-		 String prno=null;
+//		 String prno=null;
 		 
 		 if(!universityStudData.getEnrollmentNo().equalsIgnoreCase("")) {
 			 logger.info("HERE");
@@ -479,7 +479,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 //		 }
 		 
 		
-		  List<UniversityStudentDocument> usdr = getUniversityStudData(enrollementNo,  passingyrid, strmid, semid, monthofPass,  prno);
+		  List<UniversityStudentDocument> usdr = getUniversityStudData(enrollementNo,  passingyrid, strmid, semid, monthofPass);
 		
 		logger.info("********AssociateManagerServiceImpl getStudentData********");
 		 
@@ -776,7 +776,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 
 	}
 	
-public List<UniversityStudentDocument> getUniversityStudData(String enrollmentno, Long yearofpassid, Long streamid,Long semId,String monthOfPassing, String prnNo){
+public List<UniversityStudentDocument> getUniversityStudData(String enrollmentno, Long yearofpassid, Long streamid,Long semId,String monthOfPassing){
 		
 		//EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("PERSISTENCE");
 
@@ -812,6 +812,7 @@ public List<UniversityStudentDocument> getUniversityStudData(String enrollmentno
            }
 		
        cq.where(predicates.toArray(new Predicate[0]));
+       logger.info("cq-----"+cq);
        resp=em.createQuery(cq).getResultList();
        
        em.close();
