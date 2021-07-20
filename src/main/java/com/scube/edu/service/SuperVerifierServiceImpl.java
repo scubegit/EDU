@@ -104,7 +104,10 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			
 			
 			Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
-			UserMasterEntity userr = user.get();
+			UserMasterEntity userr = user.get(); // verifier User
+			
+			Optional<UserMasterEntity> reqUser = userRepository.findById(req.getUserId());
+			UserMasterEntity reqUserr = reqUser.get(); // User that created the request
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
@@ -122,6 +125,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setDoc_status(req.getDocStatus());
 			resp.setId(req.getId());
 			resp.setApplication_id(req.getApplicationId());
+			resp.setCompany_name(reqUserr.getCompanyName());
 //			closedDocResp.setCollege_name_id(req.getCollegeId());
 			resp.setDoc_name(doc.getDocumentName()); //
 			resp.setEnroll_no(req.getEnrollmentNumber());
