@@ -7,6 +7,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -258,7 +259,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	@Override
 	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
-		logger.info("********StudentServiceImpl saveVerificationDocAndCalculateAmount********");
+		logger.info("********Enterning StudentServiceImpl saveVerificationDocAndCalculateAmount********");
 		
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		long total;
@@ -282,11 +283,14 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		logger.info("---------"+ appId);
 		
-		
+		Long userid=null;
 		
 		List<VerificationRequest> list = new ArrayList<>();
 		Long ver_req = (long) 1;
 		for(StudentDocVerificationRequest req : studentDocReq) {
+			
+			logger.info("Entring in loop to save records= "+req.getUserid());
+			userid=req.getUserid();
 			System.out.println(req);
 			VerificationRequest resp = new VerificationRequest();
 			
@@ -298,10 +302,10 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			// diff fetches * from pricemaster where year diff is between year_range_start and year_range_end
 			
 			total = diff.getTotalAmt();
-			totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			totalWithGST =    ((diff.getSecurCharge() * diff.getGst()) / 100) + diff.getTotalAmt();
 			
 			amtWithoutGST += diff.getTotalAmt();
-			amtWithGST += ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			amtWithGST += ((diff.getSecurCharge() * diff.getGst()) / 100) + diff.getTotalAmt();
 			
 			logger.info(total+ "   "+ totalWithGST+ "   "+ amtWithoutGST + "   "+ amtWithGST);
 			
@@ -342,7 +346,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			ver_req += 1;
 			
 			list.add(resp);
-			
+			logger.info("Exiting for loop= " +req.getUserid());
 		}
 		HashMap<String, List<Long>> map = new HashMap<String, List<Long>>();
 		
@@ -364,9 +368,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 		}
 		map.put("saveDocID", idList);
-		logger.info("id------------"+ idList);
+		logger.info("saveDocID------------"+ idList);
 
-		logger.info("list------------"+ list);
+		logger.info("added request successfully="+(new Date())+ "User Id= "+userid);
 		
 		return map;
 	}
@@ -489,20 +493,22 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		List<Long> amtwithoutgst=new ArrayList<>();
 		List<Long> pricenotforYear=new ArrayList<>();
 
-		
+		Long userid = null;
 		for(StudentDocVerificationRequest req : studentDocReq) {
 			System.out.println(req);
 			VerificationRequest resp = new VerificationRequest();
 			
 			System.out.println("------In Save and calculate Req FOR LOOP----");
 			
+			logger.info("Entring in loop to calculate payment= "+req.getUserid());
+			userid=req.getUserid();
 			PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , req.getYearofpassid(),req.getRequesttype(),Long.parseLong(req.getDocname()));
 			if (diff!=null)	{		
 			total = diff.getTotalAmt();
-			totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			totalWithGST =    ((diff.getSecurCharge() * diff.getGst()) / 100) + diff.getTotalAmt();
 			
 			amtWithoutGST += diff.getTotalAmt();
-			amtWithGST += ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
+			amtWithGST += ((diff.getSecurCharge() * diff.getGst()) / 100) + diff.getTotalAmt();
 			
 			logger.info(total+ " and  "+ totalWithGST+ "  and  "+ amtWithoutGST + " and   "+ amtWithGST);	
 			}
@@ -537,7 +543,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		 * } catch(Exception e) { map.put("total_without_gst", (long) 99999);
 		 * map.put("total_with_gst", (long) 99999); }
 		 */
-		
+		logger.info("Payment calculate Done= "+map+" UserId= "+userid);
+
 		return map;		
 	}
 	

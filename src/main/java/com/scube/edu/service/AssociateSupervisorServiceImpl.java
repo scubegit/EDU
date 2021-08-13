@@ -1,9 +1,17 @@
 package com.scube.edu.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -27,128 +35,128 @@ import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.util.FileStorageService;
 
 @Service
-public class AssociateSupervisorServiceImpl implements AssociateSupervisorService{
-	
+public class AssociateSupervisorServiceImpl implements AssociateSupervisorService {
+
 	private static final Logger logger = LoggerFactory.getLogger(AssociateSupervisorServiceImpl.class);
-	
+
+
 	@Autowired
-	UniversityStudentDocRepository 	universityStudentDocRepository ;
-	
+	UniversityStudentDocRepository universityStudentDocRepository;
+
 	@Autowired
 	CollegeRepository collegeRespository;
-	 
+
 	@Autowired
-	StreamRepository  streamRespository;
-	
+	StreamRepository streamRespository;
+
 	@Autowired
-	UniversityStudentDocService  stuDocService;
-	
+	UniversityStudentDocService stuDocService;
+
 	@Autowired
 	YearOfPassingRepository yearOfPassingRespository;
-	
+
 	@Autowired
 	private FileStorageService fileStorageService;
 
-	 
-	 @Autowired
+	@Autowired
 	SemesterService semesterService;
-		
+
 	@Autowired
 	BranchMasterService branchMasterService;
-		
-	
+
 	@Override
 	public boolean deleteRecordById(long id, HttpServletRequest request) throws Exception {
-		
+
 		logger.info("*******AssociateSupervisorServiceImpl deleteRecordById*******");
-		
+
 		Optional<UniversityStudentDocument> usd = universityStudentDocRepository.findById(id);
 		UniversityStudentDocument uniRecord = usd.get();
-		
-		if(uniRecord == null) {
-			   
+
+		if (uniRecord == null) {
+
 			throw new Exception(" Invalid ID");
-			
-		}else {
-			
+
+		} else {
+
 			universityStudentDocRepository.deleteById(id);
 			return true;
-			
+
 		}
-		
-		
+
 	}
 
 	@Override
-	public boolean updateRecordById(UniversityStudentRequest universityStudentRequest, HttpServletRequest request) throws Exception {
-		
+	public boolean updateRecordById(UniversityStudentRequest universityStudentRequest, HttpServletRequest request)
+			throws Exception {
+
 		logger.info("*******AssociateSupervisorServiceImpl updateRecordById*******");
-		
-		Optional<UniversityStudentDocument> usd = universityStudentDocRepository.findById(universityStudentRequest.getId());
+
+		Optional<UniversityStudentDocument> usd = universityStudentDocRepository
+				.findById(universityStudentRequest.getId());
 		UniversityStudentDocument ogRecord = usd.get();
-		
-		if(ogRecord != null) {
+
+		if (ogRecord != null) {
 			logger.info("NOT NULL---");
-			
+
 			UniversityStudentDocument editRecord = new UniversityStudentDocument();
-			
+
 			editRecord.setId(universityStudentRequest.getId());
 			editRecord.setFirstName(ogRecord.getFirstName());
 			editRecord.setLastName(ogRecord.getLastName());
 
 			editRecord.setEnrollmentNo(universityStudentRequest.getEnrollmentNo());
-			if(universityStudentRequest.getFilePath() != "") {
-			editRecord.setOriginalDOCuploadfilePath(universityStudentRequest.getFilePath());
-			}else{
+			if (universityStudentRequest.getFilePath() != "") {
+				editRecord.setOriginalDOCuploadfilePath(universityStudentRequest.getFilePath());
+			} else {
 				editRecord.setOriginalDOCuploadfilePath(ogRecord.getOriginalDOCuploadfilePath());
 			}
-			editRecord.setCollegeId( ogRecord.getCollegeId());
-			editRecord.setPassingYearId( Long.parseLong(universityStudentRequest.getPassingYearId()));
-			editRecord.setStreamId( Long.parseLong(universityStudentRequest.getStreamId()));
+			editRecord.setCollegeId(ogRecord.getCollegeId());
+			editRecord.setPassingYearId(Long.parseLong(universityStudentRequest.getPassingYearId()));
+			editRecord.setStreamId(Long.parseLong(universityStudentRequest.getStreamId()));
 			editRecord.setBranchId(ogRecord.getBranchId());
 			editRecord.setSemId(Long.parseLong(universityStudentRequest.getSemId()));
 			editRecord.setMonthOfPassing(universityStudentRequest.getMonthOfPassing());
 			editRecord.setUpdatedate(new Date());
 			editRecord.setUpdateby(universityStudentRequest.getUserId());
 			universityStudentDocRepository.save(editRecord);
-			
+
 			return true;
-			
-		}else {
+
+		} else {
 			throw new Exception("Request Body cannot be empty.");
 		}
-		
-		
+
 	}
 
 	@Override
 	public UniversityStudentDocumentResponse getRecordById(long id, HttpServletRequest request) {
-		
+
 		logger.info("*******AssociateSupervisorServiceImpl getRecordById*******");
-		
+
 		Optional<UniversityStudentDocument> usd = universityStudentDocRepository.findById(id);
 		UniversityStudentDocument ogRecord = usd.get();
-		
+
 		UniversityStudentDocumentResponse resp = new UniversityStudentDocumentResponse();
-		
+
 //		Optional<CollegeMaster> cm = collegeRespository.findById(ogRecord.getCollegeId());
 //		CollegeMaster college = cm.get();
-		 
+
 		Optional<StreamMaster> streaminfo = streamRespository.findById(ogRecord.getStreamId());
 		StreamMaster stream = streaminfo.get();
-		 
+
 		Optional<PassingYearMaster> passingyrinfo = yearOfPassingRespository.findById(ogRecord.getPassingYearId());
 		PassingYearMaster passingyr = passingyrinfo.get();
-		
-		 SemesterEntity sem=semesterService.getSemById(ogRecord.getSemId());
-			
+
+		SemesterEntity sem = semesterService.getSemById(ogRecord.getSemId());
+
 //		 BranchMasterEntity branch=branchMasterService.getbranchById(ogRecord.getBranchId());
-		 
+
 		resp.setId(ogRecord.getId());
 //		resp.setCollegeName(college.getCollegeName());
 		resp.setEnrollmentNo(ogRecord.getEnrollmentNo());
@@ -167,24 +175,24 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		resp.setMonthOfPassing(ogRecord.getMonthOfPassing());
 		return resp;
 	}
-	
+
 	@Value("${file.awsORtest}")
-    private String awsORtest;
-	
-	public String saveDocument (MultipartFile file) {
+	private String awsORtest;
+
+	public String saveDocument(MultipartFile file) {
 		String fileSubPath = "file/";
 		String flag = "2";
 		String filePath;
-		
-		if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
-			 
-			 filePath = fileStorageService.storeFile(file, fileSubPath, flag);
-		 }else {
-			 filePath = fileStorageService.storeFileOnAws(file , flag);
-		 }
-		
+
+		if (awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+
+			filePath = fileStorageService.storeFile(file, fileSubPath, flag);
+		} else {
+			filePath = fileStorageService.storeFileOnAws(file, flag);
+		}
+
 		return filePath;
-		
+
 	}
 
 	@Override
@@ -203,5 +211,5 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		
 		return resEntity;
 	}
-
 }
+

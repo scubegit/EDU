@@ -62,7 +62,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 		System.out.println(id);
 		Optional<BranchMasterEntity> branchEntity    = branchMasterRepository.findById(id);
 		BranchMasterEntity semEnt = branchEntity.get();
-		System.out.println("yearEnt---"+ semEnt);
+		System.out.println("semEnt---"+ semEnt);
 		
 				return semEnt;
 	}
@@ -70,7 +70,7 @@ private static final Logger logger = LoggerFactory.getLogger(CollegeSeviceImpl.c
 	public BranchMasterEntity getbranchIdByname(String brnchnm,Long strmId) {
 		System.out.println(brnchnm);
 		BranchMasterEntity branchEntity    = branchMasterRepository.findByBranchNameAndStreamId(brnchnm,strmId);
-		System.out.println("yearEnt---"+ branchEntity);
+		System.out.println("branchEnt---"+ branchEntity);
 		
 				return branchEntity;
 	}

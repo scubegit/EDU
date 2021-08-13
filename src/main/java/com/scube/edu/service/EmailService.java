@@ -642,12 +642,12 @@ public class EmailService {
 
 			PdfWriter.getInstance(document, outputStream);
 
-			HeaderFooter footer = new HeaderFooter(
-					new Phrase("System generated document does not require signature.", footerFont9), false);
-			footer.setAlignment(Element.ALIGN_CENTER);
-//        footer.setBorder(Rectangle.NO_BORDER);
-	        document.setFooter(footer);
-	        
+			/*
+			 * HeaderFooter footer = new HeaderFooter( new
+			 * Phrase("System generated document does not require signature.", footerFont9),
+			 * false); footer.setAlignment(Element.ALIGN_CENTER); //
+			 * footer.setBorder(Rectangle.NO_BORDER); document.setFooter(footer);
+			 */
 	        Image img;
 	        if(awsORtest.equalsIgnoreCase("AWS")) {
 	        	img = Image.getInstance(logoimageLocation+"logo.png"); // live
@@ -779,7 +779,7 @@ public class EmailService {
 					"          You are, requested to inform the Sr. Inspector Of Police of your nearby Police Station for investigating in the matter and the same maybe informed to this office accordingly.");
 			para1.add(Chunk.NEWLINE);
 			para1.add(Chunk.NEWLINE);
-			para1.add("Thanking you,");
+			para1.add("Thanking you");
 			para1.add(Chunk.NEWLINE);
 			para1.add(Chunk.NEWLINE);
 			document.add(para1);
@@ -800,13 +800,7 @@ public class EmailService {
 //		    img2.scaleAbsolute(75, 75);
 //		    document.add(img2);
 			
-		    Paragraph foot = new Paragraph();
-		    foot.setAlignment(Paragraph.ALIGN_RIGHT);
-		    foot.setFont(headAddrFont12);
-		    foot.add("Dr. Vinod P Patil");
-		    
-		    document.add(foot);
-		    
+		   
 		    
 		    
 		    Image signImg;
@@ -822,9 +816,17 @@ public class EmailService {
 
 		 //   Image signImg = Image.getInstance("signn.jpg");
 		    signImg.setAlignment(Element.ALIGN_RIGHT);
-		    signImg.scaleToFit(150, 120);
+		    signImg.scaleToFit(70,40);
 		    
 		    document.add(signImg);
+		    
+		    Paragraph foot = new Paragraph();
+		    foot.setAlignment(Paragraph.ALIGN_RIGHT);
+		    foot.setFont(headAddrFont12);
+		    foot.add("Dr. Vinod P. Patil");
+		    
+		    document.add(foot);
+		    
 		    
 		    Paragraph foot1 = new Paragraph();
 		    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
@@ -888,11 +890,12 @@ public class EmailService {
 
 			PdfWriter.getInstance(document, outputStream);
 
-			HeaderFooter footer = new HeaderFooter(
-					new Phrase("System generated document does not require signature.", footerFont9), false);
-			footer.setAlignment(Element.ALIGN_CENTER);
-//        footer.setBorder(Rectangle.NO_BORDER);
-			document.setFooter(footer);
+			/*
+			 * HeaderFooter footer = new HeaderFooter( new
+			 * Phrase("System generated document does not require signature.", footerFont9),
+			 * false); footer.setAlignment(Element.ALIGN_CENTER); //
+			 * footer.setBorder(Rectangle.NO_BORDER); document.setFooter(footer);
+			 */
 
 			// left, right, top, bottom
 			logger.info("headerFooter set here--->just before document.open()");
@@ -1054,6 +1057,9 @@ public class EmailService {
 	    footer1.add("Yours faithfully,");
 	    document.add(footer1);
 	    
+	   
+		
+	    
 	 //   Image signImg = Image.getInstance("signn.jpg");
 //    Image signImg = Image.getInstance(imageLocation+ "/signn.jpg");
 	    
@@ -1068,15 +1074,25 @@ public class EmailService {
         }
 	    
 	    signImg.setAlignment(Element.ALIGN_RIGHT);
-	    signImg.scaleToFit(150, 120);
+	    signImg.scaleToFit(70, 40);
 	    
 	    document.add(signImg);
 	    
-			Paragraph foot = new Paragraph();
-			foot.setAlignment(Paragraph.ALIGN_RIGHT);
-			foot.setFont(headAddrFont12);
-			foot.add("(Narendra G. Khalane \r" + "Assistant Registrar");
-			document.add(foot);
+	    
+	    Paragraph foot = new Paragraph();
+		foot.setAlignment(Paragraph.ALIGN_RIGHT);
+		foot.setFont(headAddrFont12);
+		foot.add("Dr. Vinod P. Patil");
+		document.add(foot);
+			
+			
+			
+			  Paragraph foot1 = new Paragraph();
+			    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
+			    foot1.setFont(headAddrFont12);
+			    foot1.add("Director \r"
+			    		+ "Board Of Examination & Evaluation");
+	  		    document.add(foot1);
 
 //        HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
 //        footer.setAlignment(Element.ALIGN_CENTER);
@@ -1594,8 +1610,10 @@ public class EmailService {
 			String to=toMailId;			
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			if(CCMailid!=null&&!CCMailid.equals("")){
 			message.addRecipients(Message.RecipientType.CC, 
                     InternetAddress.parse(CCMailid));
+			}
 			message.setSubject(subject); 
 			MimeBodyPart attachmentPart = new MimeBodyPart();
 			attachmentPart.attachFile(Filepath);

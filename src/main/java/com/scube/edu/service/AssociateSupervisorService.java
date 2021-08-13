@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.response.VerificationResponse;
 
@@ -23,5 +24,8 @@ public interface AssociateSupervisorService {
 	String saveDocument(MultipartFile file);
 
 	VerificationResponse verifyDocument(Long id);
+	
+	//public List<UniversityStudDocResponse>  getStudentData(UniversityStudentRequest universityStudData);
+
 
 }

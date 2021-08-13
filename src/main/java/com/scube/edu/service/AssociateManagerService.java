@@ -17,7 +17,7 @@ public interface AssociateManagerService {
 
 	public List<UniversityStudDocResponse> ReviewStudentData(MultipartFile excelfile,MultipartFile datafile) throws IOException;
 
-	public List<UniversityStudDocResponse>  getStudentData(UniversityStudentRequest universityStudData);
+	public List<UniversityStudDocResponse>  getStudentData1(UniversityStudentRequest universityStudData);
 
 
 	public String saveassociatefilepath (MultipartFile datafile);

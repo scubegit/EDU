@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -85,13 +89,17 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	@Override
 	public  HashMap<String,List<UniversityStudDocResponse>> saveStudentInfo(List<UniversityStudDocResponse> list, Long userid) throws IOException {
 		
-		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
+		List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 List<UniversityStudDocResponse> savedStudDataList = new ArrayList<UniversityStudDocResponse>();
+
+		 Set<UniversityStudentDocument> savedset = new HashSet<UniversityStudentDocument>();
+		// Set<UniversityStudentDocument> set1 = new HashSet<UniversityStudentDocument>();
 
 		 UniversityStudentDocument docEntity =null;
 		 List<UniversityStudDocResponse> rejectedData=new ArrayList<UniversityStudDocResponse>();
 		 HashMap<String,List<UniversityStudDocResponse>> datalist=new HashMap<String,List<UniversityStudDocResponse>>();
 		
+		 int c=1;
 		 for(UniversityStudDocResponse Data:list) {
 			 
 			    Long clgnm = null;
@@ -100,9 +108,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				Long semId = null;
 				Long branchId = null;
 				String monthnm=null;
-			/*
-			 * CollegeMaster collegeEntities =
-			 * collegeRespository.findByCollegeName(Data.getCollegeName()); */
+			
 				MonthOfPassing month=monthOfPassingRepository.findByMonthOfPassing(Data.getMonthOfPassing());
 				 StreamMaster stream =streamRespository.findByStreamNameAndIsdeleted(Data.getStream(),"N");
 				
@@ -121,12 +127,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				
 
 			 			String enrollNo=Data.getEnrollmentNo();
-			 			//String fnm=Data.getFirstName();
-			 			//String lnm=Data.getLastName();
 			 			
-			/*
-			 * if(collegeEntities!=null) { clgnm=collegeEntities.getId();
-			 * logger.info("clgnm"+clgnm); }*/
 			   if(passingyr!=null) {
 			 
 			  passyr=passingyr.getId();
@@ -137,12 +138,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				 			 semId=sem.getId();
 				 			logger.info("semId"+semId);
 				 			}
-			/*
-			 * if(branch!=null) {
-			 * 
-			 * branchId=branch.getId(); logger.info("branchId"+branchId); }
-			 */
-			 			
+		
 			 			
 			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndStreamIdAndPassingYearIdAndSemIdAndMonthOfPassing(enrollNo,strm,passyr,semId,monthnm);
 			String reason = null;
@@ -151,40 +147,50 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				
 				if(passingyr!=null&&sem!=null && !Data.getEnrollmentNo().equals("")&&month!=null&&!Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
 					//if(Data.getOriginalDOCuploadfilePath().equals("FileNotAvailable")) {
-				UniversityStudentDocument studentData=new UniversityStudentDocument();
 				UniversityStudDocResponse SavestudentData=new UniversityStudDocResponse();
+				UniversityStudentDocument studentData1=new UniversityStudentDocument();
 
-			//	studentData.setFirstName(Data.getFirstName());
-		      //  studentData.setLastName(Data.getLastName());
-		       // studentData.setCollegeId(collegeEntities.getId());	
-		        studentData.setStreamId(stream.getId());	
-		        studentData.setEnrollmentNo(Data.getEnrollmentNo());
-		        studentData.setPassingYearId(passingyr.getId());	
-		        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
-		        studentData.setSemId(sem.getId());
+				
+				//studentData.setId((long)1);
+				studentData1.setStreamId(stream.getId());	
+				studentData1.setEnrollmentNo(Data.getEnrollmentNo());
+				studentData1.setPassingYearId(passingyr.getId());	
+				studentData1.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+				studentData1.setSemId(sem.getId());
 		       // studentData.setBranchId(branch.getId());
-		        studentData.setCreatedate(new Date());
-		        studentData.setCreateby(userid.toString());
-		        studentData.setMonthOfPassing(monthnm);
+		     //   studentData.setCreatedate(new Date());
+				studentData1.setCreateby(userid.toString());
+				studentData1.setIsdeleted("N");
+				studentData1.setMonthOfPassing(monthnm);
 		        
-//		        if(studentDataList.contains(studentData)) {
-		        studentDataList.add(studentData);   
-//		        }
-		        
-		        //SavestudentData.setFirstName(Data.getFirstName());
-		       // SavestudentData.setLastName(Data.getLastName());
-		      //  SavestudentData.setCollegeName(Data.getCollegeName());	
+		      if(!studentDataList.contains(studentData1)) {
+		        studentDataList.add(studentData1);
 		        SavestudentData.setStream(Data.getStream());	
 		        SavestudentData.setEnrollmentNo(Data.getEnrollmentNo());
 		        SavestudentData.setPassingYear(Data.getPassingYear());	
 		        SavestudentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
-		      //  SavestudentData.setReason(reason);
-		        //SavestudentData.setBranch_nm(Data.getBranch_nm());
 		        SavestudentData.setSemester(Data.getSemester());
 		        SavestudentData.setMonthOfPassing(monthnm);
 
 		        savedStudDataList.add(SavestudentData);	
 		        
+		      }
+		      else {
+		    	  UniversityStudDocResponse studentData=new UniversityStudDocResponse();
+				 	reason="Duplicate Record";
+				   	
+			        studentData.setStream(Data.getStream());	
+			        studentData.setSemester(Data.getSemester());
+			        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+			        studentData.setPassingYear(Data.getPassingYear());	
+			        studentData.setMonthOfPassing(Data.getMonthOfPassing());	
+			        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+			        studentData.setReason(reason);
+
+			        rejectedData.add(studentData);				
+		      }
+		      
+		      
 				
 				}
 				
@@ -215,14 +221,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 							  if(sem==null)
 							 {
 								 reason=reason+" Semester";
-							/*
-							 * if(branch==null) { reason=reason+",";
-							 * 
-							 * }
-							 * 
-							 * } if(branch==null) { reason=reason+" Branch";
-							 * 
-							 */
+							
 								 if(month==null)
 								 {
 									 reason=reason+",";
@@ -235,13 +234,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 
 								 }
 						 }
-					/*
-					 * if(collegeEntities==null) { reason=reason+" College Name";
-					  if(stream==null||passingyr==null||sem==null||branch==null) {
-					  reason=reason+",";
-					 * 
-					  }
-					  } */
+				
 				     
 						 if( Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
 							
@@ -266,27 +259,14 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 							 }
 						 }
 						 
-						 
-					/*
-					 * if(Data.getFirstName()==null || Data.getFirstName().equals("")) {
-					 * reason=reason+" First name"; if (Data.getLastName() == null ||
-					 * Data.getLastName().equals("") || Data.getLastName() == null ||
-					 * Data.getLastName().equals("") || Data.getEnrollmentNo() == null ||
-					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
-					 * if(Data.getLastName()==null || Data.getLastName().equals("") ) {
-					 * reason=reason+" Last name"; if(Data.getEnrollmentNo()==null ||
-					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
-					 */
+					
 						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
 						 {
 							 reason=reason+" Seat No";
 							
 						 }
 						
-					   // studentData.setFirstName(Data.getFirstName());
-				       // studentData.setLastName(Data.getLastName());
-				       // studentData.setCollegeName(Data.getCollegeName());
-				       // studentData.setBranch_nm(Data.getBranch_nm());
+					 
 				        studentData.setSemester(Data.getSemester());
 				        studentData.setStream(Data.getStream());	
 				        studentData.setEnrollmentNo(Data.getEnrollmentNo());
@@ -300,9 +280,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 else
 			 {	 UniversityStudDocResponse studentData=new UniversityStudDocResponse();
 			 	reason="Duplicate record";
-			    //studentData.setFirstName(Data.getFirstName());
-		        //studentData.setLastName(Data.getLastName());
-		       // studentData.setCollegeName(Data.getCollegeName());	
+			   	
 		        studentData.setStream(Data.getStream());	
 		       // studentData.setBranch_nm(Data.getBranch_nm());
 		        studentData.setSemester(Data.getSemester());
@@ -317,7 +295,13 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			
 		 }
 		 logger.info("rejectedData : "+rejectedData);
+		// logger.info("set1 : "+set1.toString());
+		 logger.info("savedset : "+savedset.toString());
+	
+		 List<UniversityStudentDocument> unique = studentDataList.stream().distinct().collect(Collectors.toList());
+		 
 		 universityStudentDocRepository.saveAll(studentDataList);
+		
 		 datalist.put("savedStudentData", savedStudDataList);
 		 datalist.put("RejectedData", rejectedData);
 		 return datalist;
@@ -433,14 +417,21 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 	}
 
 	@Override
-	public List<UniversityStudDocResponse> getStudentData(UniversityStudentRequest universityStudData ) {
+	public List<UniversityStudDocResponse> getStudentData1(UniversityStudentRequest universityStudData ) {
 		
 		logger.info("********AssociateManagerServiceImpl getStudentData********");
 
 		 List<UniversityStudentDocument> studentDataList = new ArrayList<UniversityStudentDocument>();
 		 
-//		List<UniversityStudentDocument> usdr = universityStudentDocRepository.searchByEnrollmentNoLikeAndPassingYearIdLikeAndStreamIdLikeAndSemIdLikeAndMonthOfPassingLike( 
-//				universityStudData.getEnrollmentNo(), universityStudData.getPassingYearId(), universityStudData.getStreamId(),universityStudData.getSemId(),universityStudData.getMonthOfPassing());
+		/*
+		 * List<UniversityStudentDocument> usdr = universityStudentDocRepository.
+		 * searchByEnrollmentNoLikeAndPassingYearIdLikeAndStreamIdLikeAndSemIdLikeAndMonthOfPassingLike(
+		 * universityStudData.getEnrollmentNo(), universityStudData.getPassingYearId(),
+		 * universityStudData.getStreamId(),universityStudData.getSemId(),
+		 * universityStudData.getMonthOfPassing());
+		 * 
+		 */
+		
 		List<UniversityStudDocResponse> studData=new ArrayList<>();
 		
 		String enrollementNo=null;
@@ -479,12 +470,17 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 //		 }
 		 
 		
-		  List<UniversityStudentDocument> usdr = getUniversityStudData(enrollementNo,  passingyrid, strmid, semid, monthofPass);
+		List<UniversityStudentDocument> usdr=getUniversityStudData(enrollementNo,  passingyrid, strmid, semid, monthofPass);
 		
-		logger.info("********AssociateManagerServiceImpl getStudentData********");
-		 
+		  
+		 int i=0;
+		 if(usdr!=null) {
+			  System.out.println("sixe"+usdr.size());
+
 		 for(UniversityStudentDocument studentData:usdr) {
 			 
+			  System.out.println("i=="+i);
+
 			 UniversityStudDocResponse resp = new UniversityStudDocResponse();
 			/*
 			 * Optional<CollegeMaster> cm =
@@ -516,9 +512,9 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 //String Path=
 			 resp.setOriginalDOCuploadfilePath("/verifier/getimage/U/"+studentData.getId());
 			 studData.add(resp);
-			 
+			 i++;
 		 }
-
+		 }
 		return studData;
 	}
 	@Override
@@ -558,45 +554,61 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			/*
 			 * CollegeMaster collegeEntities =
 			 * collegeRespository.findByCollegeName(Data.getCollegeName()); */
-				MonthOfPassing month=monthOfPassingRepository.findByMonthOfPassing(Data.getMonthOfPassing());
-				 StreamMaster stream =streamRespository.findByStreamNameAndIsdeleted(Data.getStream(),"N");
-				
-				 if(month!=null) {
+				MonthOfPassing month=null;
+				if(Data.getMonthOfPassing()!=null) {
+				month=monthOfPassingRepository.findByMonthOfPassing(Data.getMonthOfPassing());
+				if(month!=null) {
 					 monthnm=month.getMonthOfPassing();
 				 }
+				}
+				StreamMaster stream=null;
+				if(Data.getStream()!=null) {
+				 stream =streamRespository.findByStreamNameAndIsdeleted(Data.getStream(),"N");
 				 if(stream!=null) 
 				  { 
 					  strm=stream.getId(); 
 				  logger.info("strm"+strm);
 				  }
-				  PassingYearMaster passingyr=yearOfPassingRespository.findByYearOfPassingAndIsdeleted(Data.getPassingYear(),"N");
-				 
-					 SemesterEntity sem=semesterRepository.findBySemesterAndStreamIdAndIsdeleted(Data.getSemester(),strm,"N");					
-				//  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm(),strm);
+				}
 				
+				 
+				PassingYearMaster passingyr=null;
+				 if(Data.getPassingYear()!=null) {
+					 passingyr=yearOfPassingRespository.findByYearOfPassingAndIsdeleted(Data.getPassingYear(),"N");
+				  if(passingyr!=null) {
+						 
+					  passyr=passingyr.getId();
+					  logger.info("passyr"+passyr); }
+				 }
+				 SemesterEntity sem=null;
+				 if(Data.getSemester()!=null) {
+					sem=semesterRepository.findBySemesterAndStreamIdAndIsdeleted(Data.getSemester(),strm,"N");	
+					 if(sem!=null) {
 
-			 			String enrollNo=Data.getEnrollmentNo();
+			 			 semId=sem.getId();
+			 			logger.info("semId"+semId);
+			 			}
+				 }
+				//  BranchMasterEntity branch=branchMasterService.getbranchIdByname(Data.getBranch_nm(),strm);
+				 String enrollNo=null;
+				 if(Data.getEnrollmentNo()!=null&& !Data.getEnrollmentNo().equals("")) {
+					 enrollNo=Data.getEnrollmentNo();
+				 }
 			 			//String fnm=Data.getFirstName();
 			 			//String lnm=Data.getLastName();
 			 			
 			/*
 			 * if(collegeEntities!=null) { clgnm=collegeEntities.getId();
 			 * logger.info("clgnm"+clgnm); }*/
-			   if(passingyr!=null) {
+			  
+			 String imgPath=null;
+			 			
+			
+			  if(Data.getOriginalDOCuploadfilePath()!=null) {
+			  
+				  imgPath=  Data.getOriginalDOCuploadfilePath(); 
+			  logger.info("imgPath"+imgPath); }
 			 
-			  passyr=passingyr.getId();
-			  logger.info("passyr"+passyr); }
-			 
-			 			if(sem!=null) {
-
-				 			 semId=sem.getId();
-				 			logger.info("semId"+semId);
-				 			}
-			/*
-			 * if(branch!=null) {
-			 * 
-			 * branchId=branch.getId(); logger.info("branchId"+branchId); }
-			 */
 			 			
 			 			
 			 docEntity=universityStudentDocRepository.findByEnrollmentNoAndStreamIdAndPassingYearIdAndSemIdAndMonthOfPassing(enrollNo,strm,passyr,semId,monthnm);
@@ -604,7 +616,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 			 if(docEntity==null) {	
 				
 				
-				if(passingyr!=null&&sem!=null && !Data.getEnrollmentNo().equals("")&&month!=null&&!Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
+				if(passyr!=null&&semId!=null &&strm!=null&& enrollNo!=null&&month!=null&& (imgPath!=null&& !imgPath.equals("ImageNotAvailable"))) {
 					//if(Data.getOriginalDOCuploadfilePath().equals("FileNotAvailable")) {
 				UniversityStudentDocument studentData=new UniversityStudentDocument();
 				UniversityStudDocResponse SavestudentData=new UniversityStudDocResponse();
@@ -621,6 +633,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        studentData.setCreatedate(new Date());
 		        studentData.setCreateby(userid.toString());
 		        studentData.setMonthOfPassing(monthnm);
+		        if(!studentDataList.contains(studentData)) {
 		        studentDataList.add(studentData);    
 		        
 		        //SavestudentData.setFirstName(Data.getFirstName());
@@ -636,8 +649,22 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		        SavestudentData.setMonthOfPassing(monthnm);
 
 		        savedStudDataList.add(SavestudentData);	
+				}
 		        
-				
+		        else {
+		        	UniversityStudDocResponse rejstudentData=new UniversityStudDocResponse();
+				 	reason="Duplicate Entry";
+				    
+				 	rejstudentData.setStream(Data.getStream());	
+				 	rejstudentData.setSemester(Data.getSemester());
+				 	rejstudentData.setEnrollmentNo(Data.getEnrollmentNo());
+				 	rejstudentData.setPassingYear(Data.getPassingYear());	
+				 	rejstudentData.setMonthOfPassing(Data.getMonthOfPassing());	
+				 	rejstudentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+				 	rejstudentData.setReason(reason);
+
+			        rejectedData.add(rejstudentData);	
+		        }
 				}
 				
 					 else
@@ -695,7 +722,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 					  }
 					  } */
 				     
-						 if( Data.getOriginalDOCuploadfilePath().equals("ImageNotAvailable")) {
+						 if( imgPath!=null && imgPath.equals("ImageNotAvailable")) {
 							
 							 if(reason!=null) {
 								 reason=reason+", ImageNotAvailable";
@@ -705,9 +732,18 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 								 reason=" ImageNotAvailable";
 
 							 }
+						 }else {
+							 if(reason!=null) {
+								 reason=reason+", BankImageName";
+
+							 }
+							 else {
+								 reason=" ImageNotAvailable";
+
+							 }
 						 }
 						
-						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
+						 if(enrollNo==null)
 						 {
 							 if(reason!=null) {
 								 reason=reason+" & Blank";
@@ -729,7 +765,7 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 					 * reason=reason+" Last name"; if(Data.getEnrollmentNo()==null ||
 					 * Data.getEnrollmentNo().equals("")) { reason=reason+","; } }
 					 */
-						 if(Data.getEnrollmentNo()==null || Data.getEnrollmentNo().equals("") )
+						 if(enrollNo==null )
 						 {
 							 reason=reason+" Seat No";
 							
@@ -739,12 +775,40 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 				       // studentData.setLastName(Data.getLastName());
 				       // studentData.setCollegeName(Data.getCollegeName());
 				       // studentData.setBranch_nm(Data.getBranch_nm());
+						 if(Data.getSemester()!=null) {
 				        studentData.setSemester(Data.getSemester());
-				        studentData.setStream(Data.getStream());	
+						 }
+						 else {
+						        studentData.setSemester("");
+
+						 }
+						 if(Data.getStream()!=null) {
+				        studentData.setStream(Data.getStream());
+						 }
+						 else {
+						        studentData.setStream("");
+ 
+						 } if(Data.getEnrollmentNo()!=null) {
 				        studentData.setEnrollmentNo(Data.getEnrollmentNo());
+						 }else {
+						        studentData.setEnrollmentNo("");
+
+						 } if(Data.getPassingYear()!=null) {
 				        studentData.setPassingYear(Data.getPassingYear());	
+						 }else {
+						        studentData.setPassingYear("");
+
+						 } if(Data.getOriginalDOCuploadfilePath()!=null) {
 				        studentData.setOriginalDOCuploadfilePath(Data.getOriginalDOCuploadfilePath());
+						 }else {
+						        studentData.setOriginalDOCuploadfilePath("");
+
+						 } if(Data.getMonthOfPassing()!=null) {
 				        studentData.setMonthOfPassing(Data.getMonthOfPassing());
+						 }else {
+						        studentData.setMonthOfPassing("");
+
+						 }
 				        studentData.setReason(reason);
 				        rejectedData.add(studentData);				
 					 }
@@ -783,7 +847,7 @@ public List<UniversityStudentDocument> getUniversityStudData(String enrollmentno
 		 EntityManager em = emf.createEntityManager();
        CriteriaBuilder cb = em.getCriteriaBuilder();
        
-       List<UniversityStudentDocument> resp = new ArrayList<>();
+       List<UniversityStudentDocument> resp = null;
        
        
        CriteriaQuery<UniversityStudentDocument> cq = cb.createQuery(UniversityStudentDocument.class);
@@ -813,7 +877,9 @@ public List<UniversityStudentDocument> getUniversityStudData(String enrollmentno
 		
        cq.where(predicates.toArray(new Predicate[0]));
        logger.info("cq-----"+cq);
+       if(!predicates.isEmpty()) {
        resp=em.createQuery(cq).getResultList();
+      }
        
        em.close();
 //       emf.close();

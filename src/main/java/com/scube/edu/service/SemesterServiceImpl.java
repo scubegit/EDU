@@ -60,7 +60,7 @@ public class SemesterServiceImpl implements SemesterService{
 		System.out.println(id);
 		Optional<SemesterEntity> semEntity    = semesterRepository.findById(id);
 		SemesterEntity branchEnt = semEntity.get();
-		System.out.println("yearEnt---"+ branchEnt);
+		System.out.println("branchEnt---"+ branchEnt);
 		
 				return branchEnt;
 }
@@ -68,7 +68,7 @@ public class SemesterServiceImpl implements SemesterService{
 	public SemesterEntity getSemIdByNm(String sem,Long StreamId ) {
 		System.out.println(sem);
 		SemesterEntity semEntity = semesterRepository.findBySemesterAndStreamId(sem,StreamId);
-		System.out.println("yearEnt---"+ semEntity);
+		System.out.println("semEnt---"+ semEntity);
 		
 				return semEntity;
 }
