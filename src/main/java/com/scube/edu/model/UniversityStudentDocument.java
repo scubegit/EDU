@@ -65,4 +65,35 @@ public class UniversityStudentDocument extends CreateUpdate {
 
 
 
+		
+	
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof UniversityStudentDocument) {
+                obj = (UniversityStudentDocument) obj;
+                if (this.enrollmentNo.equals(((UniversityStudentDocument) obj).getEnrollmentNo())&&
+                		this.streamId.equals(((UniversityStudentDocument) obj).getStreamId())&&
+                		this.passingYearId.equals(((UniversityStudentDocument) obj).getPassingYearId())&&
+                		this.semId.equals(((UniversityStudentDocument) obj).getSemId())&&
+                		this.monthOfPassing.equals(((UniversityStudentDocument) obj).getMonthOfPassing())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        
+        
+	
+	  @Override public int hashCode() {
+		  return enrollmentNo.hashCode()+streamId.hashCode()+passingYearId.hashCode()+semId.hashCode()+monthOfPassing.hashCode(); 
+		  }
+	 
+
+
+
 }

@@ -33,7 +33,7 @@ public class AutoExcelReadingController {
 	public ResponseEntity<BaseResponse> AutoExcelReading () {
 
 		
-		System.out.println("*******AdminDashboardController AutoExcelReading********");
+		System.out.println("*******AutoExcelReadingController AutoExcelReading********");
 		
 			response = new BaseResponse();
 		

@@ -343,7 +343,7 @@ public class InvoicePDFExporter {
  	    Long totalAmt = (long) 0;
 // 	    Long totalGst = (long) 0;
  	    Long GSTVal = (long) 0;
- 	     
+ 	   Long totalsecureAmt=(long)0;
  	    for(int i=0 ;i<studentDocList.size();i++)
         {
  	    	logger.info("Inside for loop--------->16");
@@ -376,7 +376,7 @@ public class InvoicePDFExporter {
 //				   amtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
 				   Long totalAmount = responseObj.getAmount() + responseObj.getSecurAmt();
-				   
+				   Long secureAmt =responseObj.getSecurAmt();
 //				   Long gstval = responseObj.getDocAmtWithGST() - responseObj.getDocAmt();
 				   
 //				   totalGst = totalGst +gstval;
@@ -400,6 +400,7 @@ public class InvoicePDFExporter {
 				   totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				   
 				   totalAmt = totalAmt + totalAmount;
+				   totalsecureAmt=totalsecureAmt+secureAmt;
 				   GSTVal = responseObj.getGst();
 				   
      	    studentDocTable.addCell(srcell);
@@ -420,7 +421,7 @@ public class InvoicePDFExporter {
      	    studentDocTable.addCell(totalCell); 
            
      }
-        Long GST = (totalAmt * GSTVal) / 100;
+        Long GST = (totalsecureAmt * GSTVal) / 100;
         
  	   logger.info("just outside for loop--------->17"+ GST);
 		    

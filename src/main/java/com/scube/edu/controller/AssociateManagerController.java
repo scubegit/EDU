@@ -105,7 +105,7 @@ public class AssociateManagerController {
 		
 	    try {
 	    	
-	    	  List<UniversityStudDocResponse> List=associateManagerService.getStudentData(stuentData) ;
+	    	  List<UniversityStudDocResponse> List=associateManagerService.getStudentData1(stuentData) ;
 				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

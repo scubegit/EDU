@@ -90,6 +90,7 @@ public class ExcelReadingScheduler {
 	//@Scheduled(cron = "${cron.time.excelRead}")
 	public String readExcelFiles() throws Exception, IOException {		
 		String result = "";
+		try {
 		if(awsORtest.equalsIgnoreCase("AWS")) {
 
 			Optional<checkautoReadingActiveEntity> chk= chkAutoReadingStatus.findById((long) 1);
@@ -328,6 +329,12 @@ public class ExcelReadingScheduler {
 			}
 			
 		}
+		}
+		}
+		catch(Exception e) {
+			String statusflag1="InActive";
+			result="Unable to read file,check file format/Data and try again!";
+			chkAutoReadingStatus.updateFlg(statusflag1);
 		}
 		logger.info("******** Exiting ExcelReadingScheduler readExcelFiles********");
 

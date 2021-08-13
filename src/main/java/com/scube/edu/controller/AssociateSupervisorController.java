@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
+import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.response.UniversityStudentDocumentResponse;
 import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.AssociateSupervisorService;
@@ -198,6 +199,40 @@ public class AssociateSupervisorController {
 				}
 			
    }
+	
+	/*
+	 * @PostMapping(value = "/getUniversityStudenData") public
+	 * ResponseEntity<BaseResponse> getstudentData (@RequestBody
+	 * UniversityStudentRequest stuentData) {
+	 * 
+	 * System.out.
+	 * println("*******AssociateSupervisorController getstudentData********");
+	 * 
+	 * response = new BaseResponse();
+	 * 
+	 * try {
+	 * 
+	 * List<UniversityStudDocResponse>
+	 * List=associateSupervisorService.getStudentData(stuentData) ;
+	 * 
+	 * response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+	 * response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+	 * response.setRespData(List);
+	 * 
+	 * return ResponseEntity.ok(response);
+	 * 
+	 * }catch (Exception e) {
+	 * 
+	 * logger.error(e.getMessage()); //BAD creds message comes from here
+	 * 
+	 * response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+	 * response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+	 * response.setRespData(e.getMessage());
+	 * 
+	 * return ResponseEntity.badRequest().body(response);
+	 * 
+	 * } }
+	 */
 	
 	
 
