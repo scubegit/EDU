@@ -166,4 +166,8 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "alternate_email")
 	private String altEmail;
+	
+	@Column(name = "cgpi")
+	private String cgpi;
+	
 }
