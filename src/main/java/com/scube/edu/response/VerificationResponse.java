@@ -54,6 +54,8 @@ public class VerificationResponse {
 	
 	private String monthOfPassing;
 	
+	private String cgpi;
+	
 
 
 }

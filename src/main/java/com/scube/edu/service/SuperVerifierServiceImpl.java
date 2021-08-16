@@ -145,6 +145,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			resp.setBranch_nm(branch.getBranchName());
 			resp.setSemester(sem.getSemester());
 			resp.setMonthOfPassing(req.getMonthOfPassing());
+			resp.setCgpi(req.getCgpi());
 			
 			responseList.add(resp);
 			
@@ -184,6 +185,9 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		veriReq.setSvVerId(statusChangeRequest.getVerifiedby());
 		veriReq.setSvActionDate(new Date());
 		veriReq.setSuperVerStatus(statusChangeRequest.getStatus());
+		if(!veriReq.getCgpi().equalsIgnoreCase(statusChangeRequest.getCgpi())) {
+			veriReq.setCgpi(statusChangeRequest.getCgpi());
+		}
 		
 		verificationReqRepository.save(veriReq);
 		
