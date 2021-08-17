@@ -647,7 +647,7 @@ public class EmailService {
 			footerFont9.setColor(Color.BLACK);
 			
 			Font headingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-			headingFont.setSize(10);
+			headingFont.setSize(13);
 			headingFont.setColor(Color.BLACK);
 
 			PdfWriter.getInstance(document, outputStream);
@@ -802,7 +802,15 @@ public class EmailService {
 			Chunk chunk1 = new Chunk("Details of Statement of Marks/Grade Card");
 			chunk1.setFont(headingFont);
 			chunk1.setUnderline(1.0f, -1f);
-			document.add(chunk1);
+			
+			Phrase phrase1 = new Phrase();
+			phrase1.add(chunk1);
+			
+			Paragraph certi1 = new Paragraph();
+			certi1.add(phrase1);
+			certi1.setAlignment(Paragraph.ALIGN_CENTER);
+			
+			document.add(certi1);
 			
 			Paragraph headd = new Paragraph();
 			headd.setFont(headingFont);
@@ -952,7 +960,7 @@ public class EmailService {
 		    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
 		    foot1.setFont(headAddrFont12);
 		    foot1.add("Director \r"
-		    		+ "Board Of Examination & Evaluation");
+		    		+ "Board of Examination’s & Evaluation");
 		    
 		   
 		    		    
@@ -1009,7 +1017,7 @@ public class EmailService {
 			footerFont9.setColor(Color.BLACK);
 			
 			Font headingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-			headingFont.setSize(10);
+			headingFont.setSize(13);
 			headingFont.setColor(Color.BLACK);
 
 			PdfWriter.getInstance(document, outputStream);
@@ -1139,7 +1147,20 @@ public class EmailService {
 			Chunk chunk1 = new Chunk("Details of Statement of Marks/Grade Card");
 			chunk1.setFont(headingFont);
 			chunk1.setUnderline(1.0f, -1f);
-			document.add(chunk1);
+			
+			Phrase phrase1 = new Phrase();
+			phrase1.add(chunk1);
+			
+			Paragraph certi1 = new Paragraph();
+			certi1.add(phrase1);
+			certi1.setAlignment(Paragraph.ALIGN_CENTER);
+			certi1.add(Chunk.NEWLINE);
+			certi1.add(Chunk.NEWLINE);
+			certi1.add(Chunk.NEWLINE);
+			
+			document.add(certi1);
+			
+//			document.add(chunk1);
 			
 			
 			
@@ -1286,7 +1307,7 @@ public class EmailService {
 			    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
 			    foot1.setFont(headAddrFont12);
 			    foot1.add("Director \r"
-			    		+ "Board Of Examination & Evaluation");
+			    		+ "Board of Examination’s & Evaluation");
 	  		    document.add(foot1);
 
 //        HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);
