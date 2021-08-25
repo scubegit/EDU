@@ -1,5 +1,7 @@
 package com.scube.edu.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.request.DisputeRequest;
+import com.scube.edu.request.SendQueryRequest;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.UpdateDisputeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.service.DisputeService;
 import com.scube.edu.util.StringsUtils;
 
@@ -95,5 +100,34 @@ public class DisputeController {
 		}
 		
 	}
+	
+	@PostMapping("/sendQueryToSupport")
+	public  ResponseEntity<Object> sendQueryToSupport(@RequestBody SendQueryRequest sendQueryRequest) {
+		
+		response = new BaseResponse();
+		System.out.println("*****DisputeController sendQueryToSupport*****"+sendQueryRequest.getUserid());
+		    try {
+		    	
+		    	boolean list = disputeService.sendQueryToSupport(sendQueryRequest);
+
+		    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 
 }

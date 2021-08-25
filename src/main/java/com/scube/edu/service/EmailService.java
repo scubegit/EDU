@@ -137,6 +137,63 @@ public class EmailService {
 	@Value("${CC.Mail.id}")
     private String CCMailid;
 	
+	
+	void sendQueryMail(UserMasterEntity user, String query) throws MessagingException,Exception{
+		
+		String to = "support@educred.co.in";
+		String from = "support@educred.co.in";
+		String host = "mail.educred.co.in";
+		
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+
+		properties.put("mail.smtp.auth", "true");
+		
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+				return new PasswordAuthentication("support@educred.co.in", "EduCred$2021$");
+
+			}
+
+		});
+		session.setDebug(true);
+		
+		try {
+			
+			MimeMessage message = new MimeMessage(session);
+
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			// Set Subject: header field
+			message.setSubject(user.getUsername());
+			
+			String vmFileContent = "Name: "+user.getFirstName()+" "+ user.getLastName()+"\r"+
+									"Phone Number: "+user.getPhoneNo()+"\r"+
+									"Email: "+user.getUsername()+"\r"+
+									"Query:- "+ query;
+			
+			message.setText(vmFileContent);
+			Transport.send(message);
+			System.out.println("Sent message successfully....");
+			
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
 
 	void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException, Exception {
 
