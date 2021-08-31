@@ -762,7 +762,7 @@ public class EmailService {
 //			heading.add(Chunk.NEWLINE);
 //			heading.add(Chunk.NEWLINE);
 			
-			Chunk chunk = new Chunk("Verification Certificate");
+			Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
 			chunk.setFont(headingFont);
 			chunk.setUnderline(1.0f, -1f);
 //			document.add(chunk);
@@ -783,7 +783,7 @@ public class EmailService {
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
 			para.add(
-					"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() + " has submitted the following mentioned documents for verification purpose- \r");
+					"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() + " has submitted the following mentioned documents for verification purpose. \r");
 			
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
@@ -829,7 +829,7 @@ public class EmailService {
 		    PdfPCell cell1 = new PdfPCell(new Paragraph("Name of the Examination"));
 		    PdfPCell cell2 = new PdfPCell(new Paragraph("Seat No"));
 //		    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-		    PdfPCell cell4 = new PdfPCell(new Paragraph("Month and Year Of Exam"));
+		    PdfPCell cell4 = new PdfPCell(new Paragraph("Month & Year Of Examination"));
 		    PdfPCell cell5 = new PdfPCell(new Paragraph("Status"));
 //		    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
 		    PdfPCell cell7 = new PdfPCell(new Paragraph("Class/CGPA/CGPI"));
@@ -865,7 +865,7 @@ public class EmailService {
 	    	PdfPCell seatNoCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
 //	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(vr.getMonthOfPassing()+" "+year.getYearOfPassing()));
-	    	PdfPCell statusCell = new PdfPCell(new Paragraph("FAKE"));
+	    	PdfPCell statusCell = new PdfPCell(new Paragraph("Fake"));
 //	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
 	    	PdfPCell cgpiCell = new PdfPCell(new Paragraph(vr.getCgpi()));
 //	    	PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
@@ -905,7 +905,7 @@ public class EmailService {
 		    result.add(Chunk.NEWLINE);
 		    result.add(Chunk.NEWLINE);
 		    result.add(Chunk.NEWLINE);
-		    result.add("The above details verified from the office records, after verification it has been observed that the provided document is not been issued by the university and details mentioned in the document are FAKE.");
+		    result.add("The above details are verified from the office records. After verification it is observed that the above said document is issued by the university and details mentioned in the documents are found to be FAKE.");
 		    result.add(Chunk.NEWLINE);
 		    result.add(Chunk.NEWLINE);
 		    result.add(Chunk.NEWLINE);
@@ -960,7 +960,7 @@ public class EmailService {
 		    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
 		    foot1.setFont(headAddrFont12);
 		    foot1.add("Director \r"
-		    		+ "Board of Examination’s & Evaluation");
+		    		+ "Board of Examinations & Evaluation");
 		    
 		   
 		    		    
@@ -1101,7 +1101,7 @@ public class EmailService {
 
 			logger.info("greeting set below here--->");
 			
-			Chunk chunk = new Chunk("Verification Certificate");
+			Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
 			chunk.setFont(headingFont);
 			chunk.setUnderline(1.0f, -1f);
 			
@@ -1128,7 +1128,7 @@ public class EmailService {
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
 			para.add(
-					"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() + " has submitted the following mentioned document for verification purpose- \r");
+					"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() + " has submitted the following mentioned document for verification purpose. \r");
 			
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
@@ -1181,7 +1181,7 @@ public class EmailService {
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Name of the Examination"));
 	    PdfPCell cell2 = new PdfPCell(new Paragraph("Seat No"));
 //	    PdfPCell cell3 = new PdfPCell(new Paragraph("Document Name"));
-	    PdfPCell cell4 = new PdfPCell(new Paragraph("Month and Year Of Exam"));
+	    PdfPCell cell4 = new PdfPCell(new Paragraph("Month & Year Of Examination"));
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Status"));
 //	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
 	    PdfPCell cell7 = new PdfPCell(new Paragraph("Class/CGPA/CGPI"));
@@ -1222,9 +1222,9 @@ public class EmailService {
 	    	PdfPCell yearCell = new PdfPCell(new Paragraph(vr.getMonthOfPassing()+" "+year.getYearOfPassing()));
 	    	PdfPCell statusCell = new PdfPCell();
 	    	if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")) {
-	    		statusCell = new PdfPCell(new Paragraph("PASS"));
+	    		statusCell = new PdfPCell(new Paragraph("Successful "));
 	    	}if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail")) {
-	    		statusCell = new PdfPCell(new Paragraph("FAIL"));
+	    		statusCell = new PdfPCell(new Paragraph("Fail"));
 	    	}
 	    	
 //	    	PdfPCell branchCell = new PdfPCell(new Paragraph(branch.getBranchName()));
@@ -1252,13 +1252,13 @@ public class EmailService {
 	    result.add(Chunk.NEWLINE);
 	    result.add(Chunk.NEWLINE);
 	    if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")||vr.getDocStatus().equalsIgnoreCase("SVD_Approved_Pass")) {
-	    	result.add("The above details verified from the office records, after verification it has been observed that the provided document is been issued by the university and details mentioned in the document are Correct.");
+	    	result.add("The above details are verified from the office records. After verification it is observed that the above said document is issued by the university and details mentioned in the documents are found to be correct.");
 	    	result.add(Chunk.NEWLINE);
 	    	result.add(Chunk.NEWLINE);
 	    	result.add(Chunk.NEWLINE);
 	    }
 	    if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Fail")||vr.getDocStatus().equalsIgnoreCase("SVD_Approved_Fail")) {
-	    	result.add("The above details verified from the office records, after verification it has been observed that the provided document is been issued by the university and details mentioned in the document are Correct.");
+	    	result.add("The above details are verified from the office records. After verification it is observed that the above said document is issued by the university and details mentioned in the documents are found to be correct.");
 	    	result.add(Chunk.NEWLINE);
 	    	result.add(Chunk.NEWLINE);
 	    	result.add(Chunk.NEWLINE);
@@ -1307,7 +1307,7 @@ public class EmailService {
 			    foot1.setAlignment(Paragraph.ALIGN_RIGHT);
 			    foot1.setFont(headAddrFont12);
 			    foot1.add("Director \r"
-			    		+ "Board of Examination’s & Evaluation");
+			    		+ "Board of Examinations & Evaluation");
 	  		    document.add(foot1);
 
 //        HeaderFooter footer = new HeaderFooter( new Phrase("System generated document does not require signature.", footerFont9), true);

@@ -80,7 +80,7 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "monthOfPassing")
 	private String monthOfPassing;
 
-	@Size(max = 100)
+	@Size(max = 500)
 	@Column(name = "uploadDocumentPath")
 	private String uploadDocumentPath;
 	
