@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lowagie.text.BadElementException;
 import com.scube.edu.request.DisputeRequest;
 import com.scube.edu.request.LoginRequest;
+import com.scube.edu.request.SendQueryFromHomeRequest;
 import com.scube.edu.request.SendQueryRequest;
 import com.scube.edu.request.UpdateDisputeRequest;
 import com.scube.edu.request.UserAddRequest;
@@ -23,5 +24,7 @@ public interface DisputeService {
 	public boolean updateDispute(UpdateDisputeRequest updateDisputeReq, HttpServletRequest request) throws Exception, BadElementException, IOException;
 
 	public boolean sendQueryToSupport(SendQueryRequest sendQueryRequest) throws Exception;
+
+	boolean sendQueryToSupportFromHome(SendQueryFromHomeRequest sendQueryMailFromHomeRequest) throws Exception;
 
 }

@@ -23,6 +23,7 @@ import com.scube.edu.repository.RaiseDisputeRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.DisputeRequest;
+import com.scube.edu.request.SendQueryFromHomeRequest;
 import com.scube.edu.request.SendQueryRequest;
 import com.scube.edu.request.UpdateDisputeRequest;
 
@@ -183,6 +184,16 @@ public class DisputeServiceImpl implements DisputeService{
 		UserMasterEntity userEnt = user.get();
 		
 		emailService.sendQueryMail(userEnt, sendQueryRequest.getQuery());
+		
+		return true;
+	}
+	
+	@Override
+	public boolean sendQueryToSupportFromHome(SendQueryFromHomeRequest sendQueryFromHomeRequest) throws Exception {
+		
+		logger.info("******DisputeServiceImpl sendQueryToSupport******");
+		
+		emailService.sendQueryMailFromLandingPage(sendQueryFromHomeRequest);
 		
 		return true;
 	}
