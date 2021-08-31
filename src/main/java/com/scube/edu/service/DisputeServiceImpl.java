@@ -17,14 +17,15 @@ import org.springframework.stereotype.Service;
 
 import com.lowagie.text.BadElementException;
 import com.scube.edu.model.RaiseDespute;
+import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.RaiseDisputeRepository;
+import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.DisputeRequest;
+import com.scube.edu.request.SendQueryFromHomeRequest;
+import com.scube.edu.request.SendQueryRequest;
 import com.scube.edu.request.UpdateDisputeRequest;
-
-
-
 
 @Service
 public class DisputeServiceImpl implements DisputeService{
@@ -33,6 +34,9 @@ public class DisputeServiceImpl implements DisputeService{
 	
 	@Autowired
 	RaiseDisputeRepository disputeRepo;
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@Autowired
 	EmailService emailService;
@@ -169,6 +173,29 @@ public class DisputeServiceImpl implements DisputeService{
 		}
 		
 		return false;
+	}
+
+	@Override
+	public boolean sendQueryToSupport(SendQueryRequest sendQueryRequest) throws Exception {
+		
+		logger.info("******DisputeServiceImpl sendQueryToSupport******");
+		
+		Optional<UserMasterEntity> user = userRepo.findById(sendQueryRequest.getUserid());
+		UserMasterEntity userEnt = user.get();
+		
+		emailService.sendQueryMail(userEnt, sendQueryRequest.getQuery());
+		
+		return true;
+	}
+	
+	@Override
+	public boolean sendQueryToSupportFromHome(SendQueryFromHomeRequest sendQueryFromHomeRequest) throws Exception {
+		
+		logger.info("******DisputeServiceImpl sendQueryToSupport******");
+		
+		emailService.sendQueryMailFromLandingPage(sendQueryFromHomeRequest);
+		
+		return true;
 	}
 	
 }
