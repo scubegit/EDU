@@ -428,8 +428,7 @@ public class EmailService {
 		try {
 
 			MimeMessage message = new MimeMessage(session);
-
-//			MimeBodyPart textBodyPart = new MimeBodyPart();
+			MimeBodyPart textBodyPart = new MimeBodyPart();
 
 			message.setFrom(new InternetAddress(from));
 
@@ -443,76 +442,61 @@ public class EmailService {
 				+"<a href='http://"	+ url + "/University/emailVerification?emailId=" + encodeEmail + "' ><strong>Verification Link</strong></a> <br>"
 					+ " If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks, <br> Team University";
 
-			message.setText(vmFileContent1,"UTF-8", "html");
-//			String file = null;
-//			if(awsORtest.equalsIgnoreCase("AWS")) {
-//				file=emailFileLocation+"VerficationLink.txt";     //Live
-//			}if(awsORtest.equalsIgnoreCase("TEST")) {
-//				file=emailFileLocation+"Verification.txt";	// test
-////				file = "./EmailFiles/VerficationLink.txt";
-//			}if(awsORtest.equalsIgnoreCase("LOCAL")) {
-//				file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
+		//	message.setText(vmFileContent1,"UTF-8", "html");
+		String file = null;
+		if(awsORtest.equalsIgnoreCase("AWS")) {
+			file=emailFileLocation+"VerficationLink.txt";     //Live
+		}if(awsORtest.equalsIgnoreCase("TEST")) {
+			file=emailFileLocation+"Verification.txt";	// test
+//			file = "./EmailFiles/VerficationLink.txt";
+		}if(awsORtest.equalsIgnoreCase("LOCAL")) {
+			file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
 //
-//			}
+		}
 		
 
-//			BufferedReader reader = new BufferedReader(new FileReader(file));
-//			String vmFileContent = reader.readLine();
-//			vmFileContent = vmFileContent.replaceFirst("#url", url);
-//			vmFileContent = vmFileContent.replaceFirst("#encodeEmail", encodeEmail);
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String vmFileContent = reader.readLine();
+		vmFileContent = vmFileContent.replaceFirst("#url", url);
+		vmFileContent = vmFileContent.replaceFirst("#encodeEmail", encodeEmail);
 			//vmFileContent = vmFileContent.replaceFirst("#url1", url);
 			//vmFileContent = vmFileContent.replaceFirst("#encodeEmail1", encodeEmail);
 
-//			MimeBodyPart imagePart = new MimeBodyPart();
-//			if(awsORtest.equalsIgnoreCase("AWS")) {
-//			 imagePart.attachFile(logoimageLocation+"logo.png"); //For live
-//			}if(awsORtest.equalsIgnoreCase("TEST")) {
-//				imagePart.attachFile(logoimageLocation+"logo.png"); // for test
-////				imagePart.attachFile("./logo.png");
-//			}else {
-//
-//			imagePart.attachFile(logoimageLocation+"logo.png"); // For local Testing
-//			}
-//			imagePart.setDisposition(MimeBodyPart.INLINE);
-//			Map<String, String> inlineImages = new HashMap<String, String>();
-//
-//			if(awsORtest.equalsIgnoreCase("AWS")) {
-//				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
-//			}if(awsORtest.equalsIgnoreCase("TEST")) {
-//				inlineImages.put("image",logoimageLocation+"logo.png"); //For live
-////				inlineImages.put("image", "./logo.png");
-//			}else {
-//
-//				inlineImages.put("image", logoimageLocation+"logo.png"); // For local Testing
-//			}
-//
-//			if (inlineImages != null && inlineImages.size() > 0) {
-//				Set<String> setImageID = inlineImages.keySet();
-//
-//				for (String contentId : setImageID) {
-//					// MimeBodyPart imagePart = new MimeBodyPart();
-//					imagePart.setHeader("Content-ID", "<" + contentId + ">");
-//					imagePart.setDisposition(MimeBodyPart.INLINE);
-//
-//					String imageFilePath = inlineImages.get(contentId);
-//					try {
-//						imagePart.attachFile(imageFilePath);
-//					} catch (IOException ex) {
-//						ex.printStackTrace();
-//					}
-//				}
-//			}
-//			textBodyPart.setText(vmFileContent, "utf-8", "html");
+			/*
+			 * MimeBodyPart imagePart = new MimeBodyPart();
+			 * if(awsORtest.equalsIgnoreCase("AWS")) {
+			 * imagePart.attachFile(logoimageLocation+"logo.png"); //For live
+			 * }if(awsORtest.equalsIgnoreCase("TEST")) {
+			 * imagePart.attachFile(logoimageLocation+"logo.png"); // for test //
+			 * imagePart.attachFile("./logo.png"); }else { //
+			 * imagePart.attachFile(logoimageLocation+"logo.png"); // For local Testing }
+			 * imagePart.setDisposition(MimeBodyPart.INLINE); Map<String, String>
+			 * inlineImages = new HashMap<String, String>(); //
+			 * if(awsORtest.equalsIgnoreCase("AWS")) {
+			 * inlineImages.put("image",logoimageLocation+"logo.png"); //For live
+			 * }if(awsORtest.equalsIgnoreCase("TEST")) {
+			 * inlineImages.put("image",logoimageLocation+"logo.png"); //For live //
+			 * inlineImages.put("image", "./logo.png"); }else { // inlineImages.put("image",
+			 * logoimageLocation+"./logo.png"); // For local Testing } // if (inlineImages
+			 * != null && inlineImages.size() > 0) { Set<String> setImageID =
+			 * inlineImages.keySet(); // for (String contentId : setImageID) { //
+			 * MimeBodyPart imagePart = new MimeBodyPart();
+			 * imagePart.setHeader("Content-ID", "<" + contentId + ">");
+			 * imagePart.setDisposition(MimeBodyPart.INLINE); // String imageFilePath =
+			 * inlineImages.get(contentId); try { imagePart.attachFile(imageFilePath); }
+			 * catch (IOException ex) { ex.printStackTrace(); } } }
+			 */
+		textBodyPart.setText(vmFileContent, "utf-8", "html");
 
 
 			//logger.info("fileContent=" + vmFileContent);
 			// Send the complete message parts
-//			Multipart multipart = new MimeMultipart();
-//			multipart.addBodyPart(imagePart);
-//			multipart.addBodyPart(textBodyPart);
+		Multipart multipart = new MimeMultipart();
+	//	multipart.addBodyPart(imagePart);
+		multipart.addBodyPart(textBodyPart);
 			// Send the complete message parts
-//			message.setContent(multipart);
-		//	message.setContent(vmFileContent, "text/html");
+		message.setContent(multipart);
+		message.setContent(vmFileContent, "text/html");
 
 			System.out.println("sending...");
 
