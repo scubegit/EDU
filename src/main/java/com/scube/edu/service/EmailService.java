@@ -141,7 +141,8 @@ public class EmailService {
 	
 	void sendQueryMailFromLandingPage(SendQueryFromHomeRequest sendQueryFromHomeRequest) throws MessagingException,Exception{
 		
-		String to = "support@educred.co.in";
+		//String to = "support@educred.co.in";
+		String to = "help@educred.co.in";
 		String from = "support@educred.co.in";
 		String host = "mail.educred.co.in";
 		
@@ -196,7 +197,8 @@ public class EmailService {
 	
 	void sendQueryMail(UserMasterEntity user, String query) throws MessagingException,Exception{
 		
-		String to = "support@educred.co.in";
+		//String to = "support@educred.co.in";
+		String to = "help@educred.co.in";
 		String from = "support@educred.co.in";
 		String host = "mail.educred.co.in";
 		
