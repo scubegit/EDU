@@ -103,22 +103,21 @@ public class MisServiceImpl implements MisService {
 		    String bucket="";
 			//'','','','',''
 			
-			/*
-			 * if (docSt.equals("UN_Approved_Pass") || docSt.equals("UN_Approved_Fail") ||
-			 * docSt.equals("Uni_Auto_Approved")||docSt.equals("UN_Rejected") ||
-			 * docSt.equals("Uni_Auto_Rejected") || docSt.equals("SVD_Approved_Pass") ||
-			 * docSt.equals("SVD_Approved_Fail") || docSt.equals("SVD_Rejected")) {
-			 * currSt="Open"; } else currSt="Closed";
-			 * 
-			 * 
-			 * if (docSt.equals("Requested")) bucket="Verifier"; else if
-			 * (docSt.equals("Rejected") || docSt.equals("offline") ||
-			 * docSt.equals("Unable To Verify")||docSt.equals("SV_Offline") ||
-			 * docSt.equals("SV_Unable To Verify")) bucket="SuperVerifier"; else if
-			 * (docSt.equals("Approved_Pass") || docSt.equals("Approved_Fail") ||
-			 * docSt.equals("SV_Approved_Pass")||docSt.equals("SV_Approved_Fail") ||
-			 * docSt.equals("SV_Rejected")) bucket="University";
-			 */
+			
+			  if (docSt.equals("UN_Approved_Pass") || docSt.equals("UN_Approved_Fail") ||
+			  docSt.equals("Uni_Auto_Approved")||docSt.equals("UN_Rejected") ||
+			  docSt.equals("Uni_Auto_Rejected") || docSt.equals("SVD_Approved_Pass") ||
+			  docSt.equals("SVD_Approved_Fail") || docSt.equals("SVD_Rejected")) {
+			  currSt="Open"; } else currSt="Closed";
+			  
+			  
+			  if (docSt.equals("Requested"))
+				  bucket="Verifier"; 
+			  else if
+			  (docSt.equals("Rejected") || docSt.equals("offline") || docSt.equals("Unable To Verify")||docSt.equals("SV_Offline") ||  docSt.equals("SV_Unable To Verify")) bucket="SuperVerifier";
+			  else if
+			  (docSt.equals("Approved_Pass") || docSt.equals("Approved_Fail") ||  docSt.equals("SV_Approved_Pass")||docSt.equals("SV_Approved_Fail") ||  docSt.equals("SV_Rejected")) bucket="University";
+			 
 			resp.setDoc_status(currSt);
 				
 			resp.setBucket(bucket);
