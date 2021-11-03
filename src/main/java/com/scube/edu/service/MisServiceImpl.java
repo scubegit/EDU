@@ -114,9 +114,11 @@ public class MisServiceImpl implements MisService {
 			  if (docSt.equals("Requested"))
 				  bucket="Verifier"; 
 			  else if
-			  (docSt.equals("Rejected") || docSt.equals("offline") || docSt.equals("Unable To Verify")||docSt.equals("SV_Offline") ||  docSt.equals("SV_Unable To Verify")) bucket="SuperVerifier";
+			  (docSt.equals("Rejected") || docSt.equals("offline") || docSt.equals("Unable To Verify")||docSt.equals("SV_Offline") ||  docSt.equals("SV_Unable To Verify")) 
+				  bucket="SuperVerifier";
 			  else if
-			  (docSt.equals("Approved_Pass") || docSt.equals("Approved_Fail") ||  docSt.equals("SV_Approved_Pass")||docSt.equals("SV_Approved_Fail") ||  docSt.equals("SV_Rejected")) bucket="University";
+			  (docSt.equals("Approved_Pass") || docSt.equals("Approved_Fail") ||  docSt.equals("SV_Approved_Pass")||docSt.equals("SV_Approved_Fail") ||  docSt.equals("SV_Rejected"))
+				  bucket="University";
 			 
 			resp.setDoc_status(currSt);
 				
