@@ -152,6 +152,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			resp.setFilePath(req.getUploadDocumentPath());
 			resp.setMonthOfPassing(req.getMonthOfPassing());
 			resp.setCgpi(req.getCgpi());
+			resp.setRemark(req.getRemark());
 			
 			responseList.add(resp);
 
@@ -177,13 +178,23 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		VerificationRequest entt = verificationReqRepository.findById(statusChangeRequest.getId());
 
 		System.out.println("------------" + entt.getDocStatus() + entt.getApplicationId());
-
+		
+		if(statusChangeRequest.getNewremark() != null) {
+			if(entt.getRemark()!=null) {
+				entt.setRemark(entt.getRemark() + " UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
+				}
+			else
+				{
+					entt.setRemark(" UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
+	
+				}
+		}
 		entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
 		if (statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
 			if(entt.getRemark()!=null) {
 			entt.setRemark(entt.getRemark() + " UN_" + currentDate + "-" + statusChangeRequest.getRemark());
-		}
+			}
 			else
 			{
 				entt.setRemark(" UN_" + currentDate + "-" + statusChangeRequest.getRemark());
