@@ -17,6 +17,8 @@ public interface UniversityVerifierService {
 	public List<StudentVerificationDocsResponse> setStatusForUniversityDocument(
 			StatusChangeRequest statusChangeRequest) throws Exception ;
 
+	public boolean addNewRemark(StatusChangeRequest statusChangeRequest);
+
 
 
 }
