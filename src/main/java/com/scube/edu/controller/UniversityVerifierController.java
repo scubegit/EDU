@@ -91,4 +91,33 @@ public class UniversityVerifierController {
 			
    }
 	
+	@PostMapping("/addNewRemark")
+	public  ResponseEntity<Object> addNewRemark(@RequestBody StatusChangeRequest statusChangeRequest) {
+		
+		response = new BaseResponse();
+		System.out.println("*****VerifierController setStatusForVerifierDocument*****"+statusChangeRequest.getNewremark());
+		    try {
+		    	
+		    	boolean list = universityVerifierService.addNewRemark(statusChangeRequest);
+
+		    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(null);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
+	
 }

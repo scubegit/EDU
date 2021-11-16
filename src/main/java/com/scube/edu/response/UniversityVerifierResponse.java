@@ -25,6 +25,7 @@ public class UniversityVerifierResponse {
 		
 //		added by kartik
 		private String enrollmentNo;
+		private String remark;
 
 
 

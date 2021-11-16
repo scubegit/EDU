@@ -256,6 +256,9 @@ public class VerifierServiceImpl implements VerifierService{
 			//entt.setClosedDate(date);
 			entt.setVerId(statusChangeRequest.getVerifiedby());
 			entt.setVerifierStatus(statusChangeRequest.getStatus());
+			if(statusChangeRequest.getRemark() != null) {
+				entt.setRemark(statusChangeRequest.getRemark());
+			}
 			entt.setVerActionDate(new Date());
 			
 			if(statusChangeRequest.getCgpi() != null) {

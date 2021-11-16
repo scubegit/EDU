@@ -153,6 +153,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			resp.setMonthOfPassing(req.getMonthOfPassing());
 			resp.setCgpi(req.getCgpi());
 			resp.setEnrollmentNo(req.getEnrollmentNumber());
+			resp.setRemark(req.getRemark());
 			
 			responseList.add(resp);
 
@@ -178,13 +179,23 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		VerificationRequest entt = verificationReqRepository.findById(statusChangeRequest.getId());
 
 		System.out.println("------------" + entt.getDocStatus() + entt.getApplicationId());
-
+		
+//		if(statusChangeRequest.getNewremark() != null) {
+//			if(entt.getRemark()!=null) {
+//				entt.setRemark(entt.getRemark() + " UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
+//				}
+//			else
+//				{
+//					entt.setRemark(" UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
+//	
+//				}
+//		}
 		entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
 		if (statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
 			if(entt.getRemark()!=null) {
 			entt.setRemark(entt.getRemark() + " UN_" + currentDate + "-" + statusChangeRequest.getRemark());
-		}
+			}
 			else
 			{
 				entt.setRemark(" UN_" + currentDate + "-" + statusChangeRequest.getRemark());
@@ -216,6 +227,32 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 	
 
 		return null;
+	}
+
+	@Override
+	public boolean addNewRemark(StatusChangeRequest statusChangeRequest) {
+		
+		logger.info("*******UniversityVerifierServiceImpl addNewRemark*******");
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		String currentDate = formatter.format(date);
+
+		VerificationRequest entt = verificationReqRepository.findById(statusChangeRequest.getId());
+		
+		if(statusChangeRequest.getNewremark() != null) {
+			if(entt.getRemark()!=null) {
+				entt.setRemark(entt.getRemark() + " UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
+				}
+			else
+				{
+					entt.setRemark(" UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
+	
+				}
+		}
+		verificationReqRepository.save(entt);
+		
+		return true;
 	}
 
 }

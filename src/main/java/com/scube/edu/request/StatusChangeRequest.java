@@ -14,5 +14,7 @@ public class StatusChangeRequest {
 	private String roleid;
 	private String cgpi;
 	//private Long userId;
+//	added by kartik
+	private String newremark;
 
 }
