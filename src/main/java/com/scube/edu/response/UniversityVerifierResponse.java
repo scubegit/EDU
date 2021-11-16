@@ -22,6 +22,9 @@ public class UniversityVerifierResponse {
 		private String semester;
 		private String monthOfPassing;
 		private String cgpi;
+		
+//		added by kartik
+		private String enrollmentNo;
 
 
 

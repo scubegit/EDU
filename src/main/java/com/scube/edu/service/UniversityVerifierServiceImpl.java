@@ -152,6 +152,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			resp.setFilePath(req.getUploadDocumentPath());
 			resp.setMonthOfPassing(req.getMonthOfPassing());
 			resp.setCgpi(req.getCgpi());
+			resp.setEnrollmentNo(req.getEnrollmentNumber());
 			
 			responseList.add(resp);
 
