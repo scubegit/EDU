@@ -98,6 +98,12 @@ public class MisServiceImpl implements MisService {
 			resp.setActualstatus(req.getDocStatus());
 			resp.setMonthOfPassing(req.getMonthOfPassing());
 			
+			if(req.getRemark() != null) {
+				resp.setRemark(req.getRemark());
+			}else {
+				resp.setRemark("");
+			}
+			
 			String docSt=req.getDocStatus(); 
 			String currSt="";
 		    String bucket="";

@@ -32,6 +32,9 @@ public class MisResponse {
 	private String doc_status;
 	private String bucket;
 	
+//	added by kartik
+	private String remark;
+	
 	
 	
 	
