@@ -232,7 +232,7 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
     		
     		fileName = data.getUploadDocumentPath();
     		
-    		extension = fileName.split("\\.")[1];
+    		extension = fileName.substring(fileName.lastIndexOf(".")+1);
     		
     		randomId = fileName.split("\\/")[2];
     		
@@ -250,7 +250,7 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
     		UniversityStudentDocument doc = universityStudentDocServiceImpl.getUniversityDocDataById(id);
     		fileName = doc.getOriginalDOCuploadfilePath();
     		
-    		extension = fileName.split("\\.")[1]; // req for mediaType
+    		extension = fileName.substring(fileName.lastIndexOf(".")+1);
     		
     		randomId = fileName.split("\\/")[2]; // req for completing path
     		

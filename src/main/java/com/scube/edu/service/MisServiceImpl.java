@@ -68,7 +68,10 @@ public class MisServiceImpl implements MisService {
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
-			Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
+		//	Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
+			
+			Optional<UserMasterEntity> user = userRepository.findById(req.getUserId());
+			
 			UserMasterEntity userr = user.get(); // verifier User
 			
 			resp.setId(req.getId());
