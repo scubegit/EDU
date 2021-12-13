@@ -39,6 +39,10 @@ public class MisServiceImpl implements MisService {
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired 
+	SemesterService semesterService;
+	
+	
 	
 	
 
@@ -68,6 +72,9 @@ public class MisServiceImpl implements MisService {
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
+			SemesterEntity semesterEntity=semesterService.getSemById(req.getSemId());
+			
+			
 		//	Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
 			
 			Optional<UserMasterEntity> user = userRepository.findById(req.getUserId());
@@ -78,6 +85,8 @@ public class MisServiceImpl implements MisService {
 			resp.setFirst_name(req.getFirstName());
 			resp.setLast_name(req.getLastName());
 			resp.setStream_name(stream.getStreamName());
+			resp.setSemester(semesterEntity.getSemester());
+			
 			resp.setYear(year.getYearOfPassing());
 			resp.setEnroll_no(req.getEnrollmentNumber());
 			resp.setRegisterdemailid(userr.getUsername());
@@ -117,7 +126,7 @@ public class MisServiceImpl implements MisService {
 			  docSt.equals("Uni_Auto_Approved")||docSt.equals("UN_Rejected") ||
 			  docSt.equals("Uni_Auto_Rejected") || docSt.equals("SVD_Approved_Pass") ||
 			  docSt.equals("SVD_Approved_Fail") || docSt.equals("SVD_Rejected")) {
-			  currSt="Open"; } else currSt="Closed";
+			  currSt="Closed"; } else currSt="Open";
 			  
 			  
 			  if (docSt.equals("Requested"))

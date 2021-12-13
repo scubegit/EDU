@@ -13,6 +13,7 @@ public class MisResponse {
 	private String first_name; 
 	private String last_name;
 	private String stream_name;
+	private String semester;
 	private String year;
 	private String enroll_no;
 	private String registerdemailid;
