@@ -14,4 +14,6 @@ public interface RequestTypeService {
 
 	RequestTypeResponse getNameById(Long requestType);
 
+	RequestTypeResponse getIdByName(String reqName);
+
 }

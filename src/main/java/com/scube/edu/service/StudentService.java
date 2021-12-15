@@ -25,8 +25,7 @@ public interface StudentService {
 
 	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request);
 
-	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
-			HttpServletRequest request);
+	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq);
 
 	public String saveDocument(MultipartFile file);
 	

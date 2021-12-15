@@ -16,4 +16,6 @@ public interface RequestTypeRepository extends JpaRepository<RequestTypeMaster, 
 	List<RequestTypeMaster> findAllByIsdeleted(String isdeleted);
 	
 	List<RequestTypeMaster> findByIsdeleted(String isdeleted);
+
+	RequestTypeMaster findByRequestType(String reqName);
 }

@@ -45,7 +45,7 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "firstName")
 	private String firstName;
 	
-	@NotBlank
+	
 	@Size(max = 100)
 	@Column(name = "lastName")
 	private String lastName;

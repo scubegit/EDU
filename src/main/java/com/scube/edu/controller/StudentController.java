@@ -219,7 +219,7 @@ public class StudentController {
 		
 		    try {
 		    	
-		    	HashMap<String, Long> list = studentService.saveStudentSingleVerificationDoc(studentDocReq, request);
+		    	HashMap<String, Long> list = studentService.saveStudentSingleVerificationDoc(studentDocReq);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

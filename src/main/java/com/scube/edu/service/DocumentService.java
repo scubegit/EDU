@@ -26,4 +26,6 @@ public interface DocumentService {
 	public BaseResponse deleteDocument(long id, HttpServletRequest request) throws Exception;
 	//Abhishek Added
 
+	DocumentResponse getDocumentEntityByName(String name) throws Exception;
+
 }

@@ -376,8 +376,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	}
 
 	@Override
-	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq,
-			HttpServletRequest request) {
+	public HashMap<String, Long> saveStudentSingleVerificationDoc(StudentDocVerificationRequest studentDocReq) {
 		
 		System.out.println("********StudentServiceImpl saveStudentSingleVerificationDoc********"+ studentDocReq.getDocname());
 		
@@ -386,9 +385,6 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		long total;
 		long totalWithGST;
-		
-		long amtWithoutGST = 0;
-		long amtWithGST = 0;
 		
 		// assign application_id here
 		Long appId = (long) 0;
@@ -426,6 +422,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setUniversityId((long) 1);
 		verDoc.setUploadDocumentPath(studentDocReq.getFilepath());
 		verDoc.setVerRequestId((long) 1);
+		if(studentDocReq.getRequesttype() != null) {
+			verDoc.setRequestType(studentDocReq.getRequesttype());
+		}
 		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
 		verDoc.setUserId(studentDocReq.getUserid());
 		verificationReqRepo.save(verDoc);

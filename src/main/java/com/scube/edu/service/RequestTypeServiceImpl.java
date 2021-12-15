@@ -72,6 +72,27 @@ public class RequestTypeServiceImpl implements RequestTypeService {
 		return reqTypeResponse;
 	}
 	
+	@Override
+	public RequestTypeResponse getIdByName(String reqName) {
+		
+		logger.info("********RequestTypeServiceImpl getNameById********");
+		
+		RequestTypeResponse reqTypeList = new RequestTypeResponse();
+		
+		RequestTypeMaster ent = reqTypeRepo.findByRequestType(reqName);
+//		RequestTypeMaster entt = ent.get();
+		
+		
+			
+			RequestTypeResponse reqTypeResponse = new RequestTypeResponse();
+
+			reqTypeResponse.setId(ent.getId());
+			reqTypeResponse.setRequestType(ent.getRequestType());
+			reqTypeResponse.setUniversityId(ent.getUniversityId());
+			
+		return reqTypeResponse;
+	}
+	
 	
 
 }

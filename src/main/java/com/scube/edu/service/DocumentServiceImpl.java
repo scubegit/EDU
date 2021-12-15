@@ -183,5 +183,19 @@ public String addDocument(DocumentAddRequest documentRequest) throws Exception {
 	
 	}
 	
-	//Abhishek Added
+	//kartik added
+	@Override
+	public DocumentResponse getDocumentEntityByName(String name) throws Exception{
+		
+		logger.info("***DocumentServiceImpl getDocumentEntityByName***"+ name);
+		
+		DocumentMaster docEntities  = documentRespository.findByDocumentName(name);
+		
+		DocumentResponse docResp = new DocumentResponse();
+		docResp.setId(docEntities.getId());
+		docResp.setDocumentName(docEntities.getDocumentName());
+		
+		return docResp;
+		
+	}
 }
