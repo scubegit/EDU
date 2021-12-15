@@ -431,6 +431,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		HashMap<String, Long> map = new HashMap<String, Long>();
 		
+		map.put("application_id", appId);
 		map.put("total_without_gst", total);
 		map.put("total_with_gst", totalWithGST);
 		

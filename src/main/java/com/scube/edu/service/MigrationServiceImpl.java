@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.MigrationRequestEntity;
@@ -16,6 +18,7 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.RequestTypeResponse;
+import com.scube.edu.util.FileStorageService;
 
 @Service
 public class MigrationServiceImpl implements MigrationService {
@@ -33,6 +36,9 @@ public class MigrationServiceImpl implements MigrationService {
 	
 	@Autowired
 	RequestTypeService requestTypeService;
+	
+	@Autowired
+	private FileStorageService fileStorageService;
 
 	@Override
 	public boolean saveMigrationRequest(StudentMigrationRequest stuMigReq) throws Exception{
@@ -116,11 +122,33 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		mig.setVerDocAmt(String.valueOf(verAmounts.get("total_without_gst")));
 		mig.setVerDocAmtWithGst(String.valueOf(verAmounts.get("total_with_gst")));
+		mig.setVerReqId(String.valueOf(verAmounts.get("application_id")));
 		
 //		make and save in repository
 		migrationRepo.save(mig);
 		
 		return true;
+	}
+	
+	@Value("${file.awsORtest}")
+    private String awsORtest;
+
+	@Override
+	public String saveMigrationDocument(MultipartFile file) {
+		
+		logger.info("***MigrationServiceimpl saveMigrationDocument***"+ file.getName());
+		
+		String fileSubPath = "file/";
+		String flag = "3";
+		String filePath;
+		
+		if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			filePath = fileStorageService.storeFile(file , fileSubPath, flag);
+		}else {
+			filePath = fileStorageService.storeFileOnAws(file, flag);
+		}
+		System.out.println("****FilePath--->"+ filePath);
+		return filePath;
 	}
 
 }

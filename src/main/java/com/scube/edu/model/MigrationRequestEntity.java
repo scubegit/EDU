@@ -157,4 +157,7 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@Column(name = "tcFilePath")
 	private String tcFilePath;
 	
+	@Column(name = "ver_req_id")
+	private String verReqId;
+	
 }

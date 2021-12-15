@@ -52,6 +52,8 @@ public class FileStorageService {
 	private final String imagePathDir;
 	
 	private final String rejectedDataDir;
+	
+	private final String migrationTcDocDir;
 
 	private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 	 
@@ -72,6 +74,7 @@ public class FileStorageService {
 	  this.fileAssociateBaseLocation = fileStorageProperties.getUploadassociateDir();
 	  this.imagePathDir = fileStorageProperties.getImagepathDir();
 	  this.rejectedDataDir=fileStorageProperties.getRejecteddataDir();
+	  this.migrationTcDocDir=fileStorageProperties.getMigrationTcDocDir();
 	  }
 	 
 	
@@ -98,7 +101,10 @@ public class FileStorageService {
 			}
 			String newPath;
 			
-			if(flag.equalsIgnoreCase("2")) {
+			if(flag.equalsIgnoreCase("3")) {
+				newPath = this.migrationTcDocDir + "/" + fileSubPath;
+			}
+			else if(flag.equalsIgnoreCase("2")) {
 				newPath = this.fileAssociateBaseLocation + "/" + fileSubPath;
 			}else {
 				newPath = this.fileBaseLocation +"/" + fileSubPath; 
@@ -131,10 +137,16 @@ public class FileStorageService {
 	 
 	 @Value("${file.awsfileUPath-dir}")
      private String uFilePath;
+	 
+	 @Value("${file.awsmigrationTCdoc-dir}")
+     private String awsMigrationFilePath;
+	 
+	 @Value("${file.migrationTCdoc-dir}")
+     private String migrationFilePath;
 	
      public String storeFileOnAws(MultipartFile file, String flag) {
 		
-		System.out.println("****fileStorageService storeFile*****"+file);
+		System.out.println("****fileStorageService storeFileOnAws*****"+file);
 		
 		/*
 		 * Date date = new Date(System.currentTimeMillis());
@@ -165,7 +177,11 @@ public class FileStorageService {
 			
 			  if(flag.equalsIgnoreCase("2")) { 
 				  newPath = uFilePath+UUID.randomUUID(); 
-			  }else { 
+			  }
+			  else if(flag.equalsIgnoreCase("3")) { 
+				  newPath = migrationFilePath+UUID.randomUUID(); 
+			  }
+			  else { 
 					  newPath = vrFilePath+UUID.randomUUID(); 
 			  }
 			 
@@ -214,8 +230,27 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
  		String extension;
  		String randomId;
  		String nameOfFile;
-    	
-    	if(userFor.equalsIgnoreCase("VR")) {
+ 		
+ 		
+    	if(userFor.equalsIgnoreCase("mig")) {
+    		List<VerificationRequest> verList = verificationReqRepository.findByApplicationId(id);
+    		VerificationRequest ver = verList.get(0);
+    		
+    		String filename = ver.getUploadDocumentPath();
+    		
+    		fileName = ver.getUploadDocumentPath();
+    		
+    		extension = fileName.substring(fileName.lastIndexOf(".")+1);
+    		
+    		randomId = fileName.split("\\/")[2];
+    		
+//    		newPAth = "educred/file/verification_docs/"+randomId;
+    		
+    		newPAth = BucketName.TODO_IMAGE.getBucketName()+ "/" + awsMigrationFilePath + randomId ; 
+    		
+    		nameOfFile = fileName.split("\\/")[3];
+    	}
+ 		else if(userFor.equalsIgnoreCase("VR")) {
     		
 //    		newPAth = this.fileBaseLocation;
     		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
@@ -293,7 +328,30 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 		 	try {
 	        	
 	        	String newPAth = "";     
-	        	if(userFor.equalsIgnoreCase("VR")) {	        		
+	        	if(userFor.equalsIgnoreCase("mig")) {
+	        		newPAth = this.migrationTcDocDir;
+	        		List<VerificationRequest> verList = verificationReqRepository.findByApplicationId(id);
+	        		VerificationRequest ver = verList.get(0);
+	        		fileName = ver.getUploadDocumentPath();
+	        		
+	        		logger.info("migration---ver-document---fileName----->"+ fileName);
+	        		
+	        		Path fileStorageLocation = Paths.get(newPAth).toAbsolutePath().normalize();
+	        		
+	        		System.out.println("----this.fileStorageLocation--------userFor---------"+fileStorageLocation+"-------------"+userFor);
+	        		Path filePath = fileStorageLocation.resolve(fileName).normalize();
+	        		
+	        		Resource resource = new UrlResource(filePath.toUri());
+	  	            if(resource.exists()) {
+	  	            	logger.info("Inside IF(resource.exists)");
+	  	                return resource;
+	  	            } else {
+	  	            	logger.info("Inside else()");
+	  	                throw new Exception("File not found " + fileName);
+	  	            }
+	        		
+	        	}
+	        	else if(userFor.equalsIgnoreCase("VR")) {	        		
 	        		newPAth = this.fileBaseLocation;
 	        		Optional<VerificationRequest> verifierData = verificationReqRepository.findById(id);
 	        		VerificationRequest data = verifierData.get();

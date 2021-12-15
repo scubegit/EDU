@@ -6,11 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 public class FileStorageProperties {
 	
-	
 	private String uploadDir;
 	private String uploadassociateDir;
 	private String imagepathDir;
 	private String rejecteddataDir;
+	private String migrationTcDocDir;
 	public String getImagepathDir() {
 		return imagepathDir;
 	}
@@ -42,6 +42,15 @@ public class FileStorageProperties {
 	public void setRejecteddataDir(String rejecteddataDir) {
 		this.rejecteddataDir = rejecteddataDir;
 	}
+	
+	public String getMigrationTcDocDir() {
+		return migrationTcDocDir;
+	}
+
+	public void setMigrationTcDocDir(String migrationTcDocDir) {
+		this.migrationTcDocDir = migrationTcDocDir;
+	}
+
 
 	
 	
