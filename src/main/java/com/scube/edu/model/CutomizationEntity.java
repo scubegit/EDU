@@ -33,6 +33,9 @@ public class CutomizationEntity {
 	
 	@Column(name = "Email_Flag")
 	private String EmailFlag;
+	
+	@Column(name = "service_flag")
+	private String serviceFlag;
 
 
 }

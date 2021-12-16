@@ -12,9 +12,18 @@ public class JwtResponse {
 	private String firstname;
 	private String lastname;
 	private String phoneNo;
+	private String serviceFlag;
 
 
-	public JwtResponse(String accessToken,String refreshToken, Long id, String username, String email, Long roles, String firstname, String lastname, String phoneNo) {
+	public String getServiceFlag() {
+		return serviceFlag;
+	}
+
+	public void setServiceFlag(String serviceFlag) {
+		this.serviceFlag = serviceFlag;
+	}
+
+	public JwtResponse(String accessToken,String refreshToken, Long id, String username, String email, Long roles, String firstname, String lastname, String phoneNo, String serviceFlag) {
 		this.token = accessToken;
 		this.refreshToken = refreshToken;
 		this.id = id;
@@ -24,6 +33,7 @@ public class JwtResponse {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.phoneNo = phoneNo;
+		this.serviceFlag = serviceFlag;
 
 	}
 

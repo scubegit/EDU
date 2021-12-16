@@ -27,8 +27,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.RefreshToken;
 import com.scube.edu.model.UserMasterEntity;
+import com.scube.edu.repository.CustomizationRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.request.LoginRequest;
 import com.scube.edu.request.UserAddRequest;
@@ -59,6 +61,9 @@ public class AuthServiceImpl implements AuthService{
 	
 	@Autowired
 	VerifierService verifierService;
+	
+	@Autowired
+	CustomizationRepository customizationRepo;;
 	
 	@Autowired
 	EmailService emailService;
@@ -124,7 +129,7 @@ public class AuthServiceImpl implements AuthService{
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();	
 	
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-		
+		CutomizationEntity cusEnt = customizationRepo.findServiceFlag();
 	
 		baseResponse.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 		baseResponse.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
@@ -135,7 +140,8 @@ public class AuthServiceImpl implements AuthService{
 				 userDetails.getRole(), 
 				 userDetails.getFirstname(),
 				 userDetails.getLastname(),
-				 userDetails.getPhoneNo()
+				 userDetails.getPhoneNo(),
+				 cusEnt.getServiceFlag()
 				 ));
 		logger.info("USER INFo"+baseResponse);
 		return baseResponse;
