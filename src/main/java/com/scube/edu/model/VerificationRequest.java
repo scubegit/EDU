@@ -47,6 +47,7 @@ public class VerificationRequest extends CreateUpdate {
 	
 	
 	@Size(max = 100)
+//	@NotNull(message = "Last name cannot be null")
 	@Column(name = "lastName")
 	private String lastName;
 	

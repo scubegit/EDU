@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.MigrationRequestEntity;
+import com.scube.edu.model.PriceMaster;
 import com.scube.edu.repository.MigrationRequestRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
@@ -33,6 +34,9 @@ public class MigrationServiceImpl implements MigrationService {
 	
 	@Autowired
 	DocumentService documentService;
+	
+	@Autowired
+	PriceService priceService;
 	
 	@Autowired
 	RequestTypeService requestTypeService;
@@ -118,13 +122,24 @@ public class MigrationServiceImpl implements MigrationService {
 		DocumentResponse doc = documentService.getDocumentEntityByName("Marksheet");
 		verReq.setDocname(String.valueOf(doc.getId())); 
 		
+		RequestTypeResponse reqTypeMig = requestTypeService.getIdByName("Migration");
+		
+//		Might need to search price by request type as well as doc_id 
+		PriceMaster price = priceService.getPriceByRequestTypeId(reqTypeMig.getId());
+		mig.setMigSecurCharge(String.valueOf(price.getSecurCharge()));
+		mig.setMigUniAmount(String.valueOf(price.getAmount()));
+		
+		long total = price.getTotalAmt();
+		long totalWithGST =    ((price.getSecurCharge() * price.getGst()) / 100) + price.getTotalAmt();
+		mig.setMigAmt(String.valueOf(total));
+		mig.setMigAmtWithGst(String.valueOf(totalWithGST));
+		
 		HashMap<String, Long> verAmounts = studentService.saveStudentSingleVerificationDoc(verReq);
 		
 		mig.setVerDocAmt(String.valueOf(verAmounts.get("total_without_gst")));
 		mig.setVerDocAmtWithGst(String.valueOf(verAmounts.get("total_with_gst")));
 		mig.setVerReqId(String.valueOf(verAmounts.get("application_id")));
 		
-//		make and save in repository
 		migrationRepo.save(mig);
 		
 		return true;

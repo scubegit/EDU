@@ -24,4 +24,6 @@ public interface PriceService {
 
 		Boolean deletePrice(Long id);
 
+		PriceMaster getPriceByRequestTypeId(Long id);
+
 }

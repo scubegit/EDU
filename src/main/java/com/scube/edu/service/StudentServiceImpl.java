@@ -419,6 +419,11 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setLastName(studentDocReq.getLastname());
 		verDoc.setIsdeleted("N");
 		verDoc.setStreamId(studentDocReq.getStreamid());
+		verDoc.setBranchId(studentDocReq.getBranchId());
+		verDoc.setSemId(studentDocReq.getSemId());
+		verDoc.setDocUniAmt(diff.getAmount());
+		verDoc.setDocSecurCharge(diff.getSecurCharge());
+		verDoc.setMonthOfPassing(studentDocReq.getMonthOfPassing());
 		verDoc.setUniversityId((long) 1);
 		verDoc.setUploadDocumentPath(studentDocReq.getFilepath());
 		verDoc.setVerRequestId((long) 1);

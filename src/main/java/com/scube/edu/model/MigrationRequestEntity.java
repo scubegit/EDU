@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -24,61 +25,78 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-//	@NotNull(message = "Please enter Verification Request ID")
+	@NotBlank
 	@Column(name = "full_name")
 	private String fullName;
 	
+	@NotBlank
 	@Column(name = "mother_name")
 	private String motherName;
 	
 	@Column(name = "spouce_name")
 	private String spouceName;
 	
+	@NotBlank
 	@Column(name = "date_of_birth")
 	private String dateOfBirth;
 	
+	@NotBlank
 	@Column(name = "gender")
 	private String gender;
 	
+	@NotBlank
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 	
+	@NotBlank
 	@Column(name = "nationality")
 	private String nationality;
 	
+	@NotBlank
 	@Column(name = "postal_addr")
 	private String postalAddr;
 	
+	@NotBlank
 	@Column(name = "postal_country")
 	private String postalCountry;
 	
+	@NotBlank
 	@Column(name = "postal_state")
 	private String postalState;
 	
+	@NotBlank
 	@Column(name = "postal_district")
 	private String postalDistrict;
 	
+	@NotBlank
 	@Column(name = "postal_taluka")
 	private String postalTaluka;
 	
+	@NotBlank
 	@Column(name = "postal_pincode")
 	private String postalPincode;
 	
+	@NotBlank
 	@Column(name = "perm_addr")
 	private String permAddr;
 	
+	@NotBlank
 	@Column(name = "perm_country")
 	private String permCountry;
 	
+	@NotBlank
 	@Column(name = "perm_state")
 	private String permState;
 	
+	@NotBlank
 	@Column(name = "perm_district")
 	private String permDistrict;
 	
+	@NotBlank
 	@Column(name = "perm_taluka")
 	private String permTaluka;
 	
+	@NotBlank
 	@Column(name = "perm_pincode")
 	private String permPincode;
 	
@@ -151,9 +169,17 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@Column(name = "mig_amt_with_gst")
 	private String migAmtWithGst;
 	
+	@Column(name = "mig_secur_charge")
+	private String migSecurCharge;
+	
+	@Column(name = "mig_uni_amt")
+	private String migUniAmount;
+	
+	@NotNull(message = "marksheet file path cannot be null")
 	@Column(name = "doc_file_path")
 	private String docFilePath;
 	
+	@NotNull(message = "TC file path cannot be null")
 	@Column(name = "tcFilePath")
 	private String tcFilePath;
 	

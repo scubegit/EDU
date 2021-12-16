@@ -27,6 +27,9 @@ public interface PriceMasterRepository extends JpaRepository<PriceMaster, Long>{
 	
 	List<PriceMaster> findByIsdeleted(String string);
 
+
+	PriceMaster findByRequestTypeId(Long id);
+
 	
 
 }

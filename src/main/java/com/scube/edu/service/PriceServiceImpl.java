@@ -165,7 +165,7 @@ public class PriceServiceImpl  implements PriceService {
 			return baseResponse;
 		}
 
-
+		//Abhishek Added
 
 		@Override
 		public Boolean deletePrice(Long id) {
@@ -182,5 +182,15 @@ public class PriceServiceImpl  implements PriceService {
 		}
 		
 		
-		//Abhishek Added
+//		added by kartik for migration process
+		
+		@Override
+		public PriceMaster getPriceByRequestTypeId(Long id) {
+			
+			logger.info("*******PriceServiceImpl getPriceByRequestTypeId*******");
+			
+			PriceMaster pmm = pricemasterRespository.findByRequestTypeId(id);
+			
+			return pmm;
+		}
 }
