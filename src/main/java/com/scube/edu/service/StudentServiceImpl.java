@@ -335,8 +335,6 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
 			resp.setMonthOfPassing(req.getMonthOfPassing());
-			
-			
 
 			if(req.getAltEmail()!=null) {
 			if(!req.getAltEmail().equalsIgnoreCase("")){
@@ -432,6 +430,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		}
 		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
 		verDoc.setUserId(studentDocReq.getUserid());
+		verDoc.setServiceFlag("Mig");
 		verificationReqRepo.save(verDoc);
 		
 		HashMap<String, Long> map = new HashMap<String, Long>();

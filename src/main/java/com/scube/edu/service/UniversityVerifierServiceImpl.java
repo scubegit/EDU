@@ -217,9 +217,10 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			{
 				if(cutomizationEntity.getEmailFlag().equals("Y")) {
 					
-					String altEmail = entt.getAltEmail();
-					emailService.sendStatusMail(altEmail, ume.getEmail(), entt.getId() , statusChangeRequest.getStatus(), imageLocation);
-			
+					if(entt.getServiceFlag() == null) {
+						String altEmail = entt.getAltEmail();
+						emailService.sendStatusMail(altEmail, ume.getEmail(), entt.getId() , statusChangeRequest.getStatus(), imageLocation);
+					}
 			
 				}
 			}

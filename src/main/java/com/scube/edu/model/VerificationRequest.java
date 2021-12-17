@@ -171,4 +171,7 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "cgpi")
 	private String cgpi;
 	
+	@Column(name = "service_flag")
+	private String serviceFlag;
+	
 }
