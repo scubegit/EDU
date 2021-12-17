@@ -54,7 +54,7 @@ public class MigrationServiceImpl implements MigrationService {
 //		Calculation of migration amount is left
 //		need to save mig_amt_with and without GST in MigrationRequestEntity
 		
-		mig.setBranchId(stuMigReq.getBranchId());
+//		mig.setBranchId(stuMigReq.getBranchId());
 		mig.setClassGrade(stuMigReq.getClassGrade());
 		mig.setCreateby(stuMigReq.getUserid());
 		mig.setDateOfBirth(stuMigReq.getDateOfBirth());
@@ -101,15 +101,16 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		verReq.setFirstname(stuMigReq.getFullName());
 		verReq.setLastname("");
-		verReq.setBranchId(Long.parseLong(stuMigReq.getBranchId()));
+		verReq.setBranchId(Long.parseLong(stuMigReq.getExamName()));
+		verReq.setBranchId((long)1);
 		verReq.setCollegenameid(Long.parseLong(stuMigReq.getLastCollegeName()));
 		verReq.setCreateby(stuMigReq.getUserid());
 		verReq.setEnrollno(stuMigReq.getSeatNumber()); // ask
 		verReq.setFilepath(stuMigReq.getDocFilePath());
 		verReq.setLastname("");
 		verReq.setMonthOfPassing(stuMigReq.getMonthOfPassing());
-		verReq.setSemId(Long.parseLong(stuMigReq.getSemesterId()));
-		verReq.setStreamid(Long.parseLong(stuMigReq.getStreamId()));
+		verReq.setSemId((long)0);
+		verReq.setStreamid(Long.parseLong(stuMigReq.getExamFaculty()));
 		verReq.setUploaddocpath(stuMigReq.getDocFilePath());
 		verReq.setUserid(Long.parseLong(stuMigReq.getUserid()));
 		verReq.setVerreqid((long) 1);
