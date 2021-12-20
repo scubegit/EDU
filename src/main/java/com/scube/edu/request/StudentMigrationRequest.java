@@ -52,6 +52,9 @@ public class StudentMigrationRequest {
 	private String monthOfPassing; // id
 	private String yearOfPassingId; // id
 	
+	private String totalAmt;
+	private String totalAmtWithGst;
+	
 	private String tcFilePath;
 	private String docFilePath;
 	

@@ -3,6 +3,8 @@ package com.scube.edu.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
@@ -164,6 +167,34 @@ public class MigrationController {
 		 }
 		 
 	 }
+	 
+	 @PostMapping("/getMigrationRequestAmount")
+		public  ResponseEntity<Object> calculateDocAmt(@RequestBody StudentMigrationRequest stuMigReq, HttpServletRequest request) {
+			response = new BaseResponse();
+			    try {
+			    	
+			    	HashMap<String,Long> list = migrationService.calculateMigrationAmount(stuMigReq);
+						
+						response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(list);
+						
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
+						
+						
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
 	
 	
 

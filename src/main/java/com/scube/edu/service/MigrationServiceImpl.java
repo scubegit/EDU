@@ -1,6 +1,8 @@
 package com.scube.edu.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -101,8 +103,8 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		verReq.setFirstname(stuMigReq.getFullName());
 		verReq.setLastname("");
-		verReq.setBranchId(Long.parseLong(stuMigReq.getExamName()));
-		verReq.setBranchId((long)1);
+//		verReq.setBranchId(Long.parseLong(stuMigReq.getExamName()));
+//		verReq.setBranchId((long)1);
 		verReq.setCollegenameid(Long.parseLong(stuMigReq.getLastCollegeName()));
 		verReq.setCreateby(stuMigReq.getUserid());
 		verReq.setEnrollno(stuMigReq.getSeatNumber()); // ask
@@ -139,7 +141,9 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		mig.setVerDocAmt(String.valueOf(verAmounts.get("total_without_gst")));
 		mig.setVerDocAmtWithGst(String.valueOf(verAmounts.get("total_with_gst")));
-		mig.setVerReqId(String.valueOf(verAmounts.get("application_id")));
+		mig.setVerReqAppId(String.valueOf(verAmounts.get("application_id")));
+		mig.setMigVerTotal(stuMigReq.getTotalAmt());
+		mig.setMigVerTotalWithGst(stuMigReq.getTotalAmtWithGst());
 		
 		migrationRepo.save(mig);
 		
@@ -165,6 +169,70 @@ public class MigrationServiceImpl implements MigrationService {
 		}
 		System.out.println("****FilePath--->"+ filePath);
 		return filePath;
+	}
+
+	@Override
+	public HashMap<String, Long> calculateMigrationAmount(StudentMigrationRequest stuMigReq) throws Exception {
+		
+		logger.info("***MigrationServiceImpl calculateMigrationAmount***");
+		
+		long migTotal = 0;
+		long migTotalWithGST = 0;
+		
+		HashMap<String, Long> map = new HashMap<String, Long>();
+		
+		RequestTypeResponse reqTypeMig = requestTypeService.getIdByName("Migration");
+		PriceMaster diff =  priceService.getPriceByRequestTypeId(reqTypeMig.getId());
+		
+		if (diff!=null)	{		
+			migTotal = diff.getTotalAmt();
+			migTotalWithGST =    ((diff.getSecurCharge() * diff.getGst()) / 100) + diff.getTotalAmt();
+			
+			logger.info(migTotal+ " and  "+ migTotalWithGST);	
+			}
+		
+		List<StudentDocVerificationRequest> listReqs = new ArrayList<>();
+		StudentDocVerificationRequest verReq = new StudentDocVerificationRequest();
+		
+		verReq.setFirstname(stuMigReq.getFullName());
+		verReq.setLastname("");
+//		verReq.setBranchId(Long.parseLong(stuMigReq.getExamName()));
+//		verReq.setBranchId((long)1);
+		verReq.setCollegenameid(Long.parseLong(stuMigReq.getLastCollegeName()));
+		verReq.setCreateby(stuMigReq.getUserid());
+		verReq.setEnrollno(stuMigReq.getSeatNumber()); // ask
+		verReq.setFilepath(stuMigReq.getDocFilePath());
+		verReq.setLastname("");
+		verReq.setMonthOfPassing(stuMigReq.getMonthOfPassing());
+		verReq.setSemId((long)0);
+		verReq.setStreamid(Long.parseLong(stuMigReq.getExamFaculty()));
+		verReq.setUploaddocpath(stuMigReq.getDocFilePath());
+		verReq.setUserid(Long.parseLong(stuMigReq.getUserid()));
+		verReq.setVerreqid((long) 1);
+		verReq.setYearofpassid(Long.parseLong(stuMigReq.getYearOfPassingId()));
+		
+		verReq.setUniid((long) 1);
+		
+		RequestTypeResponse reqType = requestTypeService.getIdByName("Verification");
+		verReq.setRequesttype(reqType.getId());
+		DocumentResponse doc = documentService.getDocumentEntityByName("Marksheet");
+		verReq.setDocname(String.valueOf(doc.getId())); 
+		
+		listReqs.add(verReq);
+		
+		HashMap<String,List< Long>> verAmounts = studentService.CalculateDocAmount(listReqs);
+		long verAmtWithGst = verAmounts.get("total_with_gst").get(0);
+		long verAmtWithoutGst = verAmounts.get("total_without_gst").get(0);
+		
+		System.out.println("---------------"+ verAmounts.get("total_without_gst"));
+		
+		long totalWithGst = migTotalWithGST + verAmtWithGst;
+		long totalWithoutGst = migTotal + verAmtWithoutGst;
+		
+		map.put("total",totalWithoutGst);
+		map.put("total_with_gst", totalWithGst);
+		
+		return map;
 	}
 
 }

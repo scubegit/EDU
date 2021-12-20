@@ -169,6 +169,12 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@Column(name = "mig_amt_with_gst")
 	private String migAmtWithGst;
 	
+	@Column(name = "mig_ver_total")
+	private String migVerTotal;
+	
+	@Column(name = "mig_ver_total_with_gst")
+	private String migVerTotalWithGst;
+	
 	@Column(name = "mig_secur_charge")
 	private String migSecurCharge;
 	
@@ -183,7 +189,7 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@Column(name = "tcFilePath")
 	private String tcFilePath;
 	
-	@Column(name = "ver_req_id")
-	private String verReqId;
+	@Column(name = "ver_req_app_id")
+	private String verReqAppId;
 	
 }
