@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService{
 	VerifierService verifierService;
 	
 	@Autowired
-	CustomizationRepository customizationRepo;;
+	CustomizationRepository customizationRepo;
 	
 	@Autowired
 	EmailService emailService;

@@ -30,5 +30,8 @@ public class CollegeMaster extends CreateUpdate {
 	@Size(max = 100)
 	@Column(name = "collegeName")
 	private String collegeName;
+	
+	@Column(name = "collegeEmail")
+	private String collegeEmail;
 
 }

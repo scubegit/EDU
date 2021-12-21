@@ -1,6 +1,8 @@
 package com.scube.edu.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,12 +15,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.model.PriceMaster;
 import com.scube.edu.repository.MigrationRequestRepository;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
+import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.util.FileStorageService;
@@ -27,6 +31,8 @@ import com.scube.edu.util.FileStorageService;
 public class MigrationServiceImpl implements MigrationService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MigrationServiceImpl.class);
+	
+	Base64.Encoder baseEncoder = Base64.getEncoder();
 	
 	@Autowired
 	MigrationRequestRepository migrationRepo;
@@ -41,10 +47,19 @@ public class MigrationServiceImpl implements MigrationService {
 	PriceService priceService;
 	
 	@Autowired
+	CollegeSevice collegeService;
+	
+	@Autowired
 	RequestTypeService requestTypeService;
 	
 	@Autowired
 	private FileStorageService fileStorageService;
+	
+	@Autowired
+	EmailService emailService;
+	
+	 @Value("${file.url-dir}")
+     private String url;
 
 	@Override
 	public boolean saveMigrationRequest(StudentMigrationRequest stuMigReq) throws Exception{
@@ -146,7 +161,12 @@ public class MigrationServiceImpl implements MigrationService {
 		mig.setMigVerTotalWithGst(stuMigReq.getTotalAmtWithGst());
 		
 		migrationRepo.save(mig);
+		logger.info("mig.getId()"+ mig.getId());
 		
+//		Send migration confirmation email
+		CollegeResponse col = collegeService.getNameById(Long.valueOf(mig.getLastCollegeName()));
+		String encodedId = baseEncoder.encodeToString(String.valueOf(mig.getId()).getBytes(StandardCharsets.UTF_8)) ;
+//		emailService.sendMigrationConfirmMail(mig.getId(), col.getCollegeEmail() , url);
 		return true;
 	}
 	

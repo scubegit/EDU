@@ -12,5 +12,6 @@ public class CollegeResponse {
 	private long id;
     private String collegeName;
     private long universityId;
+    private String collegeEmail;
 
 }

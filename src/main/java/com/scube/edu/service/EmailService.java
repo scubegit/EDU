@@ -252,6 +252,13 @@ public class EmailService {
 		
 	}
 	
+	
+	void sendMigrationConfirmMail(String encodedId, String collegeEmail, String url) throws MessagingException, Exception {
+		
+		logger.info("***EmailService sendMigrationConfirmMail***");
+		
+	}
+	
 
 	void sendEmail(String emailId, String encodeEmail, String url) throws MessagingException, Exception {
 

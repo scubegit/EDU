@@ -162,6 +162,7 @@ public String addCollege(CollegeAddRequest collegeRequest) throws Exception {
 		cresp.setCollegeName(cmm.getCollegeName());
 		cresp.setId(cmm.getId());
 		cresp.setUniversityId(cmm.getUniversityId());
+		cresp.setCollegeEmail(cmm.getCollegeEmail());
 		
 		
 		return cresp;
