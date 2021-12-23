@@ -271,7 +271,10 @@ public class MigrationServiceImpl implements MigrationService {
 		MigrationRequestEntity migReqEnt = migReqEntt.get();
 		
 		migReqEnt.setMigReqStatus(migStatusChangeRequest.getStatus());
-//		migReqEnt.setVerifiedBy(statusChangeRequest.getVerifiedby()); Do we set verified by or not
+		
+		if(migStatusChangeRequest.getRemark() != null) {
+			migReqEnt.setRejectReason(migStatusChangeRequest.getRemark());
+		}
 		
 		migrationRepo.save(migReqEnt);
 		

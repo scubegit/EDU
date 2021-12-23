@@ -195,4 +195,7 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@Column(name = "mig_req_status")
 	private String migReqStatus;
 	
+	@Column(name = "mig_reject_reason")
+	private String rejectReason;
+	
 }
