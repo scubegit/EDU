@@ -257,6 +257,74 @@ public class EmailService {
 		
 		logger.info("***EmailService sendMigrationConfirmMail***");
 		
+		String to = collegeEmail;
+		
+		String from = "support@educred.co.in";
+		
+		String host = "mail.educred.co.in";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+
+		properties.put("mail.smtp.auth", "true");
+		
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+				return new PasswordAuthentication("support@educred.co.in", "EduCred$2021$");
+
+			}
+
+		});
+		logger.info("------>2");
+		
+		session.setDebug(true);
+
+		try {
+			
+			MimeMessage message = new MimeMessage(session);
+
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			// Set Subject: header field
+			message.setSubject("Confirm TC.");
+
+			// Now set the actual message
+
+			logger.info("URL---------->" + url);
+			
+			  String vmFileContent = "Hello College User, <br><br> Please Click on the link below to open up the TC verification window. <br> "
+					  +"<a href='http://"+url+"/University/collegeVerification?migId="+
+					  encodedId+"'><strong>Verify TC</strong></a>"+
+					  "<br><br> Thanks, <br> Team University";
+			
+//                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+//                        "<br><br><br> Thanks,<br>Team University";
+			logger.info("------>3");
+			message.setText(vmFileContent,"UTF-8", "html");
+			
+			System.out.println("sending...");
+			// Send message
+			Transport.send(message);
+
+			// javaMailSender.send(message);
+			System.out.println("Sent message successfully....");
+			
+		}catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 	
 

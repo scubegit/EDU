@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.request.MigrationStatusChangeRequest;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 
 public interface MigrationService {
@@ -14,5 +16,7 @@ public interface MigrationService {
 	String saveMigrationDocument(MultipartFile file);
 
 	HashMap<String, Long> calculateMigrationAmount(StudentMigrationRequest stuMigReq) throws Exception;
+
+	boolean setStatusForMigrationRequest(MigrationStatusChangeRequest migStatusChangeRequest);
 
 }

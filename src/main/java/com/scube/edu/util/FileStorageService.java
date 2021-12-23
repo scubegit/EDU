@@ -33,9 +33,11 @@ import com.scube.edu.awsconfig.FileStore;
 import com.scube.edu.controller.VerifierController;
 import com.scube.edu.exception.FileStorageException;
 import com.scube.edu.model.FileStorageProperties;
+import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.UniversityStudentDocument;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.MigrationRequestRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.service.UniversityStudentDocServiceImpl;
 
@@ -63,6 +65,8 @@ public class FileStorageService {
 	 @Autowired
 	 FileStore fileStore;
 	 
+	 @Autowired
+	 MigrationRequestRepository migrationRequestRepository;
 	 
 	 @Autowired
 	 UniversityStudentDocServiceImpl universityStudentDocServiceImpl ;
@@ -330,9 +334,11 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 	        	String newPAth = "";     
 	        	if(userFor.equalsIgnoreCase("mig")) {
 	        		newPAth = this.migrationTcDocDir;
-	        		List<VerificationRequest> verList = verificationReqRepository.findByApplicationId(id);
-	        		VerificationRequest ver = verList.get(0);
-	        		fileName = ver.getUploadDocumentPath();
+//	        		List<VerificationRequest> verList = verificationReqRepository.findByApplicationId(id);
+//	        		VerificationRequest ver = verList.get(0);
+	        		Optional<MigrationRequestEntity> verEnt = migrationRequestRepository.findById(id);
+	        		MigrationRequestEntity ver = verEnt.get();
+	        		fileName = ver.getTcFilePath();
 	        		
 	        		logger.info("migration---ver-document---fileName----->"+ fileName);
 	        		

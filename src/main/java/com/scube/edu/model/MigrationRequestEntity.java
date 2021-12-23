@@ -192,4 +192,7 @@ public class MigrationRequestEntity extends CreateUpdate {
 	@Column(name = "ver_req_app_id")
 	private String verReqAppId;
 	
+	@Column(name = "mig_req_status")
+	private String migReqStatus;
+	
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +21,8 @@ import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.model.PriceMaster;
 import com.scube.edu.repository.MigrationRequestRepository;
+import com.scube.edu.request.MigrationStatusChangeRequest;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.response.CollegeResponse;
@@ -151,6 +154,7 @@ public class MigrationServiceImpl implements MigrationService {
 		long totalWithGST =    ((price.getSecurCharge() * price.getGst()) / 100) + price.getTotalAmt();
 		mig.setMigAmt(String.valueOf(total));
 		mig.setMigAmtWithGst(String.valueOf(totalWithGST));
+		mig.setMigReqStatus("Requested");
 		
 		HashMap<String, Long> verAmounts = studentService.saveStudentSingleVerificationDoc(verReq);
 		
@@ -166,7 +170,7 @@ public class MigrationServiceImpl implements MigrationService {
 //		Send migration confirmation email
 		CollegeResponse col = collegeService.getNameById(Long.valueOf(mig.getLastCollegeName()));
 		String encodedId = baseEncoder.encodeToString(String.valueOf(mig.getId()).getBytes(StandardCharsets.UTF_8)) ;
-//		emailService.sendMigrationConfirmMail(mig.getId(), col.getCollegeEmail() , url);
+		emailService.sendMigrationConfirmMail(encodedId, col.getCollegeEmail() , url);
 		return true;
 	}
 	
@@ -253,6 +257,25 @@ public class MigrationServiceImpl implements MigrationService {
 		map.put("total_with_gst", totalWithGst);
 		
 		return map;
+	}
+
+	@Override
+	public boolean setStatusForMigrationRequest(MigrationStatusChangeRequest migStatusChangeRequest) {
+		
+		logger.info("***MigrationServiceImpl setStatusForMigrationRequest***"+ migStatusChangeRequest.getId());
+		
+		Base64.Decoder decoder = Base64.getDecoder();  
+		String idd = new String(decoder.decode(String.valueOf(migStatusChangeRequest.getId()))); 
+		
+		Optional<MigrationRequestEntity> migReqEntt = migrationRepo.findById(Long.valueOf(idd));
+		MigrationRequestEntity migReqEnt = migReqEntt.get();
+		
+		migReqEnt.setMigReqStatus(migStatusChangeRequest.getStatus());
+//		migReqEnt.setVerifiedBy(statusChangeRequest.getVerifiedby()); Do we set verified by or not
+		
+		migrationRepo.save(migReqEnt);
+		
+		return true;
 	}
 
 }

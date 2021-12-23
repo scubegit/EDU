@@ -1,5 +1,6 @@
 package com.scube.edu.controller;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,16 +19,20 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.request.MigrationStatusChangeRequest;
+import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.service.MigrationService;
 import com.scube.edu.util.FileStorageService;
@@ -110,12 +115,20 @@ public class MigrationController {
 	@Value("${file.awsORtest}")
     private String awsORtest;
 	
-	 @GetMapping("/loadTC/{id}")
-	 public ResponseEntity<byte[]> loadTCAsResource(@PathVariable Long id ) throws Exception {
+	 @GetMapping("/loadTC/{id}/{flag}")
+	 public ResponseEntity<byte[]> loadTCAsResource(@PathVariable String id, @PathVariable String flag) throws Exception {
+		 
+		 String idd = "";
+		 if(flag.equalsIgnoreCase("encoded")) {
+			 Base64.Decoder decoder = Base64.getDecoder();  
+			 idd = new String(decoder.decode(id)); 
+		 }else {
+			 idd = id;
+		 }
 		
 		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
 			 
-			 Resource res =  fileStorageService.loadFileAsResource("mig",id);
+			 Resource res =  fileStorageService.loadFileAsResource("mig",Long.valueOf(idd));
 			 
 			 byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
 			 
@@ -137,7 +150,7 @@ public class MigrationController {
 			 
 		 }else {
 			 
-			 HashMap<String, Object> res =  fileStorageService.loadFileAsResourceFromAws("mig",id);
+			 HashMap<String, Object> res =  fileStorageService.loadFileAsResourceFromAws("mig",Long.valueOf(idd));
 			 
 			 //File file = new File(res.getFile());
 			 
@@ -183,6 +196,35 @@ public class MigrationController {
 							
 					}catch (Exception e) {
 						
+						
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
+	 
+	 @PutMapping("/setStatusForMigrationRequest")
+		public  ResponseEntity<Object> setStatusForMigrationRequest(@RequestBody MigrationStatusChangeRequest migStatusChangeRequest) {
+			
+			response = new BaseResponse();
+			System.out.println("*****MigrationController setStatusForMigrationRequest*****"+migStatusChangeRequest.getId());
+			    try {
+			    	
+			    	boolean updated = migrationService.setStatusForMigrationRequest(migStatusChangeRequest);
+
+			    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(updated);
+						
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
 						
 						logger.error(e.getMessage()); //BAD creds message comes from here
 						
