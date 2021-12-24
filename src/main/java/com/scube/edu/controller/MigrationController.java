@@ -32,8 +32,10 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.request.UniversityStudentRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.MigrationRequestResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.UniversityStudDocResponse;
+import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.MigrationService;
 import com.scube.edu.util.FileStorageService;
 import com.scube.edu.util.StringsUtils;
@@ -52,6 +54,36 @@ public class MigrationController {
 	
 	@Autowired
 	private FileStorageService fileStorageService;
+	
+	@GetMapping("/getMigrationRequestByUserid/{userid}")
+	public  ResponseEntity<Object> getMigrationRequestByUserid(@PathVariable String userid) {
+		
+		response = new BaseResponse();
+		
+		    try {
+		    		MigrationRequestResponse list = migrationService.getMigrationRequestByUserid(userid);
+					// this list has FIFO mechanism for getting records for verifier (limit 5)
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+		    
+		    
+			
+   }
 	
 	@PostMapping(value = "/saveMigrationRequest")
 	public ResponseEntity<BaseResponse> saveMigrationRequest (@RequestBody StudentMigrationRequest stuMigReq) {

@@ -8,4 +8,6 @@ import com.scube.edu.model.MigrationRequestEntity;
 @Repository
 public interface MigrationRequestRepository extends JpaRepository<MigrationRequestEntity, Long> {
 
+	MigrationRequestEntity findByCreateby(String userid);
+
 }

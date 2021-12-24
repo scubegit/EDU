@@ -27,6 +27,7 @@ import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.DocumentResponse;
+import com.scube.edu.response.MigrationRequestResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.util.FileStorageService;
 
@@ -274,11 +275,76 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		if(migStatusChangeRequest.getRemark() != null) {
 			migReqEnt.setRejectReason(migStatusChangeRequest.getRemark());
+//			migReqEnt.setReason(migStatusChangeRequest.getRemark());
 		}
 		
 		migrationRepo.save(migReqEnt);
 		
 		return true;
+	}
+
+	@Override
+	public MigrationRequestResponse getMigrationRequestByUserid(String userid) {
+		
+		logger.info("***MigrationServiceImpl getMogrationRequestByUserid***"+String.valueOf(userid));
+		
+		MigrationRequestEntity migReqEnt = migrationRepo.findByCreateby(userid);
+		
+		MigrationRequestResponse resp = new MigrationRequestResponse();
+		
+		resp.setBranchId(migReqEnt.getBranchId());
+		resp.setClassGrade(migReqEnt.getClassGrade());
+		resp.setDateOfBirth(migReqEnt.getDateOfBirth());
+		resp.setDocFilePath(migReqEnt.getDocFilePath());
+		resp.setExamCode(migReqEnt.getExamCode());
+		resp.setExamFaculty(migReqEnt.getExamFaculty());
+		resp.setExamHeldDate(migReqEnt.getExamHeldDate());
+		resp.setExamName(migReqEnt.getExamName());
+		resp.setFullName(migReqEnt.getFullName());
+		resp.setGender(migReqEnt.getGender());
+		resp.setId(migReqEnt.getId());
+		resp.setLastCollegeName(migReqEnt.getLastCollegeName());
+		resp.setLeavingYear(migReqEnt.getLeavingYear());
+		resp.setMigAmt(migReqEnt.getMigAmt());
+		resp.setMigAmtWithGst(migReqEnt.getMigAmtWithGst());
+		resp.setMigReqStatus(migReqEnt.getMigReqStatus());
+		resp.setMigSecurCharge(migReqEnt.getMigSecurCharge());
+		resp.setMigUniAmount(migReqEnt.getMigUniAmount());
+		resp.setMigVerTotal(migReqEnt.getMigVerTotal());
+		resp.setMigVerTotalWithGst(migReqEnt.getMigVerTotalWithGst());
+		resp.setMobileNumber(migReqEnt.getMobileNumber());
+		resp.setMonthOfPassing(migReqEnt.getMonthOfPassing());
+		resp.setMotherName(migReqEnt.getMotherName());
+		resp.setNationality(migReqEnt.getNationality());
+		resp.setPermAddr(migReqEnt.getPermAddr());
+		resp.setPermCountry(migReqEnt.getPermCountry());
+		resp.setPermDistrict(migReqEnt.getPermDistrict());
+		resp.setPermPincode(migReqEnt.getPermPincode());
+		resp.setPermState(migReqEnt.getPermState());
+		resp.setPermTaluka(migReqEnt.getPermTaluka());
+		resp.setPostalAddr(migReqEnt.getPostalAddr());
+		resp.setPostalCountry(migReqEnt.getPostalCountry());
+		resp.setPostalDistrict(migReqEnt.getPostalDistrict());
+		resp.setPostalPincode(migReqEnt.getPostalPincode());
+		resp.setPostalState(migReqEnt.getPostalState());
+		resp.setPostalTaluka(migReqEnt.getPostalTaluka());
+		resp.setPrn(migReqEnt.getPrn());
+		resp.setProfessionalCourse(migReqEnt.getProfessionalCourse());
+		resp.setReason(migReqEnt.getReason());
+		resp.setSeatNumber(migReqEnt.getSeatNumber());
+		resp.setSemesterId(migReqEnt.getSemesterId());
+		resp.setSpouceName(migReqEnt.getSpouceName());
+		resp.setStreamId(migReqEnt.getStreamId());
+		resp.setTcDate(migReqEnt.getTcDate());
+		resp.setTcFilePath(migReqEnt.getTcFilePath());
+		resp.setTcNumber(migReqEnt.getTcNumber());
+		resp.setVerDocAmt(migReqEnt.getVerDocAmt());
+		resp.setVerDocAmtWithGst(migReqEnt.getVerDocAmtWithGst());
+		resp.setVerReqAppId(migReqEnt.getVerReqAppId());
+		resp.setYearOfPassingId(migReqEnt.getYearOfPassingId());
+		resp.setRejectReason(migReqEnt.getRejectReason());
+		
+		return resp;
 	}
 
 }
