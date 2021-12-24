@@ -9,6 +9,8 @@ import com.scube.edu.request.MigrationStatusChangeRequest;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.response.MigrationRequestResponse;
+import com.scube.edu.response.MigrationVerificationResponse;
+
 
 public interface MigrationService {
 
@@ -21,5 +23,7 @@ public interface MigrationService {
 	boolean setStatusForMigrationRequest(MigrationStatusChangeRequest migStatusChangeRequest);
 
 	MigrationRequestResponse getMigrationRequestByUserid(String userid);
+	
+	List<MigrationVerificationResponse> getAllMigrationRequests();
 
 }

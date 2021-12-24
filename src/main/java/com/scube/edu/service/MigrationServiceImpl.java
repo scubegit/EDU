@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.MigrationRequestEntity;
@@ -28,6 +30,7 @@ import com.scube.edu.request.StudentMigrationRequest;
 import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.DocumentResponse;
 import com.scube.edu.response.MigrationRequestResponse;
+import com.scube.edu.response.MigrationVerificationResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.util.FileStorageService;
 
@@ -345,6 +348,25 @@ public class MigrationServiceImpl implements MigrationService {
 		resp.setRejectReason(migReqEnt.getRejectReason());
 		
 		return resp;
+	}
+	public List<MigrationVerificationResponse> getAllMigrationRequests() {
+		
+		logger.info("***MigrationServiceImpl getAllMigrationRequests***");
+		
+		List<Map<String, String>> migList = migrationRepo.getMigrationRequests();
+		
+		List<MigrationVerificationResponse> list = new ArrayList<>(); 
+		
+		final ObjectMapper mapper = new ObjectMapper(); // jackson's object mapper
+		
+		for(int i = 0; i < migList.size(); i++) {
+			final MigrationVerificationResponse pojo = mapper.convertValue(migList.get(i), MigrationVerificationResponse.class);
+			
+			logger.info(String.valueOf(i) + "----->" + pojo.toString());
+			list.add(pojo);
+		}
+		
+		return list;
 	}
 
 }
