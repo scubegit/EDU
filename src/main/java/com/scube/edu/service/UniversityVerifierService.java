@@ -6,6 +6,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import com.lowagie.text.BadElementException;
+import com.scube.edu.request.MigrationStatusChangeRequest;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.UniversityVerifierResponse;
@@ -18,6 +19,8 @@ public interface UniversityVerifierService {
 			StatusChangeRequest statusChangeRequest) throws Exception ;
 
 	public boolean addNewRemark(StatusChangeRequest statusChangeRequest);
+
+	public boolean updateMigrationRequest(MigrationStatusChangeRequest migStatusChangeRequest);
 
 
 

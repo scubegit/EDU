@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.request.LoginRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.UserAddRequest;
@@ -22,5 +23,7 @@ public interface VerificationService {
 	public HashMap getdatabyapplicationId(String applicationId);
 
 	public String updateAssignedto();
+
+	public VerificationRequest fetchVerificationRequestByApplicationId(Long id);
 
 }

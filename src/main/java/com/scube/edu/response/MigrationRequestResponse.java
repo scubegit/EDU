@@ -61,5 +61,6 @@ public class MigrationRequestResponse {
 	private String verReqAppId;
 	private String migReqStatus;
 	private String rejectReason;
+	private String verDocStatus;
 
 }

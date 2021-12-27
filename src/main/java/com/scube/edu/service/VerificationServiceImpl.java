@@ -52,19 +52,18 @@ public class VerificationServiceImpl implements VerificationService{
 	@Autowired
 	DocumentRepository  docRepo;
 	
-	 @Autowired
-	 PriceMasterRepository priceMasterRepo;
+	@Autowired
+	PriceMasterRepository priceMasterRepo;
 	 
-	 @Autowired
-	 BranchMasterService branchService;
+	@Autowired
+	BranchMasterService branchService;
 	 
-	 @Autowired
-	 SemesterService semService;
+	@Autowired
+	SemesterService semService;
 	 
-	 @Autowired
-	 StreamService streamService;
+	@Autowired
+	StreamService streamService;
 
-	
 	@Autowired
 	UserRepository  userRepository;
 	
@@ -198,6 +197,15 @@ public class VerificationServiceImpl implements VerificationService{
 		return cnt.toString();
 	}
 	
+	@Override
+	public VerificationRequest fetchVerificationRequestByApplicationId(Long id) {
+		
+		logger.info("********verificationServiceImpl fetchVerificationRequestByApplicationId********");
+		
+		List<VerificationRequest> verReq = verificationReqRepo.findByApplicationId(id);
+		
+		return verReq.get(0);
+	}
 	
 
 }

@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.request.MigrationStatusChangeRequest;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
@@ -119,5 +121,34 @@ public class UniversityVerifierController {
 				}
 			
    }
+	
+	 @PutMapping("/updateMigrationRequest")
+		public  ResponseEntity<Object> updateMigrationRequest(@RequestBody MigrationStatusChangeRequest migStatusChangeRequest) {
+			
+			response = new BaseResponse();
+			System.out.println("*****UniversityVerifierController updateMigrationRequest*****"+migStatusChangeRequest.getId());
+			    try {
+			    	
+			    	boolean updated = universityVerifierService.updateMigrationRequest(migStatusChangeRequest);
+
+			    	    response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(updated);
+						
+						return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+  }
 	
 }

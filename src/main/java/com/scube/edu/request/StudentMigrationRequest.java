@@ -11,6 +11,7 @@ import lombok.ToString;
 public class StudentMigrationRequest {
 
 //	Basic Details
+	private String id;
 	private String userid;
 	private String fullName;
 	private String motherName;

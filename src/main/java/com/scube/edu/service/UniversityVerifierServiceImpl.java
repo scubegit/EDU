@@ -19,6 +19,7 @@ import com.lowagie.text.BadElementException;
 import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
+import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
@@ -28,6 +29,7 @@ import com.scube.edu.repository.CustomizationRepository;
 import com.scube.edu.repository.UniversityVerifierRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
+import com.scube.edu.request.MigrationStatusChangeRequest;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.RequestTypeResponse;
@@ -68,6 +70,9 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	MigrationService migrationService;
 	
 	@Autowired
 	CustomizationRepository customizationRepository;
@@ -254,6 +259,16 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		verificationReqRepository.save(entt);
 		
 		return true;
+	}
+
+	@Override
+	public boolean updateMigrationRequest(MigrationStatusChangeRequest migStatusChangeRequest) {
+		
+		logger.info("*****UniversityVerifierServiceImpl updateMigrationRequest*****"+ migStatusChangeRequest.getId());
+		
+		boolean migEnt = migrationService.updateMigrationEntityStatus(migStatusChangeRequest);
+		
+		return migEnt;
 	}
 
 }

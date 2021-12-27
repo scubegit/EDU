@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.request.MigrationStatusChangeRequest;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentMigrationRequest;
@@ -31,5 +32,7 @@ public interface MigrationService {
 	boolean resendCollegeMail(String migId, String collegeId) throws MessagingException, Exception;
 
 	MigrationRequestResponse getMigrationRequestByPrimarykey(String id);
+
+	boolean updateMigrationEntityStatus(MigrationStatusChangeRequest migStatusChangeRequest);
 
 }
