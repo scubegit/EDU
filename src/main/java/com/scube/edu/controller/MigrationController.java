@@ -56,6 +56,36 @@ public class MigrationController {
 	@Autowired
 	private FileStorageService fileStorageService;
 	
+	@GetMapping("/getMigrationRequestByPrimarykey/{id}")
+	public  ResponseEntity<Object> getMigrationRequestByPrimarykey(@PathVariable String id) {
+		
+		response = new BaseResponse();
+		
+		    try {
+		    		MigrationRequestResponse list = migrationService.getMigrationRequestByPrimarykey(id);
+					// this list has FIFO mechanism for getting records for verifier (limit 5)
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+		    
+		    
+			
+   }
+	
 	@GetMapping("/getMigrationRequestByUserid/{userid}")
 	public  ResponseEntity<Object> getMigrationRequestByUserid(@PathVariable String userid) {
 		
@@ -278,6 +308,33 @@ public class MigrationController {
 			    try {
 			    	
 			    	List<MigrationVerificationResponse> list = migrationService.getAllMigrationRequests();
+						
+						response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(list);
+					
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
+
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
+	 
+	 @GetMapping("/resendCollegeMail/{migId}/{collegeId}")
+		public  ResponseEntity<Object> resendCollegeMail(@PathVariable String migId, @PathVariable String collegeId, HttpServletRequest request) {
+			response = new BaseResponse();
+			    try {
+			    	
+			    	boolean list = migrationService.resendCollegeMail(migId,collegeId);
 						
 						response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

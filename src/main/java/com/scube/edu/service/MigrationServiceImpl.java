@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -367,6 +368,84 @@ public class MigrationServiceImpl implements MigrationService {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public boolean resendCollegeMail(String migId, String collegeId) throws MessagingException, Exception {
+		
+		logger.info("***MigrationServiceImpl resendcollegeMail***"+ migId +"   "+collegeId);
+		
+		CollegeResponse col = collegeService.getNameById(Long.valueOf(collegeId));
+		String encodedId = baseEncoder.encodeToString(String.valueOf(migId).getBytes(StandardCharsets.UTF_8)) ;
+		emailService.sendMigrationConfirmMail(encodedId, col.getCollegeEmail() , url);
+		
+		return true;
+	}
+
+	@Override
+	public MigrationRequestResponse getMigrationRequestByPrimarykey(String id) {
+		
+		logger.info("***MigrationServiceImpl getMigrationRequestByPrimarykey***"+ id);
+		
+		Optional<MigrationRequestEntity> entt = migrationRepo.findById(Long.valueOf(id));
+		MigrationRequestEntity ent = entt.get();
+		
+		MigrationRequestResponse resp = new MigrationRequestResponse();
+		
+		resp.setBranchId(ent.getBranchId());
+		resp.setClassGrade(ent.getClassGrade());
+		resp.setDateOfBirth(ent.getDateOfBirth());
+		resp.setDocFilePath(ent.getDocFilePath());
+		resp.setExamCode(ent.getExamCode());
+		resp.setExamFaculty(ent.getExamFaculty());
+		resp.setExamHeldDate(ent.getExamHeldDate());
+		resp.setExamName(ent.getExamName());
+		resp.setFullName(ent.getFullName());
+		resp.setGender(ent.getGender());
+		resp.setId(ent.getId());
+		resp.setLastCollegeName(ent.getLastCollegeName());
+		resp.setLeavingYear(ent.getLeavingYear());
+		resp.setMigAmt(ent.getMigAmt());
+		resp.setMigAmtWithGst(ent.getMigAmtWithGst());
+		resp.setMigReqStatus(ent.getMigReqStatus());
+		resp.setMigSecurCharge(ent.getMigSecurCharge());
+		resp.setMigUniAmount(ent.getMigUniAmount());
+		resp.setMigVerTotal(ent.getMigVerTotal());
+		resp.setMigVerTotalWithGst(ent.getMigVerTotalWithGst());
+		resp.setMobileNumber(ent.getMobileNumber());
+		resp.setMonthOfPassing(ent.getMonthOfPassing());
+		resp.setMotherName(ent.getMotherName());
+		resp.setNationality(ent.getNationality());
+		resp.setPermAddr(ent.getPermAddr());
+		resp.setPermCountry(ent.getPermCountry());
+		resp.setPermDistrict(ent.getPermDistrict());
+		resp.setPermPincode(ent.getPermPincode());
+		resp.setPermState(ent.getPermState());
+		resp.setPermTaluka(ent.getPermTaluka());
+		resp.setPostalAddr(ent.getPostalAddr());
+		resp.setPostalCountry(ent.getPostalCountry());
+		resp.setPostalDistrict(ent.getPostalDistrict());
+		resp.setPostalPincode(ent.getPostalPincode());
+		resp.setPostalState(ent.getPostalState());
+		resp.setPostalTaluka(ent.getPostalTaluka());
+		resp.setPrn(ent.getPrn());
+		resp.setProfessionalCourse(ent.getProfessionalCourse());
+		resp.setReason(ent.getReason());
+		resp.setSeatNumber(ent.getSeatNumber());
+		resp.setSemesterId(ent.getSemesterId());
+		resp.setSpouceName(ent.getSpouceName());
+		resp.setStreamId(ent.getStreamId());
+		resp.setTcDate(ent.getTcDate());
+		resp.setTcFilePath(ent.getTcFilePath());
+		resp.setTcNumber(ent.getTcNumber());
+		resp.setVerDocAmt(ent.getVerDocAmt());
+		resp.setVerDocAmtWithGst(ent.getVerDocAmtWithGst());
+		resp.setVerReqAppId(ent.getVerReqAppId());
+		resp.setYearOfPassingId(ent.getYearOfPassingId());
+		resp.setRejectReason(ent.getRejectReason());
+		
+		
+		return resp;
 	}
 
 }

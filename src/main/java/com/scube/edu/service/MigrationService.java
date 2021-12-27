@@ -3,6 +3,8 @@ package com.scube.edu.service;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.request.MigrationStatusChangeRequest;
@@ -25,5 +27,9 @@ public interface MigrationService {
 	MigrationRequestResponse getMigrationRequestByUserid(String userid);
 	
 	List<MigrationVerificationResponse> getAllMigrationRequests();
+
+	boolean resendCollegeMail(String migId, String collegeId) throws MessagingException, Exception;
+
+	MigrationRequestResponse getMigrationRequestByPrimarykey(String id);
 
 }
