@@ -1,5 +1,7 @@
 package com.scube.edu.response;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +12,7 @@ import lombok.ToString;
 public class MigrationRequestResponse {
 	
 	private Long id;
+	private String created_date;
 	private String fullName;
 	private String motherName;
 	private String spouceName;

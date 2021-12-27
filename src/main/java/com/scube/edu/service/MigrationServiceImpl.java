@@ -1,6 +1,7 @@
 package com.scube.edu.service;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -348,7 +349,10 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		MigrationRequestResponse resp = new MigrationRequestResponse();
 		
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+		
 		resp.setBranchId(migReqEnt.getBranchId());
+		resp.setCreated_date(formatter.format(migReqEnt.getCreatedate()));
 		resp.setClassGrade(migReqEnt.getClassGrade());
 		resp.setDateOfBirth(migReqEnt.getDateOfBirth());
 		resp.setDocFilePath(migReqEnt.getDocFilePath());
