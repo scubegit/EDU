@@ -98,6 +98,7 @@ public class MigrationServiceImpl implements MigrationService {
 			mig.setMonthOfPassing(stuMigReq.getMonthOfPassing());
 			mig.setMotherName(stuMigReq.getMotherName());
 			mig.setNationality(stuMigReq.getNationality());
+			mig.setPaymentId(stuMigReq.getPaymentId());
 			mig.setPermAddr(stuMigReq.getPermAddr());
 			mig.setPermCountry(stuMigReq.getPermCountry());
 			mig.setPermDistrict(stuMigReq.getPermDistrict());
@@ -122,6 +123,8 @@ public class MigrationServiceImpl implements MigrationService {
 			mig.setYearOfPassingId(stuMigReq.getYearOfPassingId());
 			mig.setDocFilePath(stuMigReq.getDocFilePath());
 			mig.setTcFilePath(stuMigReq.getTcFilePath());
+			mig.setMigVerTotal(stuMigReq.getTotalAmt());
+			mig.setMigVerTotalWithGst(stuMigReq.getTotalAmtWithGst());
 			
 	//		make studentDocVerificationRequest
 			StudentDocVerificationRequest verReq = new StudentDocVerificationRequest();
