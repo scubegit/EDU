@@ -25,6 +25,7 @@ import com.scube.edu.model.BranchMasterEntity;
 import com.scube.edu.model.CollegeMaster;
 import com.scube.edu.model.CutomizationEntity;
 import com.scube.edu.model.DocumentMaster;
+import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.RequestTypeMaster;
 import com.scube.edu.model.SemesterEntity;
@@ -41,6 +42,7 @@ import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.JwtResponse;
+import com.scube.edu.response.MigrationVerificationResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StreamResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
@@ -64,6 +66,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 @Autowired
 	 VerificationRequestRepository verificationReqRepository;
 	 
+		@Autowired
+		UserRepository userRepo;
+	 
 	 @Autowired 
 	 StreamService streamService;
 	 
@@ -72,6 +77,9 @@ public class VerifierServiceImpl implements VerifierService{
 	 
 	 @Autowired
 	 DocumentService	documentService;
+	 
+	 @Autowired
+	 MigrationService	migrationService;
 	 
 	 @Autowired
 		CustomizationRepository customizationRepository;
@@ -248,6 +256,21 @@ public class VerifierServiceImpl implements VerifierService{
 		    String currentDate = formatter.format(date);  
 			
 			VerificationRequest entt =  verificationReqRepository.findById(statusChangeRequest.getId());
+			Optional<UserMasterEntity> user = userRepo.findById(entt.getUserId());
+			UserMasterEntity userEnt = user.get();
+			
+			if(statusChangeRequest.getStatus().equalsIgnoreCase("Mig_Request_Edit")){
+				MigrationVerificationResponse migEnt = migrationService.findMigEntByAppId(entt.getApplicationId()); // give verifier a new button with status = Mig_Request_Edit
+				if(migEnt != null) {
+					boolean migReqEnt = migrationService.changeStatusForMigReqEnt(migEnt.getMigId(), statusChangeRequest.getRejectionreason()); 
+					if(entt.getServiceFlag().equalsIgnoreCase("Mig") && migReqEnt == true) {
+						emailService.sendMigEditMail(userEnt.getUsername(), "mig");
+					}else {
+						emailService.sendMigEditMail(userEnt.getUsername(), "ver");
+					}
+				}
+			}
+			
 //			VerificationRequest entt = ent.get();
 			System.out.println("------------"+ entt.getDocStatus() + entt.getApplicationId());
 //			Long roleId = Long.parseLong(statusChangeRequest.getRoleid());

@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.model.CollegeVerificationUrlEntity;
+import com.scube.edu.request.LoadTcRequest;
 import com.scube.edu.request.MigrationStatusChangeRequest;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
@@ -37,6 +39,7 @@ import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.MigrationVerificationResponse;
 import com.scube.edu.response.UniversityStudDocResponse;
 import com.scube.edu.response.VerificationResponse;
+import com.scube.edu.service.CollegeVerificationUrlService;
 import com.scube.edu.service.MigrationService;
 import com.scube.edu.util.FileStorageService;
 import com.scube.edu.util.StringsUtils;
@@ -55,6 +58,9 @@ public class MigrationController {
 	
 	@Autowired
 	private FileStorageService fileStorageService;
+	
+	@Autowired
+	CollegeVerificationUrlService collegeVerificationUrlService;
 	
 	@GetMapping("/getMigrationRequestByPrimarykey/{id}")
 	public  ResponseEntity<Object> getMigrationRequestByPrimarykey(@PathVariable String id) {
@@ -178,20 +184,30 @@ public class MigrationController {
 	@Value("${file.awsORtest}")
     private String awsORtest;
 	
-	 @GetMapping("/loadTC/{id}/{flag}")
-	 public ResponseEntity<byte[]> loadTCAsResource(@PathVariable String id, @PathVariable String flag) throws Exception {
+	 @GetMapping("/loadEncodedTC/{randomKey}/{flag}")
+	 public ResponseEntity<byte[]> loadEncodedTCAsResource(@PathVariable String randomKey, @PathVariable String flag) throws Exception {
 		 
 		 String idd = "";
+		 String random = "";
 		 if(flag.equalsIgnoreCase("encoded")) {
 			 Base64.Decoder decoder = Base64.getDecoder();  
-			 idd = new String(decoder.decode(id)); 
-		 }else {
-			 idd = id;
+			 random = new String(decoder.decode(randomKey)); 
+			 
 		 }
 		
 		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			 CollegeVerificationUrlEntity urlEntt = new CollegeVerificationUrlEntity();
+			 if(flag.equalsIgnoreCase("encoded")) {
+				 CollegeVerificationUrlEntity urlEnt = collegeVerificationUrlService.getEntityByRandomKey(random);
+				 urlEntt = urlEnt;
+				 if(urlEnt.getStatus().equalsIgnoreCase("Disabled")) {
+					 throw new Exception("This link has expired since student was asked to edit his application and request again."
+					 		+ "You will recieve another mail with the new verification link."
+					 		+ "Thanks, Team University.");
+				 }
+			 }
 			 
-			 Resource res =  fileStorageService.loadFileAsResource("mig",Long.valueOf(idd));
+			 Resource res =  fileStorageService.loadFileAsResource("mig",Long.valueOf(urlEntt.getMigPriKey()));
 			 
 			 byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
 			 
@@ -214,6 +230,64 @@ public class MigrationController {
 		 }else {
 			 
 			 HashMap<String, Object> res =  fileStorageService.loadFileAsResourceFromAws("mig",Long.valueOf(idd));
+			 
+			 //File file = new File(res.getFile());
+			 
+			 
+			 
+			 
+//		        byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
+
+		        byte[] ret = (byte[]) res.get("byteArray");
+		        String ext = (String) res.get("extension");
+		        MediaType mediaType;
+			 
+		        
+		        if(ext.equalsIgnoreCase("pdf")|| ext == "PDF" ) {
+		        
+		        	mediaType = MediaType.APPLICATION_PDF ;
+		        }
+		        else {
+		        	mediaType = MediaType.IMAGE_JPEG ;
+		        }
+		        	
+		        
+		        return ResponseEntity.ok()
+		                             .contentType(mediaType)
+		                             .body(ret);
+			 
+		 }
+		 
+	 }
+	 
+	 @GetMapping("/loadTC/{migId}")
+	 public ResponseEntity<byte[]> loadTCAsResource(@PathVariable String migId) throws Exception {
+		
+		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
+			 
+			 Resource res =  fileStorageService.loadFileAsResource("mig",Long.valueOf(migId));
+			 
+			 byte[] bytes = StreamUtils.copyToByteArray(res.getInputStream());
+			 
+			 MediaType mediaType;
+			 String ext = FilenameUtils.getExtension(res.getFilename());
+		        
+		        if(ext.equalsIgnoreCase("pdf")|| ext == "PDF" ) {
+		        
+		        	mediaType = MediaType.APPLICATION_PDF ;
+		        }
+		        else {
+		        	mediaType = MediaType.IMAGE_JPEG ;
+		        }
+		        	
+		        
+		        return ResponseEntity.ok()
+		                             .contentType(mediaType)
+		                             .body(bytes);
+			 
+		 }else {
+			 
+			 HashMap<String, Object> res =  fileStorageService.loadFileAsResourceFromAws("mig",Long.valueOf(migId));
 			 
 			 //File file = new File(res.getFile());
 			 

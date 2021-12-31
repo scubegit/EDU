@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.model.CollegeMaster;
+import com.scube.edu.model.CollegeVerificationUrlEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.MigrationRequestEntity;
 import com.scube.edu.model.PriceMaster;
@@ -66,6 +67,9 @@ public class MigrationServiceImpl implements MigrationService {
 	RequestTypeService requestTypeService;
 	
 	@Autowired
+	CollegeVerificationUrlService collegeVerificationUrlService;
+	
+	@Autowired
 	private FileStorageService fileStorageService;
 	
 	@Autowired
@@ -81,6 +85,12 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		if(stuMigReq.getId() == null) {
 			MigrationRequestEntity mig = new MigrationRequestEntity();
+			MigrationRequestEntity ent = migrationRepo.findByCreateby(stuMigReq.getUserid());
+			
+			if(ent != null) {
+				throw new Exception("Request already exists for userId = "+stuMigReq.getUserid()+".");
+			}
+			
 	//		mig.setBranchId(stuMigReq.getBranchId());
 			mig.setClassGrade(stuMigReq.getClassGrade());
 			mig.setCreateby(stuMigReq.getUserid());
@@ -179,8 +189,8 @@ public class MigrationServiceImpl implements MigrationService {
 			
 	//		Send migration confirmation email
 			CollegeResponse col = collegeService.getNameById(Long.valueOf(mig.getLastCollegeName()));
-			String encodedId = baseEncoder.encodeToString(String.valueOf(mig.getId()).getBytes(StandardCharsets.UTF_8)) ;
-			emailService.sendMigrationConfirmMail(encodedId, col.getCollegeEmail() , url);
+//			String encodedId = baseEncoder.encodeToString(String.valueOf(mig.getId()).getBytes(StandardCharsets.UTF_8)) ;
+			emailService.sendMigrationConfirmMail(String.valueOf(mig.getId()), col.getCollegeEmail() , url);
 		}else {
 			Optional<MigrationRequestEntity> migEntt = migrationRepo.findById(Long.valueOf(stuMigReq.getId()));
 			MigrationRequestEntity migEnt = migEntt.get();
@@ -228,8 +238,45 @@ public class MigrationServiceImpl implements MigrationService {
 			migEnt.setYearOfPassingId(stuMigReq.getYearOfPassingId());
 			migEnt.setDocFilePath(stuMigReq.getDocFilePath());
 			migEnt.setTcFilePath(stuMigReq.getTcFilePath());
+			migEnt.setMigReqStatus("Requested");
 			
+			//		make studentDocVerificationRequest
+			StudentDocVerificationRequest verReq = new StudentDocVerificationRequest();
+			
+			verReq.setFirstname(stuMigReq.getFullName());
+			verReq.setLastname("");
+	//		verReq.setBranchId(Long.parseLong(stuMigReq.getExamName()));
+	//		verReq.setBranchId((long)1);
+			verReq.setCollegenameid(Long.parseLong(stuMigReq.getLastCollegeName()));
+			verReq.setCreateby(stuMigReq.getUserid());
+			verReq.setEnrollno(stuMigReq.getSeatNumber()); // ask
+			verReq.setFilepath(stuMigReq.getDocFilePath());
+			verReq.setLastname("");
+			verReq.setMonthOfPassing(stuMigReq.getMonthOfPassing());
+			verReq.setSemId((long)0);
+			verReq.setStreamid(Long.parseLong(stuMigReq.getExamFaculty()));
+			verReq.setUploaddocpath(stuMigReq.getDocFilePath());
+			verReq.setUserid(Long.parseLong(stuMigReq.getUserid()));
+			verReq.setVerreqid((long) 1);
+			verReq.setYearofpassid(Long.parseLong(stuMigReq.getYearOfPassingId()));
+			
+			verReq.setUniid((long) 1);
+			
+			RequestTypeResponse reqType = requestTypeService.getIdByName("Verification");
+			verReq.setRequesttype(reqType.getId());
+			DocumentResponse doc = documentService.getDocumentEntityByName("Marksheet");
+			verReq.setDocname(String.valueOf(doc.getId())); 
+			
+			HashMap<String, Long> verAmounts = studentService.saveStudentSingleVerificationDoc(verReq);
+			
+			migEnt.setVerReqAppId(String.valueOf(verAmounts.get("application_id")));
+			
+			CollegeResponse col = collegeService.getNameById(Long.valueOf(migEnt.getLastCollegeName()));
+			String encodedId = baseEncoder.encodeToString(String.valueOf(migEnt.getId()).getBytes(StandardCharsets.UTF_8)) ;
+			
+//			delete previous verification created and create a new one and save its application id migration Request
 			migrationRepo.save(migEnt);
+			emailService.sendMigrationConfirmMail(String.valueOf(migEnt.getId()), col.getCollegeEmail() , url);
 			
 		}
 		return true;
@@ -328,17 +375,24 @@ public class MigrationServiceImpl implements MigrationService {
 		Base64.Decoder decoder = Base64.getDecoder();  
 		String idd = new String(decoder.decode(String.valueOf(migStatusChangeRequest.getId()))); 
 		
-		Optional<MigrationRequestEntity> migReqEntt = migrationRepo.findById(Long.valueOf(idd));
+//		CollegeVerificationUrlEntity urlEnt = collegeVerificationUrlService.getByRandomKey(idd);
+		
+		CollegeVerificationUrlEntity urlEnt = collegeVerificationUrlService.getByRandomKeyAndChangeStatus(idd);
+		
+		logger.info("****************Previous college verification link disabled." + urlEnt);
+		
+		Optional<MigrationRequestEntity> migReqEntt = migrationRepo.findById(Long.valueOf(urlEnt.getMigPriKey()));
 		MigrationRequestEntity migReqEnt = migReqEntt.get();
 		
 		migReqEnt.setMigReqStatus(migStatusChangeRequest.getStatus());
 		
 		if(migStatusChangeRequest.getRemark() != null) {
-			migReqEnt.setRejectReason(migStatusChangeRequest.getRemark());
-//			migReqEnt.setReason(migStatusChangeRequest.getRemark());
+				migReqEnt.setTcRejectReason(migStatusChangeRequest.getRemark());
+//				migReqEnt.setReason(migStatusChangeRequest.getRemark());
+				migrationRepo.save(migReqEnt);
 		}
 		
-		migrationRepo.save(migReqEnt);
+//		Send email after college approves or rejects the TC request 
 		
 		return true;
 	}
@@ -405,7 +459,7 @@ public class MigrationServiceImpl implements MigrationService {
 		resp.setVerDocAmtWithGst(migReqEnt.getVerDocAmtWithGst());
 		resp.setVerReqAppId(migReqEnt.getVerReqAppId());
 		resp.setYearOfPassingId(migReqEnt.getYearOfPassingId());
-		resp.setRejectReason(migReqEnt.getRejectReason());
+		resp.setRejectReason(migReqEnt.getTcRejectReason());
 		
 		return resp;
 	}
@@ -516,7 +570,7 @@ public class MigrationServiceImpl implements MigrationService {
 		resp.setVerDocAmtWithGst(ent.getVerDocAmtWithGst());
 		resp.setVerReqAppId(ent.getVerReqAppId());
 		resp.setYearOfPassingId(ent.getYearOfPassingId());
-		resp.setRejectReason(ent.getRejectReason());
+		resp.setRejectReason(ent.getTcRejectReason());
 		
 		VerificationRequest verReq = verificationService.fetchVerificationRequestByApplicationId(Long.valueOf(ent.getVerReqAppId()));
 		
@@ -524,6 +578,39 @@ public class MigrationServiceImpl implements MigrationService {
 		
 		
 		return resp;
+	}
+
+	@Override
+	public MigrationVerificationResponse findMigEntByAppId(Long applicationId) {
+		
+		logger.info("*****MigrationServiceImpl findMigEntByAppId*****"+ String.valueOf(applicationId));
+		
+		Map<String, String> migEnt = migrationRepo.findByApplicationId(String.valueOf(applicationId));
+		MigrationVerificationResponse pojo = new MigrationVerificationResponse();
+		if(migEnt != null) {
+			final ObjectMapper mapper = new ObjectMapper(); // jackson's object mapper
+		
+			pojo = mapper.convertValue(migEnt, MigrationVerificationResponse.class);
+			
+			logger.info("------------>"+ pojo.toString());
+		}
+		
+		return pojo;
+	}
+
+	@Override
+	public boolean changeStatusForMigReqEnt(String migId, String reason) {
+		
+		logger.info("*****MigrationServiceImpl changeStatusForMigReqEnt*****"+ migId);
+		
+		Optional<MigrationRequestEntity> migEntt = migrationRepo.findById(Long.valueOf(migId));
+		MigrationRequestEntity migEnt = migEntt.get();
+		
+		migEnt.setVerReqStatus("Mig_Request_Edit");
+		migEnt.setVerReqRejectReason(reason);
+		migrationRepo.save(migEnt);
+		
+		return true;
 	}
 
 }

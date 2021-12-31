@@ -35,4 +35,8 @@ public interface MigrationService {
 
 	boolean updateMigrationEntityStatus(MigrationStatusChangeRequest migStatusChangeRequest);
 
+	MigrationVerificationResponse findMigEntByAppId(Long applicationId);
+
+	boolean changeStatusForMigReqEnt(String migId, String reason);
+
 }

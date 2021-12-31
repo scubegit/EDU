@@ -16,5 +16,7 @@ public class StatusChangeRequest {
 	//private Long userId;
 //	added by kartik
 	private String newremark;
+	
+	private String rejectionreason;
 
 }

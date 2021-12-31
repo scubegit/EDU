@@ -11,6 +11,7 @@ public class MigrationVerificationResponse {
 	
 	private String migId;
 	private String migCreatedBy;
+	private String migReqStatus;
 	private String migCreatedDate;
 	private String migIsdeleted;
 	private String migUpdatedBy;

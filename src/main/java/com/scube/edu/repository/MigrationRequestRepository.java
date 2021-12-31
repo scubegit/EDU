@@ -17,4 +17,7 @@ public interface MigrationRequestRepository extends JpaRepository<MigrationReque
 	@Query(value = "select * from list_view", nativeQuery = true)
 	List<Map<String, String>> getMigrationRequests();
 
+	@Query(value = "select * from list_view where verAppId = (?1)", nativeQuery = true)
+	Map<String, String> findByApplicationId(String applicationId);
+
 }

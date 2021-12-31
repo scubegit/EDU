@@ -75,16 +75,19 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
 import com.scube.edu.model.BranchMasterEntity;
+import com.scube.edu.model.CollegeVerificationUrlEntity;
 import com.scube.edu.model.DocumentMaster;
 import com.scube.edu.model.PassingYearMaster;
 import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
 import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationRequest;
+import com.scube.edu.repository.CollegeVerificationUrlRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.SendQueryFromHomeRequest;
 import com.scube.edu.response.UserResponse;
 import com.scube.edu.util.FileStorageService;
+import com.scube.edu.util.RandomStringUtil;
 
 @Service
 public class EmailService {
@@ -111,6 +114,11 @@ public class EmailService {
 
 	@Autowired
 	DocumentService documentService;
+	
+	@Autowired
+	CollegeVerificationUrlRepository collegeUrlRepo;
+	
+	RandomStringUtil randomStringUtil = null;
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -253,7 +261,7 @@ public class EmailService {
 	}
 	
 	
-	void sendMigrationConfirmMail(String encodedId, String collegeEmail, String url) throws MessagingException, Exception {
+	void sendMigrationConfirmMail(String migId, String collegeEmail, String url) throws MessagingException, Exception {
 		
 		logger.info("***EmailService sendMigrationConfirmMail***");
 		
@@ -304,11 +312,103 @@ public class EmailService {
 
 			logger.info("URL---------->" + url);
 			
+//			Save sent url here along with its status
+//			disable this url if college rejects the TC request
+			
+			String buffer = randomStringUtil.getAlphaNumericString(5, String.valueOf(migId));
+			String encodedRandomKey = baseEncoder.encodeToString(String.valueOf(buffer).getBytes(StandardCharsets.UTF_8)) ;
+//			String finalUrl = "http://"+url+"/University/collegeVerification?"+buffer+"-migId="+encodedId;
+//			save this into collegeUrlRepo
+			CollegeVerificationUrlEntity urlEnt = new CollegeVerificationUrlEntity();
+//			urlEnt.setUrl(finalUrl);
+			urlEnt.setMigPriKey(migId);
+			urlEnt.setRandomKey(buffer);
+			urlEnt.setIsdeleted("N");
+			urlEnt.setStatus("Enabled");
+			collegeUrlRepo.save(urlEnt);
+			
+			
 			  String vmFileContent = "Hello College User, <br><br> Please Click on the link below to open up the TC verification window. <br> "
-					  +"<a href='http://"+url+"/University/collegeVerification?migId="+
-					  encodedId+"'><strong>Verify TC</strong></a>"+
+					  +"<a href='http://"+url+"/University/collegeVerification?migRandomKey="+
+					  encodedRandomKey+"'><strong>Verify TC</strong></a>"+
 					  "<br><br> Thanks, <br> Team University";
 			
+//                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
+//                        "<br><br><br> Thanks,<br>Team University";
+			logger.info("------>3");
+			message.setText(vmFileContent,"UTF-8", "html");
+			
+			System.out.println("sending...");
+			// Send message
+			Transport.send(message);
+
+			// javaMailSender.send(message);
+			System.out.println("Sent message successfully....");
+			
+		}catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+
+	public void sendMigEditMail(String username, String request) {
+		
+		logger.info("*****EmailService sendMigEditMail*****"+ username);
+		String to = username;
+		
+		String from = "verify@educred.co.in";
+		
+		String host = "mail.educred.co.in";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.ssl.enable", "true");
+
+		properties.put("mail.smtp.auth", "true");
+		
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
+				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+
+			}
+
+		});
+		logger.info("------>2");
+		// Used to debug SMTP issues
+		session.setDebug(true);
+
+		try {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
+
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			// Set Subject: header field
+			message.setSubject("Edit Migration Request");
+
+			// Now set the actual message
+			String vmFileContent = "";
+			logger.info("URL---------->");
+			if(request.equalsIgnoreCase("mig")) {
+				vmFileContent = "Hello User, <br><br> The Migration request created by you has some mistakes in it because of which it cannot be processed further. <br>"
+				+ "Please log into the MU portal and edit the request according to the rejection reason provided. <br><br>"
+				+ "Thanks, <br> Team University";
+			}else {
+				vmFileContent = "Hello User, <br><br> The Verification request created by you has some mistakes in it because of which it cannot be processed further. <br>"
+				+ "Please log into the MU portal and edit the request according to the rejection reason provided. <br><br>"
+				+ "Thanks, <br> Team University";
+			}
 //                		"Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password.<br><a href='http://localhost:4200/resetPassword?emailId="+encodeEmail+"'><strong>Reset Link</strong></a> "+
 //                        "<br><br><br> Thanks,<br>Team University";
 			logger.info("------>3");
@@ -2022,6 +2122,8 @@ public class EmailService {
 			throw new RuntimeException(e);
 		}
 	}
+
+
 
 
 }

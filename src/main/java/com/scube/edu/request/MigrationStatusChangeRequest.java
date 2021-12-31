@@ -10,6 +10,7 @@ public class MigrationStatusChangeRequest {
 	private String id;
 	private String status;
 	private String remark;
+	private String url;
 //	private long verifiedby;
 //	private String remark;
 //	private String roleid;
