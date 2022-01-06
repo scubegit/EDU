@@ -42,25 +42,17 @@ public class VerificationResponse {
 	private String verifier_name;
 	
 	private String fullName;
-	
 	private String college_name;
-
 	private String originalDocUploadFilePath;
-	
 	private String remark;
-	
 	private Long amount;
 	private Long securAmt;
 	private Long gst;
-	
 	private String monthOfPassing;
-	
 	private String cgpi;
-	
 	private String editReason;
-	
 	private String alt_email;
-	
+	private String doc_id;
 
 
 }

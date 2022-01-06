@@ -601,7 +601,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setMonthOfPassing(req.getMonthOfPassing());
 //		resp.setOriginalDocUploadFilePath(req.getUploadDocumentPath());
 		resp.setRemark(req.getRemark());
-		resp.setRequest_type_id(reqMaster.getRequestType());
+		resp.setRequest_type_id(String.valueOf(reqMaster.getId()));
 		resp.setSemester(sem.getSemester());
 		resp.setStream_id(req.getStreamId());
 		resp.setStream_name(stream.getStreamName());
@@ -610,6 +610,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setYear_of_pass_id(req.getYearOfPassingId());
 		resp.setYear(year.getYearOfPassing());
 		resp.setBranch_id(String.valueOf(branch.getId()));
+		resp.setDoc_id(String.valueOf(doc.getId()));
 		
 		if(req.getEditReason() != null) {
 			resp.setEditReason(req.getEditReason());
