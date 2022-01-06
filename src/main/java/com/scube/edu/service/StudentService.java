@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
@@ -32,5 +33,9 @@ public interface StudentService {
 	
 	public String UpdatePaymentFlag(List<paymensReqFlagRequest> id);
 	public HashMap<String, List<Long>> CalculateDocAmount(List<StudentDocVerificationRequest> studentDocReq);
+
+	public VerificationResponse getVerificationRequestById(long id);
+
+	public boolean editVerificationRequest(StudentDocEditVerificationRequest stuVerReq);
 
 }

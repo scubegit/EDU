@@ -180,18 +180,15 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 
 		System.out.println("------------" + entt.getDocStatus() + entt.getApplicationId());
 		
-//		if(statusChangeRequest.getNewremark() != null) {
-//			if(entt.getRemark()!=null) {
-//				entt.setRemark(entt.getRemark() + " UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
-//				}
-//			else
-//				{
-//					entt.setRemark(" UN_comment" + currentDate + "-" + statusChangeRequest.getNewremark());
-//	
-//				}
-//		}
 		entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
+		
+		if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
+			UserResponse ent = userService.getUserInfoById(entt.getUserId());
+			entt.setEditReason(statusChangeRequest.getEditreason());
+			emailService.sendRequestEditMail(ent.getEmail());
+		}
+		
 		if (statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
 			if(entt.getRemark()!=null) {
 			entt.setRemark(entt.getRemark() + " UN_" + currentDate + "-" + statusChangeRequest.getRemark());

@@ -256,19 +256,28 @@ public class VerifierServiceImpl implements VerifierService{
 			//entt.setClosedDate(date);
 			entt.setVerId(statusChangeRequest.getVerifiedby());
 			entt.setVerifierStatus(statusChangeRequest.getStatus());
-			if(statusChangeRequest.getRemark() != null) {
-				entt.setRemark(statusChangeRequest.getRemark());
-			}
 			entt.setVerActionDate(new Date());
 			
 			if(statusChangeRequest.getCgpi() != null) {
 				entt.setCgpi(statusChangeRequest.getCgpi());
 			}
-			
+//			gets reason for rejection in remark
 			if (statusChangeRequest.getRemark() != null) {
-			entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
+				entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
+			}
+			if(statusChangeRequest.getEditreason() != null) {
+				entt.setEditReason(statusChangeRequest.getEditreason());
 			}
 			verificationReqRepository.save(entt);
+			
+			UserResponse ent = userService.getUserInfoById(entt.getUserId());
+			
+//			send mail to candidate requesting him to edit his verification request
+			if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
+//				send mail to candidate to edit his request
+				emailService.sendRequestEditMail(ent.getEmail());
+				
+			}
 			
 //			if(statusChangeRequest.getStatus().equalsIgnoreCase("Approved") || 
 //					statusChangeRequest.getStatus().equalsIgnoreCase("SV_Approved")) {

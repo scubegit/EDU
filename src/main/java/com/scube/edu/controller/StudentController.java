@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.model.FileStorageProperties;
+import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
@@ -60,7 +62,61 @@ public class StudentController {
 	VerificationService	verificationService;
 	
 	
+	@PutMapping("/editVerificationRequest")
+	public  ResponseEntity<Object> editVerificationRequest(@RequestBody StudentDocEditVerificationRequest stuVerReq) {
+		response = new BaseResponse();
+		
+		    try {
+
+		    	boolean list = studentService.editVerificationRequest(stuVerReq);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 	
+	@GetMapping("/getVerificationRequestById/{id}")
+	public  ResponseEntity<Object> getVerificationRequestById(@PathVariable long id) {
+		response = new BaseResponse();
+		
+		    try {
+
+		    	VerificationResponse list = studentService.getVerificationRequestById(id);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
 	
 	@GetMapping("/getVerificationDataByUserid/{userId}")
 	public  ResponseEntity<Object> getVerificationDataByUserid(@PathVariable long userId) {

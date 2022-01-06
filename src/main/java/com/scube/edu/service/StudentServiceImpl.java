@@ -44,10 +44,11 @@ import com.scube.edu.repository.PriceMasterRepository;
 import com.scube.edu.repository.VerificationDocViewRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
+import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
-
+import com.scube.edu.response.CollegeResponse;
 import com.scube.edu.response.PriceMasterResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
@@ -109,6 +110,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 
 	 @Autowired 
 	 RequestTypeService reqTypeService;
+	 
+	 @Autowired 
+	 CollegeSevice collegeSevice;
 	 
 	 @Autowired
 		SemesterService semesterService;
@@ -559,6 +563,83 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		}
 		 String row=Integer.toString(rowcnt);
 		return row;
+	}
+
+	@Override
+	public VerificationResponse getVerificationRequestById(long id) {
+		
+		logger.info("*****StudentServiceImpl getVerificationRequestById*****"+ String.valueOf(id));
+		
+		VerificationRequest req = verificationReqRepo.findById(id);
+		
+		VerificationResponse resp = new VerificationResponse();
+		
+		PassingYearMaster year = yearOfPassService.getYearById(req.getYearOfPassingId());
+		
+		DocumentMaster doc = documentService.getNameById(req.getDocumentId());
+		
+		RequestTypeResponse reqMaster = reqTypeService.getNameById(req.getRequestType());
+		
+		StreamMaster stream = streamService.getNameById(req.getStreamId());
+		
+		SemesterEntity sem=semesterService.getSemById(req.getSemId());
+		
+		BranchMasterEntity branch=branchMasterService.getbranchById(req.getBranchId());
+		
+		CollegeResponse college = collegeSevice.getNameById(req.getCollegeId());
+		
+		resp.setApplication_id(req.getApplicationId());
+		resp.setBranch_nm(branch.getBranchName());
+		resp.setCollege_name(college.getCollegeName());
+		resp.setCollege_name_id(req.getCollegeId());
+		resp.setDoc_name(doc.getDocumentName());
+		resp.setDoc_status(req.getDocStatus());
+		resp.setEnroll_no(req.getEnrollmentNumber());
+		resp.setFirst_name(req.getFirstName());
+		resp.setId(req.getId());
+		resp.setLast_name(req.getLastName());
+		resp.setMonthOfPassing(req.getMonthOfPassing());
+//		resp.setOriginalDocUploadFilePath(req.getUploadDocumentPath());
+		resp.setRemark(req.getRemark());
+		resp.setRequest_type_id(reqMaster.getRequestType());
+		resp.setSemester(sem.getSemester());
+		resp.setStream_id(req.getStreamId());
+		resp.setStream_name(stream.getStreamName());
+		resp.setUpload_doc_path(req.getUploadDocumentPath());
+		resp.setUser_id(req.getUserId());
+		resp.setYear_of_pass_id(req.getYearOfPassingId());
+		resp.setYear(year.getYearOfPassing());
+		
+		if(req.getEditReason() != null) {
+			resp.setEditReason(req.getEditReason());
+		}
+		
+		return resp;
+	}
+
+	@Override
+	public boolean editVerificationRequest(StudentDocEditVerificationRequest stuVerReq) {
+		
+		logger.info("*****StudentServiceImpl editVerificationRequest*****"+ stuVerReq.getId());
+		
+		VerificationRequest verReq = verificationReqRepo.findById(stuVerReq.getId());
+		
+		verReq.setBranchId(stuVerReq.getBranchId());
+		verReq.setCollegeId(stuVerReq.getCollegenameid());
+		verReq.setDocStatus("Requested");
+		verReq.setDocumentId(stuVerReq.getDocname());
+		verReq.setEnrollmentNumber(stuVerReq.getEnrollno());
+		verReq.setFirstName(stuVerReq.getFirstname());
+		verReq.setLastName(stuVerReq.getLastname());
+		verReq.setMonthOfPassing(stuVerReq.getMonthOfPassing());
+		verReq.setYearOfPassingId(String.valueOf(stuVerReq.getYearofpassid()));
+		verReq.setUploadDocumentPath(stuVerReq.getUploaddocpath());
+		verReq.setAltEmail(stuVerReq.getAltEmail());
+//		verReq.setRequestType(stuVerReq.getRequesttype());
+		
+		verificationReqRepo.save(verReq);
+		
+		return true;
 	}
 
 	

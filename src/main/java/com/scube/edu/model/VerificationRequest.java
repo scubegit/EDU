@@ -170,4 +170,7 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "cgpi")
 	private String cgpi;
 	
+	@Column(name = "edit_reason")
+	private String editReason;
+	
 }

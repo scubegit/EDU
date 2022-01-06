@@ -56,6 +56,8 @@ public class VerificationResponse {
 	
 	private String cgpi;
 	
+	private String editReason;
+	
 
 
 }
