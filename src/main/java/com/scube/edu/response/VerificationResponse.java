@@ -25,6 +25,7 @@ public class VerificationResponse {
 	private Long ver_req_id;
 	private String upload_doc_path;
 	private String branch_nm;
+	private String branch_id;
 	private String semester;
 
 	private String req_date;
@@ -57,6 +58,8 @@ public class VerificationResponse {
 	private String cgpi;
 	
 	private String editReason;
+	
+	private String alt_email;
 	
 
 

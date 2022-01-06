@@ -609,9 +609,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setUser_id(req.getUserId());
 		resp.setYear_of_pass_id(req.getYearOfPassingId());
 		resp.setYear(year.getYearOfPassing());
+		resp.setBranch_id(String.valueOf(branch.getId()));
 		
 		if(req.getEditReason() != null) {
 			resp.setEditReason(req.getEditReason());
+		}
+		if(req.getAltEmail() != null) {
+			resp.setAlt_email(req.getAltEmail());
 		}
 		
 		return resp;
