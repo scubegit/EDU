@@ -27,7 +27,7 @@ public class VerificationResponse {
 	private String branch_nm;
 	private String branch_id;
 	private String semester;
-
+	private String semid;
 	private String req_date;
 
 	private Long docAmt;
