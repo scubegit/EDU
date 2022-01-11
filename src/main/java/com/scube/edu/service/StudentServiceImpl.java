@@ -603,6 +603,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setRemark(req.getRemark());
 		resp.setRequest_type_id(String.valueOf(reqMaster.getId()));
 		resp.setSemester(sem.getSemester());
+		resp.setSemid(String.valueOf(sem.getId()));
 		resp.setStream_id(req.getStreamId());
 		resp.setStream_name(stream.getStreamName());
 		resp.setUpload_doc_path(req.getUploadDocumentPath());
@@ -629,18 +630,18 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		VerificationRequest verReq = verificationReqRepo.findById(stuVerReq.getId());
 		
-		verReq.setBranchId(stuVerReq.getBranchId());
+		verReq.setBranchId(stuVerReq.getBranchid());
 		verReq.setCollegeId(stuVerReq.getCollegenameid());
 		verReq.setDocStatus("Requested");
 		verReq.setDocumentId(stuVerReq.getDocname());
 		verReq.setEnrollmentNumber(stuVerReq.getEnrollno());
 		verReq.setFirstName(stuVerReq.getFirstname());
 		verReq.setLastName(stuVerReq.getLastname());
-		verReq.setMonthOfPassing(stuVerReq.getMonthOfPassing());
+		verReq.setMonthOfPassing(stuVerReq.getMonthofpassing());
 		verReq.setYearOfPassingId(String.valueOf(stuVerReq.getYearofpassid()));
 		verReq.setUploadDocumentPath(stuVerReq.getUploaddocpath());
-		verReq.setAltEmail(stuVerReq.getAltEmail());
-//		verReq.setRequestType(stuVerReq.getRequesttype());
+		verReq.setAltEmail(stuVerReq.getAltemail());
+		verReq.setRequestType(Long.valueOf(stuVerReq.getRequesttype()));
 		
 		verificationReqRepo.save(verReq);
 		

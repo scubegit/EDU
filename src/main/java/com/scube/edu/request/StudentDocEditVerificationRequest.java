@@ -20,11 +20,11 @@ public class StudentDocEditVerificationRequest {
 	private Long collegenameid;
 //	private String requesttypeid;
 	private String uploaddocpath;
-	private Long branchId;
-	private Long semId;
-	private String altEmail;
-	
-	private String monthOfPassing;
+	private Long branchid;
+	private Long semid;
+	private String altemail;
+	private String requesttype;
+	private String monthofpassing;
 
 
 
