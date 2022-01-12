@@ -612,6 +612,10 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setYear(year.getYearOfPassing());
 		resp.setBranch_id(String.valueOf(branch.getId()));
 		resp.setDoc_id(String.valueOf(doc.getId()));
+	
+		if(req.getEditReason() != null) {
+				resp.setEditReason(req.getEditReason());
+		}
 		
 		if(req.getEditReason() != null) {
 			resp.setEditReason(req.getEditReason());

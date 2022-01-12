@@ -50,6 +50,7 @@ public class VerificationResponse {
 	private Long gst;
 	private String monthOfPassing;
 	private String cgpi;
+//	added by kartik
 	private String editReason;
 	private String alt_email;
 	private String doc_id;
