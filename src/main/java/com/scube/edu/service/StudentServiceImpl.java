@@ -154,7 +154,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				
 				if(req.getRequestType() != null) {
 				RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
-				studentVerificationList.setRequest_type_id(request.getRequestType());
+				studentVerificationList.setRequest_type_id(request.getId());
 				}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
@@ -178,7 +178,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setUpload_doc_path(req.getUploadDocumentPath());
 				studentVerificationList.setStream_name(stream.getStreamName());
 				studentVerificationList.setReq_date(strDate);
-				studentVerificationList.setRequest_type_id(reqMaster.getRequestType());
+//				studentVerificationList.setRequest_type_id(reqMaster.getId());
 				studentVerificationList.setBranch_nm(branch.getBranchName());
 				studentVerificationList.setSemester(sem.getSemester());
 				studentVerificationList.setMonthOfPassing(req.getMonthOfPassing());
@@ -231,7 +231,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
-			closedDocResp.setRequest_type_id(request.getRequestType());
+			closedDocResp.setRequest_type_id(Long.valueOf(request.getRequestType()));
 			}
 			
 			closedDocResp.setDoc_status(req.getDocStatus());
@@ -601,17 +601,17 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setMonthOfPassing(req.getMonthOfPassing());
 //		resp.setOriginalDocUploadFilePath(req.getUploadDocumentPath());
 		resp.setRemark(req.getRemark());
-		resp.setRequest_type_id(String.valueOf(reqMaster.getId()));
+		resp.setRequest_type_id(reqMaster.getId());
 		resp.setSemester(sem.getSemester());
-		resp.setSemid(String.valueOf(sem.getId()));
+		resp.setSemid(sem.getId());
 		resp.setStream_id(req.getStreamId());
 		resp.setStream_name(stream.getStreamName());
 		resp.setUpload_doc_path(req.getUploadDocumentPath());
 		resp.setUser_id(req.getUserId());
-		resp.setYear_of_pass_id(req.getYearOfPassingId());
+		resp.setYear_of_pass_id(Long.valueOf(req.getYearOfPassingId()));
 		resp.setYear(year.getYearOfPassing());
-		resp.setBranch_id(String.valueOf(branch.getId()));
-		resp.setDoc_id(String.valueOf(doc.getId()));
+		resp.setBranch_id(branch.getId());
+		resp.setDoc_id(doc.getId());
 	
 		if(req.getEditReason() != null) {
 				resp.setEditReason(req.getEditReason());

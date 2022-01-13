@@ -111,7 +111,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
-			resp.setRequest_type_id(request.getRequestType());
+			resp.setRequest_type_id(Long.valueOf(request.getRequestType()));
 			}
 			
 			 SemesterEntity sem=semesterService.getSemById(req.getSemId());
@@ -278,7 +278,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 		
 		if(vr.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(vr.getRequestType());
-			resp.setRequest_type_id(request.getRequestType());
+			resp.setRequest_type_id(Long.valueOf(request.getRequestType()));
 			}
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
