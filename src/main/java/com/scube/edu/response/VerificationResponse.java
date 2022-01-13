@@ -22,6 +22,7 @@ public class VerificationResponse {
 	private Long uni_id;
 	private Long user_id;
 	private Long request_type_id;
+	private String request_type;
 	private Long ver_req_id;
 	private String upload_doc_path;
 	private String branch_nm;

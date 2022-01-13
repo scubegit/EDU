@@ -154,7 +154,8 @@ public class VerifierServiceImpl implements VerifierService{
 			  resp.setVer_req_id(veriReq.getVerRequestId());
 			  resp.setYear(year.getYearOfPassing());
 			  resp.setCompany_name(userr.getCompanyName());
-			  resp.setRequest_type_id(Long.valueOf(reqMaster.getRequestType()));
+			  resp.setRequest_type_id(reqMaster.getId());
+			  resp.setRequest_type(reqMaster.getRequestType());
 			  resp.setBranch_nm(branch.getBranchName());
 			  resp.setSemester(sem.getSemester());
 			  resp.setMonthOfPassing(veriReq.getMonthOfPassing());

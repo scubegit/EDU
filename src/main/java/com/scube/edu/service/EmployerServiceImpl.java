@@ -80,6 +80,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
 			resp.setRequest_type_id(request.getId());
+			resp.setRequest_type(request.getRequestType());
 			}
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
