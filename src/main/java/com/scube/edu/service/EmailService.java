@@ -182,11 +182,13 @@ public class EmailService {
 			
 			String vmFileContent = "Dear Candidate, <br><br>"
 					+ "Please login to the portal again and edit the verification request created. <br><br>"
-					+ "Refer to the reason mentioned to make the edit in the request. <br><br>"
+					+ "Refer to the reason mentioned to make the changes in the request. <br><br>"
 					+ "Thanks, <br> Team University.";
+
 			
 //			message.setText(vmFileContent);
 			message.setText(vmFileContent,"UTF-8", "html");
+
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
 			
@@ -2006,4 +2008,7 @@ public class EmailService {
 	}
 
 
+	 
+	 
+	 
 }
