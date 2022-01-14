@@ -645,7 +645,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verReq.setMonthOfPassing(stuVerReq.getMonthofpassing());
 		verReq.setYearOfPassingId(String.valueOf(stuVerReq.getYearofpassid()));
 		verReq.setUploadDocumentPath(stuVerReq.getUploaddocpath());
-		verReq.setAltEmail(stuVerReq.getAltemail());
+		if(stuVerReq.getAltemail() != null) {
+			verReq.setAltEmail(stuVerReq.getAltemail());
+		}
 		verReq.setRequestType(Long.valueOf(stuVerReq.getRequesttype()));
 		verReq.setSemId(stuVerReq.getSemid());
 		verReq.setStreamId(stuVerReq.getStreamid());
