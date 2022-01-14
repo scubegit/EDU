@@ -648,6 +648,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verReq.setAltEmail(stuVerReq.getAltemail());
 		verReq.setRequestType(Long.valueOf(stuVerReq.getRequesttype()));
 		verReq.setSemId(stuVerReq.getSemid());
+		verReq.setStreamId(stuVerReq.getStreamid());
 		
 		verificationReqRepo.save(verReq);
 		
