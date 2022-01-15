@@ -154,7 +154,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				
 				if(req.getRequestType() != null) {
 				RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
-				studentVerificationList.setRequest_type_id(request.getRequestType());
+				studentVerificationList.setRequest_type_id(request.getId());
+				studentVerificationList.setRequest_type(request.getRequestType());
 				}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
@@ -178,7 +179,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				studentVerificationList.setUpload_doc_path(req.getUploadDocumentPath());
 				studentVerificationList.setStream_name(stream.getStreamName());
 				studentVerificationList.setReq_date(strDate);
-				studentVerificationList.setRequest_type_id(reqMaster.getRequestType());
+//				studentVerificationList.setRequest_type_id(reqMaster.getId());
 				studentVerificationList.setBranch_nm(branch.getBranchName());
 				studentVerificationList.setSemester(sem.getSemester());
 				studentVerificationList.setMonthOfPassing(req.getMonthOfPassing());
@@ -231,7 +232,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
-			closedDocResp.setRequest_type_id(request.getRequestType());
+			closedDocResp.setRequest_type_id(Long.valueOf(request.getRequestType()));
 			}
 			
 			closedDocResp.setDoc_status(req.getDocStatus());
@@ -601,16 +602,21 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setMonthOfPassing(req.getMonthOfPassing());
 //		resp.setOriginalDocUploadFilePath(req.getUploadDocumentPath());
 		resp.setRemark(req.getRemark());
-		resp.setRequest_type_id(String.valueOf(reqMaster.getId()));
+		resp.setRequest_type_id(reqMaster.getId());
 		resp.setSemester(sem.getSemester());
+		resp.setSemid(sem.getId());
 		resp.setStream_id(req.getStreamId());
 		resp.setStream_name(stream.getStreamName());
 		resp.setUpload_doc_path(req.getUploadDocumentPath());
 		resp.setUser_id(req.getUserId());
-		resp.setYear_of_pass_id(req.getYearOfPassingId());
+		resp.setYear_of_pass_id(Long.valueOf(req.getYearOfPassingId()));
 		resp.setYear(year.getYearOfPassing());
-		resp.setBranch_id(String.valueOf(branch.getId()));
-		resp.setDoc_id(String.valueOf(doc.getId()));
+		resp.setBranch_id(branch.getId());
+		resp.setDoc_id(doc.getId());
+	
+		if(req.getEditReason() != null) {
+				resp.setEditReason(req.getEditReason());
+		}
 		
 		if(req.getEditReason() != null) {
 			resp.setEditReason(req.getEditReason());
@@ -629,18 +635,20 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		VerificationRequest verReq = verificationReqRepo.findById(stuVerReq.getId());
 		
-		verReq.setBranchId(stuVerReq.getBranchId());
+		verReq.setBranchId(stuVerReq.getBranchid());
 		verReq.setCollegeId(stuVerReq.getCollegenameid());
 		verReq.setDocStatus("Requested");
 		verReq.setDocumentId(stuVerReq.getDocname());
 		verReq.setEnrollmentNumber(stuVerReq.getEnrollno());
 		verReq.setFirstName(stuVerReq.getFirstname());
 		verReq.setLastName(stuVerReq.getLastname());
-		verReq.setMonthOfPassing(stuVerReq.getMonthOfPassing());
+		verReq.setMonthOfPassing(stuVerReq.getMonthofpassing());
 		verReq.setYearOfPassingId(String.valueOf(stuVerReq.getYearofpassid()));
 		verReq.setUploadDocumentPath(stuVerReq.getUploaddocpath());
-		verReq.setAltEmail(stuVerReq.getAltEmail());
-//		verReq.setRequestType(stuVerReq.getRequesttype());
+		verReq.setAltEmail(stuVerReq.getAltemail());
+		verReq.setRequestType(Long.valueOf(stuVerReq.getRequesttype()));
+		verReq.setSemId(stuVerReq.getSemid());
+		verReq.setStreamId(stuVerReq.getStreamid());
 		
 		verificationReqRepo.save(verReq);
 		

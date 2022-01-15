@@ -163,7 +163,7 @@ public class VerificationServiceImpl implements VerificationService{
 				
 				docResponse.setId(verEntities.getId());
 				
-				docResponse.setYear_of_pass_id(verEntities.getYearOfPassingId());
+				docResponse.setYear_of_pass_id(Long.valueOf(verEntities.getYearOfPassingId()));
 				
 				Long yearid = Long.parseLong(verEntities.getYearOfPassingId());
 				PassingYearMaster passingYearMaster = yearOfPassingRepository.getOne(yearid);

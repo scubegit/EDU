@@ -16,18 +16,19 @@ public class VerificationResponse {
 	private String doc_name;
 	private String enroll_no;
 	private String year;
-	private String year_of_pass_id;
+	private Long year_of_pass_id;
 	private Long college_name_id;
 	private Long application_id;
 	private Long uni_id;
 	private Long user_id;
-	private String request_type_id;
+	private Long request_type_id;
+	private String request_type;
 	private Long ver_req_id;
 	private String upload_doc_path;
 	private String branch_nm;
-	private String branch_id;
+	private Long branch_id;
 	private String semester;
-
+	private Long semid;
 	private String req_date;
 
 	private Long docAmt;
@@ -50,9 +51,10 @@ public class VerificationResponse {
 	private Long gst;
 	private String monthOfPassing;
 	private String cgpi;
+//	added by kartik
 	private String editReason;
 	private String alt_email;
-	private String doc_id;
+	private Long doc_id;
 
 
 }
