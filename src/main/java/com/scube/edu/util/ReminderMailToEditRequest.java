@@ -35,7 +35,7 @@ public class ReminderMailToEditRequest {
 	@Autowired
 	UserService userService;
 	
-	@Scheduled(cron = "*/10 * * * * ?")	
+	@Scheduled(cron = "0 */1 * * * ?")	
       public void getListofEditRequest() throws MessagingException, Exception {
 		
 		logger.info("********getListofEditRequest***********");
