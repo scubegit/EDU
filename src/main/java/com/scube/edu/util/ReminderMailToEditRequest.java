@@ -1,5 +1,7 @@
 package com.scube.edu.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class ReminderMailToEditRequest {
 	@Autowired
 	UserService userService;
 	
-	@Scheduled(cron = "0 */1 * * * ?")	
+	@Scheduled(cron = "0 0 10 * * ?")	
       public void getListofEditRequest() throws MessagingException, Exception {
 		
 		logger.info("********getListofEditRequest***********");
@@ -45,7 +47,7 @@ public class ReminderMailToEditRequest {
           System.out.println("list="+list.size());	
           for(VerificationRequest vr: list) {
         	  Date requestdAte=vr.getUpdatedate();
-              int diffInDays = (int) ((currentdate.getTime() - requestdAte.getTime()) / (1000 * 60 * 60 * 24));
+              int diffInDays = (int) ((currentdate.getTime() - requestdAte.getTime()) / (1000 * 60 * 60 * 24))%365;
               System.out.println("diffInDays"+diffInDays);
               if(diffInDays==2||diffInDays==4||diffInDays==6) {
             	UserResponse ent = userService.getUserInfoById(vr.getUserId());
