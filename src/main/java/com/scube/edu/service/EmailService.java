@@ -184,9 +184,11 @@ public class EmailService {
 					+ "Please login to the portal again and edit the verification request created. <br><br>"
 					+ "Refer to the reason mentioned to make the changes in the request. <br><br>"
 					+ "Thanks, <br> Team University.";
+
+			
+//			message.setText(vmFileContent);
 			message.setText(vmFileContent,"UTF-8", "html");
 
-			//message.setText(vmFileContent);
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
 			
