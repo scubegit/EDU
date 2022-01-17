@@ -232,7 +232,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			if(req.getRequestType() != null) {
 			RequestTypeResponse request = reqTypeService.getNameById(req.getRequestType());
-			closedDocResp.setRequest_type_id(Long.valueOf(request.getRequestType()));
+			closedDocResp.setRequest_type_id(request.getId());
 			}
 			
 			closedDocResp.setDoc_status(req.getDocStatus());
