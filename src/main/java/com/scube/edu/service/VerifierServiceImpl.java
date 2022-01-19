@@ -267,7 +267,11 @@ public class VerifierServiceImpl implements VerifierService{
 				entt.setRemark("VR_"+currentDate+"-"+statusChangeRequest.getRemark());
 			}
 			if(statusChangeRequest.getEditreason() != null) {
-				entt.setEditReason(statusChangeRequest.getEditreason());
+				if(entt.getEditReason() == null) {
+					entt.setEditReason("-VR-"+currentDate+"#*#"+statusChangeRequest.getEditreason());
+				}else {
+					entt.setEditReason(entt.getEditReason()+"-VR-"+currentDate+"#*#"+statusChangeRequest.getEditreason());
+				}
 			}
 			verificationReqRepository.save(entt);
 			
@@ -276,7 +280,7 @@ public class VerifierServiceImpl implements VerifierService{
 //			send mail to candidate requesting him to edit his verification request
 			if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
 //				send mail to candidate to edit his request
-				emailService.sendRequestEditMail(ent.getEmail());
+//				emailService.sendRequestEditMail(ent.getEmail());
 				
 			}
 			
