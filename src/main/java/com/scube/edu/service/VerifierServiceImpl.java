@@ -308,5 +308,76 @@ public class VerifierServiceImpl implements VerifierService{
 		return rowcnt;
 	}
 
+
+
+	@Override
+	public List<VerificationResponse> getRejectedRequests() {
+		
+		System.out.println("******VerifierServiceImpl getRejectedRequests******" );
+		
+		List<VerificationResponse> List = new ArrayList<>();
+//		 try {
+		 List<VerificationRequest> verReq = verificationReqRepository.findByDocStatus("Ver_Request_Edit");
+		 
+		 logger.info("------>1"+verReq.toString());
+		 
+		 for(VerificationRequest veriReq: verReq) {
+			 
+			 logger.info("------>2");
+			 VerificationResponse resp = new VerificationResponse();
+			  
+			  PassingYearMaster year =
+			  yearOfPassService.getYearById(veriReq.getYearOfPassingId());
+			  logger.info("------>3"+ year.getYearOfPassing());
+			  System.out.println(veriReq.getDocumentId());
+			  
+			  DocumentMaster doc = documentService.getNameById(veriReq.getDocumentId());
+			  logger.info("------>4"+ doc.getDocumentName());
+			  Optional<UserMasterEntity> user = userRepository.findById(veriReq.getUserId());
+			  UserMasterEntity userr = user.get();
+			  logger.info("------>5"+ userr.getEmailId());
+			  Optional<StreamMaster> stream = streamRespository.findById(veriReq.getStreamId()); 
+			  StreamMaster str = stream.get();
+			  logger.info("------>6"+ str.getStreamName());
+			  RequestTypeResponse reqMaster = reqTypeService.getNameById(veriReq.getRequestType());
+			  logger.info("------>7"+ reqMaster.getRequestType());
+			  
+			  SemesterEntity sem=semesterService.getSemById(veriReq.getSemId());
+				
+			  BranchMasterEntity branch=branchMasterService.getbranchById(veriReq.getBranchId());
+				
+			  resp.setId(veriReq.getId());
+			  resp.setApplication_id(veriReq.getApplicationId());
+			  resp.setCollege_name_id(veriReq.getCollegeId());
+			  resp.setDoc_name(doc.getDocumentName());
+			  resp.setEnroll_no(veriReq.getEnrollmentNumber());
+			  resp.setFirst_name(veriReq.getFirstName());
+			  resp.setLast_name(veriReq.getLastName());
+			  resp.setStream_name(str.getStreamName());
+			  resp.setUni_id(veriReq.getUniversityId());
+			  resp.setUpload_doc_path(veriReq.getUploadDocumentPath());
+			  resp.setUser_id(veriReq.getUserId());
+			  resp.setVer_req_id(veriReq.getVerRequestId());
+			  resp.setYear(year.getYearOfPassing());
+			  resp.setCompany_name(userr.getCompanyName());
+			  resp.setRequest_type_id(reqMaster.getId());
+			  resp.setRequest_type(reqMaster.getRequestType());
+			  resp.setBranch_nm(branch.getBranchName());
+			  resp.setSemester(sem.getSemester());
+			  resp.setMonthOfPassing(veriReq.getMonthOfPassing());
+			 
+			  List.add(resp);
+		 }
+		 
+		 System.out.println("----------"+ verReq);
+		 
+		 return List;
+//		 }catch(Exception e) {
+//			 throw new Exception(e.getMessage());
+//		 }
+		
+//		return null;
+	}
+
 	
 }

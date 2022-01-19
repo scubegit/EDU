@@ -208,5 +208,33 @@ public class VerifierController {
 					}
 				
 	   }
+		
+		@GetMapping("/getRejectedRequests")
+		public  ResponseEntity<Object> getRejectedRequests() {
+			response = new BaseResponse();
+			
+			    try {
+
+			    	List<VerificationResponse> list = verifierService.getRejectedRequests();
+						
+						response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(list);
+						
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
+						
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
 
 }

@@ -22,4 +22,6 @@ public interface VerifierService {
 
 	public Integer  updateListonLogout (long id) throws Exception;
 
+	public List<VerificationResponse> getRejectedRequests();
+
 }
