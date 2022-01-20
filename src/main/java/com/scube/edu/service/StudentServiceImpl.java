@@ -615,11 +615,9 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setDoc_id(doc.getId());
 	
 		if(req.getEditReason() != null) {
-				resp.setEditReason(req.getEditReason());
-		}
-		
-		if(req.getEditReason() != null) {
-			resp.setEditReason(req.getEditReason());
+			String temp = req.getEditReason();
+			String[] list = temp.split("%");
+			resp.setEditReason(list[list.length - 1]);
 		}
 		if(req.getAltEmail() != null) {
 			resp.setAlt_email(req.getAltEmail());

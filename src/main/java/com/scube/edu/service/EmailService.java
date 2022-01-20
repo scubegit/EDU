@@ -42,6 +42,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
@@ -176,7 +177,8 @@ public class EmailService {
 
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
+			message.addRecipient(RecipientType.CC, new InternetAddress(
+		            "help@educred.co.in"));
 			// Set Subject: header field
 			message.setSubject("Edit Verification Request.");
 			
