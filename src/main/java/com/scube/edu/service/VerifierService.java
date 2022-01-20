@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import com.lowagie.text.BadElementException;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.EditReasonResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
 
@@ -23,5 +24,7 @@ public interface VerifierService {
 	public Integer  updateListonLogout (long id) throws Exception;
 
 	public List<VerificationResponse> getRejectedRequests();
+
+	public List<EditReasonResponse> getRejectionTrailById(Long id);
 
 }

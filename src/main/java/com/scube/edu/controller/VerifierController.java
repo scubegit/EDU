@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
+import com.scube.edu.response.EditReasonResponse;
 import com.scube.edu.response.StudentVerificationDocsResponse;
 import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.VerifierService;
@@ -216,6 +217,34 @@ public class VerifierController {
 			    try {
 
 			    	List<VerificationResponse> list = verifierService.getRejectedRequests();
+						
+						response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+						response.setRespData(list);
+						
+						return ResponseEntity.ok(response);
+							
+					}catch (Exception e) {
+						
+						logger.error(e.getMessage()); //BAD creds message comes from here
+						
+						response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+						response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+						response.setRespData(e.getMessage());
+						
+						return ResponseEntity.badRequest().body(response);
+						
+					}
+				
+	   }
+		
+		@GetMapping("/getRejectionTrailById/{id}")
+		public  ResponseEntity<Object> getRejectionTrailById(@PathVariable Long id) {
+			response = new BaseResponse();
+			
+			    try {
+
+			    	List<EditReasonResponse> list = verifierService.getRejectionTrailById(id);
 						
 						response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 						response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);

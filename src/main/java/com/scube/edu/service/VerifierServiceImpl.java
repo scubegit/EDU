@@ -40,6 +40,7 @@ import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.CollegeResponse;
+import com.scube.edu.response.EditReasonResponse;
 import com.scube.edu.response.JwtResponse;
 import com.scube.edu.response.RequestTypeResponse;
 import com.scube.edu.response.StreamResponse;
@@ -268,9 +269,9 @@ public class VerifierServiceImpl implements VerifierService{
 			}
 			if(statusChangeRequest.getEditreason() != null) {
 				if(entt.getEditReason() == null) {
-					entt.setEditReason("-VR-"+currentDate+"#*#"+statusChangeRequest.getEditreason());
+					entt.setEditReason("Verifier%"+currentDate+"%"+statusChangeRequest.getEditreason());
 				}else {
-					entt.setEditReason(entt.getEditReason()+"-VR-"+currentDate+"#*#"+statusChangeRequest.getEditreason());
+					entt.setEditReason(entt.getEditReason()+"#Verifier%"+currentDate+"%"+statusChangeRequest.getEditreason());
 				}
 			}
 			verificationReqRepository.save(entt);
@@ -280,7 +281,7 @@ public class VerifierServiceImpl implements VerifierService{
 //			send mail to candidate requesting him to edit his verification request
 			if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
 //				send mail to candidate to edit his request
-//				emailService.sendRequestEditMail(ent.getEmail());
+				emailService.sendRequestEditMail(ent.getEmail());
 				
 			}
 			
@@ -381,6 +382,43 @@ public class VerifierServiceImpl implements VerifierService{
 //		 }
 		
 //		return null;
+	}
+
+
+
+	@Override
+	public List<EditReasonResponse> getRejectionTrailById(Long id) {
+		
+		System.out.println("*****VerifierServiceImpl getRejectionTrailById*****"+ String.valueOf(id));
+		
+		Optional<VerificationRequest> verReqq = verificationReqRepository.findById(id);
+		VerificationRequest verReq = verReqq.get();
+		
+		List<EditReasonResponse> list = new ArrayList<>();
+		
+		String str = verReq.getEditReason();
+		if(str != null) {
+			String[] listToSplit;
+			
+			listToSplit = str.split("#");
+			
+			for(int i = 0; i<listToSplit.length; i++) {
+			logger.info(listToSplit[i]);
+			
+			EditReasonResponse editResp = new EditReasonResponse();
+			
+			String[] listToSet = listToSplit[i].split("%");
+			
+			editResp.setRole(listToSet[0]);
+			editResp.setDate(listToSet[1]);
+			editResp.setReason(listToSet[2]);
+			
+			list.add(editResp);
+			
+			}
+			return list;
+		}
+		return null;
 	}
 
 	

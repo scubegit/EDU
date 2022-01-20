@@ -186,9 +186,9 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
 			UserResponse ent = userService.getUserInfoById(entt.getUserId());
 			if(entt.getEditReason() == null) {
-				entt.setEditReason("-U-"+currentDate +"#*#"+statusChangeRequest.getEditreason());
+				entt.setEditReason("University%"+currentDate +"%"+statusChangeRequest.getEditreason());
 			}else {
-				entt.setEditReason(entt.getEditReason()+"-U-"+currentDate+"#*#"+statusChangeRequest.getEditreason());
+				entt.setEditReason(entt.getEditReason()+"#University%"+currentDate+"%"+statusChangeRequest.getEditreason());
 			}
 			emailService.sendRequestEditMail(ent.getEmail());
 		}
