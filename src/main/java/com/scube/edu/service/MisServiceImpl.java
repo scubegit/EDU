@@ -137,6 +137,9 @@ public class MisServiceImpl implements MisService {
 			  else if
 			  (docSt.equals("Approved_Pass") || docSt.equals("Approved_Fail") ||  docSt.equals("SV_Approved_Pass")||docSt.equals("SV_Approved_Fail") ||  docSt.equals("SV_Rejected"))
 				  bucket="University";
+			  else if
+			  (docSt.equalsIgnoreCase("Ver_Request_Edit"))
+				  bucket = "Rejection";
 			 
 			resp.setDoc_status(currSt);
 				

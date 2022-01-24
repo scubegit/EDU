@@ -173,4 +173,10 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "edit_reason")
 	private String editReason;
 	
+	@Column(name = "reminder_date")
+	private String remDate;
+	
+	@Column(name = "rem_email_count")
+	private Long remEmailCount;
+	
 }

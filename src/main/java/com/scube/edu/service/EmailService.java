@@ -139,7 +139,7 @@ public class EmailService {
 	@Value("${CC.Mail.id}")
     private String CCMailid;
 	
-	public void sendRequestEditMail(String email) throws MessagingException,Exception{
+	public void sendRequestEditMail(String email, String subject) throws MessagingException,Exception{
 		logger.info("*****emailService sendRequestEditMail*****"+ email);
 		String to = email;
 		String from = "support@educred.co.in";
@@ -180,8 +180,8 @@ public class EmailService {
 			message.addRecipient(RecipientType.CC, new InternetAddress(
 		            "help@educred.co.in"));
 			// Set Subject: header field
-			message.setSubject("Edit Verification Request.");
-			
+				message.setSubject(subject);
+				
 			String vmFileContent = "Dear Candidate, <br><br>"
 					+ "Please login to the portal again and edit the verification request created. <br><br>"
 					+ "Refer to the reason mentioned to make the changes in the request. <br><br>"

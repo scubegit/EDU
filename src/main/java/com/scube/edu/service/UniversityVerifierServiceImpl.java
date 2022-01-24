@@ -190,7 +190,8 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 			}else {
 				entt.setEditReason(entt.getEditReason()+"#University%"+currentDate+"%"+statusChangeRequest.getEditreason());
 			}
-			emailService.sendRequestEditMail(ent.getEmail());
+			emailService.sendRequestEditMail(ent.getEmail(), "Edit Verification Request.");
+			
 		}
 		
 		if (statusChangeRequest.getStatus().equalsIgnoreCase("UN_Rejected")) {
@@ -207,6 +208,8 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		entt.setUnVerId(statusChangeRequest.getVerifiedby());
 		entt.setUnActionDate(new Date());
 		entt.setUniVerStatus(statusChangeRequest.getStatus());
+		entt.setRemDate(null);
+		entt.setRemEmailCount((long)0);
 		verificationReqRepository.save(entt);
 				
 		if(statusChangeRequest.getStatus().equalsIgnoreCase("UN_Approved_Pass") || statusChangeRequest.getStatus().equalsIgnoreCase("UN_Approved_Fail") || 
