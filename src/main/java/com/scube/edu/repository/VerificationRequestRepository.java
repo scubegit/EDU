@@ -74,5 +74,6 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "UPDATE verification_request set assigned_to=0 where doc_status='Requested' and assigned_to not in(0) ", nativeQuery = true)
 	Integer updateAssignedto();
 
-	List<VerificationRequest> findByDocStatus(String status);
+	@Query(value = "select * from verification_request where doc_status in ((?1),(?2))", nativeQuery = true)
+	List<VerificationRequest> findByDocStatus(String status1,String status2);
 }

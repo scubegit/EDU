@@ -283,7 +283,7 @@ public class VerifierServiceImpl implements VerifierService{
 //			send mail to candidate requesting him to edit his verification request
 			if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
 //				send mail to candidate to edit his request
-				emailService.sendRequestEditMail(ent.getEmail(), "Edit Verification Request.");
+				emailService.sendRequestEditMail(entt,ent.getEmail(), "Verification Request - Rejected - Request ID - "+entt.getApplicationId());
 				
 			}
 			
@@ -324,7 +324,7 @@ public class VerifierServiceImpl implements VerifierService{
 		
 		List<VerificationResponse> List = new ArrayList<>();
 //		 try {
-		 List<VerificationRequest> verReq = verificationReqRepository.findByDocStatus("Ver_Request_Edit");
+		 List<VerificationRequest> verReq = verificationReqRepository.findByDocStatus("Ver_Request_Edit","Uni_Request_Edit");
 		 
 		 logger.info("------>1"+verReq.toString());
 		 

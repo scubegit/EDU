@@ -54,7 +54,7 @@ private static final Logger logger = LoggerFactory.getLogger(EmployerServiceImpl
 	@Override
 	public List<VerificationResponse> getOneMonthVerificationDocsDataByUserid(long userId, String fromDate, String toDate ) throws Exception {
 		
-		logger.info("********EmployerServiceImpl getOneMonthVerificationDocsDataByUserid");
+		logger.info("********EmployerServiceImpl getOneMonthVerificationDocsDataByUserid********");
 		logger.info("------------"+ userId + fromDate + toDate);
 		
 		List<VerificationResponse> responseList = new ArrayList<>();

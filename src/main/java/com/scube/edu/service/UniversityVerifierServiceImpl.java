@@ -183,14 +183,14 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		entt.setDocStatus(statusChangeRequest.getStatus());
 //		entt.setVerifiedBy(statusChangeRequest.getVerifiedby());
 		
-		if(statusChangeRequest.getStatus().equalsIgnoreCase("Ver_Request_Edit")) {
+		if(statusChangeRequest.getStatus().equalsIgnoreCase("Uni_Request_Edit")) {
 			UserResponse ent = userService.getUserInfoById(entt.getUserId());
 			if(entt.getEditReason() == null) {
 				entt.setEditReason("University%"+currentDate +"%"+statusChangeRequest.getEditreason());
 			}else {
 				entt.setEditReason(entt.getEditReason()+"#University%"+currentDate+"%"+statusChangeRequest.getEditreason());
 			}
-			emailService.sendRequestEditMail(ent.getEmail(), "Edit Verification Request.");
+			emailService.sendRequestEditMail(entt,ent.getEmail(), "Verification Request - Rejected - Request ID - "+entt.getApplicationId());
 			
 		}
 		

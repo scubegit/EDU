@@ -139,12 +139,20 @@ public class EmailService {
 	@Value("${CC.Mail.id}")
     private String CCMailid;
 	
-	public void sendRequestEditMail(String email, String subject) throws MessagingException,Exception{
+	@Value("${file.url-dir}")
+    private String loginUrl;
+	
+	public void sendRequestEditMail(VerificationRequest entt,String email, String subject) throws MessagingException,Exception{
 		logger.info("*****emailService sendRequestEditMail*****"+ email);
 		String to = email;
 		String from = "support@educred.co.in";
-		
 		String host = "mail.educred.co.in";
+		
+		String name = entt.getFirstName();
+		Long appId = entt.getApplicationId();
+		String temp = entt.getEditReason();
+		String[] list = temp.split("%");
+		String reason = list[list.length - 1];
 		
 		Properties properties = System.getProperties();
 
@@ -182,13 +190,14 @@ public class EmailService {
 			// Set Subject: header field
 				message.setSubject(subject);
 				
-			String vmFileContent = "Dear Candidate, <br><br>"
-					+ "Please login to the portal again and edit the verification request created. <br><br>"
-					+ "Refer to the reason mentioned to make the changes in the request. <br><br>"
-					+ "Thanks, <br> Team University.";
+			String vmFileContent = "Dear "+name+", <br><br>"
+					+ "Your request (Application ID: "+appId+") has been rejected, please login again and Fulfill the requirements by clicking on the Edit button against your record. <br><br>"
+					+ "Rejection Details: "+reason+". <br><br>"
+					+ "If you have any query you can writeback to help@educred.co.in <br><br>"
+					+ "Click "+"<a href='http://"+loginUrl+"/University/verification'><strong>Here</strong></a>"+" to Login. <br><br>"
+					+ "Team Educred.";
 
 			
-//			message.setText(vmFileContent);
 			message.setText(vmFileContent,"UTF-8", "html");
 
 			Transport.send(message);

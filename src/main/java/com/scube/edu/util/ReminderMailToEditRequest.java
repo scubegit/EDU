@@ -58,7 +58,7 @@ public class ReminderMailToEditRequest {
         	  try {
         		  UserResponse ent = userService.getUserInfoById(vr.getUserId());
         		  if(vr.getRemDate() == null) {
-        			  emailService.sendRequestEditMail(ent.getEmail(), "Reminder to Edit Rejected Request.");
+        			  emailService.sendRequestEditMail(vr,ent.getEmail(), "Verification Request  - Rejected  - Request ID – Reminder "+vr.getRemEmailCount()+1);
         			  vr.setRemDate(currentDate);
 	            	  vr.setRemEmailCount(vr.getRemEmailCount() + 1);
         		  }else {
@@ -72,7 +72,7 @@ public class ReminderMailToEditRequest {
 		              if(diffInDays >= 2) {
 		            	  
 			      			  if(vr.getRemEmailCount() < 3) { // count less than 3
-			      				  emailService.sendRequestEditMail(ent.getEmail(), "Reminder to Edit Rejected Request.");
+			      				  emailService.sendRequestEditMail(vr,ent.getEmail(), "Verification Request  - Rejected  - Request ID - "+vr.getApplicationId()+" – Reminder "+vr.getRemEmailCount()+1);
 			      				  vr.setRemDate(currentDate);
 				            	  vr.setRemEmailCount(vr.getRemEmailCount() + 1);
 				            	  System.out.println("Reminder mail sent successfully to="+ent.getEmail());
