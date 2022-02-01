@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.scube.edu.response.AgeingSummaryResponse;
 import com.scube.edu.response.FinancialStatResponse;
+import com.scube.edu.response.GeneralSummaryResponse;
 import com.scube.edu.response.TopFiverYearRevenueResponse;
 import com.scube.edu.response.TopTenEmployResponse;
 import com.scube.edu.response.VerifierPerformanceResponse;
@@ -32,5 +34,8 @@ public interface AdminDashboardService {
 
 	public List<VerifierPerformanceResponse> getPerformanceOfVerfier(String frmdate,String todate);
 
+	public List<GeneralSummaryResponse> getRequestStatusSummaryByYear(int year);
+
+	public List<AgeingSummaryResponse> getAgeingSummaryByYear(int year);
 	
 }

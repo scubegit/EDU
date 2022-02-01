@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scube.edu.response.AgeingSummaryResponse;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.FinancialStatResponse;
+import com.scube.edu.response.GeneralSummaryResponse;
 import com.scube.edu.response.TopFiverYearRevenueResponse;
 import com.scube.edu.response.TopTenEmployResponse;
 import com.scube.edu.response.VerifierPerformanceResponse;
@@ -36,6 +38,67 @@ public class AdminDashboardController {
 
 	@Autowired
 	AdminDashboardService adminDashboardService;
+	
+	@GetMapping(value = "/getAgeingSummaryByYear/{year}" )
+	public ResponseEntity<BaseResponse> getAgeingSummaryByYear (@PathVariable int year) {
+		
+		System.out.println("*******AdminDashboardController getAgeingSummaryByYear********");
+		BaseResponse response3 = null;
+		response3 = new BaseResponse();
+		
+	    try {
+	    	
+	    	List<AgeingSummaryResponse> List1 = adminDashboardService.getAgeingSummaryByYear(year);
+				
+				response3.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response3.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response3.setRespData(List1);
+				
+				return ResponseEntity.ok(response3);
+					
+			}catch (Exception e) {
+				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response3.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response3.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response3.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response3);
+				
+			}
+	}
+	
+	@GetMapping(value = "/getRequestStatusSummaryByYear/{year}" )
+	public ResponseEntity<BaseResponse> getRequestStatusSummaryByYear (@PathVariable int year) {
+		
+		System.out.println("*******AdminDashboardController getRequestStatusSummaryByYear********");
+		BaseResponse response3 = null;
+		response3 = new BaseResponse();
+		
+	    try {
+	    	
+	    	List<GeneralSummaryResponse> List1 = adminDashboardService.getRequestStatusSummaryByYear(year);
+				
+				response3.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response3.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response3.setRespData(List1);
+				
+				return ResponseEntity.ok(response3);
+					
+			}catch (Exception e) {
+				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response3.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response3.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response3.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response3);
+				
+			}
+	}
+	
 	@GetMapping(value = "/getRequestStatitics/{year}" )
 	public ResponseEntity<BaseResponse> getRequestStatiticsByYearWeekMonth (@PathVariable int year) {
 		

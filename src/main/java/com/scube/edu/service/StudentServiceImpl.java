@@ -650,6 +650,12 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verReq.setSemId(stuVerReq.getSemid());
 		verReq.setStreamId(stuVerReq.getStreamid());
 		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+	    Date date = new Date();  
+	    String currentDate = formatter.format(date); 
+		
+		verReq.setEditReason(verReq.getEditReason()+"#Student%"+currentDate+"%Request has been editted");
+		
 		verificationReqRepo.save(verReq);
 		
 		return true;

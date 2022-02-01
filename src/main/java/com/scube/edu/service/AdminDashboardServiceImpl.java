@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scube.edu.controller.MasterController;
 import com.scube.edu.model.DailyVrBackupEntity;
 import com.scube.edu.model.RaiseDespute;
@@ -28,7 +29,9 @@ import com.scube.edu.repository.DailyVrBackupRepository;
 import com.scube.edu.repository.RaiseDisputeRepository;
 import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.YearlyVerReqBackupRepository;
+import com.scube.edu.response.AgeingSummaryResponse;
 import com.scube.edu.response.FinancialStatResponse;
+import com.scube.edu.response.GeneralSummaryResponse;
 import com.scube.edu.response.TopFiverYearRevenueResponse;
 import com.scube.edu.response.TopTenEmployResponse;
 import com.scube.edu.response.VerifierPerformanceResponse;
@@ -442,6 +445,46 @@ logger.info("****AdminDashboardServiceImpl   getDailyPerformanceOfVerfier******"
 		}
 		
 		return response;	}
+
+	@Override
+	public List<GeneralSummaryResponse> getRequestStatusSummaryByYear(int year) {
+		
+		logger.info("****AdminDashboardServiceImpl getRequestStatusSummaryByYear******"+year);
+		
+//		List<Map<String ,Object>> openListMap = adminDashboardRepository.getGeneralSummary(year);
+		
+		List<Map<String ,Object>> openListMap = adminDashboardRepository.getNormalSummary(year);
+		
+		List<GeneralSummaryResponse> openList = new ArrayList<>();
+		
+		final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+		
+		for(int i = 0 ; i < openListMap.size() ; i++) {
+			final GeneralSummaryResponse pojo = mapper.convertValue(openListMap.get(i), GeneralSummaryResponse.class);
+			openList.add(pojo);
+		}
+		
+		return openList;
+	}
+
+	@Override
+	public List<AgeingSummaryResponse> getAgeingSummaryByYear(int year) {
+		
+		logger.info("****AdminDashboardServiceImpl getAgeingSummaryByYear******"+year);
+		
+		List<Map<String ,Object>> openListMap = adminDashboardRepository.getAgeingSummary(year);
+		
+		List<AgeingSummaryResponse> openList = new ArrayList<>();
+		
+		final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+		
+		for(int i = 0 ; i < openListMap.size() ; i++) {
+			final AgeingSummaryResponse pojo = mapper.convertValue(openListMap.get(i), AgeingSummaryResponse.class);
+			openList.add(pojo);
+		}
+		
+		return openList;
+	}
 
 
 }

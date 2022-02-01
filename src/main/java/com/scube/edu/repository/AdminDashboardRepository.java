@@ -1,7 +1,9 @@
 package com.scube.edu.repository;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -55,4 +57,28 @@ public interface AdminDashboardRepository extends JpaRepository<VerificationRequ
 	
 	@Query(value="SELECT count(vr.ver_id),vr.ver_id,um.first_name,um.last_name FROM verification_request vr left join user_master um on um.id=vr.ver_id where date(ver_action_date)>=?1 and date(ver_action_date)<=?2 and vr.ver_id is not null   group by vr.ver_id",nativeQuery = true)
 	List<Object[]> getVerPerformance(String fromdate,String todate);
+
+	@Query(value="SELECT MONTHNAME(created_date) as month,SUM(CASE WHEN"
+			+ " vr.doc_status ='UN_Approved_Pass' || vr.doc_status ='UN_Approved_Fail' || vr.doc_status ='SVD_Approved_Pass' ||"
+			+ " vr.doc_status ='SVD_Approved_Fail' || vr.doc_status ='SVD_Rejected' || vr.doc_status ='UN_Rejected'"
+			+ " THEN 1  ELSE 0 END) AS closed ,"
+			+ " SUM(CASE WHEN vr.doc_status ='Requested' || vr.doc_status ='Approved_Pass' || vr.doc_status ='Offline' || vr.doc_status ='Approved_Fail' ||"
+			+ " vr.doc_status ='Unable To Verify' || vr.doc_status ='Ver_Request_Edit' || vr.doc_status ='Uni_Request_Edit' ||"
+			+ " vr.doc_status ='Approved_Pass' THEN 1  ELSE 0 END) AS pending from verification_request vr where "
+			+ " YEAR(created_date)=(?1)  GROUP BY MONTH(created_date) , YEAR(created_date) ;",nativeQuery = true)
+	List<Map<String ,Object>> getGeneralSummary(int year);
+
+	@Query(value="SELECT MONTHNAME(created_date) as month,SUM(CASE WHEN DATEDIFF(now(), created_date) < 31"
+			+ " THEN 1  ELSE 0 END) AS lessthan ,SUM(CASE WHEN DATEDIFF(now(), created_date) > 30 and DATEDIFF(now(), created_date) < 60"
+			+ " THEN 1  ELSE 0 END) AS inbetween, SUM(CASE WHEN DATEDIFF(now(), created_date) > 60 THEN 1 ELSE 0"
+			+ " END) AS above from verification_request vr where YEAR(created_date)= (?1) and doc_status not in ('Offline','Unable To Verify',"
+			+ " 'UN_Approved_Pass','UN_Approved_Fail','SVD_Approved_Pass','SVD_Approved_Fail','SVD_Rejected','UN_Rejected') "
+			+ "GROUP BY MONTH(created_date) , YEAR(created_date) ;", nativeQuery = true)
+	List<Map<String, Object>> getAgeingSummary(int year);
+
+	@Query(value="select ow.month, ow.Pending as pending, cw.Closed as closed from closed_view cw left join open_view ow on cw.month = ow.month " + 
+			" where ow.year = (?1) and cw.year = (?1)",nativeQuery = true)
+	List<Map<String, Object>> getNormalSummary(int year);
+
+	
 }

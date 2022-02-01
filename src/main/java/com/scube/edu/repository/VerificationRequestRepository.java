@@ -61,14 +61,35 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	@Query(value = "UPDATE verification_request set Payment_flg='Y' where id=(?1) and doc_status='Requested'", nativeQuery = true)
 	Integer updatePaymentFlag(long id);
 
-	@Query(value="SELECT * FROM verification_request where convert(created_date , Date) <= (?1)", nativeQuery = true)
+	/*
+	 * @Query(
+	 * value="SELECT * FROM verification_request where convert(created_date , Date) <= (?1)"
+	 * , nativeQuery = true) List<VerificationRequest>
+	 * findRecordsByPreviousYearCreatedDate(String prevDate);
+	 * 
+	 * @Modifying(clearAutomatically = true)
+	 * 
+	 * @Transactional
+	 * 
+	 * @Query(
+	 * value="delete  FROM verification_request where year(created_date) <= (?1)",
+	 * nativeQuery = true) int DeleteRecordsByPreviousYearCreatedDate(String
+	 * prevDate);
+	 */
+
+	
+	@Query(value="SELECT * FROM verification_request where convert(created_date , Date) <= (?1)  "
+			+ "and doc_status  in('UN_Approved_Pass','Uni_Auto_Approved_Pass','SVD_Approved_Pass','UN_Approved_Fail','Uni_Auto_Approved_Fail',"
+			+ "'SVD_Approved_Fail','UN_Rejected','Uni_Auto_Rejected','SVD_Rejected')  ", nativeQuery = true)
 	List<VerificationRequest> findRecordsByPreviousYearCreatedDate(String prevDate);
 	
 	@Modifying(clearAutomatically = true)
 	@Transactional
-	@Query(value="delete  FROM verification_request where year(created_date) <= (?1)", nativeQuery = true)
+	@Query(value="delete  FROM verification_request where year(created_date) <= (?1) and doc_status in "
+			+ "('UN_Approved_Pass','Uni_Auto_Approved_Pass','SVD_Approved_Pass','UN_Approved_Fail','Uni_Auto_Approved_Fail','SVD_Approved_Fail',"
+			+ "'UN_Rejected','Uni_Auto_Rejected','SVD_Rejected')", nativeQuery = true)
 	int DeleteRecordsByPreviousYearCreatedDate(String prevDate);
-
+	
 	@Modifying(clearAutomatically = true)
 	@Transactional
 	@Query(value = "UPDATE verification_request set assigned_to=0 where doc_status='Requested' and assigned_to not in(0) ", nativeQuery = true)
