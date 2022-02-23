@@ -469,13 +469,13 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 			strdate = strdate.replace(":", "-");
 			String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), newPath);
 
-			logger.info("---------TodoServiceImpl path----------------" + path);
+	//		logger.info("---------TodoServiceImpl path----------------" + path);
 
 			String fileName = String.format("%s", imgnm);
 
-			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
+	//		logger.info("---------TodoServiceImpl fileName----------------" + fileName);
 
-			logger.info("---------TodoServiceImpl start fileStore upload----------------");
+	//		logger.info("---------TodoServiceImpl start fileStore upload----------------");
 
 			// fileStore.upload(path, fileName, );
 			fileStore.upload(path, fileName, Optional.of(metadata), imagestream);
@@ -486,7 +486,7 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 //					  fileStore.upload(newPath, fileName, Optional.of(metadata),
 //					  file.getInputStream());
 
-			logger.info("---------returnPath----------------" + returnPath);
+//			logger.info("---------returnPath----------------" + returnPath);
 
 			return String.valueOf(returnPath);
 		} catch (Exception ex) {
@@ -528,13 +528,13 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 			strdate = strdate.replace(":", "-");
 			String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), newPath);
 
-			logger.info("---------TodoServiceImpl path----------------" + path);
+//			logger.info("---------TodoServiceImpl path----------------" + path);
 
 			String fileName = imgnm;
 
-			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
+//			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
 
-			logger.info("---------TodoServiceImpl start fileStore upload----------------");
+//			logger.info("---------TodoServiceImpl start fileStore upload----------------");
 
 			fileStore.upload(path, fileName, Optional.of(metadata), imagestream);
 
@@ -542,7 +542,7 @@ public HashMap<String, Object> loadFileAsResourceFromAws(String userFor, Long id
 			String returnPath = newPath + "/" + fileName;
 //					
 
-			logger.info("---------returnPath----------------" + returnPath);
+//			logger.info("---------returnPath----------------" + returnPath);
 
 			return String.valueOf(returnPath);
 		} catch (Exception ex) {

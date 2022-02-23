@@ -38,7 +38,10 @@ public class AutoExcelReadingController {
 			response = new BaseResponse();
 		
 			try {
-	    	String result= excelReadingScheduler.readExcelFiles();
+// old 	    	String result= excelReadingScheduler.readExcelFiles();
+	    	
+	    	String result= excelReadingScheduler.readExcelFilesAndSaveToTable();
+	    	
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 				response.setRespData(result);
@@ -47,6 +50,37 @@ public class AutoExcelReadingController {
 					
 			}catch (Exception e) {
 				
+				logger.error(e.getMessage()); //BAD creds message comes from here
+				
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response.setRespData(e.getMessage());
+				
+				return ResponseEntity.badRequest().body(response);
+				
+			}
+	}
+	
+	
+	@GetMapping(value = "/readExcelAndSaveToTable" )
+	public ResponseEntity<BaseResponse> AutoExcelReadingAndSaveToTable () {
+
+		
+		System.out.println("*******AutoExcelReadingController AutoExcelReadingAndSaveToTable********");
+		
+			response = new BaseResponse();
+		
+			try {
+	    	String result= excelReadingScheduler.readExcelFilesAndSaveToTable();
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+				response.setRespData(result);
+				
+				return ResponseEntity.ok(response);
+					
+			}catch (Exception e) {
+				
+				e.printStackTrace();
 				logger.error(e.getMessage()); //BAD creds message comes from here
 				
 				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
