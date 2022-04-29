@@ -18,5 +18,7 @@ public class StatusChangeRequest {
 	private String newremark;
 	
 	private String editreason;
+	//added by manisha
+	private String modeOfStudy;
 
 }

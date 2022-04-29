@@ -1342,9 +1342,9 @@ public class EmailService {
 //			headd.add(Chunk.NEWLINE);
 //			document.add(headd);
 
-			 PdfPTable detailsTable = new PdfPTable(5);
+			 PdfPTable detailsTable = new PdfPTable(6);
 			    detailsTable.setWidthPercentage(100);
-			   detailsTable.setWidths(new int[] {20,20,20,15,25});
+			   detailsTable.setWidths(new int[] {20,20,20,15,18,20});
 			    
 //	    PdfPCell cell1 = new PdfPCell(new Paragraph("Serial No"));
 	    PdfPCell cell1 = new PdfPCell(new Paragraph("Name of the Examination"));
@@ -1354,6 +1354,7 @@ public class EmailService {
 	    PdfPCell cell5 = new PdfPCell(new Paragraph("Status"));
 //	    PdfPCell cell6 = new PdfPCell(new Paragraph("Branch"));
 	    PdfPCell cell7 = new PdfPCell(new Paragraph("Class/CGPA/CGPI"));
+	    PdfPCell cell8 = new PdfPCell(new Paragraph("Mode of Study"));
 //	    PdfPCell cell8 = new PdfPCell(new Paragraph("Semester"));
 	    
 	    
@@ -1363,6 +1364,7 @@ public class EmailService {
 	    detailsTable.addCell(cell4);
 	    detailsTable.addCell(cell5);
 	    detailsTable.addCell(cell7);
+	    detailsTable.addCell(cell8);
 //	    detailsTable.addCell(cell6);
 	    
 //	    detailsTable.addCell(cell8);
@@ -1384,7 +1386,15 @@ public class EmailService {
 			SemesterEntity sem = semService.getSemById(vr.getSemId());
 
 			StreamMaster stream = streamService.getNameById(vr.getStreamId());
+			String modeofstudyinfo;
 
+			if(vr.getModeOfStudy()!=null){
+		    	 modeofstudyinfo=vr.getModeOfStudy();
+		    	}
+		    	else
+		    	{
+		    		modeofstudyinfo="-";
+		    	}
 			PdfPCell nameOfExamCell = new PdfPCell(new Paragraph(stream.getStreamName()+"("+branch.getBranchName()+")"));
 	    	PdfPCell seatNoCell = new PdfPCell(new Paragraph(vr.getEnrollmentNumber()));
 //	    	PdfPCell docCell = new PdfPCell(new Paragraph(doc.getDocumentName()));
@@ -1400,6 +1410,7 @@ public class EmailService {
 	    	PdfPCell cgpiCell = new PdfPCell(new Paragraph(vr.getCgpi()));
 //	    	PdfPCell semCell = new PdfPCell(new Paragraph(sem.getSemester()));
 	    	
+	    	PdfPCell modeofstudycell = new PdfPCell(new Paragraph(modeofstudyinfo));
 	    	detailsTable.addCell(nameOfExamCell);
 	    	detailsTable.addCell(seatNoCell);
 //	    	detailsTable.addCell(docCell);
@@ -1407,7 +1418,7 @@ public class EmailService {
 	    	detailsTable.addCell(statusCell);
 	    	detailsTable.addCell(cgpiCell);
 //	    	detailsTable.addCell(branchCell);
-	    	
+	    	detailsTable.addCell(modeofstudycell);
 //	    	detailsTable.addCell(semCell);
 	    	
 	    	

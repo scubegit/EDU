@@ -17,7 +17,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-//@Transactional
 @Table(	name = "verificationRequest")
 @Getter @Setter
 public class VerificationRequest extends CreateUpdate {
@@ -178,5 +177,10 @@ public class VerificationRequest extends CreateUpdate {
 	
 	@Column(name = "rem_email_count")
 	private Long remEmailCount;
+	
+	
+	//added by manisha
+	@Column(name = "mode_of_study")
+	private String modeOfStudy;
 	
 }

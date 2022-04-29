@@ -209,6 +209,7 @@ public class UniversityVerifierServiceImpl implements UniversityVerifierService 
 		entt.setUnActionDate(new Date());
 		entt.setUniVerStatus(statusChangeRequest.getStatus());
 		entt.setRemDate(null);
+		entt.setModeOfStudy(statusChangeRequest.getModeOfStudy());
 		entt.setRemEmailCount((long)0);
 		verificationReqRepository.save(entt);
 				
