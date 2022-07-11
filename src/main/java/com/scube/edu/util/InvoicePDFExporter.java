@@ -249,7 +249,7 @@ public class InvoicePDFExporter {
              
              logger.info("Entry point for pdf exporter--------->12");
              
-             PdfPCell InvoiceCell =new PdfPCell(new Paragraph("\nINVOICE\n\n",headingFont15));
+             PdfPCell InvoiceCell =new PdfPCell(new Paragraph("\nRECEIPT\n\n",headingFont15));
          
              InvoiceCell.setColspan(2);
              InvoiceCell.setHorizontalAlignment(Element.ALIGN_CENTER);

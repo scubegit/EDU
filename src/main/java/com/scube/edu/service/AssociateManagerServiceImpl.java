@@ -335,8 +335,13 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
 			 
 			 filePath = fileStorageService.storeFile(datafile, fileSubPath, flag);
-		 }else {
-			 filePath = fileStorageService.storeFileOnAws(datafile , flag);
+			 
+		 }
+		 else if(awsORtest.equalsIgnoreCase("InHouse") ) {
+			 filePath = fileStorageService.storeFileOnFtp(datafile , flag);		 }
+		 else {
+			 filePath = fileStorageService.storeFileOnAws(datafile , flag);   // For AWS
+			 
 		 }
 		 if(clomncnt==5) {
 		 for(int i=1;i<=rowcnt;i++) {
@@ -526,8 +531,13 @@ public class AssociateManagerServiceImpl implements AssociateManagerService{
 		 if(awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
 			 
 			 filePath = fileStorageService.storeFile(datafile, fileSubPath, flag);
-		 }else {
-			 filePath = fileStorageService.storeFileOnAws(datafile , flag);
+		 }
+		 else if(awsORtest.equalsIgnoreCase("InHouse") ) {
+			 filePath = fileStorageService.storeFileOnFtp(datafile , flag);		
+			 }
+		 else {
+	
+			 filePath = fileStorageService.storeFileOnAws(datafile , flag);   // For AWS
 		 }				 
 		 return filePath;
 	}

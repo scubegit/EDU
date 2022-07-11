@@ -187,8 +187,12 @@ public class AssociateSupervisorServiceImpl implements AssociateSupervisorServic
 		if (awsORtest.equalsIgnoreCase("TEST") || awsORtest.equalsIgnoreCase("LOCAL")) {
 
 			filePath = fileStorageService.storeFile(file, fileSubPath, flag);
-		} else {
-			filePath = fileStorageService.storeFileOnAws(file, flag);
+		} else if(awsORtest.equalsIgnoreCase("InHouse") ) {
+			 filePath = fileStorageService.storeFileOnFtp(file , flag);	//FTP
+			 }
+		else {
+			
+			 filePath = fileStorageService.storeFileOnAws(file , flag);   // For AWS
 		}
 
 		return filePath;

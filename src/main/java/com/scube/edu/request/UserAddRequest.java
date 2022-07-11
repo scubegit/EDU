@@ -25,6 +25,16 @@ public class UserAddRequest {
 	private String contactPersonPhoneNo;
 	private String panNumber;
 	//private String companyEmailId;
+	
+	//For Address- Manisha
+	
+	private String address;
+	private String country;
+	private String state;
+	private String city;
+	private String pincode;
+	
+	
 
 	
 }

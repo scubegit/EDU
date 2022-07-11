@@ -177,6 +177,11 @@ public class AuthServiceImpl implements AuthService{
 			userMasterEntity.setRoleId(userAddRequest.getRoleId());
 			userMasterEntity.setIsactive("Y");
 			userMasterEntity.setIsdeleted("N");
+			userMasterEntity.setAddress(userAddRequest.getAddress());
+			userMasterEntity.setCountry(userAddRequest.getCountry());
+			userMasterEntity.setState(userAddRequest.getState());
+			userMasterEntity.setCity(userAddRequest.getCity());
+			userMasterEntity.setPincode(userAddRequest.getPincode());
 		 
 	
 	     userRepository.save(userMasterEntity);
