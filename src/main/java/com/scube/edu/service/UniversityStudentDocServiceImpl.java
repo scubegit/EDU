@@ -56,7 +56,7 @@ public class UniversityStudentDocServiceImpl implements UniversityStudentDocServ
 				
 				UniversityStudentDocument universtyStudentData = docEntity.get();
 				
-				System.out.println("-----Entities---"+universtyStudentData);
+				//System.out.println("-----Entities---"+universtyStudentData);
 				
 		         return universtyStudentData;
 		         

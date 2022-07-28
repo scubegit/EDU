@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.scube.edu.model.AssociateExcelDataEntity;
 
@@ -16,6 +18,8 @@ public interface AssociateExcelDataRepository extends JpaRepository<AssociateExc
 	List<Map<String, Object>> excelCompare();
 	
 	
+	@Modifying
+    @Transactional
 	@Query(value = "DELETE FROM associate_excel_data", nativeQuery = true)
 	void daleteExcelData();
 

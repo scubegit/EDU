@@ -97,7 +97,24 @@ public class UserMasterEntity  extends CreateUpdate{
 	@Column(name = "PAN_number")
 	private String panNumber;
 
+	@Column(name = "address")
+	private String address;
 	
+	@Size(max = 100)
+	@Column(name = "country")
+	private String country;
+	
+	@Size(max = 100)
+	@Column(name = "state")
+	private String state;
+	
+	@Size(max = 100)
+	@Column(name = "city")
+	private String city;
+	
+	@Size(max = 100)
+	@Column(name = "pincode")
+	private String pincode;
 	
 	public UserMasterEntity() {
 		
