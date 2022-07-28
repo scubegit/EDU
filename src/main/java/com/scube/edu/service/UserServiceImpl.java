@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 			userResponse.setId(entity.getId());
 			userResponse.setCompany_name(entity.getCompanyName());
 			userResponse.setEmail(entity.getEmailId());
-//			userResponse.setGstno(entity.getGSTNo());
+			userResponse.setGstno(entity.getGSTNo());
 			userResponse.setRole_id(entity.getRoleId());
 			userResponse.setRole_name(role.getRoleName());
 			userResponse.setFirst_name(entity.getFirstName());
