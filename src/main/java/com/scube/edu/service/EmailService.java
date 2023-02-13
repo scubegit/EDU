@@ -395,7 +395,7 @@ public class EmailService {
 //				file=emailFileLocation+"PasswordReset.txt";     //Live
 //			}if(awsORtest.equalsIgnoreCase("TEST")) {
 //				file = emailFileLocation+ "PasswordReset.txt"; // test
-////				file = "./EmailFiles/PasswordReset.txt"; 
+////				file = "./EmailFiles/PasswordReset.txt"; o
 //			}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 //				file = emailFileLocation+"./EmailFiles/PasswordReset.txt";          //local
 //			}
@@ -524,6 +524,9 @@ public class EmailService {
 		}if(awsORtest.equalsIgnoreCase("LOCAL")) {
 			file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
 //
+		}
+		if(awsORtest.equalsIgnoreCase("InHouse")) {
+			file=emailFileLocation+"VerficationLink.txt";     //Live
 		}
 		
 
@@ -1147,7 +1150,9 @@ public class EmailService {
 		    Paragraph foot = new Paragraph();
 		    foot.setAlignment(Paragraph.ALIGN_RIGHT);
 		    foot.setFont(headAddrFont12);
-		    foot.add("Dr. Vinod P. Patil");
+		   // foot.add("Dr. Vinod P. Patil");
+		    foot.add("Dr. Prasad Karande.");
+		    
 		    
 		    document.add(foot);
 		    
@@ -1503,9 +1508,10 @@ public class EmailService {
 	    
 	    
 	    Paragraph foot = new Paragraph();
-		foot.setAlignment(Paragraph.ALIGN_RIGHT);
+		foot.setAlignment(Paragraph.ALIGN_RIGHT);   
 		foot.setFont(headAddrFont12);
-		foot.add("Dr. Vinod P. Patil");
+	//	foot.add("Dr. Vinod P. Patil");
+		foot.add("Dr. Prasad Karande.");
 		document.add(foot);
 			
 			

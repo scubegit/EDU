@@ -11,9 +11,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.scube.edu.util.FileStorageService;
 
 @Service
 public class FtpConfiguration {
@@ -31,6 +35,12 @@ public class FtpConfiguration {
 	@Value("${Ftp.pass}")
 	private String ftppass;
 	
+	@Value("${Ftp.file.localpath}")
+	private String ftplocalpath;
+	
+	private static final Logger logger = LoggerFactory.getLogger(FtpConfiguration.class);
+
+	
 	public void upload(MultipartFile file,  String destination,String fileName) throws IOException {
 		FTPClient ftpClient = new FTPClient();
 		String server =  ftpserver;
@@ -41,22 +51,50 @@ public class FtpConfiguration {
 		try {
 			ftpClient.connect(server, port);
 			int reply = ftpClient.getReplyCode();
+			logger.info("---------FTPReply.isPositiveCompletion(reply) ----------------" + FTPReply.isPositiveCompletion(reply));
+
 			System.out.println("FTPReply.isPositiveCompletion(reply) " + FTPReply.isPositiveCompletion(reply));
 			ftpClient.enterLocalPassiveMode();
+			logger.info("---------enterLocalPassiveMode" );
+
+			
 			if (!FTPReply.isPositiveCompletion(reply)) {
+				logger.info("---------11FTP server refused connection." + FTPReply.isPositiveCompletion(reply));
 				ftpClient.disconnect();
 				System.err.println("FTP server refused connection.");
-				
+				logger.info("---------22FTP server refused connection." + FTPReply.isPositiveCompletion(reply));
+
 			}
 			ftpClient.login(user, pass);
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setBufferSize(0);
+			logger.info("---------making directory at" + destination);
+
+			
 			ftpClient.makeDirectory(destination);
-			  convFile = new File("C:/Users/ADMIN/Desktop/MuTestFolder"+"/"+fileName);   //Need to create temp folder on server this is for local
-			  file.transferTo(convFile);
+			
+			logger.info("---------made directory at" + destination);
+			
+			logger.info("---------creating new file" + ftplocalpath+"/"+fileName);
+
+			  convFile = new File(ftplocalpath+"/"+fileName);   //Need to create temp folder on server this is for local
+				logger.info("---------con file" + ftplocalpath+"/"+fileName);
+
+				 FileUtils.copyToFile(file.getInputStream(),convFile);
+			  //file.transferTo(convFile);
+			  
+				logger.info("---------file transfer to" + convFile);
+
 			String fileNameToSave =destination+"/"+fileName;
 			
+			logger.info("---------fileNameToSave" + fileNameToSave);
+
+			
 			ftpClient.storeFile(fileNameToSave, new FileInputStream(convFile));		
+			
+			logger.info("---------ftpClient.storeFile" );
+
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -188,7 +226,9 @@ public class FtpConfiguration {
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setBufferSize(0);
 			ftpClient.makeDirectory(destination);
-			  convFile = new File("C:/Users/ADMIN/Desktop/MuTestFolder"+"/"+fileName);   //Need to create temp folder on server this is for local
+			//  convFile = new File("C:/Users/ADMIN/Desktop/MuTestFolder"+"/"+fileName);   //Need to create temp folder on server this is for local
+			
+			convFile = new File(ftplocalpath+"/"+fileName); 
 			  FileUtils.copyInputStreamToFile(file, convFile);
 			String fileNameToSave =destination+"/"+fileName;
 			

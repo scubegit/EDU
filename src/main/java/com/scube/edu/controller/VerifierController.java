@@ -1,10 +1,13 @@
 package com.scube.edu.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -33,6 +36,7 @@ import com.scube.edu.response.VerificationResponse;
 import com.scube.edu.service.VerifierService;
 import com.scube.edu.util.FileStorageService;
 import com.scube.edu.util.StringsUtils;
+import java.util.UUID;
 
 import lombok.var;
 
@@ -40,6 +44,12 @@ import lombok.var;
 @RestController
 @RequestMapping("/api/verifier")
 public class VerifierController {
+
+	@Value("${writepath.forlinux}")
+	private String writepathforlinux;
+
+	@Value("${readpath.forlinux}")
+	private String readpathforlinux;
 
 	private static final Logger logger = LoggerFactory.getLogger(VerifierController.class);
 
@@ -62,6 +72,61 @@ public class VerifierController {
 			response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 			response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 			response.setRespData(list);
+
+			/*
+			 * 
+			 * logger.info("Write attempt "); try {
+			 * 
+			 * String fpath=writepathforlinux+"testfiletest"+UUID.randomUUID()+".txt";
+			 * 
+			 * logger.info("fpath name: " +fpath);
+			 * 
+			 * File myObj = new File(fpath);
+			 * 
+			 * // if (myObj.exists()) {
+			 * 
+			 * 
+			 * 
+			 * FileWriter myWriter = new FileWriter(fpath);
+			 * myWriter.write("Files in Java might be tricky, but it is fun enough!");
+			 * myWriter.close();
+			 * 
+			 * logger.info("11 : ");
+			 * 
+			 * logger.info("writeFile name: " + myObj.getName());
+			 * logger.info("Absolute path: " + myObj.getAbsolutePath());
+			 * logger.info("Writeable: " + myObj.canWrite()); logger.info("Readable " +
+			 * myObj.canRead()); logger.info("File size in bytes " + myObj.length());
+			 * 
+			 * 
+			 * // } else { // System.out.println("The file does not exist."); // }
+			 * 
+			 * if (myObj.createNewFile()) { logger.info("File created: " + myObj.getName());
+			 * } else { logger.info("File not created"); } } catch (IOException e) {
+			 * logger.info("An error occurred."+e.toString()); e.printStackTrace(); }
+			 * 
+			 * logger.info("Read attempt ");
+			 * 
+			 * 
+			 * 
+			 * 
+			 * logger.info("read attempt ");
+			 * 
+			 * try { File myObj = new File(readpathforlinux);
+			 * 
+			 * logger.info("readpathforlinux name: " +readpathforlinux);
+			 * 
+			 * if (myObj.exists()) { logger.info("writeFile name: " + myObj.getName());
+			 * logger.info("Absolute path: " + myObj.getAbsolutePath());
+			 * logger.info("Writeable: " + myObj.canWrite()); logger.info("Readable " +
+			 * myObj.canRead()); logger.info("File size in bytes " + myObj.length()); } else
+			 * { logger.info("File not exist"); }
+			 * 
+			 * Scanner myReader = new Scanner(myObj); while (myReader.hasNextLine()) {
+			 * String data = myReader.nextLine(); logger.info("data"+data); }
+			 * myReader.close(); } catch (FileNotFoundException e) {
+			 * logger.info("An error occurred."); e.printStackTrace(); }
+			 */
 
 			return ResponseEntity.ok(response);
 
