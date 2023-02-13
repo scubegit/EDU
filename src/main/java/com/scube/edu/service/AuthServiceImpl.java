@@ -182,7 +182,8 @@ public class AuthServiceImpl implements AuthService{
 			userMasterEntity.setState(userAddRequest.getState());
 			userMasterEntity.setCity(userAddRequest.getCity());
 			userMasterEntity.setPincode(userAddRequest.getPincode());
-		 
+			userMasterEntity.setAreYouGov(userAddRequest.getAreYouGov());
+			userMasterEntity.setGstExemption(userAddRequest.getGstExemption());	
 	
 	     userRepository.save(userMasterEntity);
 	

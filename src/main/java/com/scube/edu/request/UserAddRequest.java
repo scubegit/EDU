@@ -34,6 +34,10 @@ public class UserAddRequest {
 	private String city;
 	private String pincode;
 	
+	//Added by mayuri 
+	private String areYouGov;
+	private String gstExemption;
+	
 	
 
 	

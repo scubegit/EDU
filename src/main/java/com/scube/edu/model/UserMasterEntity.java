@@ -127,6 +127,16 @@ public class UserMasterEntity  extends CreateUpdate{
 		this.emailId = emailId;
 		this.GSTNo = GSTNo;
 	}
+    //Added by mayuri 8-2-23
+    @Size(max = 10)
+	@Column(name = "areYouGov")
+	private String areYouGov;
+    
+    @Size(max = 10)
+	@Column(name = "gstExemption ")
+	private String gstExemption;
+    
+    
 	
 
 

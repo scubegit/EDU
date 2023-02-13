@@ -522,8 +522,8 @@ public class EmailService {
 			file=emailFileLocation+"Verification.txt";	// test
 //			file = "./EmailFiles/VerficationLink.txt";
 		}if(awsORtest.equalsIgnoreCase("LOCAL")) {
-			file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
-//
+			//file = emailFileLocation+"./EmailFiles/VerficationLink.txt";
+			file = "./EmailFiles/VerficationLink.txt";
 		}
 		if(awsORtest.equalsIgnoreCase("InHouse")) {
 			file=emailFileLocation+"VerficationLink.txt";     //Live

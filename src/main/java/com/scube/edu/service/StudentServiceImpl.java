@@ -38,14 +38,17 @@ import com.scube.edu.model.PriceMaster;
 import com.scube.edu.model.RequestTypeMaster;
 import com.scube.edu.model.SemesterEntity;
 import com.scube.edu.model.StreamMaster;
+import com.scube.edu.model.UserMasterEntity;
 import com.scube.edu.model.VerificationDocView;
 import com.scube.edu.model.VerificationRequest;
 import com.scube.edu.repository.PriceMasterRepository;
+import com.scube.edu.repository.UserRepository;
 import com.scube.edu.repository.VerificationDocViewRepository;
 import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.CollegeResponse;
@@ -115,10 +118,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	 CollegeSevice collegeSevice;
 	 
 	 @Autowired
-		SemesterService semesterService;
+	 SemesterService semesterService;
 		
-		@Autowired
-		BranchMasterService branchMasterService;
+	 @Autowired
+	 BranchMasterService branchMasterService;
+		
+	 @Autowired
+	 UserRepository userRepository;
 	 
 	 @Override
 
@@ -363,6 +369,14 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		map.put("total_without_gst", amtwithoutGst);
 		map.put("total_with_gst", listamtwithGst);
+		
+		
+		//for gst changes
+		
+		
+		
+		
+		
 		List<VerificationRequest>returnDta=verificationReqRepo.saveAll(list);
 		List<Long> idList=new ArrayList<>();
 
@@ -546,6 +560,32 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			map.put("total_without_gst", amtwithoutgst);
 			map.put("total_with_gst", amtwithgst);
+		
+			//Added by mayuri
+			
+			UserMasterEntity entities= userRepository.findById(userid).get();
+			System.out.print("-----------Role Id----------- " + entities.getRoleId());
+			System.out.print("-----------Gove Body---------" + entities.getAreYouGov());
+			System.out.print("-----------GST Exemption---------" + entities.getGstExemption());
+			long val = 2;
+			if (entities.getRoleId().equals(val)) {
+				
+				if (entities.getAreYouGov().equals("Y") && entities.getGstExemption().equals("Y")) {
+					
+					map.put("total_with_gst", amtwithoutgst);
+					System.out.print("I am in if (total_without_gst)" + amtwithoutgst);
+				}else{
+					
+					map.put("total_with_gst", amtwithgst);
+					System.out.print("I am in Else" + amtwithgst);
+			} 
+		
+			}else{
+					
+					map.put("total_with_gst", amtwithgst);
+					System.out.print("I am in Else" + amtwithgst);
+			}
+			
 		}
 		
 		/*
