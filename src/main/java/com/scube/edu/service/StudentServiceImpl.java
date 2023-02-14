@@ -363,9 +363,12 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		
 		List<Long> amtwithoutGst = new ArrayList<>();
 		amtwithoutGst.add(amtWithoutGST);
+				
 		
 		List<Long> listamtwithGst = new ArrayList<>();
 		listamtwithGst.add(amtWithGST);
+		
+		
 		
 		map.put("total_without_gst", amtwithoutGst);
 		map.put("total_with_gst", listamtwithGst);
