@@ -2,6 +2,7 @@ package com.scube.edu.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,8 @@ public class MisServiceImpl implements MisService {
 	@Autowired 
 	SemesterService semesterService;
 	
+	@Autowired
+	BranchMasterService branchMasterService;
 	
 	
 	
@@ -51,18 +54,20 @@ public class MisServiceImpl implements MisService {
 	public List<MisResponse> getMisList(String fromDate, String toDate)
 	{
 		
+		logger.info("*******MisServiceImplCheck range Date*******"+fromDate+":"+toDate);
 		logger.info("*******MisServiceImpl getMisList*******");
 		
 		List<MisResponse> responseList = new ArrayList<>();
 		
-		
+		logger.info("*******MisServiceImplCheck responseList *******"+responseList);
 		try
 		{
+		logger.info("Check 12===>>>>>"+fromDate+"   "+toDate);
 		
-			List<VerificationRequest> list = verificationReqRepository.findByDateRange(fromDate, toDate);
-		
+			List<VerificationRequest> list = verificationReqRepository.getVerificationRequestByDateRange(fromDate, toDate);
+			logger.info("*******MisServiceImplCheck range Date inside try catch*******"+fromDate+":"+toDate);
 			for(VerificationRequest req: list) {
-			
+				
 				logger.info("*******MisServiceImpl getMisList333*******"+req.getId());
 
 				
@@ -72,12 +77,23 @@ public class MisServiceImpl implements MisService {
 			
 			StreamMaster stream = streamService.getNameById(req.getStreamId());
 			
+			logger.info("*******MisServiceImpl stream*******"+stream.getId());
+			
+			logger.info("*******MisServiceImpl req.getStreamId()*******"+req.getStreamId());
+			
 			SemesterEntity semesterEntity=semesterService.getSemById(req.getSemId());
 			
+			logger.info("*******MisServiceImpl req.getSemId()*******"+semesterEntity);
+			
+			logger.info("*******MisServiceImpl semesterEntity*******"+req.getSemId());
+			
+			BranchMasterEntity branchMasterEntity = branchMasterService.getbranchById(req.getBranchId());
 			
 		//	Optional<UserMasterEntity> user = userRepository.findById(req.getVerifiedBy());
 			
 			Optional<UserMasterEntity> user = userRepository.findById(req.getUserId());
+			
+			logger.info("*******MisServiceImpl user*******"+req.getUserId());
 			
 			UserMasterEntity userr = user.get(); // verifier User
 			
@@ -86,7 +102,7 @@ public class MisServiceImpl implements MisService {
 			resp.setLast_name(req.getLastName());
 			resp.setStream_name(stream.getStreamName());
 			resp.setSemester(semesterEntity.getSemester());
-			
+			resp.setBranch_name(branchMasterEntity.getBranchName());
 			resp.setYear(year.getYearOfPassing());
 			resp.setEnroll_no(req.getEnrollmentNumber());
 			resp.setRegisterdemailid(userr.getUsername());
