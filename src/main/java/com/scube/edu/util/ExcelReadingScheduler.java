@@ -1,6 +1,7 @@
 package com.scube.edu.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,6 +104,9 @@ public class ExcelReadingScheduler {
 	 
 	 @Value("${img.folder}")
 	    private String imgLocation;
+	 
+		@Value("${Ftp.file.localpath}")
+		private String ftplocalpath;
 	
 	//@Scheduled(cron = "${cron.time.excelRead}")
 	public String readExcelFiles() throws Exception, IOException {		
@@ -1039,6 +1043,8 @@ public class ExcelReadingScheduler {
 		
 		if(awsORtest.equalsIgnoreCase("InHouse")) {
 
+			
+			logger.info("*******one");
 			Optional<checkautoReadingActiveEntity> chk= chkAutoReadingStatus.findById((long) 1);
 			checkautoReadingActiveEntity ischk=chk.get();
 			String chkflag = null;
@@ -1066,9 +1072,20 @@ public class ExcelReadingScheduler {
 		String filePathStatus = "Not";
 		String line;
 
-	
-		if(ftpConfiguration.isfileExists(csvFileLocation)==true) {
-		InputStream csvstream = ftpConfiguration.readExcel(csvFileLocation);
+	boolean flag11=true;
+		if(ftpConfiguration.isfileExists(csvFileLocation)==true) 
+	//if(flag11==true)
+		{
+		logger.info("*******two");
+		//InputStream csvstream = ftpConfiguration.readExcel(csvFileLocation);
+		
+		byte[] res = ftpConfiguration.readExcel1(csvFileLocation);
+		
+		InputStream csvstream= new ByteArrayInputStream(res);
+		
+		logger.info("csvstream---" + csvstream);
+
+		
 		if(csvstream!=null) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(csvstream));
 
@@ -1161,6 +1178,8 @@ public class ExcelReadingScheduler {
 		
 		logger.info("******* PROCEDURE return data ***",new Date().getTime());
 		
+		logger.info("*******three"+excelCompareList.size());
+		
 		final ObjectMapper mapper = new ObjectMapper();
 		
 		List<ExcelDataResponse> rejectList = new ArrayList<>();
@@ -1171,35 +1190,83 @@ public class ExcelReadingScheduler {
 		
 		logger.info("*******img read start ***",new Date().getTime());
 		for(int i=0; i<excelCompareList.size(); i++) {
+			
+			if(i==0)
+				logger.info("*****four ***");
+			
 			final ExcelDataResponse excelDataResponse = mapper.convertValue(excelCompareList.get(i), ExcelDataResponse.class);
 	//		logger.info(String.valueOf(i) + "-->"+excelDataResponse);
 			
-			
+			logger.info("*****five ***");
 			if(excelDataResponse.getStatus().equalsIgnoreCase("selected")){
 
+				logger.info("*****six ***");
+				
 			imagefile=imgLocation;
-	//		logger.info("imageFileNAme" + imagefile);
+			
+			logger.info("*****seven ***"+imagefile);
 
 			String flag = "2";
 			
 			imagefilenm = excelDataResponse.getImage_name();
+			
+			logger.info("*****eight ***"+imagefilenm);
 
 			Date date1 = new Date();
 			SimpleDateFormat formatter1 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+			
 			String strdate1 = formatter1.format(date1);
+			
+			logger.info("*****999 ***"+imagefilenm+"-----"+previmagefile);
+			
 			strdate1 = strdate1.replace(" ", "_");
 			strdate1 = strdate1.replace(":", "-");
 				if (!previmagefile.equals(imagefilenm)) {
-					InputStream imagestream = ftpConfiguration.readExcel(imagefile+imagefilenm);
+					
+					logger.info("*****101010 calling readExcel1***"+imagefilenm+"-----"+previmagefile);		
+					
+			//		InputStream imagestream = ftpConfiguration.readExcel(imagefile+imagefilenm);
+					InputStream imagestream;
+					
+					byte[] res1 = ftpConfiguration.readExcel1(imagefile+imagefilenm);
+					
+					if (res1==null)
+						imagestream=null;
+					else
+					 imagestream= new ByteArrayInputStream(res1);
+					
+					
+					logger.info("*****1111 ***"+imagestream);
+					
 					if (imagestream != null) {
 	
+						logger.info("*****1212 storeScanFileOnFtp***");
+						
 						filePath = fileStorageService.storeScanFileOnFtp(imagestream, flag, imagefilenm);
+						
+						logger.info("*****1313 ***");
 
 						String filename = imagefilenm.split("\\.")[0];
 						String extension = imagefilenm.split("\\.")[1];
 
 						String newimagefilenm = filename+"_" + strdate1 +  "." + extension;
-						fileStorageService.storeScanFileOnFtpToArchive(imagestream, newimagefilenm, "1");
+						
+						logger.info("*****1414 calling storeScanFileOnFtpToArchive***");
+						
+						byte[] res11 = ftpConfiguration.readExcel1(imagefile+imagefilenm);
+						
+						InputStream imagestream1= new ByteArrayInputStream(res11);
+						
+						
+						fileStorageService.storeScanFileOnFtpToArchive(imagestream1, newimagefilenm, "1");
+						
+						logger.info("*****delete file after archive***"+imagefile+imagefilenm);
+
+						
+						ftpConfiguration.delete(imagefile+imagefilenm);
+						
+						
+						logger.info("*****1515 ***");
 
 						filePathStatus = "";
 					} else {
@@ -1218,12 +1285,13 @@ public class ExcelReadingScheduler {
 			
 			
 			if(excelDataResponse.getStatus().equalsIgnoreCase("Reject")){
-				
+				logger.info("*******in reject six***");
 				row = sheet.createRow(rownum++);
 				createListNew(excelDataResponse, row);
 				
 			}else {
 			
+				logger.info("*******save into ***");
 				long id = 0000;
 				
 				UniversityStudentDocument studentData=new UniversityStudentDocument();
@@ -1254,7 +1322,7 @@ public class ExcelReadingScheduler {
 				SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 				String strdate = formatter.format(date);
 				strdate = strdate.replace(" ", "_");
-				strdate = strdate.replace(":", "-");
+				strdate = strdate.replace(":", "-");  
 		
 				if(awsORtest.equalsIgnoreCase("AWS")) {
 					String returnpath=fileStorageService.storeRejectedDataFile("Rejected_Data_" + strdate + ".csv");
@@ -1262,26 +1330,52 @@ public class ExcelReadingScheduler {
 				}
 				else {
 					
-					emailexcelstorePath = new File("./Rejected_Csv/Rejected_Data_" + strdate + ".csv");
+				//	emailexcelstorePath = new File("./Rejected_Csv/Rejected_Data_" + strdate + ".csv");
+				//	emailexcelstorePath = new File(ftplocalpath+"/Rejected_Data_" + strdate + ".csv");
+					
+					String returnpath=fileStorageService.storeRejectedDataFile("Rejected_Data_" + strdate + ".csv");
+				    emailexcelstorePath = new File(returnpath);
 		
 				}
+				
+				logger.info("*******emailexcelstorePath--"+emailexcelstorePath);
+				
 				FileOutputStream out = new FileOutputStream(emailexcelstorePath);
 				workbook.write(out);
 				out.close();
 				InputStream targetStream = new FileInputStream(emailexcelstorePath);
+				
+				logger.info("*******excel targetStream--"+targetStream);
+				
+				
+			//	byte[] resp = ftpConfiguration.readExcel1(emailexcelstorePath);
+				
+			//	InputStream imagestream= new ByteArrayInputStream(resp);
+				
 		
-				fileStorageService.storeScanFileOnFtpToArchive(targetStream, emailexcelstorePath.getName(), "2");
+				String rejFileString=fileStorageService.storeScanFileOnFtpToArchive(targetStream, emailexcelstorePath.getName(), "2");
 		
+			//	File rejFile = new File(rejFileString);
+
 				emailService.sendRejectedDatamail(emailexcelstorePath);
+				
+				
+				logger.info("*******mail sent--");
+				
+		//		emailService.sendRejectedDatamail(rejFileString);
+				
 			
-				if(emailexcelstorePath.delete())
-		        {
-		            System.out.println("File deleted successfully From EDU");
-		        }
-		        else
-		        {
-		            System.out.println("Failed to delete the file From EDU");
-		        }
+			//	ftpConfiguration.delete(csvFileLocation);
+				
+				
+								
+								
+								
+								  if(emailexcelstorePath.delete()) {
+								  System.out.println("File deleted successfully From EDU"); } else {
+								  System.out.println("Failed to delete the file From EDU"); }
+								 
+				
 				result="Added data successfully, Rejected Data sent via mail";
 				
 		

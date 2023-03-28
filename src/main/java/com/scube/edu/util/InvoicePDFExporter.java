@@ -55,6 +55,8 @@ public class InvoicePDFExporter {
 	
        private static final Logger logger = LoggerFactory.getLogger(InvoicePDFExporter.class);
        
+       @Autowired
+  	 UserRepository userRepository;
        
        
   	 @Autowired
@@ -421,7 +423,21 @@ public class InvoicePDFExporter {
      	    studentDocTable.addCell(totalCell); 
            
      }
-        Long GST = (totalsecureAmt * GSTVal) / 100;
+      Long GST =(long) 0;
+        
+      Long userid=  userMasterEntity.getId();
+      boolean flag = checkGStExemption(userid);
+      
+
+      
+      if(flag==true)
+    	  GST=(long) 0;
+      else {
+    	  GST=(totalsecureAmt * GSTVal) / 100;
+	}
+	   logger.info("userid---"+userid+ "---gst flag----"+flag+"--GST---"+ GST);
+
+        //(totalsecureAmt * GSTVal) / 100;
         
  	   logger.info("just outside for loop--------->17"+ GST);
 		    
@@ -532,6 +548,29 @@ public class InvoicePDFExporter {
 	    }
 	
 		
-
+	 public boolean checkGStExemption(Long userid)
+		{
+			
+			boolean flag=false;
+			UserMasterEntity entities= userRepository.findById(userid).get();
+			System.out.print("-----------Role Id----------- " + entities.getRoleId());
+			System.out.print("-----------Gove Body---------" + entities.getAreYouGov());
+			System.out.print("-----------GST Exemption---------" + entities.getGstExemption());
+			long val = 2;
+			if (entities.getRoleId().equals(val)) {
+				
+				if(entities.getAreYouGov() != null && !entities.getAreYouGov().trim().isEmpty() && entities.getGstExemption() != null && !entities.getGstExemption().trim().isEmpty() ) 
+				{
+				if (entities.getAreYouGov().equals("Y") && entities.getGstExemption().equals("Y")) {
+			
+					flag=true;
+				}
+				}
+			}
+			
+			return flag;
+		}
+	 
+	 
 }
 

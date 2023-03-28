@@ -1,10 +1,13 @@
 package com.scube.edu.ftp;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
@@ -81,7 +84,8 @@ public class FtpConfiguration {
 				logger.info("---------con file" + ftplocalpath+"/"+fileName);
 
 				 FileUtils.copyToFile(file.getInputStream(),convFile);
-			  //file.transferTo(convFile);
+				 
+			//  file.transferTo(convFile);
 			  
 				logger.info("---------file transfer to" + convFile);
 
@@ -141,6 +145,7 @@ public class FtpConfiguration {
 			return as;
 
 		} catch (IOException ex) {
+			logger.info("--------ex download----------------" + ex.toString());
 			ex.printStackTrace();
 			return null;
 		} catch (NullPointerException ex) {
@@ -165,13 +170,19 @@ public class FtpConfiguration {
 
 	
 	
-	public InputStream readExcel(String filePath) {
+	
+	public byte[] download1(String filePath) {
 
 		FTPClient ftpClient = new FTPClient();
 		String server =  ftpserver;
 		int port = ftpport;
 		String user = ftpuser;
 		String pass =ftppass;
+		
+		 filePath="/AutoScanExcel/IMG_2022_11_11_12_47_44.jpg";
+	
+		byte[] as = new byte[0];
+		byte bytes[] = new byte[1024];
 		try {
 			ftpClient.connect(server, port);
 			ftpClient.login(user, pass);
@@ -179,10 +190,90 @@ public class FtpConfiguration {
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setBufferSize(0);
 			InputStream inputStream = ftpClient.retrieveFileStream(filePath);
+			System.out.println("ftp inputstreamss :: " + inputStream);
+			
+			 File fileObj = new File("D:/myDoc/test.jpg");
+				
+				OutputStream outputStream            = new BufferedOutputStream(new FileOutputStream(fileObj));
+	                
+			
+			ByteArrayOutputStream ba = new ByteArrayOutputStream();
+			int bytesRead = -1;
+			while ((bytesRead = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, bytesRead);
+				
+				ba.write(bytes, 0, bytesRead);
+			}
+			as = ba.toByteArray();
+			
+			
+                
+			inputStream.close();
+			return as;
+
+		} catch (IOException ex) {
+			logger.info("--------ex download----------------" + ex.toString());
+			ex.printStackTrace();
+			return null;
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		finally {
+			try {
+				if (ftpClient.isConnected()) {
+					ftpClient.logout();
+					ftpClient.disconnect();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	
+	}
+	
+	
+//public byte[] readExcel(String filePath) {
+		public InputStream readExcel(String filePath) {
+		
+		FTPClient ftpClient = new FTPClient();
+		String server =  ftpserver;
+		int port = ftpport;
+		String user = ftpuser;
+		String pass =ftppass;
+		byte bytes[] = new byte[1024];
+		byte[] as = new byte[0];
+
+		
+		try {
+			ftpClient.connect(server, port);
+			int reply = ftpClient.getReplyCode();
+			logger.info("---------FTPReply.isPositiveCompletion(reply)11 ----------------" + FTPReply.isPositiveCompletion(reply));
+
+			ftpClient.login(user, pass);
+			
+			ftpClient.enterLocalPassiveMode();
+			
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			ftpClient.setBufferSize(0);
+			InputStream inputStream = ftpClient.retrieveFileStream(filePath);
+			logger.info("--------ex readexcel----------------" +inputStream);
+
+			
+			/*
+			 * ByteArrayOutputStream ba = new ByteArrayOutputStream(); int bytesRead = -1;
+			 * while ((bytesRead = inputStream.read(bytes)) != -1) { ba.write(bytes, 0,
+			 * bytesRead); } as = ba.toByteArray(); inputStream.close(); return as;
+			 */
 			
 			return inputStream;
 
 		} catch (IOException ex) {
+			logger.info("--------ex readexcel----------------" + ex.toString());
 			ex.printStackTrace();
 			return null;
 		} catch (NullPointerException ex) {
@@ -205,32 +296,131 @@ public class FtpConfiguration {
 		}
 	}
 
+
+public byte[] readExcel1(String filePath) {
+	//	public InputStream readExcel(String filePath) {
+		
+		FTPClient ftpClient = new FTPClient();
+		String server =  ftpserver;
+		int port = ftpport;
+		String user = ftpuser;
+		String pass =ftppass;
+		byte bytes[] = new byte[1024];
+		byte[] as = new byte[0];
+
+		
+		try {
+			ftpClient.connect(server, port);
+			int reply = ftpClient.getReplyCode();
+			logger.info("----readExcel1--1---FTPReply.isPositiveCompletion(reply)11 ----------------" + FTPReply.isPositiveCompletion(reply));
+
+			ftpClient.login(user, pass);
+			ftpClient.enterLocalPassiveMode();
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			ftpClient.setBufferSize(0);
+			InputStream inputStream = ftpClient.retrieveFileStream(filePath);
+			
+			logger.info("---------readExcel1---2----inputStream"+inputStream);
+
+			
+			ByteArrayOutputStream ba = new ByteArrayOutputStream();
+			int bytesRead = -1;
+			while ((bytesRead = inputStream.read(bytes)) != -1) {
+				ba.write(bytes, 0, bytesRead);
+			}
+			as = ba.toByteArray();
+			inputStream.close();
+			logger.info("---------readExcel1---3--as"+as.toString());
+			
+			return as;
+			
+			
+			//return inputStream;
+
+		} catch (IOException ex) {
+			logger.info("--------ex readexcel----------------" + ex.toString());
+			ex.printStackTrace();
+			return null;
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		finally {
+			try {
+				if (ftpClient.isConnected()) {
+					ftpClient.logout();
+					ftpClient.disconnect();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+private static void showServerReply(FTPClient ftpClient) {
+    String[] replies = ftpClient.getReplyStrings();
+    if (replies != null && replies.length > 0) {
+        for (String aReply : replies) {
+            System.out.println("SERVER: " + aReply);
+        }
+    }
+}
+
 	public void uploadDataFromScan(InputStream file,  String destination,String fileName) throws IOException {
 		FTPClient ftpClient = new FTPClient();
 		String server =  ftpserver;
 		int port = ftpport;
 		String user = ftpuser;
-		String pass =ftpuser;
+		String pass =ftppass;
 		File convFile = null;
 		try {
 			ftpClient.connect(server, port);
 			int reply = ftpClient.getReplyCode();
-			System.out.println("FTPReply.isPositiveCompletion(reply) " + FTPReply.isPositiveCompletion(reply));
+			logger.info("FTPReply.isPositiveCompletion(reply) " + FTPReply.isPositiveCompletion(reply));
 			ftpClient.enterLocalPassiveMode();
 			if (!FTPReply.isPositiveCompletion(reply)) {
 				ftpClient.disconnect();
-				System.err.println("FTP server refused connection.");
+				logger.info("FTP server refused connection.");
 				
 			}
-			ftpClient.login(user, pass);
+			logger.info("user--"+user+"--pass--"+pass);
+			
+			boolean loginresponse=ftpClient.login(user, pass);
+			
+			logger.info("loginresponse--"+loginresponse);
+			
+			showServerReply(ftpClient);
+
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setBufferSize(0);
-			ftpClient.makeDirectory(destination);
+			logger.info("destination--"+destination);
+			
+			boolean dirflag=ftpClient.makeDirectory(destination);
+			
+			showServerReply(ftpClient);
+			
+			logger.info("uploadDataFromScan dirflag--"+dirflag +"--");
+			boolean dirflag1=ftpClient.changeWorkingDirectory(destination);
+			
+			showServerReply(ftpClient);
+
+			
+			logger.info("uploadDataFromScan dirflag1--"+dirflag1);
 			//  convFile = new File("C:/Users/ADMIN/Desktop/MuTestFolder"+"/"+fileName);   //Need to create temp folder on server this is for local
 			
 			convFile = new File(ftplocalpath+"/"+fileName); 
+			
+			logger.info(" uploadDataFromScan convFile "+convFile);
+			
 			  FileUtils.copyInputStreamToFile(file, convFile);
 			String fileNameToSave =destination+"/"+fileName;
+			
+			logger.info(" uploadDataFromScan fileNameToSave "+fileNameToSave);
+
 			
 			ftpClient.storeFile(fileNameToSave, new FileInputStream(convFile));		
 		} catch (IOException e) {
@@ -258,13 +448,32 @@ public class FtpConfiguration {
 		String pass =ftppass;
 		try {
 			ftpClient.connect(server, port);
+			logger.info("on connect"); 
+			showServerReply(ftpClient);
+
+			
 			ftpClient.login(user, pass);
+			logger.info("on login"); 
+
+			showServerReply(ftpClient);
+
+			
 			ftpClient.enterLocalPassiveMode();
+			logger.info("on mode"); 
+
+			showServerReply(ftpClient);
+
+			
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			
+			
 			ftpClient.setBufferSize(0);
+			
+			
 			ftpClient.deleteFile(filePath);
-			
-			
+			logger.info("on delete"); 
+
+			showServerReply(ftpClient);
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -295,14 +504,26 @@ public class FtpConfiguration {
 		String server =  ftpserver;
 		int port = ftpport;
 		String user = ftpuser;
-		String pass =ftpuser;
+		String pass =ftppass;
 		try {
 			ftpClient.connect(server, port);
+			
+			int reply = ftpClient.getReplyCode();
+			logger.info("---------isfileExists FTPReply.isPositiveCompletion(reply)22 ----------------" + FTPReply.isPositiveCompletion(reply));
+			
+			if (!FTPReply.isPositiveCompletion(reply)) {
+				logger.info("---------11FTP server refused connection." + FTPReply.isPositiveCompletion(reply));
+				ftpClient.disconnect();
+				System.err.println("FTP server refused connection.");
+				logger.info("---------22FTP server refused connection." + FTPReply.isPositiveCompletion(reply));
+
+			}
+			
 			ftpClient.login(user, pass);
 			ftpClient.enterLocalPassiveMode();
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setBufferSize(0);
-			String[] files = ftpClient.listNames("AutoScanExcel");
+			String[] files = ftpClient.listNames("/AutoScanExcel");
 
 		    return Arrays.asList(files).contains(filePath);
 			

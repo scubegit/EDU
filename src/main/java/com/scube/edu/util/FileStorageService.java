@@ -459,6 +459,7 @@ public class FileStorageService {
 
 			return String.valueOf(returnPath);
 		} catch (Exception ex) {
+			logger.info("---------ex fsp----------------" + ex.toString());
 			throw new FileStorageException("Could not store file", ex);
 		}
 
@@ -494,13 +495,13 @@ public class FileStorageService {
 			strdate = strdate.replace(":", "-");
 			String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), newPath);
 
-//			logger.info("---------TodoServiceImpl path----------------" + path);
+			logger.info("---------TodoServiceImpl path----------------" + path);
 
 			String fileName = imgnm;
 
-//			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
+			logger.info("---------TodoServiceImpl fileName----------------" + fileName);
 
-//			logger.info("---------TodoServiceImpl start fileStore upload----------------");
+		logger.info("---------TodoServiceImpl start fileStore upload----------------");
 
 			fileStore.upload(path, fileName, Optional.of(metadata), imagestream);
 
@@ -512,6 +513,7 @@ public class FileStorageService {
 
 			return String.valueOf(returnPath);
 		} catch (Exception ex) {
+			logger.info("--------ex move----------------" + ex.toString());
 			throw new FileStorageException("Could not store file", ex);
 		}
 
@@ -625,7 +627,7 @@ public class FileStorageService {
 
 	public String storeScanFileOnFtp(InputStream file, String flag, String fileName) {
 
-		System.out.println("****fileStorageService storeFileOnFtp*****" + file);
+		logger.info("****fileStorageService storeFileOnFtp*****" + file+"-flag-"+flag+"-fileName-"+fileName);
 
 		try {
 
@@ -634,6 +636,9 @@ public class FileStorageService {
 			if (flag.equalsIgnoreCase("2")) {
 				newPath = uFtpFilePath + UUID.randomUUID();
 			}
+			logger.info("****before uploadDataFromScan*****" + file+"-newPath-"+newPath+"-fileName-"+fileName);
+
+			
 			ftpConfiguration.uploadDataFromScan(file, newPath, fileName);
 
 			String returnPath = newPath + "/" + fileName;
@@ -660,10 +665,12 @@ public class FileStorageService {
 
 			}
 
+			logger.info("---------storeScanFileOnFtpToArchive newPath----------------" + newPath);
+			
 			ftpConfiguration.uploadDataFromScan(file, newPath, fileName);
 
 			String returnPath = newPath + "/" + fileName;
-			logger.info("---------returnPath----------------" + returnPath);
+			logger.info("---------returnPath storeScanFileOnFtpToArchive----------------" + returnPath);
 			return String.valueOf(returnPath);
 		} catch (IOException ex) {
 			throw new FileStorageException("Could not store file", ex);

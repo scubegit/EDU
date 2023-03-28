@@ -64,7 +64,7 @@ public class MisServiceImpl implements MisService {
 		{
 		logger.info("Check 12===>>>>>"+fromDate+"   "+toDate);
 		
-			List<VerificationRequest> list = verificationReqRepository.getVerificationRequestByDateRange(fromDate, toDate);
+			List<VerificationRequest> list = verificationReqRepository.findByDateRange(fromDate, toDate);
 			logger.info("*******MisServiceImplCheck range Date inside try catch*******"+fromDate+":"+toDate);
 			for(VerificationRequest req: list) {
 				

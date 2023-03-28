@@ -295,7 +295,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		logger.info("---------"+ appId);
 		
 		Long userid=null;
-		
+		boolean flag=false;
 		List<VerificationRequest> list = new ArrayList<>();
 		Long ver_req = (long) 1;
 		for(StudentDocVerificationRequest req : studentDocReq) {
@@ -321,8 +321,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			logger.info(total+ "   "+ totalWithGST+ "   "+ amtWithoutGST + "   "+ amtWithGST);
 			
 			// Make a verificationRequestRepo function which will save total and totalWithoutGST against each application id
-			resp.setDocUniAmt(diff.getAmount());
-			resp.setDocSecurCharge(diff.getSecurCharge());
+			resp.setDocUniAmt(diff.getAmount());					//
+			resp.setDocSecurCharge(diff.getSecurCharge());			//
 			resp.setApplicationId(appId);
 			resp.setAssignedTo(assign_to);
 			resp.setCollegeId(req.getCollegenameid());
@@ -340,8 +340,18 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setRequestType(req.getRequesttype());
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
 			resp.setPaymentId(req.getPaymentId());
-			resp.setDocAmt(total);
-			resp.setDosAmtWithGst(totalWithGST);
+			resp.setDocAmt(total);							//with out gst amount
+			
+			 flag=checkGStExemption(userid);
+
+			if(flag==true)
+				resp.setDosAmtWithGst(total);//if added so as gst not to be taken for
+			else
+			resp.setDosAmtWithGst(totalWithGST);			 
+			
+			
+			
+			
 			resp.setBranchId(req.getBranchId());
 			resp.setSemId(req.getSemId());
 			resp.setCreateby(req.getCreateby());
@@ -366,18 +376,16 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 				
 		
 		List<Long> listamtwithGst = new ArrayList<>();
+		//for gst changes
+		if(flag==true)  //if added so as gst not to be taken for
+			listamtwithGst.add(amtWithoutGST);
+		else
 		listamtwithGst.add(amtWithGST);
 		
 		
 		
 		map.put("total_without_gst", amtwithoutGst);
 		map.put("total_with_gst", listamtwithGst);
-		
-		
-		//for gst changes
-		
-		
-		
 		
 		
 		List<VerificationRequest>returnDta=verificationReqRepo.saveAll(list);
@@ -426,8 +434,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		}
 		
 		logger.info("---------"+ appId);
+		boolean flag=checkGStExemption(studentDocReq.getUserid());
 		
 		PriceMaster diff =  priceMasterRepo.getPriceByYearDiff(year , studentDocReq.getYearofpassid(),studentDocReq.getRequesttype(),Long.parseLong(studentDocReq.getDocname()));
+		
+		logger.info("---from price master year----"+ year+ "-total amount-"+diff.getTotalAmt()+"-gst-"+diff.getGst()+"--");
+
+		
 		
 		total = diff.getTotalAmt();
 		totalWithGST =    ((diff.getTotalAmt() * diff.getGst()) / 100) + diff.getTotalAmt();
@@ -439,7 +452,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setDocAmt(total);
 		verDoc.setDocStatus("Requested");
 		verDoc.setDocumentId(studentDocReq.getDocname());
-		verDoc.setDosAmtWithGst(totalWithGST);
+		
+		if(flag==true)
+			verDoc.setDosAmtWithGst(total);	
+		else
+		verDoc.setDosAmtWithGst(totalWithGST);											//
+		
+		
 		verDoc.setEnrollmentNumber(studentDocReq.getEnrollno());
 		verDoc.setFirstName(studentDocReq.getFirstname());
 		verDoc.setLastName(studentDocReq.getLastname());
@@ -455,7 +474,13 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		HashMap<String, Long> map = new HashMap<String, Long>();
 		
 		map.put("total_without_gst", total);
-		map.put("total_with_gst", totalWithGST);
+		
+		
+		
+		if(flag==true)
+			map.put("total_with_gst", total);
+		else
+				map.put("total_with_gst", totalWithGST);
 		
 		return map;
 //		return null;
@@ -571,23 +596,38 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			System.out.print("-----------Gove Body---------" + entities.getAreYouGov());
 			System.out.print("-----------GST Exemption---------" + entities.getGstExemption());
 			long val = 2;
-			if (entities.getRoleId().equals(val)) {
-				
-				if (entities.getAreYouGov().equals("Y") && entities.getGstExemption().equals("Y")) {
-					
-					map.put("total_with_gst", amtwithoutgst);
-					System.out.print("I am in if (total_without_gst)" + amtwithoutgst);
-				}else{
-					
-					map.put("total_with_gst", amtwithgst);
-					System.out.print("I am in Else" + amtwithgst);
-			} 
 		
-			}else{
-					
-					map.put("total_with_gst", amtwithgst);
-					System.out.print("I am in Else" + amtwithgst);
+			boolean flag=checkGStExemption(userid);
+			
+			if(flag==true)
+				map.put("total_with_gst", amtwithoutgst);
+			else {
+				map.put("total_with_gst", amtwithgst);
 			}
+			
+			
+			
+			
+			/*
+			 * if (entities.getRoleId().equals(val)) {
+			 * 
+			 * if (entities.getAreYouGov().equals("Y") &&
+			 * entities.getGstExemption().equals("Y")) {
+			 * 
+			 * map.put("total_with_gst", amtwithoutgst);
+			 * System.out.print("I am in if (total_without_gst)" + amtwithoutgst); }else{
+			 * 
+			 * map.put("total_with_gst", amtwithgst); System.out.print("I am in Else" +
+			 * amtwithgst); }
+			 * 
+			 * }else{
+			 * 
+			 * map.put("total_with_gst", amtwithgst); System.out.print("I am in Else" +
+			 * amtwithgst); }
+			 */
+			
+			
+			
 			
 		}
 		
@@ -708,5 +748,28 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		return true;
 	}
 
+	
+	public boolean checkGStExemption(Long userid)
+	{
+		
+		boolean flag=false;
+		UserMasterEntity entities= userRepository.findById(userid).get();
+		System.out.print("-----------Role Id----------- " + entities.getRoleId());
+		System.out.print("-----------Gove Body---------" + entities.getAreYouGov());
+		System.out.print("-----------GST Exemption---------" + entities.getGstExemption());
+		long val = 2;
+		if (entities.getRoleId().equals(val)) {
+			
+			if(entities.getAreYouGov() != null && !entities.getAreYouGov().trim().isEmpty() && entities.getGstExemption() != null && !entities.getGstExemption().trim().isEmpty() ) 
+			{
+			if (entities.getAreYouGov().equals("Y") && entities.getGstExemption().equals("Y")) {
+		
+				flag=true;
+			}
+			}
+		}
+		
+		return flag;
+	}
 	
 }

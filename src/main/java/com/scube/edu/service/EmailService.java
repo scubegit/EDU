@@ -1994,6 +1994,7 @@ public class EmailService {
 	}
 	 public void sendRejectedDatamail(File Filepath) throws Exception {
 
+			logger.info("*******sendRejectedDatamail--"+Filepath);
 
 
 		String from =fromMailID;
@@ -2046,8 +2047,12 @@ public class EmailService {
 			}
 			message.setSubject(subject); 
 			MimeBodyPart attachmentPart = new MimeBodyPart();
+			logger.info("*******22sendRejectedDatamail--"+Filepath);
+			
 			attachmentPart.attachFile(Filepath);
 
+			logger.info("*******3333sendRejectedDatamail--"+Filepath);
+			
 		//	BodyPart messageBodyPart = new MimeBodyPart(); 
 			textBodyPart.setText(vmFileContent,"utf-8","html");
 
@@ -2055,9 +2060,13 @@ public class EmailService {
 			multipart.addBodyPart(textBodyPart);
 			multipart.addBodyPart(attachmentPart);
 			message.setContent(multipart);
+			
+			logger.info("*******444sendRejectedDatamail--"+Filepath);
+			
 			Transport.send(message);
 		} catch (MessagingException e) {
-
+			
+			logger.info("*******ex in mail send--"+e.toString());
 			throw new RuntimeException(e);
 		}
 	}
