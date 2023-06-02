@@ -271,6 +271,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
 		logger.info("********Enterning StudentServiceImpl saveVerificationDocAndCalculateAmount********");
+		logger.info("********Enterning StudentServiceImpl ********"+studentDocReq);
 		
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		long total;
@@ -299,6 +300,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		List<VerificationRequest> list = new ArrayList<>();
 		Long ver_req = (long) 1;
 		for(StudentDocVerificationRequest req : studentDocReq) {
+			
+			logger.info("********Enterning req ********"+req);
 			
 			logger.info("Entring in loop to save records= "+req.getUserid());
 			userid=req.getUserid();
@@ -341,6 +344,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setYearOfPassingId(String.valueOf(req.getYearofpassid()));
 			resp.setPaymentId(req.getPaymentId());
 			resp.setDocAmt(total);							//with out gst amount
+			resp.setEmbassyid(req.getEmbassyid());
 			
 			 flag=checkGStExemption(userid);
 
@@ -368,6 +372,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			list.add(resp);
 			logger.info("Exiting for loop= " +req.getUserid());
+			logger.info("Exiting for loop= " +list.add(resp));
 		}
 		HashMap<String, List<Long>> map = new HashMap<String, List<Long>>();
 		
@@ -469,6 +474,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setVerRequestId((long) 1);
 		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
 		verDoc.setUserId(studentDocReq.getUserid());
+		verDoc.setEmbassyid(studentDocReq.getEmbassyid());
 		verificationReqRepo.save(verDoc);
 		
 		HashMap<String, Long> map = new HashMap<String, Long>();
@@ -595,6 +601,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			System.out.print("-----------Role Id----------- " + entities.getRoleId());
 			System.out.print("-----------Gove Body---------" + entities.getAreYouGov());
 			System.out.print("-----------GST Exemption---------" + entities.getGstExemption());
+		//	System.out.println("---------Embassy Id -----------"+ entities.getem)
 			long val = 2;
 		
 			boolean flag=checkGStExemption(userid);
@@ -700,6 +707,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setYear(year.getYearOfPassing());
 		resp.setBranch_id(branch.getId());
 		resp.setDoc_id(doc.getId());
+		resp.setEmbassyid(req.getEmbassyid());
 	
 		if(req.getEditReason() != null) {
 			String temp = req.getEditReason();

@@ -183,4 +183,8 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "mode_of_study")
 	private String modeOfStudy;
 	
+	// add by Rushabh
+	@Column(name = "embassy_id")
+	private String embassyid;
+	
 }

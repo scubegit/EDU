@@ -97,6 +97,7 @@ public class VerificationServiceImpl implements VerificationService{
 				verReq.setVerRequestId(stuReq.getVerreqid());
 				verReq.setAssignedTo(assign_to);
 				verReq.setCreateby(stuReq.getCreateby());
+				verReq.setEmbassyid(stuReq.getEmbassyid());
 				verificationRequests.add(verReq);
 			}
 

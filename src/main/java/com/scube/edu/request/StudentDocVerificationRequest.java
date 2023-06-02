@@ -30,6 +30,7 @@ public class StudentDocVerificationRequest {
 	private Long semId;
 	private String createby;
 	private String altEmail;
+	private String embassyid;
 	
 	private String monthOfPassing;
 

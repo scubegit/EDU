@@ -55,6 +55,9 @@ public class VerificationResponse {
 	private String editReason;
 	private String alt_email;
 	private Long doc_id;
+	
+	//add by rushabh
+	private String embassyid;
 
 
 }
