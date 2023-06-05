@@ -142,11 +142,23 @@ public class EmailService {
 	@Value("${file.url-dir}")
     private String loginUrl;
 	
+	
+	@Value("${new.from.mail.id}")
+    private String newfromMailID;
+	
+	@Value("${email.pwd}")
+    private String emailPwd;
+	
+	@Value("${email.smtp}")
+    private String emailSmtp;
+	
+	
+	
 	public void sendRequestEditMail(VerificationRequest entt,String email, String subject) throws MessagingException,Exception{
 		logger.info("*****emailService sendRequestEditMail*****"+ email);
 		String to = email;
-		String from = "support@educred.co.in";
-		String host = "mail.educred.co.in";
+	//	String from = "support@educred.co.in";
+	//	String host = "mail.educred.co.in";
 		
 		String name = entt.getFirstName();
 		Long appId = entt.getApplicationId();
@@ -156,18 +168,19 @@ public class EmailService {
 		
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
-
 		properties.put("mail.smtp.auth", "true");
+
 		
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
 //	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
-				return new PasswordAuthentication("support@educred.co.in", "EduCred$2021$");
+			//	return new PasswordAuthentication("support@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication(newfromMailID, emailPwd);
 
 			}
 
@@ -181,7 +194,7 @@ public class EmailService {
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
 
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
@@ -205,7 +218,8 @@ public class EmailService {
 			
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
-		}
+
+		}   
 		
 	}
 	
@@ -331,27 +345,29 @@ public class EmailService {
 
 		// Sender's email ID needs to be mentioned
 //	        String from = "universityscube@gmail.com";
-		String from = "verify@educred.co.in";
+	//	String from = "verify@educred.co.in";
 
 		// Assuming you are sending email from through gmails smtp
 //	        String host = "smtp.gmail.com";
-		String host = "mail.educred.co.in";
+//		String host = "mail.educred.co.in";
 
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
-
 		properties.put("mail.smtp.auth", "true");
+		
 
 		// Get the Session object.// and pass username and password
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-//	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
-				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+//				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication(newfromMailID, emailPwd);
+
 
 			}
 
@@ -367,7 +383,9 @@ public class EmailService {
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			//message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
+			
 
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
@@ -472,17 +490,24 @@ public class EmailService {
 		String encodeEmail = baseEncoder.encodeToString(emailId.getBytes(StandardCharsets.UTF_8));
 
 		String to = emailId;
-		logger.info("URL---------->" + url);
+		logger.info("URL---------->" + url );
+		logger.info("--newfromMailID--"+ newfromMailID);
+		logger.info("--emailPwd--"+ emailPwd); 
+		logger.info("--emailSmtp--"+ emailSmtp); 
+				
+				//+"+--pwd--"+emailPwd +"--emailSmtp--"+emailSmtp);
 		// Sender's email ID needs to be mentioned
 
-		String from = "verify@educred.co.in";
+		//String from = "verify@educred.co.in";
+		//String from = "verify@educred.co.in";
 
 		// Assuming you are sending email from through gmails smtp
-		String host = "mail.educred.co.in";
+		//String host = "mail.educred.co.in";
+		//String host = "mail.gmail.com";
 
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
@@ -490,7 +515,8 @@ public class EmailService {
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+			//	return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication(newfromMailID, emailPwd);
 
 			}
 		});
@@ -502,7 +528,8 @@ public class EmailService {
 			MimeMessage message = new MimeMessage(session);
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 
-			message.setFrom(new InternetAddress(from));
+			//message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
 
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
@@ -571,7 +598,7 @@ public class EmailService {
 		multipart.addBodyPart(textBodyPart);
 			// Send the complete message parts
 		message.setContent(multipart);
-		message.setContent(vmFileContent, "text/html");
+		message.setContent(vmFileContent, "text/html");  
 
 			System.out.println("sending...");
 
@@ -603,16 +630,16 @@ public class EmailService {
 
 		// Sender's email ID needs to be mentioned
 //	        String from = "universityscube@gmail.com";
-		String from = "verify@educred.co.in";
+	//	String from = "verify@educred.co.in";
 //	        String from = "resolution@educred.co.in";
 
 		// Assuming you are sending email from through gmails smtp
-		String host = "mail.educred.co.in";
+	//	String host = "mail.educred.co.in";
 //	        String host = "smtp.gmail.com";
 
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
@@ -645,7 +672,10 @@ public class EmailService {
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
+				
+				return new PasswordAuthentication(newfromMailID, emailPwd);
+
+				//return new PasswordAuthentication("verify@educred.co.in", "EduCred$2021$");
 //	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 //	                return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 
@@ -746,7 +776,7 @@ public class EmailService {
 			Message message = new MimeMessage(session);
 			BodyPart messageBodyPart = new MimeBodyPart();
 			Multipart multipart = new MimeMultipart();
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
             message.addRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(to));
             if(altTo != null) {
@@ -766,7 +796,7 @@ public class EmailService {
 			message.setContent(multipart);
 
 			// create the sender/recipient addresses
-			InternetAddress iaSender = new InternetAddress(from);
+			InternetAddress iaSender = new InternetAddress(newfromMailID);
 			InternetAddress iaRecipient = new InternetAddress(to);
 
 			// construct the mime message
@@ -796,7 +826,7 @@ public class EmailService {
 
 		} catch (MessagingException e) {
 
-			throw new RuntimeException(e);
+			throw new RuntimeException(e);       
 		}
 	}
 
@@ -1541,19 +1571,18 @@ public class EmailService {
 		String to = emailId;
 
 		// Sender's email ID needs to be mentioned
-		String from = "resolution@educred.co.in";
+	//	String from = "resolution@educred.co.in";
 //		   String from = "universityscube@gmail.com";
 
 		// Assuming you are sending email from through gmails smtp
-		String host = "mail.educred.co.in";
+//		String host = "mail.educred.co.in";
 //	        String host = "smtp.gmail.com";
 
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
-
 		properties.put("mail.smtp.auth", "true");
 
 		// Get the Session object.// and pass username and password
@@ -1561,7 +1590,8 @@ public class EmailService {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication(newfromMailID, emailPwd);				
+		//		return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 //	            	return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 
 			}
@@ -1577,7 +1607,7 @@ public class EmailService {
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
 
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
@@ -1677,18 +1707,17 @@ public class EmailService {
 		String to = emailId;
 
 		// Sender's email ID needs to be mentioned
-	        String from = "resolution@educred.co.in";
+	   //     String from = "resolution@educred.co.in";
 //		String from = "universityscube@gmail.com";
 		// Assuming you are sending email from through gmails smtp
-	        String host = "mail.educred.co.in";
+	    //    String host = "mail.educred.co.in";
 	//	String host = "smtp.gmail.com";
 
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
-
 		properties.put("mail.smtp.auth", "true");
 
 		// Get the Session object.// and pass username and password
@@ -1696,7 +1725,7 @@ public class EmailService {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication(newfromMailID, emailPwd);
 
                // return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 //				return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
@@ -1713,7 +1742,7 @@ public class EmailService {
 			MimeBodyPart textBodyPart = new MimeBodyPart();
 
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
 
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
@@ -1828,14 +1857,14 @@ public class EmailService {
 		String to = emailId;
 
 		// Sender's email ID needs to be mentioned
-		String from = "resolution@educred.co.in";
+//		String from = "resolution@educred.co.in";
 //		    String from = "universityscube@gmail.com";
 		// Assuming you are sending email from through gmails smtp
-		String host = "mail.educred.co.in";
+//		String host = "mail.educred.co.in";
 //	        String host = "smtp.gmail.com";
 		Properties properties = System.getProperties();
 
-		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.host", emailSmtp);
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
@@ -1865,7 +1894,8 @@ public class EmailService {
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
+				return new PasswordAuthentication(newfromMailID, emailPwd);				
+		//		return new PasswordAuthentication("resolution@educred.co.in", "EduCred$2021$");
 //	                return new PasswordAuthentication("universityscube@gmail.com", "edu@1234");
 			}
 
@@ -1958,7 +1988,7 @@ public class EmailService {
 			Message message = new MimeMessage(session);
 			BodyPart messageBodyPart = new MimeBodyPart();
 			Multipart multipart = new MimeMultipart();
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(newfromMailID));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 			messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setDataHandler(new DataHandler(dataSource));
@@ -1970,7 +2000,7 @@ public class EmailService {
 			message.setSubject(subject);
 
 			// create the sender/recipient addresses
-			InternetAddress iaSender = new InternetAddress(from);
+			InternetAddress iaSender = new InternetAddress(newfromMailID);
 			InternetAddress iaRecipient = new InternetAddress(to);
 
 			// construct the mime message
