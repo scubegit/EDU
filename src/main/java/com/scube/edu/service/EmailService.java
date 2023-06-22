@@ -975,6 +975,23 @@ public class EmailService {
 //			heading.add(Chunk.NEWLINE);
 //			heading.add(Chunk.NEWLINE);
 			
+			String strEmbassyId=vr.getEmbassyid();
+			if(strEmbassyId!=null)
+			{
+				if(strEmbassyId.equals("1"))
+				{
+				     Paragraph emb = new Paragraph();
+				     emb.setAlignment(Paragraph.ALIGN_LEFT);
+				     emb.setFont(footerFont9);
+				     emb.add("To,");
+				    
+				     emb.add(Chunk.NEWLINE);
+				     emb.add("Dubai Embassy");
+					 document.add(emb);
+
+				}
+			}
+			
 			Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
 			chunk.setFont(headingFont);
 			chunk.setUnderline(1.0f, -1f);
@@ -1303,6 +1320,27 @@ public class EmailService {
 	        refNo.add(Chunk.NEWLINE);
 			
 			document.add(refNo);
+			
+			String strEmbassyId=vr.getEmbassyid();
+			if(strEmbassyId!=null)
+			{
+				if(strEmbassyId.equals("1"))
+				{
+				     Paragraph emb = new Paragraph();
+				     emb.setAlignment(Paragraph.ALIGN_LEFT);
+				     emb.setFont(footerFont9);
+				     emb.add("To,");
+				    
+				     emb.add(Chunk.NEWLINE);
+				     emb.add("Dubai Embassy");
+				     emb.add(Chunk.NEWLINE);
+				     emb.add("");
+					 document.add(emb);
+					 
+
+				}
+			}
+			
 //			document.add(date);
 	        
 //			Paragraph head = new Paragraph();
