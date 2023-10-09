@@ -115,6 +115,75 @@ public class FtpConfiguration {
 		}
 	}
 	
+	/*
+	public String upload(MultipartFile file, String destination, String fileName) throws IOException {
+	    FTPClient ftpClient = new FTPClient();
+	    String server = ftpserver;
+	    int port = ftpport;
+	    String user = ftpuser;
+	    String pass = ftppass;
+	    File convFile = null;
+	    String statusMessage = "";
+
+	    try {
+	        ftpClient.connect(server, port);
+
+	        int reply = ftpClient.getReplyCode();
+	        logger.info("---------FTPReply.isPositiveCompletion(reply) ----------------" + FTPReply.isPositiveCompletion(reply));
+	        System.out.println("FTPReply.isPositiveCompletion(reply) " + FTPReply.isPositiveCompletion(reply));
+	        ftpClient.enterLocalPassiveMode();
+	        logger.info("---------enterLocalPassiveMode");
+
+	        if (!FTPReply.isPositiveCompletion(reply)) {
+	            logger.info("---------11FTP server refused connection." + FTPReply.isPositiveCompletion(reply));
+	            ftpClient.disconnect();
+	            System.err.println("FTP server refused connection.");
+	            logger.info("---------22FTP server refused connection." + FTPReply.isPositiveCompletion(reply));
+	            statusMessage = "FTP server refused connection.";
+	        }
+
+	        ftpClient.login(user, pass);
+	        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+	        ftpClient.setBufferSize(0);
+	        logger.info("---------making directory at" + destination);
+	        ftpClient.makeDirectory(destination);
+	        logger.info("---------made directory at" + destination);
+	        logger.info("---------creating new file" + ftplocalpath + "/" + fileName);
+	        convFile = new File(ftplocalpath + "/" + fileName);
+	        logger.info("---------con file" + ftplocalpath + "/" + fileName);
+	        FileUtils.copyToFile(file.getInputStream(), convFile);
+	        logger.info("---------file transfer to" + convFile);
+	        String fileNameToSave = destination + "/" + fileName;
+	        logger.info("---------fileNameToSave" + fileNameToSave);
+	        ftpClient.storeFile(fileNameToSave, new FileInputStream(convFile));
+	        logger.info("---------ftpClient.storeFile");
+	        statusMessage = "File uploaded successfully.";
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        statusMessage = "Could not store file due to connection issue";
+	        logger.info("---------Exception For Ftp:-"+e);
+	        throw new IOException("Could not store file connection issue", e);
+	        
+	    } finally {
+	        try {
+	            if (ftpClient.isConnected()) {
+	                ftpClient.logout();
+	                ftpClient.disconnect();
+	            }
+	        } catch (IOException ex) {
+	            ex.printStackTrace();
+	            statusMessage = "Could not store file due to connection issue";
+	            logger.info("---------Exception For Ftp 1:-"+ex);
+	            throw new IOException("Could not store file connection issue", ex);
+	            
+	        }
+	        if (convFile != null)
+	            convFile.delete();
+	    }
+
+	    return statusMessage;
+	}
+	*/
 	
 	public byte[] download(String filePath) {
 

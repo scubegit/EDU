@@ -207,7 +207,7 @@ public class EmailService {
 					+ "Your request (Application ID: "+appId+") has been rejected, please login again and Fulfill the requirements by clicking on the Edit button against your record. <br><br>"
 					+ "Rejection Details: "+reason+". <br><br>"
 					+ "If you have any query you can writeback to help@educred.co.in <br><br>"
-					+ "Click "+"<a href='http://"+loginUrl+"/University/verification'><strong>Here</strong></a>"+" to Login. <br><br>"
+					+ "Click "+"<a href='https://"+loginUrl+"/University/verification'><strong>Here</strong></a>"+" to Login. <br><br>"
 					+ "Team Educred.";
 
 			
@@ -399,7 +399,7 @@ public class EmailService {
 			
 			  String vmFileContent =
 			  "Hello User, <br><br> We have received your reset password request .Please click link below to reset  your password. <br> "
-			  +"<a href='http://"+url+"/University/resetPassword?emailId="+
+			  +"<a href='https://"+url+"/University/resetPassword?emailId="+
 			  encodeEmail+"'><strong>Reset Link</strong></a>"+
 			  "<br><br> Thanks, <br> Team University";
 			
@@ -538,7 +538,7 @@ public class EmailService {
 			// Now set the actual messageHello User,
 
 			String vmFileContent1 = "Hello User, <br> We have received your registration request .Please click link below to verify your email account. <br><br> "
-				+"<a href='http://"	+ url + "/University/emailVerification?emailId=" + encodeEmail + "' ><strong>Verification Link</strong></a> <br>"
+				+"<a href='https://"	+ url + "/University/emailVerification?emailId=" + encodeEmail + "' ><strong>Verification Link</strong></a> <br>"
 					+ " If you do not use this link within 24 hours , it will expire. Post that you will need to register again. <br><br> Thanks, <br> Team University";
 
 		//	message.setText(vmFileContent1,"UTF-8", "html");
