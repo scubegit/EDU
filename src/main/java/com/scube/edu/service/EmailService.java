@@ -976,18 +976,72 @@ public class EmailService {
 //			heading.add(Chunk.NEWLINE);
 			
 			String strEmbassyId=vr.getEmbassyid();
+			String embassyName= vr.getEmbassyname();
+			String embassyAddress= vr.getEmbassyadress();
+			
+			System.out.println("----------------embassyName" + embassyName + "embassyAddress---------" + embassyAddress);
+			
 			if(strEmbassyId!=null)
 			{
 				if(strEmbassyId.equals("1"))
 				{
-				     Paragraph emb = new Paragraph();
-				     emb.setAlignment(Paragraph.ALIGN_LEFT);
-				     emb.setFont(footerFont9);
-				     emb.add("To,");
-				    
-				     emb.add(Chunk.NEWLINE);
-				     emb.add("Dubai Embassy");
-					 document.add(emb);
+					/*
+					 * Paragraph emb = new Paragraph(); emb.setAlignment(Paragraph.ALIGN_LEFT);
+					 * emb.setFont(footerFont9); emb.add("To,");
+					 * 
+					 * emb.add(Chunk.NEWLINE); emb.add("Dubai Embassy");
+					 * 
+					 * emb.add(Chunk.NEWLINE); emb.add(embassyName +",");
+					 * 
+					 * emb.add(Chunk.NEWLINE); emb.add(embassyAddress); emb.add(Chunk.NEWLINE);
+					 * 
+					 * document.add(emb);
+					 */
+					
+		            PdfPTable table = new PdfPTable(2); // 2 columns
+		            table.setHorizontalAlignment(PdfPTable.ALIGN_LEFT); // Set table alignment to left
+		            
+		            float leading = 12f;
+
+		            PdfPCell cell1 = new PdfPCell(new Paragraph("To,", footerFont9));
+		            cell1.setLeading(leading, 0);
+		            
+		            PdfPCell cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+		            PdfPCell cell3 = new PdfPCell(new Paragraph("Dubai Embassy", footerFont9));
+		            cell3.setLeading(leading, 0);
+		            
+		            PdfPCell cell4 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+		            PdfPCell cell5 = new PdfPCell(new Paragraph(embassyName + "," , footerFont9));
+		            cell5.setLeading(leading, 0);
+		            
+		            PdfPCell cell6 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+		            PdfPCell cell7 = new PdfPCell(new Paragraph(embassyAddress, footerFont9));
+		            cell7.setLeading(leading, 0);
+		            
+		            PdfPCell cell8 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+
+		            // Set border width to 0 for all cells and the table
+		            cell1.setBorderWidth(0);
+		            cell2.setBorderWidth(0);
+		            cell3.setBorderWidth(0);
+		            cell4.setBorderWidth(0);
+		            cell5.setBorderWidth(0);
+		            cell6.setBorderWidth(0);
+		            cell7.setBorderWidth(0);
+		            cell8.setBorderWidth(0);
+		              
+		            table.getDefaultCell().setBorderWidth(0);
+
+		            table.addCell(cell1);
+		            table.addCell(cell2);
+		            table.addCell(cell3);
+		            table.addCell(cell4);
+		            table.addCell(cell5);
+		            table.addCell(cell6);
+		            table.addCell(cell7);
+		            table.addCell(cell8);
+
+		            document.add(table);
 
 				}
 			}
@@ -1322,20 +1376,69 @@ public class EmailService {
 			document.add(refNo);
 			
 			String strEmbassyId=vr.getEmbassyid();
+			String embassyName= vr.getEmbassyname();
+			String embassyAddress= vr.getEmbassyadress();
 			if(strEmbassyId!=null)
 			{
 				if(strEmbassyId.equals("1"))
 				{
-				     Paragraph emb = new Paragraph();
-				     emb.setAlignment(Paragraph.ALIGN_LEFT);
-				     emb.setFont(footerFont9);
-				     emb.add("To,");
-				    
-				     emb.add(Chunk.NEWLINE);
-				     emb.add("Dubai Embassy");
-				     emb.add(Chunk.NEWLINE);
-				     emb.add("");
-					 document.add(emb);
+					/*
+					 * Paragraph emb = new Paragraph(); emb.setAlignment(Paragraph.ALIGN_LEFT);
+					 * emb.setFont(footerFont9); emb.add("To,");
+					 * 
+					 * emb.add(Chunk.NEWLINE); emb.add("Dubai Embassy");
+					 * 
+					 * emb.add(Chunk.NEWLINE); emb.add(embassyName +",");
+					 * 
+					 * emb.add(Chunk.NEWLINE); emb.add(embassyAddress); emb.add(Chunk.NEWLINE);
+					 * 
+					 * document.add(emb);
+					 */
+					
+					 PdfPTable table = new PdfPTable(2); // 2 columns
+			            table.setHorizontalAlignment(PdfPTable.ALIGN_LEFT); // Set table alignment to left
+			            
+			            float leading = 12f;
+
+			            PdfPCell cell1 = new PdfPCell(new Paragraph("To,", footerFont9));
+			            cell1.setLeading(leading, 0);
+			            
+			            PdfPCell cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+			            PdfPCell cell3 = new PdfPCell(new Paragraph("Dubai Embassy", footerFont9));
+			            cell3.setLeading(leading, 0);
+			            
+			            PdfPCell cell4 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+			            PdfPCell cell5 = new PdfPCell(new Paragraph(embassyName + "," , footerFont9));
+			            cell5.setLeading(leading, 0);
+			            
+			            PdfPCell cell6 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+			            PdfPCell cell7 = new PdfPCell(new Paragraph(embassyAddress, footerFont9));
+			            cell7.setLeading(leading, 0);
+			            
+			            PdfPCell cell8 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+
+			            // Set border width to 0 for all cells and the table
+			            cell1.setBorderWidth(0);
+			            cell2.setBorderWidth(0);
+			            cell3.setBorderWidth(0);
+			            cell4.setBorderWidth(0);
+			            cell5.setBorderWidth(0);
+			            cell6.setBorderWidth(0);
+			            cell7.setBorderWidth(0);
+			            cell8.setBorderWidth(0);
+			              
+			            table.getDefaultCell().setBorderWidth(0);
+
+			            table.addCell(cell1);
+			            table.addCell(cell2);
+			            table.addCell(cell3);
+			            table.addCell(cell4);
+			            table.addCell(cell5);
+			            table.addCell(cell6);
+			            table.addCell(cell7);
+			            table.addCell(cell8);
+
+			            document.add(table);
 					 
 
 				}

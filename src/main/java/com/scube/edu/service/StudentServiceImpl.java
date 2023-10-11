@@ -345,6 +345,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setPaymentId(req.getPaymentId());
 			resp.setDocAmt(total);							//with out gst amount
 			resp.setEmbassyid(req.getEmbassyid());
+			resp.setEmbassyname(req.getEmbassyname());
+			resp.setEmbassyadress(req.getEmbassyaddress());
 			
 			 flag=checkGStExemption(userid);
 
@@ -475,6 +477,8 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		verDoc.setYearOfPassingId(String.valueOf(studentDocReq.getYearofpassid()));
 		verDoc.setUserId(studentDocReq.getUserid());
 		verDoc.setEmbassyid(studentDocReq.getEmbassyid());
+		verDoc.setEmbassyname(studentDocReq.getEmbassyname());
+		verDoc.setEmbassyadress(studentDocReq.getEmbassyaddress());
 		verificationReqRepo.save(verDoc);
 		
 		HashMap<String, Long> map = new HashMap<String, Long>();

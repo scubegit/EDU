@@ -33,6 +33,9 @@ public class StudentDocVerificationRequest {
 	private String embassyid;
 	
 	private String monthOfPassing;
+	
+	private String embassyname;
+	private String embassyaddress;
 
 
 

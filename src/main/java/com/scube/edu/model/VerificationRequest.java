@@ -187,4 +187,11 @@ public class VerificationRequest extends CreateUpdate {
 	@Column(name = "embassy_id")
 	private String embassyid;
 	
+	// add by mayuri
+    @Column(name = "embassy_name")
+	private String embassyname;
+    
+    @Column(name = "embassy_address")
+	private String embassyadress;
+	
 }
