@@ -139,10 +139,25 @@ public class VerificationPdf {
 	        
 	        document.add(img);
 	        
+			String strEmbassyId=vr.getEmbassyid();
+
+			String embassyName= vr.getEmbassyname();
+			String embassyAddress= vr.getEmbassyadress();
+	        
 	        LineSeparator ls = new LineSeparator();
 	        document.add(new Chunk(ls));
 	        int years = Calendar.getInstance().get(Calendar.YEAR);
 	        String currentYear = String.valueOf(years);
+	        
+	        int currentYear1 = Integer.parseInt(currentYear);
+	        
+	        // Calculate the last year
+	        int lastYear = currentYear1 - 1; 
+	        
+	        String lastTwoDigitsOfCurrentYear = currentYear.substring(currentYear.length() - 2);
+	        
+	        //Academic Year
+	        String academicYear = lastYear + "-" + lastTwoDigitsOfCurrentYear;
 	        
 	        Chunk glue = new Chunk(new VerticalPositionMark());
 	        
@@ -153,7 +168,20 @@ public class VerificationPdf {
 	        Paragraph refNo = new Paragraph();
 	        refNo.setAlignment(Paragraph.ALIGN_LEFT);
 	        refNo.setFont(footerFont9);
-	        refNo.add("Ref.: No.Exam./M&C Unit/"+ vr.getId()+"/"+currentYear);
+	        
+	        if(strEmbassyId!=null) {
+	        	
+	        	if(strEmbassyId.equals("1")) {
+	        		
+	        		refNo.add("No.DBOEE/ICF/"+academicYear+ "/");
+	        		
+	        	}else {
+	        		
+	        		 refNo.add("Ref.: No.Exam./M&C Unit/"+ vr.getId()+"/"+currentYear);
+					
+				}
+	        }
+	      
 	        refNo.add(glue);
 	        refNo.add("DATE:- "+dtf.format(now));
 	        refNo.add(Chunk.NEWLINE);
@@ -225,10 +253,7 @@ public class VerificationPdf {
 //			heading.add(Chunk.NEWLINE);
 //			heading.add(Chunk.NEWLINE);
 			
-			String strEmbassyId=vr.getEmbassyid();
 
-			String embassyName= vr.getEmbassyname();
-			String embassyAddress= vr.getEmbassyadress();
 			
 			if(strEmbassyId!=null)
 			{
@@ -296,19 +321,49 @@ public class VerificationPdf {
 				}
 			}
 			
-			Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
-			chunk.setFont(headingFont);
-			chunk.setUnderline(1.0f, -1f);
-//			document.add(chunk);
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("In Embassy-- no header");
+									
+					Paragraph forSirMadam  = new Paragraph();
+					forSirMadam.setAlignment(Paragraph.ALIGN_LEFT);   
+					forSirMadam.setFont(headAddrFont11);
+					forSirMadam.add(Chunk.NEWLINE);
+					forSirMadam.add("Sir/ Madam,");
+					document.add(forSirMadam);
+					
+				}
+			}
 			
-			Phrase phrase = new Phrase();
-			phrase.add(chunk);
+			logger.info("greeting set below here--->");
 			
-			Paragraph certi = new Paragraph();
-			certi.add(phrase);
-			certi.setAlignment(Paragraph.ALIGN_CENTER);
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("In Embassy-- no header");
+				}else {
+					
+					System.out.println("hii");
+					
+					Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
+					chunk.setFont(headingFont);
+					chunk.setUnderline(1.0f, -1f);
+					
+					Phrase phrase = new Phrase();
+					phrase.add(chunk);
+					
+					Paragraph certi = new Paragraph();
+					certi.add(phrase);
+					certi.setAlignment(Paragraph.ALIGN_CENTER);
+					
+					document.add(certi);
+					
+				}
+			}
 			
-			document.add(certi);
 
 			Paragraph para = new Paragraph();
 			para.setFont(headAddrFont11);
@@ -316,8 +371,25 @@ public class VerificationPdf {
 //			if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")||vr.getDocStatus().equalsIgnoreCase("SVD_Approved_Pass")) {
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
-			para.add(
-					"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() + " has submitted the following mentioned documents for verification purpose. \r");
+			
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("For dubai --");
+					
+					para.add(
+							"This is to inform you that the candidate "+ vr.getFirstName() + " " + vr.getLastName() 
+							+ " has submitted the following mentioned document for verification purpose. \r");
+				}else {
+					
+					para.add(
+							"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() 
+							+ " has submitted the following mentioned document for verification purpose. \r");
+				}
+				
+			}
+			
 			
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
@@ -477,6 +549,22 @@ public class VerificationPdf {
 //		    img2.setAlignment(Image.ALIGN_RIGHT);
 //		    img2.scaleAbsolute(75, 75);
 //		    document.add(img2);
+		    
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("In Embassy-- no header");
+					
+					 Paragraph forYoursFaithfully  = new Paragraph();
+					    forYoursFaithfully.setAlignment(Paragraph.ALIGN_RIGHT);   
+					    forYoursFaithfully.setFont(headAddrFont11);
+					    forYoursFaithfully.add(Chunk.NEWLINE);
+					    forYoursFaithfully.add("Yours faithfully,");
+						document.add(forYoursFaithfully);
+					
+				}
+			}
 			
 		   
 		    
@@ -604,11 +692,27 @@ public class VerificationPdf {
 //	    EduCred_Logo.jpg
 
 			document.add(img);
+			
+			String strEmbassyId=vr.getEmbassyid();
+
+			String embassyName= vr.getEmbassyname();
+			String embassyAddress= vr.getEmbassyadress();
+			
 			 // insert horizontal line
 	        LineSeparator ls = new LineSeparator();
 	        document.add(new Chunk(ls));
 	        int years = Calendar.getInstance().get(Calendar.YEAR);
 	        String currentYear = String.valueOf(years);
+	        
+	        int currentYear1 = Integer.parseInt(currentYear);
+	        
+	        // Calculate the last year
+	        int lastYear = currentYear1 - 1; 
+	        
+	        String lastTwoDigitsOfCurrentYear = currentYear.substring(currentYear.length() - 2);
+	        
+	        //Academic Year
+	        String academicYear = lastYear + "-" + lastTwoDigitsOfCurrentYear;
 	        
 	        Chunk glue = new Chunk(new VerticalPositionMark());
 	        
@@ -619,7 +723,20 @@ public class VerificationPdf {
 	        Paragraph refNo = new Paragraph();
 	        refNo.setAlignment(Paragraph.ALIGN_LEFT);
 	        refNo.setFont(footerFont9);
-	        refNo.add("Ref.: No.Exam./M&C Unit/"+ vr.getId()+"/"+currentYear);
+	        
+	        if(strEmbassyId!=null) {
+	        	
+	        	if(strEmbassyId.equals("1")) {
+	        		
+	        		refNo.add("No.DBOEE/ICF/"+academicYear+ "/");
+	        		
+	        	}else {
+	        		
+	        		 refNo.add("Ref.: No.Exam./M&C Unit/"+ vr.getId()+"/"+currentYear);
+					
+				}
+	        }
+	        
 	        refNo.add(glue);
 	        refNo.add("DATE:- "+dtf.format(now));
 	        refNo.add(Chunk.NEWLINE);
@@ -628,10 +745,7 @@ public class VerificationPdf {
 			
 			document.add(refNo);
 			
-			String strEmbassyId=vr.getEmbassyid();
 
-			String embassyName= vr.getEmbassyname();
-			String embassyAddress= vr.getEmbassyadress();
 
 			if(strEmbassyId!=null)
 			{
@@ -700,6 +814,22 @@ public class VerificationPdf {
 				}
 			}
 			
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("In Embassy-- no header");
+									
+					Paragraph forSirMadam  = new Paragraph();
+					forSirMadam.setAlignment(Paragraph.ALIGN_LEFT);   
+					forSirMadam.setFont(headAddrFont11);
+					forSirMadam.add(Chunk.NEWLINE);
+					forSirMadam.add("Sir/ Madam,");
+					document.add(forSirMadam);
+					
+				}
+			}
+			
 //			document.add(date);
 	        
 //			Paragraph head = new Paragraph();
@@ -729,18 +859,31 @@ public class VerificationPdf {
 
 			logger.info("greeting set below here--->");
 			
-			Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
-			chunk.setFont(headingFont);
-			chunk.setUnderline(1.0f, -1f);
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("In Embassy-- no header");
+				}else {
+					
+					System.out.println("hii");
+					
+					Chunk chunk = new Chunk("VERIFICATION CERTIFICATE");
+					chunk.setFont(headingFont);
+					chunk.setUnderline(1.0f, -1f);
+					
+					Phrase phrase = new Phrase();
+					phrase.add(chunk);
+					
+					Paragraph certi = new Paragraph();
+					certi.add(phrase);
+					certi.setAlignment(Paragraph.ALIGN_CENTER);
+					
+					document.add(certi);
+					
+				}
+			}
 			
-			Phrase phrase = new Phrase();
-			phrase.add(chunk);
-			
-			Paragraph certi = new Paragraph();
-			certi.add(phrase);
-			certi.setAlignment(Paragraph.ALIGN_CENTER);
-			
-			document.add(certi);
 
 //			Paragraph heading = new Paragraph();
 //			heading.setFont(headingFont);
@@ -755,8 +898,24 @@ public class VerificationPdf {
 //			if(vr.getDocStatus().equalsIgnoreCase("UN_Approved_Pass")||vr.getDocStatus().equalsIgnoreCase("SVD_Approved_Pass")) {
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
-			para.add(
-					"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() + " has submitted the following mentioned document for verification purpose. \r");
+			
+			if(strEmbassyId!=null) {
+				
+				if(strEmbassyId.equals("1")) {
+					
+					System.out.println("For dubai --");
+					
+					para.add(
+							"This is to inform you that the candidate "+ vr.getFirstName() + " " + vr.getLastName() 
+							+ " has submitted the following mentioned document for verification purpose. \r");
+				}else {
+					
+					para.add(
+							"This is to certify that the candidate "+ vr.getFirstName() + " " + vr.getLastName() 
+							+ " has submitted the following mentioned document for verification purpose. \r");
+				}
+				
+			}
 			
 			para.add(Chunk.NEWLINE);
 			para.add(Chunk.NEWLINE);
@@ -904,6 +1063,24 @@ public class VerificationPdf {
 	    }
 	    document.add(result);
 	    logger.info("detail table added--->");
+	    
+	    
+	    
+		if(strEmbassyId!=null) {
+			
+			if(strEmbassyId.equals("1")) {
+				
+				System.out.println("In Embassy-- no header");
+				
+				 Paragraph forYoursFaithfully  = new Paragraph();
+				    forYoursFaithfully.setAlignment(Paragraph.ALIGN_RIGHT);   
+				    forYoursFaithfully.setFont(headAddrFont11);
+				    forYoursFaithfully.add(Chunk.NEWLINE);
+				    forYoursFaithfully.add("Yours faithfully,");
+					document.add(forYoursFaithfully);
+				
+			}
+		}
 	    //Add footer of PDF here
 	    
 //	    Paragraph footer1 = new Paragraph();
