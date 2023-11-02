@@ -57,7 +57,11 @@ public class VerificationResponse {
 	private Long doc_id;
 	
 	//add by rushabh
-	private String embassyid;
+	private Long embassyid;
+	
+	//add by mayuri
+	private String embassyaddress;
+	private String embassyname;
 
 
 }

@@ -25,6 +25,12 @@ public class StudentDocEditVerificationRequest {
 	private String altemail;
 	private String requesttype;
 	private String monthofpassing;
+	
+	//Added by mayuri
+	
+	private Long embassyid;
+	private String embassyaddress;
+	private String embassyname;
 
 
 

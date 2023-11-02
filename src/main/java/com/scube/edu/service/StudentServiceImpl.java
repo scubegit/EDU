@@ -711,7 +711,14 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		resp.setYear(year.getYearOfPassing());
 		resp.setBranch_id(branch.getId());
 		resp.setDoc_id(doc.getId());
-		resp.setEmbassyid(req.getEmbassyid());
+		
+		String embassyIdString = req.getEmbassyid(); 
+		Long embassyId = Long.parseLong(embassyIdString);
+		resp.setEmbassyid(embassyId);
+		System.out.println("embasyyy"+embassyId + resp);
+		//resp.setEmbassyid(req.getEmbassyid());
+		resp.setEmbassyname(req.getEmbassyname());
+		resp.setEmbassyaddress(req.getEmbassyadress());
 	
 		if(req.getEditReason() != null) {
 			String temp = req.getEditReason();
@@ -754,6 +761,14 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 	    String currentDate = formatter.format(date); 
 		
 		verReq.setEditReason(verReq.getEditReason()+"#Student%"+currentDate+"%Request has been editted");
+		
+		//Added by mayuri
+		verReq.setAltEmail(stuVerReq.getAltemail());
+		Long embassyId = stuVerReq.getEmbassyid(); // this is  Long
+		verReq.setEmbassyid(String.valueOf(embassyId));
+		verReq.setEmbassyname(stuVerReq.getEmbassyname());
+		verReq.setEmbassyadress(stuVerReq.getEmbassyaddress());
+		
 		
 		verificationReqRepo.save(verReq);
 		

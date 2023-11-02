@@ -267,7 +267,7 @@ public class VerificationPdf {
 			
 			if(strEmbassyId!=null)
 			{
-				if(strEmbassyId.equals("1"))
+				if(strEmbassyId.equals("1") || strEmbassyId.equals("3"))
 				{
 					/*
 					 * Paragraph emb = new Paragraph(); emb.setAlignment(Paragraph.ALIGN_LEFT);
@@ -291,9 +291,21 @@ public class VerificationPdf {
 			            PdfPCell cell1 = new PdfPCell(new Paragraph("To,", footerFont9));
 			            cell1.setLeading(leading, 0);
 			            
-			            PdfPCell cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
-			            PdfPCell cell3 = new PdfPCell(new Paragraph("Dubai Embassy", footerFont9));
-			            cell3.setLeading(leading, 0);
+			            PdfPCell cell2 = null;
+			            PdfPCell cell3 = null;
+			            
+			            if(strEmbassyId.equals("1")) {
+			            	
+				            cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+				            cell3 = new PdfPCell(new Paragraph("Dubai Embassy", footerFont9));
+				            cell3.setLeading(leading, 0);
+			            	
+			            }else {
+							
+			            	cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+				            cell3 = new PdfPCell(new Paragraph(""));
+				            cell3.setLeading(leading, 0);
+						}
 			            
 			            PdfPCell cell4 = new PdfPCell(new Paragraph("")); // Empty cell with no content
 			            PdfPCell cell5 = new PdfPCell(new Paragraph(embassyName + "," , footerFont9));
@@ -769,7 +781,7 @@ public class VerificationPdf {
 
 			if(strEmbassyId!=null)
 			{
-				if(strEmbassyId.equals("1"))
+				if(strEmbassyId.equals("1") || strEmbassyId.equals("3"))
 				{
 					
 					/*
@@ -792,9 +804,21 @@ public class VerificationPdf {
 			            PdfPCell cell1 = new PdfPCell(new Paragraph("To,", footerFont9));
 			            cell1.setLeading(leading, 0);
 			            
-			            PdfPCell cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
-			            PdfPCell cell3 = new PdfPCell(new Paragraph("Dubai Embassy", footerFont9));
-			            cell3.setLeading(leading, 0);
+			            PdfPCell cell2 = null;
+			            PdfPCell cell3 = null;
+			            
+			            if(strEmbassyId.equals("1")) {
+			            	
+				            cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+				            cell3 = new PdfPCell(new Paragraph("Dubai Embassy", footerFont9));
+				            cell3.setLeading(leading, 0);
+			            	
+			            }else {
+							
+			            	cell2 = new PdfPCell(new Paragraph("")); // Empty cell with no content
+				            cell3 = new PdfPCell(new Paragraph(""));
+				            cell3.setLeading(leading, 0);
+						}
 			            
 			            PdfPCell cell4 = new PdfPCell(new Paragraph("")); // Empty cell with no content
 			            PdfPCell cell5 = new PdfPCell(new Paragraph(embassyName + "," , footerFont9));
