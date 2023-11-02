@@ -840,6 +840,21 @@ public class EmailService {
 			VerificationRequest vr = vrr.get();
 
 			UserResponse ume = userService.getUserInfoById(vr.getUserId());
+			
+			String strEmbassyId=vr.getEmbassyid();
+			String embassyName= vr.getEmbassyname();
+			String embassyAddress= vr.getEmbassyadress();
+			
+			String strLogoString="logo.jpg";
+			
+			 if(strEmbassyId!=null) {
+		        	
+		        	if(strEmbassyId.equals("1")) {
+		        		
+		        		strLogoString="dubailogo.jpg";
+		        	}
+		        }
+			
 
 			Document document = new Document(PageSize.A4, 40, 40, 50, 7);
 			// Set all required fonts here with appropriate names
@@ -873,12 +888,12 @@ public class EmailService {
 			 */
 	        Image img;
 	        if(awsORtest.equalsIgnoreCase("AWS")) {
-	        	img = Image.getInstance(logoimageLocation+"logo.jpg"); // live
+	        	img = Image.getInstance(logoimageLocation+strLogoString); // live
 	        }if(awsORtest.equalsIgnoreCase("TEST")) {
-	        	img = Image.getInstance(logoimageLocation+"logo.jpg"); // test
+	        	img = Image.getInstance(logoimageLocation+strLogoString); // test
 //	        	img = Image.getInstance("logo.jpg");
 	        }else {
-	        	img = Image.getInstance(logoimageLocation+"logo.jpg");
+	        	img = Image.getInstance(logoimageLocation+strLogoString);
 	        }
 	       // Image img = Image.getInstance("logo.jpg");
 
@@ -889,9 +904,10 @@ public class EmailService {
 	        
 	        document.add(img);
 	        
-			String strEmbassyId=vr.getEmbassyid();
-			String embassyName= vr.getEmbassyname();
-			String embassyAddress= vr.getEmbassyadress();
+			/*
+			 * String strEmbassyId=vr.getEmbassyid(); String embassyName=
+			 * vr.getEmbassyname(); String embassyAddress= vr.getEmbassyadress();
+			 */
 	        
 	        LineSeparator ls = new LineSeparator();
 	        document.add(new Chunk(ls));
@@ -1388,6 +1404,22 @@ public class EmailService {
 			VerificationRequest vr = vrr.get();
 
 			UserResponse ume = userService.getUserInfoById(vr.getUserId());
+			
+			
+			String strEmbassyId=vr.getEmbassyid();
+			String embassyName= vr.getEmbassyname();
+			String embassyAddress= vr.getEmbassyadress();
+
+			String strLogoString="logo.jpg";
+			
+			 if(strEmbassyId!=null) {
+		        	
+		        	if(strEmbassyId.equals("1")) {
+		        		
+		        		strLogoString="dubailogo.jpg";
+		        	}
+		        }
+			
 
 			Document document = new Document(PageSize.A4, 40, 40, 50, 7);
 			// Set all required fonts here with appropriate names
@@ -1425,12 +1457,12 @@ public class EmailService {
 
 			Image img;
 	        if(awsORtest.equalsIgnoreCase("AWS")) {
-	        	img = Image.getInstance(logoimageLocation+"logo.jpg"); // live
+	        	img = Image.getInstance(logoimageLocation+strLogoString); // live
 	        }if(awsORtest.equalsIgnoreCase("TEST")){
-	        	img = Image.getInstance(logoimageLocation+"logo.jpg"); // test
+	        	img = Image.getInstance(logoimageLocation+strLogoString); // test
 //	        	img = Image.getInstance("logo.jpg");
 	        }else {
-	        	img = Image.getInstance(logoimageLocation+"logo.jpg");
+	        	img = Image.getInstance(logoimageLocation+strLogoString);
 	        }
 
 			img.setAlignment(Element.ALIGN_CENTER);
@@ -1441,10 +1473,7 @@ public class EmailService {
 
 			document.add(img);
 			
-			String strEmbassyId=vr.getEmbassyid();
-			String embassyName= vr.getEmbassyname();
-			String embassyAddress= vr.getEmbassyadress();
-			
+		
 			
 			 // insert horizontal line
 	        LineSeparator ls = new LineSeparator();
