@@ -19,7 +19,7 @@ import com.scube.edu.response.StudentVerificationDocsResponse;
 @Repository
 public interface VerificationRequestRepository extends JpaRepository<VerificationRequest, Long>{
 
-	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM verification_request vr left join passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1 order by created_date desc", nativeQuery = true)
+	@Query(value = "SELECT pym.year_of_passing as yearr, vr.* FROM verification_request vr left join passing_year_master pym on vr.year_of_passing_id = pym.id where user_id = ?1 and vr.doc_status not in ('Draft') order by created_date desc", nativeQuery = true)
 	List<VerificationRequest> findByUserId(long userId);
 
 	@Query(value = "SELECT * FROM verification_request where doc_status = 'Requested' and (assigned_to = 0 OR assigned_to = ?1) order by created_date asc limit 5", nativeQuery = true)
@@ -39,13 +39,13 @@ public interface VerificationRequestRepository extends JpaRepository<Verificatio
 	
 	VerificationRequest findById(long id);
 
-	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and convert(created_date , Date) >= (?2) and convert(created_date , Date) <= (?3)" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where user_id = (?1) and doc_status not in ('Draft') and convert(created_date , Date) >= (?2) and convert(created_date , Date) <= (?3)" , nativeQuery = true)
 	List<VerificationRequest> findByUserIdAndDates(long userId, String fromDate, String toDate);
 
-	@Query(value = "SELECT * FROM verification_request where doc_status not in ('Ver_Request_Edit','Requested', 'Approved_Pass','Approved_Fail','SV_Approved_Fail','SV_Approved_Pass','SV_Rejected') and convert(created_date , Date) >= (?1) and convert(created_date , Date) <= (?2)" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status not in ('Draft','Ver_Request_Edit','Requested', 'Approved_Pass','Approved_Fail','SV_Approved_Fail','SV_Approved_Pass','SV_Rejected') and convert(created_date , Date) >= (?1) and convert(created_date , Date) <= (?2)" , nativeQuery = true)
 	List<VerificationRequest> findByStatus(String fromDate, String toDate);
 	
-	@Query(value = "SELECT * FROM verification_request where convert(created_date , Date) >= (?1) and convert(created_date , Date) <= (?2)" , nativeQuery = true)
+	@Query(value = "SELECT * FROM verification_request where doc_status not in ('Draft') and convert(created_date , Date) >= (?1) and convert(created_date , Date) <= (?2)" , nativeQuery = true)
 	List<VerificationRequest> findByDateRange(String fromDate, String toDate);
 
 	@Query(value = "SELECT * FROM verification_request where doc_status in ('Approved','SV_Approved','SV_Rejected')", nativeQuery = true)

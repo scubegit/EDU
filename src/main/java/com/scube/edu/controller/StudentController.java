@@ -34,6 +34,7 @@ import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.request.StatusChangeRequest;
 import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.UpdatePaymentReq;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 
@@ -193,6 +194,37 @@ public class StudentController {
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData(list);
+					
+					return ResponseEntity.ok(response);
+						
+				}catch (Exception e) {
+					
+					
+					logger.error(e.getMessage()); //BAD creds message comes from here
+					
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData(e.getMessage());
+					
+					logger.error("Check response 44"+response); 
+					
+					return ResponseEntity.badRequest().body(response);
+					
+				}
+			
+   }
+	
+	
+	@PostMapping("/updateVerificationPaymentDetails")
+	public  ResponseEntity<Object> updateVerificationPaymentDetails(@RequestBody UpdatePaymentReq studentDocReq, HttpServletRequest request) {
+		response = new BaseResponse();
+		    try {
+		    	
+		    	String resp = studentService.updateVerificationPaymentDetails(studentDocReq, request);
+					
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(resp);
 					
 					return ResponseEntity.ok(response);
 						

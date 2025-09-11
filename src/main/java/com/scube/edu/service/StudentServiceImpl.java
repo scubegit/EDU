@@ -48,6 +48,7 @@ import com.scube.edu.repository.VerificationRequestRepository;
 import com.scube.edu.repository.YearOfPassingRepository;
 import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.UpdatePaymentReq;
 import com.scube.edu.request.UserAddRequest;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
@@ -267,6 +268,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		return List;
 	}
 
+	
 	@Override
 	public HashMap<String, List<Long>> saveVerificationDocAndCalculateAmount(List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		
@@ -329,7 +331,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			resp.setApplicationId(appId);
 			resp.setAssignedTo(assign_to);
 			resp.setCollegeId(req.getCollegenameid());
-			resp.setDocStatus("Requested");
+			resp.setDocStatus("Draft");
 			resp.setDocumentId(req.getDocname());
 			resp.setEnrollmentNumber(req.getEnrollno());
 			resp.setFirstName(req.getFirstname());
@@ -374,7 +376,7 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 			
 			list.add(resp);
 			logger.info("Exiting for loop= " +req.getUserid());
-			logger.info("Exiting for loop= " +list.add(resp));
+			//logger.info("Exiting for loop= " +list.add(resp));
 		}
 		HashMap<String, List<Long>> map = new HashMap<String, List<Long>>();
 		
@@ -395,11 +397,16 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		map.put("total_with_gst", listamtwithGst);
 		
 		
+		logger.info("list size------------"+ list.size());
+		
 		List<VerificationRequest>returnDta=verificationReqRepo.saveAll(list);
 		List<Long> idList=new ArrayList<>();
 
 		for(VerificationRequest data: returnDta)
 		{
+			
+			logger.info("returnDta in------------"+ data.getId());
+
 			Long id=data.getId();
 			idList.add(id);
 			
@@ -410,6 +417,40 @@ private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.
 		logger.info("added request successfully="+(new Date())+ "User Id= "+userid);
 		
 		return map;
+	}
+	
+	
+	@Override
+	public String updateVerificationPaymentDetails(UpdatePaymentReq studentDocReq, HttpServletRequest request) {
+		
+		logger.info("********Enterning updateVerificationPaymentDetails ********"+studentDocReq);
+		
+		
+			
+			logger.info("Entring in loop to upadte records= ");
+			List<String>   verreqid=studentDocReq.getVerreqid();
+			String  verreqpayid=studentDocReq.getPaymentid();
+			String userid=studentDocReq.getUserid();
+			
+			 System.out.println("verreqid length "+verreqid.size());
+			
+		
+		  for (int i = 0; i < verreqid.size(); i++) {
+		  
+		  System.out.println("rec id "+verreqid.get(i));
+			  
+		  VerificationRequest vrReq = new VerificationRequest();
+		  vrReq=verificationReqRepo.findById(Long.parseLong(verreqid.get(i)));
+		  vrReq.setPaymentId(verreqpayid);
+		  vrReq.setCreateby(userid);
+		  vrReq.setDocStatus("Requested");
+		  
+		  verificationReqRepo.save(vrReq);
+		  
+		  }
+		 
+			
+		return null;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.scube.edu.request.StudentDocEditVerificationRequest;
 import com.scube.edu.request.StudentDocVerificationRequest;
+import com.scube.edu.request.UpdatePaymentReq;
 import com.scube.edu.request.paymensReqFlagRequest;
 import com.scube.edu.response.BaseResponse;
 import com.scube.edu.response.PriceMasterResponse;
@@ -37,5 +38,8 @@ public interface StudentService {
 	public VerificationResponse getVerificationRequestById(long id);
 
 	public boolean editVerificationRequest(StudentDocEditVerificationRequest stuVerReq);
+	
+	public String updateVerificationPaymentDetails(UpdatePaymentReq studentDocReq, HttpServletRequest request);
+
 
 }
