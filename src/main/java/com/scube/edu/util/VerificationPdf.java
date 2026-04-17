@@ -612,7 +612,7 @@ public class VerificationPdf {
 		    foot.setAlignment(Paragraph.ALIGN_RIGHT);
 		    foot.setFont(headAddrFont12);
 		   // foot.add("Dr. Vinod P. Patil");
-		    foot.add("Dr. Prasad Karande.");
+		    foot.add("Dr. Pooja Raundale.");
 		    
 		    
 		    document.add(foot);
@@ -1159,7 +1159,7 @@ public class VerificationPdf {
 		foot.setAlignment(Paragraph.ALIGN_RIGHT);   
 		foot.setFont(headAddrFont12);
 	//	foot.add("Dr. Vinod P. Patil");
-		foot.add("Dr. Prasad Karande.");
+		foot.add("Dr. Pooja Raundale.");
 		document.add(foot);
 			
 			

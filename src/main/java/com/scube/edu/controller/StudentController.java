@@ -77,7 +77,7 @@ public class StudentController {
 		response = new BaseResponse();
 		
 		    try {
-
+		    	logger.info("editVerificationRequest===="+stuVerReq.toString());
 		    	boolean list = studentService.editVerificationRequest(stuVerReq);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
@@ -188,7 +188,7 @@ public class StudentController {
 	public  ResponseEntity<Object> saveVerificationDocAndCalculateAmount(@RequestBody List<StudentDocVerificationRequest> studentDocReq, HttpServletRequest request) {
 		response = new BaseResponse();
 		    try {
-		    	
+		    	logger.info("Entering in saveVerificationDocAndCalculateAmount"+ studentDocReq.toString());
 		    	HashMap<String, List<Long>> list = studentService.saveVerificationDocAndCalculateAmount(studentDocReq, request);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
@@ -219,7 +219,8 @@ public class StudentController {
 	public  ResponseEntity<Object> updateVerificationPaymentDetails(@RequestBody UpdatePaymentReq studentDocReq, HttpServletRequest request) {
 		response = new BaseResponse();
 		    try {
-		    	
+				logger.info("********Enterning updateVerificationPaymentDetails ********"+studentDocReq);
+
 		    	String resp = studentService.updateVerificationPaymentDetails(studentDocReq, request);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
@@ -346,7 +347,7 @@ public class StudentController {
 		response = new BaseResponse();
 		
 		    try {
-		    	
+		    	logger.info("Inside payment Flag");
 		    	String list = studentService.UpdatePaymentFlag(studentDocReq);
 					
 					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
